@@ -33,41 +33,71 @@ class _ExecutionViewState extends ConsumerState<ExecutionView> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Tag'),
-                    Container(
-                      height: 40,
-                      width: 150,
-                      child: TextFormField(
-                          controller: dayPickerController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.blue))),
-                          onTap: () async {
-                            selecedDate = await Utilits.selecetDate(context);
-                            if (selecedDate != null) {
-                              setState(() {
-                                dayPickerController.text =
-                                    '${selecedDate!.day}.${selecedDate!.month}.${selecedDate!.year}';
-                              });
-                            }
-                          }),
-                    ),
-                  ],
-                )
+                LabeledTextFField(
+                  label: 'Tag',
+                  onPressed: () async {
+                    selecedDate = await Utilits.selecetDate(context);
+                    if (selecedDate != null) {
+                      setState(() {
+                        dayPickerController.text =
+                            '${selecedDate!.day}.${selecedDate!.month}.${selecedDate!.year}';
+                      });
+                    }
+                  },
+                ),
+                LabeledTextFField(label: 'Dauer')
               ],
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class LabeledTextFField extends StatefulWidget {
+  final Function()? onPressed;
+  final String label;
+
+  const LabeledTextFField({super.key, this.onPressed, required this.label});
+
+  @override
+  State createState() => _LabeledTextFFieldState();
+}
+
+class _LabeledTextFFieldState extends State<LabeledTextFField> {
+  final controller = TextEditingController();
+  @override
+  Widget build(context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            widget.label,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+          width: 150,
+          child: TextFormField(
+            controller: controller,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.blue))),
+            onTap: widget.onPressed,
+          ),
+        ),
+      ],
     );
   }
 }
