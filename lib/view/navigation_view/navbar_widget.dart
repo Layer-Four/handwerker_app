@@ -33,7 +33,7 @@ class NavBarIconWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(size: 25, color: Colors.white, icon),
-                  Text(name, style: TextStyle(color: Colors.white, fontSize: 10))
+                  Text(name, style: const TextStyle(color: Colors.white, fontSize: 10))
                 ],
               ),
             ),
