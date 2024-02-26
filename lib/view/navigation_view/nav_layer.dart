@@ -10,7 +10,7 @@ class ViewNavigator extends ConsumerWidget {
       child: Scaffold(
         body: Container(
           color: Colors.white,
-          child: Center(
+          child: const Center(
             child: Text('zeiterfassung'),
           ),
         ),
@@ -26,7 +26,7 @@ class ViewNavigator extends ConsumerWidget {
         bottomNavigationBar: NavigationBar(
           height: MediaQuery.of(context).size.height / 10,
           backgroundColor: Colors.grey,
-          destinations: [],
+          destinations: const [],
         ),
       ),
     );

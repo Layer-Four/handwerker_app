@@ -47,7 +47,7 @@ class _ExecutionViewState extends ConsumerState<ExecutionView> {
                     }
                   },
                 ),
-                LabeledTextFField(label: 'Dauer')
+                const LabeledTextFField(label: 'Dauer')
               ],
             )
           ],
@@ -78,7 +78,7 @@ class _LabeledTextFFieldState extends State<LabeledTextFField> {
           padding: const EdgeInsets.all(4.0),
           child: Text(
             widget.label,
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
         SizedBox(
@@ -93,7 +93,7 @@ class _LabeledTextFFieldState extends State<LabeledTextFField> {
                 ),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.blue))),
+                    borderSide: const BorderSide(color: Colors.blue))),
             onTap: widget.onPressed,
           ),
         ),
@@ -124,7 +124,8 @@ class NavigationIcon extends StatelessWidget {
               ? Container(
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   width: 25,
-                  decoration: BoxDecoration(border: Border.all(width: 1.5, color: Colors.orange)),
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.5, color: Colors.orange)),
                 )
               : const SizedBox()
         ],
