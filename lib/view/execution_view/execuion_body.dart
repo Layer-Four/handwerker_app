@@ -1,9 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/globals.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/small_textfield.dart';
+import 'package:handwerker_app/models/execution/execution.dart';
+import 'package:handwerker_app/provider/dokumentation_provider.dart';
+import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
 class ExecutionBody extends ConsumerStatefulWidget {
   const ExecutionBody({super.key});
@@ -12,133 +14,406 @@ class ExecutionBody extends ConsumerStatefulWidget {
 }
 
 class _ExecutionState extends ConsumerState<ExecutionBody> {
-  final TextEditingController dayPickerController = TextEditingController();
-  final TextEditingController durationController = TextEditingController();
-  final TextEditingController startController = TextEditingController();
-  final TextEditingController endController = TextEditingController();
+  final TextEditingController _dayPickerController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
+  final TextEditingController _endController = TextEditingController();
+  final TextEditingController _startController = TextEditingController();
   DateTime? selecedDate;
   TimeOfDay? selectedTime;
+  static const customerProject = [
+    'Wählen',
+    'Koch / Fenster Montage',
+    'Meier/ Bad verfliesen',
+    'Berger/ Putzen',
+  ];
+  static const services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
+  String _project = customerProject.first;
+  String _executedService = services.first;
   @override
   void initState() {
     super.initState();
-    selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-    startController.text = '${selectedTime!.hour}:${selectedTime!.minute}';
+    final minute =
+        DateTime.now().minute < 10 ? '0${DateTime.now().minute}' : '${DateTime.now().minute}';
+    if (selectedTime == null || _dayPickerController.text.isEmpty) {
+      _dayPickerController.text =
+          '${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}';
+      selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: int.parse(minute));
+    }
+    _startController.text = '${selectedTime!.hour}:$minute';
   }
 
   @override
   Widget build(BuildContext context) {
-    log('$selectedTime');
+    final collection = ref.read(dokuProvider.notifier);
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+        child: Column(
+          children: [
+            dayInputRow(
+              context: context,
+              dayController: _dayPickerController,
+              onTapDay: () async {
+                final date = await Utilits.selecetDate(context);
+                if (date != null) {
+                  setState(() {
+                    _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                  });
+                }
+              },
+              durationController: _durationController,
+              onChangedDuration: (value) {
+                // TODO: implement a wheelspinner for pick Hours and minutes?
+              },
+            ),
+            durationInputRow(
+                context: context,
+                endController: _endController,
+                selectedTime: selectedTime!,
+                startController: _startController,
+                onTapStart: () async {
+                  final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                  if (time != null) {
+                    final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                    setState(
+                      () => _startController.text = '${time.hour}:$minute',
+                    );
+                  }
+                },
+                onTapEnd: () async {
+                  final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                  if (time != null) {
+                    setState(() {
+                      final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                      _endController.text = '${time.hour}:$minute';
+                    });
+                    _calculateDuration();
+                  }
+                }),
+            _buildCustomerProjectField(),
+            _buildServiceButton(),
+            _buildDescription(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SymetricButton(
+                color: AppColor.kPrimaryColor,
+                text: 'Eintrag erstellen',
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                onPressed: () {
+                  if (_startController.text.isEmpty || _endController.text.isEmpty) {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Bitte gib Start und eine Endzeit an'),
+                      ),
+                    );
+                  } else if (_project == 'Wählen' || _executedService == 'Wählen') {
+                    return ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
+                      ),
+                    );
+                  } else {
+                    final execution = _createExecution();
+                    collection.saveStart(start: execution.start);
+                    collection.saveDescription(description: execution.descritpion);
+                  }
+                },
+              ),
+            ),
+            SizedBox(
+              child: Image.asset('assets/images/img_techtool.png', height: 70),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Execution _createExecution() {
+    final startTime = _startController.text.split(':').map((e) => int.parse(e)).toList();
+    final startAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+    final start = DateTime(
+      startAsList[2],
+      startAsList[1],
+      startAsList[0],
+      startTime[0],
+      startTime[1],
+    );
+    final endTime = _endController.text.split(':').map((e) => int.parse(e)).toList();
+    final end = DateTime(
+      startAsList[2],
+      startAsList[1],
+      startAsList[0],
+      endTime.first,
+      endTime.last,
+    );
+    return Execution(
+      project: _project,
+      start: start,
+      end: end,
+      descritpion:
+          'Dauer: ${_durationController.text.split('m').first}min. ${_descriptionController.text}',
+      service: _executedService,
+    );
+  }
+
+  Padding _buildCustomerProjectField() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: LabeledInputWidget(
+        label: 'KUNDE/PROJEKT',
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColor.kTextfieldBorder),
+          ),
+          child: DropdownButton(
+            underline: const SizedBox(),
+            isExpanded: true,
+            value: _project,
+            items: customerProject
+                .map(
+                  (e) => DropdownMenuItem(value: e, child: Text(e)),
+                )
+                .toList(),
+            onChanged: (e) {
+              setState(() => _project = e!);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  dayInputRow({
+    required BuildContext context,
+    required TextEditingController dayController,
+    required TextEditingController durationController,
+    VoidCallback? onTapDay,
+    Function(String)? onChangedDuration,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SmallLabelInputWidget(
-                  label: 'Tag',
-                  child: CustomTextField(
-                    controller: dayPickerController,
-                    onPressed: () async {
-                      selecedDate = await Utilits.selecetDate(context);
-                      if (selecedDate != null) {
-                        setState(() {
-                          dayPickerController.text =
-                              '${selecedDate!.day}.${selecedDate!.month}.${selecedDate!.year}';
-                        });
-                      }
-                    },
-                  ),
-                ),
-                SmallLabelInputWidget(
-                  label: 'Dauer',
-                  child: CustomTextField(
-                    controller: durationController,
-                    onPressed: () async {},
-                  ),
-                ),
-              ],
+          SmallLabelInputWidget(
+            label: 'Tag',
+            child: SizedBox(
+              height: 35,
+              child: TextField(
+                autofocus: false,
+                controller: dayController,
+                keyboardType: TextInputType.datetime,
+                onTap: onTapDay,
+                decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColor.kBlue))),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SmallLabelInputWidget(
-                  label: 'VON',
-                  child: CustomTextField(
-                    controller: startController,
-                    onPressed: () async {
-                      final newTime = await showTimePicker(
-                          initialEntryMode: TimePickerEntryMode.input,
-                          context: context,
-                          initialTime: selectedTime!);
-                      if (newTime != null) {
-                        setState(() {
-                          startController.text = '${newTime.hour} : ${newTime.minute}';
-                        });
-                      }
-                    },
-                  ),
-                ),
-                SmallLabelInputWidget(
-                  label: 'BIS',
-                  child: CustomTextField(
-                    controller: endController,
-                    onPressed: () async {
-                      final newTime = await showTimePicker(
-                          initialEntryMode: TimePickerEntryMode.input,
-                          context: context,
-                          initialTime: selectedTime!);
-                      if (newTime != null) {
-                        setState(() {
-                          endController.text = '${newTime.hour} : ${newTime.minute}';
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
+          SmallLabelInputWidget(
+            label: 'Dauer',
+            child: SizedBox(
+              height: 35,
+              child: TextField(
+                autofocus: false,
+                controller: durationController,
+                keyboardType: TextInputType.number,
+                onChanged: onChangedDuration,
+                decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColor.kBlue))),
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-// TODO: keyboardType.multiline
-class CustomTextField extends StatefulWidget {
-  final String? initialValue;
-  final TextEditingController controller;
-  final VoidCallback? onPressed;
-  const CustomTextField({super.key, required this.controller, this.onPressed, this.initialValue});
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  @override
-  Widget build(BuildContext context) => TextFormField(
-        cursorHeight: 20,
-        // TODO: all input style in grey or just default? like initvalue is Today and when update its black?
-        textAlignVertical: TextAlignVertical.center,
-
-        style: TextStyle(color: Colors.grey[400], fontSize: 20),
-        textInputAction: TextInputAction.done,
-        controller: widget.controller,
-        decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color.fromARGB(255, 198, 198, 198)),
+  Widget durationInputRow({
+    required BuildContext context,
+    required TextEditingController endController,
+    Function(String)? onChancedEnd,
+    Function(String)? onChancedStart,
+    VoidCallback? onTapEnd,
+    VoidCallback? onTapStart,
+    required TimeOfDay selectedTime,
+    required TextEditingController startController,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SmallLabelInputWidget(
+              label: 'VON',
+              child: SizedBox(
+                height: 35,
+                child: TextField(
+                  keyboardType: TextInputType.datetime,
+                  autofocus: false,
+                  cursorHeight: 20,
+                  textInputAction: TextInputAction.done,
+                  controller: startController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColor.kTextfieldBorder,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColor.kBlue),
+                    ),
+                  ),
+                  onTap: onTapStart,
+                  onChanged: (value) => onChancedStart,
+                ),
+              ),
             ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.blue))),
-        onTap: widget.onPressed,
+            SmallLabelInputWidget(
+              label: 'BIS',
+              child: SizedBox(
+                height: 35,
+                child: TextField(
+                  keyboardType: TextInputType.datetime,
+                  autofocus: false,
+                  cursorHeight: 20,
+                  textInputAction: TextInputAction.done,
+                  controller: endController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: AppColor.kTextfieldBorder,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: AppColor.kBlue),
+                    ),
+                  ),
+                  onTap: onTapEnd,
+                  onChanged: (value) => onChancedEnd,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
+
+  void _calculateDuration() {
+    final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+    final start = DateTime(
+      dateAsList[2],
+      dateAsList[1],
+      dateAsList[0],
+      int.parse(_startController.text.split(':').first),
+      int.parse(_startController.text.split(':').last),
+    );
+    final end = DateTime(
+      start.year,
+      start.month,
+      start.day,
+      int.parse(_endController.text.split(':').first),
+      int.parse(_endController.text.split(':').last),
+    );
+    final sum = ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/ 60;
+
+    final hours = sum ~/ 60;
+    final minutes = sum % 60;
+    // TODO: exclude pause?
+    _durationController.text = '$sum min. $hours:${minutes < 10 ? '0$minutes' : minutes} h.';
+  }
+
+  Padding _buildDescription() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: LabeledInputWidget(
+        label: 'BESCHREBUNG',
+        child: SizedBox(
+          height: 80,
+          child: TextField(
+            controller: _descriptionController,
+            textAlignVertical: TextAlignVertical.top,
+            expands: true,
+            keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            maxLines: null,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 5,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: AppColor.kTextfieldBorder,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColor.kBlue),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildServiceButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: LabeledInputWidget(
+        label: 'LEISTUNG',
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColor.kTextfieldBorder),
+          ),
+          child: DropdownButton(
+            underline: const SizedBox(),
+            isExpanded: true,
+            value: _executedService,
+            items: services.map(
+              (e) {
+                return DropdownMenuItem(
+                  value: e,
+                  child: Text(e),
+                );
+              },
+            ).toList(),
+            onChanged: (e) => setState(() => _executedService = e!),
+          ),
+        ),
+      ),
+    );
+  }
 }
