@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 class AppNavigationBar extends StatefulWidget {
   const AppNavigationBar({
@@ -20,14 +21,14 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          color: const Color.fromARGB(255, 98, 98, 98),
+          color: AppColor.kGreyColor,
           notchMargin: 16,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               buildTabItem(0, const Icon(Icons.alarm)),
               buildTabItem(1, const Icon(Icons.note_alt_outlined)),
-              Container(width: 80),
+              Container(width: 60),
               buildTabItem(2, const Icon(Icons.storage)),
               buildTabItem(3, const Icon(Icons.account_box_outlined)),
             ],
@@ -39,16 +40,16 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
     final isSelected = index == widget.index;
 
     return Container(
-      width: 45.0,
-      height: 45.0,
+      width: 50.0,
+      height: 50.0,
       decoration: BoxDecoration(
         border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
         borderRadius: BorderRadius.circular(30),
-        color: const Color.fromARGB(255, 224, 142, 60),
+        color: AppColor.kPrimaryColor,
       ),
       child: IconButton(
         icon: icon,
-        color: Colors.white,
+        color: AppColor.kWhilte,
         onPressed: () => widget.onChangedTab(index),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/navigation_view/nav_layer.dart';
 
 void main() {
@@ -15,7 +14,7 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ViewNavigator(),
     );
