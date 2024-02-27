@@ -15,7 +15,17 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     return MaterialApp(
+      theme: ThemeData().copyWith(scaffoldBackgroundColor: Colors.black),
       debugShowCheckedModeBanner: false,
+      // themeMode: ThemeMode.system,
+      // darkTheme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(
+      //       seedColor: Colors.orangeAccent, brightness: Brightness.dark),
+      // ),
+      // theme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(
+      //       seedColor: Colors.blue, brightness: Brightness.light),
+      // ),
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,
     );

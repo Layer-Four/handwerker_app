@@ -11,11 +11,6 @@ class LogoApp extends StatelessWidget {
       children: [
         Image.asset(
           'assets/images/img_techtool.png',
-          height: 100,
-        ),
-        Image.asset(
-          'assets/images/img_techtool.png',
-          height: 70,
         ),
       ],
     );
