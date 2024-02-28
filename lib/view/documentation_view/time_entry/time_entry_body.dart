@@ -7,13 +7,13 @@ import 'package:handwerker_app/provider/dokumentation_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
-class ExecutionBody extends ConsumerStatefulWidget {
-  const ExecutionBody({super.key});
+class TimeEntryBody extends ConsumerStatefulWidget {
+  const TimeEntryBody({super.key});
   @override
-  ConsumerState<ExecutionBody> createState() => _ExecutionState();
+  ConsumerState<TimeEntryBody> createState() => _ExecutionState();
 }
 
-class _ExecutionState extends ConsumerState<ExecutionBody> {
+class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
