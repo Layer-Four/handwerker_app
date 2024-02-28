@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SymetricButton extends StatelessWidget {
+class SymmetricButton extends StatelessWidget {
   final String text;
   final Function()? onPressed;
   final Color color;
   final EdgeInsets padding;
   final TextStyle style;
-  const SymetricButton({
+  const SymmetricButton({
     super.key,
     this.onPressed,
     this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

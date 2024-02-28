@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/globals.dart';
-import 'package:handwerker_app/provider/dokumentation_provider.dart';
+import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -19,10 +19,10 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   static const customerProject = [
-    'Wählen',
-    'Koch / Fenster Montage',
-    'Meier/ Bad verfliesen',
-    'Berger/ Putzen',
+    ' Wählen',
+    ' Koch / Fenster Montage',
+    ' Meier/ Bad verfliesen',
+    ' Berger/ Putzen',
   ];
   // static const services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
   String _project = customerProject.first;
@@ -52,7 +52,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
             _buildCustomerProjectField(),
             _buildChooseMedai(),
             _buildDescription(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 18),
             _submitInput(),
             SizedBox(
               child: Image.asset('assets/images/img_techtool.png', height: 70),
@@ -140,7 +140,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   Padding _submitInput() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SymetricButton(
+      child: SymmetricButton(
         color: AppColor.kPrimaryColor,
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),

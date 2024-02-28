@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handwerker_app/app_theme.dart/colors.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 class CustomField extends StatefulWidget {
   final TextEditingController controller;
@@ -23,7 +23,7 @@ class _CustomFieldState extends State<CustomField> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: kWhilteWOpacity,
+        color: AppColor.kWhilteWOpacity,
       ),
       child: Focus(
         onFocusChange: (hasFocus) {
@@ -52,12 +52,12 @@ class _CustomFieldState extends State<CustomField> {
               contentPadding: const EdgeInsets.all(6),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: kPrimaryColor),
+                borderSide: BorderSide(color: AppColor.kPrimaryColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused ? kPrimaryColor : Colors.transparent,
+                  color: isFocused ? AppColor.kPrimaryColor : Colors.transparent,
                 ),
               ),
             ),

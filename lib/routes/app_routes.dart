@@ -10,7 +10,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     anmeldeScreen: (context) => const LoginView(),
-    viewScreen: (context) => const ViewNavigator(),
+    viewScreen: (context) => const MainViewNavigator(),
     initialRoute: (context) => const StartView(),
   };
 }

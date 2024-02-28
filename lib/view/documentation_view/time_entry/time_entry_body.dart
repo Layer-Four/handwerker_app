@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/globals.dart';
+import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/execution/execution.dart';
-import 'package:handwerker_app/provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
-class ExecutionBody extends ConsumerStatefulWidget {
-  const ExecutionBody({super.key});
+class TimeEntryBody extends ConsumerStatefulWidget {
+  const TimeEntryBody({super.key});
   @override
-  ConsumerState<ExecutionBody> createState() => _ExecutionState();
+  ConsumerState<TimeEntryBody> createState() => _ExecutionState();
 }
 
-class _ExecutionState extends ConsumerState<ExecutionBody> {
+class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
@@ -50,25 +50,28 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
       child: Column(
         children: [
-          dayInputRow(),
-          durationInputRow(),
+          _dayInputRow(),
+          _durationInputRow(),
           _buildCustomerProjectField(),
           _buildServiceButton(),
           _buildDescription(),
-          const SizedBox(height: 40),
-          _submitInput(context, collection),
+          const SizedBox(height: 46),
+          _submitInput(collection),
           SizedBox(
-            child: Image.asset('assets/images/img_techtool.png', height: 70),
+            child: Image.asset(
+              'assets/images/img_techtool.png',
+              height: 70,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Padding _submitInput(BuildContext context, InputNotifier collection) {
+  Padding _submitInput(InputNotifier collection) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SymetricButton(
+      child: SymmetricButton(
         color: AppColor.kPrimaryColor,
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
@@ -156,7 +159,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
     );
   }
 
-  dayInputRow() {
+  _dayInputRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -167,6 +170,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
             child: SizedBox(
               height: 35,
               child: TextField(
+                cursorHeight: 20,
                 autofocus: false,
                 controller: _dayPickerController,
                 keyboardType: TextInputType.datetime,
@@ -195,6 +199,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
             child: SizedBox(
               height: 35,
               child: TextField(
+                cursorHeight: 20,
                 autofocus: false,
                 controller: _durationController,
                 keyboardType: TextInputType.number,
@@ -217,7 +222,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
     );
   }
 
-  Widget durationInputRow() => Padding(
+  Widget _durationInputRow() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,6 +340,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
         child: SizedBox(
           height: 80,
           child: TextField(
+            cursorHeight: 20,
             controller: _descriptionController,
             textAlignVertical: TextAlignVertical.top,
             expands: true,
