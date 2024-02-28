@@ -71,7 +71,8 @@ class InputNotifier extends Notifier<List<Map<String, dynamic>>> {
     ];
   }
 
-  void saveService({required String service}) {
+  void saveService({required String? service}) {
+    if (service == null) return;
     if (state.contains('service')) {
       final list = [];
       state.map((e) {
@@ -87,19 +88,20 @@ class InputNotifier extends Notifier<List<Map<String, dynamic>>> {
     ];
   }
 
-  void saveUser({required String user}) {
+  void saveUser({required List<String>? users}) {
+    if (users == null) return;
     if (state.contains('user')) {
       final list = [];
       state.map((e) {
         if (!e.containsKey('user')) list.add(e);
       });
-      list.add({'user': user});
+      list.add({'user': users});
       state = list as List<Map<String, dynamic>>;
       return;
     }
     state = [
       ...state,
-      {'user': user}
+      {'user': users}
     ];
   }
 }

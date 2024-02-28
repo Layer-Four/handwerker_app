@@ -51,81 +51,52 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
         child: Column(
           children: [
-            dayInputRow(
-              context: context,
-              dayController: _dayPickerController,
-              onTapDay: () async {
-                final date = await Utilits.selecetDate(context);
-                if (date != null) {
-                  setState(() {
-                    _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                  });
-                }
-              },
-              durationController: _durationController,
-              onChangedDuration: (value) {
-                // TODO: implement a wheelspinner for pick Hours and minutes?
-              },
-            ),
-            durationInputRow(
-                context: context,
-                endController: _endController,
-                selectedTime: selectedTime!,
-                startController: _startController,
-                onTapStart: () async {
-                  final time = await showTimePicker(context: context, initialTime: selectedTime!);
-                  if (time != null) {
-                    final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
-                    setState(
-                      () => _startController.text = '${time.hour}:$minute',
-                    );
-                  }
-                },
-                onTapEnd: () async {
-                  final time = await showTimePicker(context: context, initialTime: selectedTime!);
-                  if (time != null) {
-                    setState(() {
-                      final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
-                      _endController.text = '${time.hour}:$minute';
-                    });
-                    _calculateDuration();
-                  }
-                }),
+            dayInputRow(),
+            durationInputRow(),
             _buildCustomerProjectField(),
             _buildServiceButton(),
             _buildDescription(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SymetricButton(
-                color: AppColor.kPrimaryColor,
-                text: 'Eintrag erstellen',
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-                onPressed: () {
-                  if (_startController.text.isEmpty || _endController.text.isEmpty) {
-                    return ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Bitte gib Start und eine Endzeit an'),
-                      ),
-                    );
-                  } else if (_project == 'Wählen' || _executedService == 'Wählen') {
-                    return ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
-                      ),
-                    );
-                  } else {
-                    final execution = _createExecution();
-                    collection.saveStart(start: execution.start);
-                    collection.saveDescription(description: execution.descritpion);
-                  }
-                },
-              ),
-            ),
+            SizedBox(height: 40),
+            _submitInput(context, collection),
             SizedBox(
               child: Image.asset('assets/images/img_techtool.png', height: 70),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding _submitInput(BuildContext context, InputNotifier collection) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SymetricButton(
+        color: AppColor.kPrimaryColor,
+        text: 'Eintrag erstellen',
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+        onPressed: () {
+          if (_startController.text.isEmpty || _endController.text.isEmpty) {
+            return ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bitte gib Start und eine Endzeit an'),
+              ),
+            );
+          } else if (_project == 'Wählen' || _executedService == 'Wählen') {
+            return ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
+              ),
+            );
+          } else {
+            final execution = _createExecution();
+            collection.saveStart(start: execution.start);
+            collection.saveDescription(description: execution.descritpion);
+            collection.saveProject(project: execution.project);
+            collection.saveEnd(end: execution.end);
+            collection.saveService(service: execution.service);
+            collection.saveUser(users: execution.users);
+          }
+        },
       ),
     );
   }
@@ -187,13 +158,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
     );
   }
 
-  dayInputRow({
-    required BuildContext context,
-    required TextEditingController dayController,
-    required TextEditingController durationController,
-    VoidCallback? onTapDay,
-    Function(String)? onChangedDuration,
-  }) {
+  dayInputRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -205,9 +170,16 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
               height: 35,
               child: TextField(
                 autofocus: false,
-                controller: dayController,
+                controller: _dayPickerController,
                 keyboardType: TextInputType.datetime,
-                onTap: onTapDay,
+                onTap: () async {
+                  final date = await Utilits.selecetDate(context);
+                  if (date != null) {
+                    setState(() {
+                      _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                    });
+                  }
+                },
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     enabledBorder: OutlineInputBorder(
@@ -226,9 +198,10 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
               height: 35,
               child: TextField(
                 autofocus: false,
-                controller: durationController,
+                controller: _durationController,
                 keyboardType: TextInputType.number,
-                onChanged: onChangedDuration,
+                // TODO: implement a wheelspinner for pick Hours and minutes?
+                onChanged: (value) {},
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     enabledBorder: OutlineInputBorder(
@@ -246,17 +219,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
     );
   }
 
-  Widget durationInputRow({
-    required BuildContext context,
-    required TextEditingController endController,
-    Function(String)? onChancedEnd,
-    Function(String)? onChancedStart,
-    VoidCallback? onTapEnd,
-    VoidCallback? onTapStart,
-    required TimeOfDay selectedTime,
-    required TextEditingController startController,
-  }) =>
-      Padding(
+  Widget durationInputRow() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,7 +233,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
                   autofocus: false,
                   cursorHeight: 20,
                   textInputAction: TextInputAction.done,
-                  controller: startController,
+                  controller: _startController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 15,
@@ -287,8 +250,15 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
                       borderSide: BorderSide(color: AppColor.kBlue),
                     ),
                   ),
-                  onTap: onTapStart,
-                  onChanged: (value) => onChancedStart,
+                  onTap: () async {
+                    final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                    if (time != null) {
+                      final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                      setState(
+                        () => _startController.text = '${time.hour}:$minute',
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -301,7 +271,7 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
                   autofocus: false,
                   cursorHeight: 20,
                   textInputAction: TextInputAction.done,
-                  controller: endController,
+                  controller: _endController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 15,
@@ -318,8 +288,16 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
                       borderSide: BorderSide(color: AppColor.kBlue),
                     ),
                   ),
-                  onTap: onTapEnd,
-                  onChanged: (value) => onChancedEnd,
+                  onTap: () async {
+                    final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                    if (time != null) {
+                      setState(() {
+                        final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                        _endController.text = '${time.hour}:$minute';
+                      });
+                      _calculateDuration();
+                    }
+                  },
                 ),
               ),
             ),
