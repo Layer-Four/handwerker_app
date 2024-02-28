@@ -1,3 +1,8 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:handwerker_app/constants/globals.dart';
+// import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/globals.dart';
