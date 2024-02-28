@@ -14,13 +14,47 @@ class ViewNavigator extends ConsumerWidget {
 
     return Scaffold(
       body: switch (index) {
-        1 => const DokuNavigation(),
-        _ => const DokuNavigation(),
+        0 => const TimeTrackView(),
+        1 => const DokuNavigationView(),
+        2 => const HistoryView(),
+        3 => const UserView(),
+        _ => const DokuNavigationView(),
       },
       bottomNavigationBar: AppNavigationBar(
         index: index,
         onChangedTab: (index) => notifier.state = index,
       ),
+    );
+  }
+}
+
+class UserView extends StatelessWidget {
+  const UserView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text('User Information')),
+    );
+  }
+}
+
+class HistoryView extends StatelessWidget {
+  const HistoryView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text('Verlauf')),
+    );
+  }
+}
+
+class TimeTrackView extends StatelessWidget {
+  const TimeTrackView({super.key});
+  static const startScreen = '/start_view';
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: Text('Time tracker')),
     );
   }
 }

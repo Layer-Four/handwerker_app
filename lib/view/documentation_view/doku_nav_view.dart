@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/dokumentation_provider.dart';
-import 'package:handwerker_app/view/documentation_view/documentation_body.dart';
-import 'package:handwerker_app/view/execution_view/execuion_body.dart';
+import 'package:handwerker_app/view/documentation_view/documentation_entry/documentation_body.dart';
+import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
+import 'package:handwerker_app/view/documentation_view/time_entry/execuion_body.dart';
 import 'package:handwerker_app/view/navigation_view/nav_appbar_widget.dart';
 
-class DokuNavigation extends ConsumerWidget {
-  const DokuNavigation({super.key});
+class DokuNavigationView extends ConsumerWidget {
+  const DokuNavigationView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,19 +27,5 @@ class DokuNavigation extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class MaterialBody extends ConsumerStatefulWidget {
-  const MaterialBody({super.key});
-
-  @override
-  ConsumerState<MaterialBody> createState() => _MaterialBodyState();
-}
-
-class _MaterialBodyState extends ConsumerState<MaterialBody> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

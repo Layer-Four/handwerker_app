@@ -65,7 +65,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
 
   Container _buildChooseMedai() {
     return Container(
-      height: 150,
+      height: 170,
       width: 500,
       decoration: BoxDecoration(
         color: AppColor.kTextfieldBorder,
@@ -200,32 +200,29 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
     );
   }
 
-  Padding _dayInputWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: LabeledInputWidget(
-          label: 'TAG',
-          child: TextField(
-            controller: _dayPickerController,
-            keyboardType: TextInputType.datetime,
-            onTap: () async {
-              final date = await Utilits.selecetDate(context);
-              if (date != null) {
-                setState(() {
-                  _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                });
-              }
-            },
-            decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                enabledBorder: OutlineInputBorder(
+  Widget _dayInputWidget() {
+    return LabeledInputWidget(
+        label: 'TAG',
+        child: TextField(
+          controller: _dayPickerController,
+          keyboardType: TextInputType.datetime,
+          onTap: () async {
+            final date = await Utilits.selecetDate(context);
+            if (date != null) {
+              setState(() {
+                _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+              });
+            }
+          },
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+              ),
+              focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColor.kTextfieldBorder),
-                ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppColor.kBlue))),
-          )),
-    );
+                  borderSide: BorderSide(color: AppColor.kBlue))),
+        ));
   }
 }
