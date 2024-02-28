@@ -1,4 +1,4 @@
 class Execution {
   const Execution();
-  factory() => Execution();
+  factory() => const Execution();
 }

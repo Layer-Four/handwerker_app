@@ -21,8 +21,8 @@ class ViewNavigator extends ConsumerWidget {
           title: NavAppBarWidget(notifier: notifier, index: index),
         ),
         body: switch (index) {
-          0 => const ExecutionBody(),
-          _ => LoginView(),
+          3 => const LoginView(),
+          _ => const ExecutionBody(),
         },
         bottomNavigationBar: AppNavigationBar(
           index: index,
