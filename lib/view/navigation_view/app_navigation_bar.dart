@@ -22,13 +22,13 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           color: AppColor.kGreyColor,
-          notchMargin: 16,
+          // notchMargin: 16,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               buildTabItem(0, const Icon(Icons.alarm)),
               buildTabItem(1, const Icon(Icons.note_alt_outlined)),
-              Container(width: 60),
+              // Container(width: 40),
               buildTabItem(2, const Icon(Icons.storage)),
               buildTabItem(3, const Icon(Icons.account_box_outlined)),
             ],
