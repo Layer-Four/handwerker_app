@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handwerker_app/app_theme.dart/colors.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/text_field.dart';
 
@@ -29,10 +29,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                 ),
                 Text(
                   "Reset Password,",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge
-                      ?.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
                 ),
                 Text(
                   "Please Enter Your Email",
@@ -47,9 +44,8 @@ class _ForgetScreenState extends State<ForgetScreen> {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    backgroundColor: kPrimaryColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    backgroundColor: AppColor.kPrimaryColor,
                     padding: const EdgeInsets.all(16),
                   ),
                   child: Center(

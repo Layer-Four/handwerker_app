@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handwerker_app/app_theme.dart/colors.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
@@ -28,7 +28,7 @@ class _StartViewState extends State<StartView> {
                     Text(
                       "Revolutionieren \nSie Ihr Handwerk",
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: kWhilteWOpacity,
+                          color: AppColor.kWhilteWOpacity,
                           fontWeight: FontWeight.bold,
                           fontSize: 25),
                     ),
@@ -37,7 +37,7 @@ class _StartViewState extends State<StartView> {
                       style: Theme.of(context)
                           .textTheme
                           .titleSmall
-                          ?.copyWith(color: kPrimaryColor),
+                          ?.copyWith(color: AppColor.kPrimaryColor),
                     ),
                     const SizedBox(
                       height: 15,
@@ -65,7 +65,7 @@ class _StartViewState extends State<StartView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          backgroundColor: kPrimaryColor,
+                          backgroundColor: AppColor.kPrimaryColor,
                         ),
                         child: const Center(
                           child: Text(

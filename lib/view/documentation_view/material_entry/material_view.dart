@@ -1,12 +1,14 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/globals.dart';
+import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -34,6 +36,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   ];
   String _project = customerProject.first;
   String _selectedMaterial = _materials.first;
+  File? _file;
 
   @override
   void initState() {
@@ -88,8 +91,24 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               const Text('Foto machen'),
               IconButton(
                 icon: const Icon(Icons.camera_alt, size: 75),
-                onPressed: () {
-                  ref.read(dokuProvider);
+                onPressed: () async {
+                  PermissionStatus permission = await Permission.camera.request();
+                  if (!permission.isGranted) {
+                    await Permission.storage.request();
+                  }
+                  if (permission.isGranted || permission.isDenied) {
+                    final image = await Utilits.pickImageFromCamera();
+                    if (image != null) {
+                      setState(() => _file = image);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(' Bild ausgewählt')),
+                      );
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(content: Text('kein Bild ausgewählt')),
+                      //   );
+                    }
+                  }
                 },
               ),
             ],
@@ -100,7 +119,29 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               const Text('Bild wählen'),
               IconButton(
                 icon: const Icon(Icons.image, size: 70),
-                onPressed: () {},
+                onPressed: () async {
+                  // TODO: implemetns plugin settings in AndroidManifest and Podfile in Ios
+                  PermissionStatus permission = await Permission.storage.request();
+                  if (!permission.isGranted) {
+                    await Permission.storage.request();
+                  }
+                  if (permission.isGranted || permission.isDenied) {
+                    final image = await Utilits.pickImageFromGalery();
+                    if (image != null) {
+                      setState(() => _file = image);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text(' Bild ausgewählt')),
+                      );
+                      // } else {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(content: Text('kein Bild ausgewählt')),
+                      //   );
+                    }
+                  }
+
+                  final image = await Utilits.pickImageFromGalery();
+                  if (image != null) setState(() => _file = image);
+                },
               ),
             ],
           ),

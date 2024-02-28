@@ -5,6 +5,7 @@ class AppColor {
   static Color kGreyColor = const Color.fromARGB(255, 98, 98, 98);
   static Color kWhite = Colors.white;
   static Color kTextfieldBorder = const Color.fromARGB(255, 220, 217, 217);
+  static Color kWhilteWOpacity = const Color.fromARGB(192, 255, 255, 255);
   static Color kBlue = Colors.blue;
 
   static final lightTheme = ThemeData(

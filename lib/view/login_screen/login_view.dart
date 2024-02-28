@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handwerker_app/app_theme.dart/colors.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/forget_screen.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
@@ -38,7 +38,7 @@ class _LoginViewState extends State<LoginView> {
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
-                          ?.copyWith(color: kWhilteWOpacity),
+                          ?.copyWith(color: AppColor.kWhilteWOpacity),
                     ),
                   ),
                   const SizedBox(
@@ -52,10 +52,8 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "E-Mail",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: kWhilteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColor.kWhilteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -68,10 +66,8 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(color: kWhilteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppColor.kWhilteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -88,9 +84,10 @@ class _LoginViewState extends State<LoginView> {
                           child: Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: GestureDetector(
-                              child: const Text(
+                              child: Text(
                                 "Passwort vergessen?",
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                                style:
+                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -118,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                backgroundColor: kPrimaryColor,
+                                backgroundColor: AppColor.kPrimaryColor,
                               ),
                               child: const Center(
                                 child: Text(
