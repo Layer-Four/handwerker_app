@@ -46,23 +46,21 @@ class _ExecutionState extends ConsumerState<ExecutionBody> {
   @override
   Widget build(BuildContext context) {
     final collection = ref.read(dokuProvider.notifier);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
-        child: Column(
-          children: [
-            dayInputRow(),
-            durationInputRow(),
-            _buildCustomerProjectField(),
-            _buildServiceButton(),
-            _buildDescription(),
-            SizedBox(height: 40),
-            _submitInput(context, collection),
-            SizedBox(
-              child: Image.asset('assets/images/img_techtool.png', height: 70),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+      child: Column(
+        children: [
+          dayInputRow(),
+          durationInputRow(),
+          _buildCustomerProjectField(),
+          _buildServiceButton(),
+          _buildDescription(),
+          const SizedBox(height: 40),
+          _submitInput(context, collection),
+          SizedBox(
+            child: Image.asset('assets/images/img_techtool.png', height: 70),
+          ),
+        ],
       ),
     );
   }
