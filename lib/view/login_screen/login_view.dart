@@ -55,9 +55,7 @@ class _LoginViewState extends State<LoginView> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(
-                                  color: kWhilteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                              ?.copyWith(color: kWhilteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -73,9 +71,7 @@ class _LoginViewState extends State<LoginView> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
-                              ?.copyWith(
-                                  color: kWhilteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                              ?.copyWith(color: kWhilteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -94,9 +90,7 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: const Text(
                                 "Passwort vergessen?",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -118,8 +112,7 @@ class _LoginViewState extends State<LoginView> {
                             height: 35,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context)
-                                    .pushReplacementNamed(AppRoutes.viewScreen);
+                                Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
