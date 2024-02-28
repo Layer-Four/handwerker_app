@@ -21,7 +21,7 @@ class DokuNavigationView extends ConsumerWidget {
         child: SingleChildScrollView(
           child: switch (dokuViewRef) {
             DokuViews.doku => const DokumentationBody(),
-            DokuViews.material => const MaterialBody(),
+            DokuViews.consumables => const MaterialBody(),
             _ => const TimeEntryBody(),
           },
         ),
@@ -41,10 +41,10 @@ class NavAppBarWidget extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         InkWell(
-          onTap: () => viewNotifier.state = DokuViews.zeiteintrag,
+          onTap: () => viewNotifier.state = DokuViews.timeEntry,
           child: NavigationIcon(
             title: 'Zeiteintrag',
-            isCurrent: viewProvider == DokuViews.zeiteintrag,
+            isCurrent: viewProvider == DokuViews.timeEntry,
           ),
           // child: NavigationIcon(title: 'Zeiteintrag', isCurrent: index == 0),
         ),
@@ -56,10 +56,10 @@ class NavAppBarWidget extends ConsumerWidget {
           ),
         ),
         InkWell(
-          onTap: () => viewNotifier.state = DokuViews.material,
+          onTap: () => viewNotifier.state = DokuViews.consumables,
           child: NavigationIcon(
             title: 'Material',
-            isCurrent: viewProvider == DokuViews.material,
+            isCurrent: viewProvider == DokuViews.consumables,
           ),
         ),
       ],

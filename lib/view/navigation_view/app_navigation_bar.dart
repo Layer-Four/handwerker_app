@@ -49,7 +49,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
       ),
       child: IconButton(
         icon: icon,
-        color: AppColor.kWhilte,
+        color: AppColor.kWhite,
         onPressed: () => widget.onChangedTab(index),
       ),
     );

@@ -55,7 +55,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           _buildCustomerProjectField(),
           _buildServiceButton(),
           _buildDescription(),
-          const SizedBox(height: 40),
+          const SizedBox(height: 46),
           _submitInput(collection),
           SizedBox(
             child: Image.asset(
@@ -71,7 +71,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   Padding _submitInput(InputNotifier collection) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SymetricButton(
+      child: SymmetricButton(
         color: AppColor.kPrimaryColor,
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),

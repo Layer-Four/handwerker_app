@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/documentation_view/doku_nav_view.dart';
+import 'package:handwerker_app/view/history_view/history_nav_view.dart';
 import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
 
 class ViewNavigator extends ConsumerWidget {
@@ -16,7 +17,7 @@ class ViewNavigator extends ConsumerWidget {
       body: switch (index) {
         0 => const TimeTrackView(),
         1 => const DokuNavigationView(),
-        2 => const HistoryView(),
+        2 => const HistoryNavigationView(),
         3 => const UserView(),
         _ => const DokuNavigationView(),
       },
@@ -34,16 +35,6 @@ class UserView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(child: Text('User Information')),
-    );
-  }
-}
-
-class HistoryView extends StatelessWidget {
-  const HistoryView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Verlauf')),
     );
   }
 }
