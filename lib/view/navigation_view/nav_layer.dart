@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/provider/view_provider.dart';
+import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/documentation_view/doku_nav_view.dart';
 import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
 

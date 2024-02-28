@@ -1,14 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum DokuViews {
-  zeiteintrag,
-  doku,
-  material,
-}
-
 final dokuProvider =
     NotifierProvider<InputNotifier, List<Map<String, dynamic>>>(() => InputNotifier());
-final dokuViewProvider = StateProvider((ref) => DokuViews.zeiteintrag);
 
 class InputNotifier extends Notifier<List<Map<String, dynamic>>> {
   @override

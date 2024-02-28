@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/globals.dart';
 import 'package:handwerker_app/models/execution/execution.dart';
-import 'package:handwerker_app/provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -50,22 +50,25 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
       child: Column(
         children: [
-          dayInputRow(),
-          durationInputRow(),
+          _dayInputRow(),
+          _durationInputRow(),
           _buildCustomerProjectField(),
           _buildServiceButton(),
           _buildDescription(),
           const SizedBox(height: 40),
-          _submitInput(context, collection),
+          _submitInput(collection),
           SizedBox(
-            child: Image.asset('assets/images/img_techtool.png', height: 70),
+            child: Image.asset(
+              'assets/images/img_techtool.png',
+              height: 70,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Padding _submitInput(BuildContext context, InputNotifier collection) {
+  Padding _submitInput(InputNotifier collection) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymetricButton(
@@ -156,7 +159,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     );
   }
 
-  dayInputRow() {
+  _dayInputRow() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -167,6 +170,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             child: SizedBox(
               height: 35,
               child: TextField(
+                cursorHeight: 20,
                 autofocus: false,
                 controller: _dayPickerController,
                 keyboardType: TextInputType.datetime,
@@ -195,6 +199,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             child: SizedBox(
               height: 35,
               child: TextField(
+                cursorHeight: 20,
                 autofocus: false,
                 controller: _durationController,
                 keyboardType: TextInputType.number,
@@ -217,7 +222,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     );
   }
 
-  Widget durationInputRow() => Padding(
+  Widget _durationInputRow() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,6 +340,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         child: SizedBox(
           height: 80,
           child: TextField(
+            cursorHeight: 20,
             controller: _descriptionController,
             textAlignVertical: TextAlignVertical.top,
             expands: true,
