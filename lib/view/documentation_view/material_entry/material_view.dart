@@ -52,21 +52,59 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     }
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
             _dayInputWidget(),
             _buildCustomerProjectField(),
             _buildMaterialField(),
             _buildAmountPriceFields(),
-            _addMoreMaterial(),
-            const SizedBox(height: 110),
+            _buildChooseMedai(),
+            // const SizedBox(height: 10),
             _submitInput(),
             SizedBox(
               child: Image.asset('assets/images/img_techtool.png', height: 70),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _buildChooseMedai() {
+    return Container(
+      height: 160,
+      width: 500,
+      decoration: BoxDecoration(
+        color: AppColor.kTextfieldBorder,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Foto machen'),
+              IconButton(
+                icon: const Icon(Icons.camera_alt, size: 75),
+                onPressed: () {
+                  ref.read(dokuProvider);
+                },
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Bild wählen'),
+              IconButton(
+                icon: const Icon(Icons.image, size: 70),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
