@@ -11,13 +11,23 @@ void main() {
   ));
 }
 
+bool? isDark;
+
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
     return MaterialApp(
-      theme: ThemeData().copyWith(scaffoldBackgroundColor: Colors.black),
+      themeMode: isDark == null
+          ? ThemeMode.system
+          : isDark!
+              ? ThemeMode.dark
+              : ThemeMode.light,
+
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData.light(),
+      // theme: ThemeData().copyWith(scaffoldBackgroundColor: Colors.black),
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,
