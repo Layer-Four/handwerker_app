@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/app_theme.dart/colors.dart';
 import 'package:handwerker_app/view/login_screen/login_view.dart';
+import 'package:handwerker_app/view/navigation_view/nav_layer.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
@@ -56,10 +57,10 @@ class _StartViewState extends State<StartView> {
                       child: ElevatedButton(
                         onPressed: () {
                           // Navigate to the other page when the button is clicked
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginView()),
+                                builder: (context) => const ViewNavigator()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
