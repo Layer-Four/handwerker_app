@@ -14,7 +14,7 @@ class HistoryTimeBody extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 'TAG',
                 style: Theme.of(context).textTheme.labelMedium,

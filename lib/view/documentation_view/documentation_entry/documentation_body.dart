@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +30,8 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   // static const services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
   String _project = customerProject.first;
   // String _executedService = services.first;
+  File? _file;
+  bool _isStorageSource = true;
 
   @override
   void initState() {
@@ -80,8 +85,26 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
               const Text('Foto machen'),
               IconButton(
                 icon: const Icon(Icons.camera_alt, size: 75),
-                onPressed: () {
-                  ref.read(dokuProvider);
+                onPressed: () async {
+                  final image = await Utilits.pickImageFromCamera(context);
+                  if (image != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          ' Bild ausgewählt',
+                          style: TextStyle(
+                            color: AppColor.kPrimaryButtonColor,
+                          ),
+                        ),
+                        backgroundColor: AppColor.kPrimaryButtonColor,
+                      ),
+                    );
+                    setState(() {
+                      _file = image;
+                      _isStorageSource = false;
+                    });
+                    // }
+                  }
                 },
               ),
             ],
@@ -92,7 +115,27 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
               const Text('Bild wählen'),
               IconButton(
                 icon: const Icon(Icons.image, size: 70),
-                onPressed: () {},
+                onPressed: () async {
+                  final image = await Utilits.pickImageFromGalery(context);
+                  if (image != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          ' Bild ausgewählt',
+                          style: TextStyle(
+                            color: AppColor.kPrimaryButtonColor,
+                          ),
+                        ),
+                        backgroundColor: AppColor.kPrimaryButtonColor,
+                      ),
+                    );
+                    setState(() {
+                      _file = image;
+                      _isStorageSource = false;
+                    });
+                    // }
+                  }
+                },
               ),
             ],
           ),
@@ -141,10 +184,19 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
-        color: AppColor.kPrimaryColor,
+        color: AppColor.kPrimaryButtonColor,
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
+          switch (_isStorageSource) {
+            case true:
+              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+              break;
+            default:
+              ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+              break;
+          }
+
           // if (_startController.text.isEmpty || _endController.text.isEmpty) {
           //   return ScaffoldMessenger.of(context).showSnackBar(
           //     const SnackBar(

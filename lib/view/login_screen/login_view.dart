@@ -4,7 +4,7 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/forget_screen.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
-import 'package:handwerker_app/view/widgets/text_field.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(
                           height: 3,
                         ),
-                        CustomField(
+                        UserAndPasswordField(
                           controller: emailCon,
                         ),
                         const SizedBox(
@@ -72,7 +72,7 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(
                           height: 3,
                         ),
-                        CustomField(
+                        UserAndPasswordField(
                           controller: passCon,
                           isPass: true,
                         ),
@@ -115,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                backgroundColor: AppColor.kPrimaryColor,
+                                backgroundColor: AppColor.kPrimaryButtonColor,
                               ),
                               child: const Center(
                                 child: Text(

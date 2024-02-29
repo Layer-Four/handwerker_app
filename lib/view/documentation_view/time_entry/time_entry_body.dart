@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/execution/execution.dart';
 import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -46,17 +48,19 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   @override
   Widget build(BuildContext context) {
     final collection = ref.read(dokuProvider.notifier);
+    final language = ref.watch(languangeProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
       child: Column(
         children: [
-          _dayInputRow(),
+          _dayInputRow(language),
           _durationInputRow(),
           _buildCustomerProjectField(),
           _buildServiceButton(),
           _buildDescription(),
           const SizedBox(height: 46),
-          _submitInput(collection),
+          _submitInput(collection, language),
           SizedBox(
             child: Image.asset(
               'assets/images/img_techtool.png',
@@ -68,12 +72,12 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     );
   }
 
-  Padding _submitInput(InputNotifier collection) {
+  Padding _submitInput(InputNotifier collection, Dictionary language) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
-        color: AppColor.kPrimaryColor,
-        text: 'Eintrag erstellen',
+        color: AppColor.kPrimaryButtonColor,
+        text: language.createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           if (_startController.text.isEmpty || _endController.text.isEmpty) {
@@ -159,14 +163,14 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     );
   }
 
-  _dayInputRow() {
+  _dayInputRow(Dictionary language) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SmallLabelInputWidget(
-            label: 'Tag',
+            label: language.date,
             child: SizedBox(
               height: 35,
               child: TextField(
@@ -195,7 +199,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             ),
           ),
           SmallLabelInputWidget(
-            label: 'Dauer',
+            label: language.duration,
             child: SizedBox(
               height: 35,
               child: TextField(

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
-class CustomField extends StatefulWidget {
+class UserAndPasswordField extends StatefulWidget {
   final TextEditingController controller;
   final bool isPass;
-  const CustomField({
+  const UserAndPasswordField({
     super.key,
     required this.controller,
     this.isPass = false,
   });
 
   @override
-  State<CustomField> createState() => _CustomFieldState();
+  State<UserAndPasswordField> createState() => _UserAndPasswordFieldState();
 }
 
-class _CustomFieldState extends State<CustomField> {
+class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
   bool obscure = true;
   bool isFocused = false;
 
@@ -52,12 +52,12 @@ class _CustomFieldState extends State<CustomField> {
               contentPadding: const EdgeInsets.all(6),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: AppColor.kPrimaryColor),
+                borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused ? AppColor.kPrimaryColor : Colors.transparent,
+                  color: isFocused ? AppColor.kPrimaryButtonColor : Colors.transparent,
                 ),
               ),
             ),

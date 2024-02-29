@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final viewProvider = StateProvider<MainViews>((ref) => MainViews.doku);
-
 enum MainViews { timeEntry, doku, history, user }
+
+final viewProvider = StateProvider<MainViews>((ref) => MainViews.doku);
 
 extension MainViewsExention on MainViews {
   int get index => switch (this) {
@@ -21,7 +21,7 @@ extension MainViewsExention on MainViews {
 
 enum DokuViews { timeEntry, doku, consumables }
 
-final dokuViewProvider = StateProvider((ref) => DokuViews.timeEntry);
+final dokuViewProvider = StateProvider<DokuViews>((ref) => DokuViews.timeEntry);
 
 enum HistoryViews { timeEntry, project, consumables }
 

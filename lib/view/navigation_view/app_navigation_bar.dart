@@ -21,7 +21,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          color: AppColor.kGreyColor,
+          color: AppColor.kPrimary,
           // notchMargin: 16,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,7 +45,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
       decoration: BoxDecoration(
         border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
         borderRadius: BorderRadius.circular(30),
-        color: AppColor.kPrimaryColor,
+        color: AppColor.kPrimaryButtonColor,
       ),
       child: IconButton(
         icon: icon,

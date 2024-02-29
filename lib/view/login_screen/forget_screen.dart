@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
-import 'package:handwerker_app/view/widgets/text_field.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
-class ForgetScreen extends StatefulWidget {
+class ForgetScreen extends ConsumerStatefulWidget {
   const ForgetScreen({super.key});
 
   @override
-  State<ForgetScreen> createState() => _ForgetScreenState();
+  ConsumerState<ForgetScreen> createState() => _ForgetScreenState();
 }
 
-class _ForgetScreenState extends State<ForgetScreen> {
+class _ForgetScreenState extends ConsumerState<ForgetScreen> {
   @override
   Widget build(BuildContext context) {
     TextEditingController emailCon = TextEditingController();
@@ -35,7 +36,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                   "Please Enter Your Email",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                CustomField(
+                UserAndPasswordField(
                   controller: emailCon,
                 ),
                 const SizedBox(
@@ -45,7 +46,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    backgroundColor: AppColor.kPrimaryColor,
+                    backgroundColor: AppColor.kPrimaryButtonColor,
                     padding: const EdgeInsets.all(16),
                   ),
                   child: Center(
