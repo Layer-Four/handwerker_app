@@ -37,7 +37,7 @@ class _StartViewState extends State<StartView> {
                       style: Theme.of(context)
                           .textTheme
                           .titleSmall
-                          ?.copyWith(color: AppColor.kPrimaryColor),
+                          ?.copyWith(color: AppColor.kPrimaryButtonColor),
                     ),
                     const SizedBox(
                       height: 15,
@@ -65,7 +65,7 @@ class _StartViewState extends State<StartView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          backgroundColor: AppColor.kPrimaryColor,
+                          backgroundColor: AppColor.kPrimaryButtonColor,
                         ),
                         child: const Center(
                           child: Text(

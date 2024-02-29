@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dokuProvider =
@@ -37,6 +39,38 @@ class InputNotifier extends Notifier<List<Map<String, dynamic>>> {
     final list = state;
     list.add({'end': end});
     state = list;
+  }
+
+  void saveGalleryFile({required File? galleryFile}) {
+    if (state.contains('galleryFile')) {
+      final list = [];
+      state.map((e) {
+        if (!e.containsKey('galleryFile')) list.add(e);
+      });
+      list.add({'galleryFile': galleryFile});
+      state = list as List<Map<String, dynamic>>;
+      return;
+    }
+    state = [
+      ...state,
+      {'galleryFile': galleryFile}
+    ];
+  }
+
+  void saveStorageFile({required File? storageFile}) {
+    if (state.contains('storageFile')) {
+      final list = [];
+      state.map((e) {
+        if (!e.containsKey('storageFile')) list.add(e);
+      });
+      list.add({'storageFile': storageFile});
+      state = list as List<Map<String, dynamic>>;
+      return;
+    }
+    state = [
+      ...state,
+      {'storageFile': storageFile}
+    ];
   }
 
   void saveDescription({String? description}) {

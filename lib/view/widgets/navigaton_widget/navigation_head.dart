@@ -17,7 +17,7 @@ class NavigationIcon extends StatelessWidget {
               style: isCurrent
                   ? Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: AppColor.kPrimaryColor,
+                        color: AppColor.kPrimaryButtonColor,
                       )
                   : Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w700,
@@ -29,8 +29,8 @@ class NavigationIcon extends StatelessWidget {
               ? Container(
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   width: 25,
-                  decoration:
-                      BoxDecoration(border: Border.all(width: 1.5, color: AppColor.kPrimaryColor)),
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.5, color: AppColor.kPrimaryButtonColor)),
                 )
               : const SizedBox()
         ],

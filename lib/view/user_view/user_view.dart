@@ -20,7 +20,7 @@ class UserView extends ConsumerWidget {
             child: Text('User Information'),
           ),
           SymmetricButton(
-            color: AppColor.kPrimaryColor,
+            color: AppColor.kPrimaryButtonColor,
             text: 'Logout',
             onPressed: () {
               log('log user out');

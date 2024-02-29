@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -37,6 +39,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   String _project = customerProject.first;
   String _selectedMaterial = _materials.first;
   File? _file;
+  bool _isStorageSource = false;
 
   @override
   void initState() {
@@ -92,22 +95,24 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               IconButton(
                 icon: const Icon(Icons.camera_alt, size: 75),
                 onPressed: () async {
-                  PermissionStatus permission = await Permission.camera.request();
-                  if (!permission.isGranted) {
-                    await Permission.storage.request();
-                  }
-                  if (permission.isGranted || permission.isDenied) {
-                    final image = await Utilits.pickImageFromCamera();
-                    if (image != null) {
-                      setState(() => _file = image);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(' Bild ausgewählt')),
-                      );
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(content: Text('kein Bild ausgewählt')),
-                      //   );
-                    }
+                  final image = await Utilits.pickImageFromCamera(context);
+                  if (image != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          ' Bild ausgewählt',
+                          style: TextStyle(
+                            color: AppColor.kPrimaryButtonColor,
+                          ),
+                        ),
+                        backgroundColor: AppColor.kPrimaryButtonColor,
+                      ),
+                    );
+                    setState(() {
+                      _file = image;
+                      _isStorageSource = false;
+                    });
+                    // }
                   }
                 },
               ),
@@ -120,27 +125,16 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               IconButton(
                 icon: const Icon(Icons.image, size: 70),
                 onPressed: () async {
-                  // TODO: implemetns plugin settings in AndroidManifest and Podfile in Ios
-                  PermissionStatus permission = await Permission.storage.request();
-                  if (!permission.isGranted) {
-                    await Permission.storage.request();
+                  final image = await Utilits.pickImageFromGalery(context);
+                  if (image != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text(' Bild ausgewählt')),
+                    );
+                    setState(() {
+                      _file = image;
+                      _isStorageSource = true;
+                    });
                   }
-                  if (permission.isGranted || permission.isDenied) {
-                    final image = await Utilits.pickImageFromGalery();
-                    if (image != null) {
-                      setState(() => _file = image);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text(' Bild ausgewählt')),
-                      );
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(content: Text('kein Bild ausgewählt')),
-                      //   );
-                    }
-                  }
-
-                  final image = await Utilits.pickImageFromGalery();
-                  if (image != null) setState(() => _file = image);
                 },
               ),
             ],
@@ -227,10 +221,22 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
-        color: AppColor.kPrimaryColor,
+        color: AppColor.kPrimaryButtonColor,
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-        onPressed: () {},
+        onPressed: () {
+          if (_file != null) {
+            if (_isStorageSource) {
+              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+            } else {
+              if (_file != null) {
+                ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+              }
+            }
+          }
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Success')));
+          ref.read(dokuViewProvider.notifier).state = DokuViews.timeEntry;
+        },
       ),
     );
   }
@@ -322,7 +328,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   Widget _addMoreMaterial() {
     return Row(
       children: [
-        SymmetricButton(color: AppColor.kPrimaryColor, text: '+'),
+        SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
       ],
     );
   }
