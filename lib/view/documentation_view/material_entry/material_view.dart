@@ -23,6 +23,18 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
+  String _unit = _units.first;
+  static final _durationSteps = List.generate(20, (index) {
+    return index * 0.5;
+  });
+  double _duration = _durationSteps.first;
+  static const _units = [
+    'Stk.',
+    'CM',
+    'KG',
+    'Liter',
+    'Meter',
+  ];
   static const customerProject = [
     ' Wählen',
     ' Koch / Fenster Montage',
@@ -65,6 +77,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             _buildCustomerProjectField(),
             _buildMaterialField(),
             _buildAmountPriceFields(),
+
             _buildChooseMedai(),
             // const SizedBox(height: 10),
             _submitInput(),
@@ -146,73 +159,185 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   Widget _buildAmountPriceFields() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SmallLabelInputWidget(
-              label: 'MENGE',
-              child: SizedBox(
-                height: 35,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  autofocus: false,
-                  cursorHeight: 20,
-                  textInputAction: TextInputAction.done,
-                  controller: _amountController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColor.kTextfieldBorder,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                            child: Text('MENGE', style: Theme.of(context).textTheme.labelMedium),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: SizedBox(
+                              width: 50,
+                              height: 30,
+                              child: DropdownButton(
+                                underline: const SizedBox(),
+                                isExpanded: true,
+                                value: _unit,
+                                items: _units
+                                    .map(
+                                      (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            e,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .copyWith(color: AppColor.kPrimary),
+                                          )),
+                                    )
+                                    .toList(),
+                                onChanged: (e) {
+                                  setState(() => _unit = e!);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColor.kBlue),
-                    ),
-                  ),
-                  onChanged: (value) => setState(
-                    () => _amountController.text = value,
-                  ),
-                ),
-              ),
-            ),
-            SmallLabelInputWidget(
-              label: 'SUMME',
-              child: SizedBox(
-                height: 35,
-                child: TextField(
-                  keyboardType: TextInputType.datetime,
-                  autofocus: false,
-                  cursorHeight: 20,
-                  textInputAction: TextInputAction.done,
-                  controller: _summeryController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColor.kTextfieldBorder,
+                    SizedBox(
+                      height: 40,
+                      width: 150,
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        cursorHeight: 20,
+                        textInputAction: TextInputAction.done,
+                        controller: _amountController,
+                        decoration: InputDecoration(
+                          hintText: 'MENGE',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(color: AppColor.kTextfieldBorder),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColor.kTextfieldBorder,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: AppColor.kBlue),
+                          ),
+                        ),
+                        onChanged: (value) => setState(
+                          () => _amountController.text = value,
+                        ),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColor.kBlue),
-                    ),
-                  ),
-                  onChanged: (value) => setState(() {
-                    _summeryController.text = value;
-                  }),
+                  ],
                 ),
-              ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                      child: Text(
+                        'SUMME',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 150,
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        cursorHeight: 20,
+                        textInputAction: TextInputAction.done,
+                        controller: _summeryController,
+                        decoration: InputDecoration(
+                          hintText: 'SUMME €',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(color: AppColor.kTextfieldBorder),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColor.kTextfieldBorder,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: AppColor.kBlue),
+                          ),
+                        ),
+                        onChanged: (value) => setState(
+                          () {
+                            _summeryController.text = value;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+            SizedBox(
+              width: 400,
+              height: 35,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text('Geschätze Dauer'),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    // height: 100,
+                    child: DropdownButton(
+                        isExpanded: true,
+                        value: _duration,
+                        items: _durationSteps.map(
+                          (e) {
+                            final x =
+                                '${e.toString().split('.').first},${e.toString().split('.').last}';
+                            log(x.toString());
+                            // String value = '';
+                            // if (e.) {
+                            //   final whole = (e / 2).toStringAsFixed(0);
+                            //   value = '$whole,5';
+                            // } else {
+                            //   value = (e ~/ 2).toString();
+                            // }
+
+                            return DropdownMenuItem(
+                              value: e,
+                              child: Text(e.toString()),
+                            );
+                          },
+                        ).toList(),
+                        onChanged: (e) => setState(() {
+                              log(e.toString());
+                              _duration = e!;
+                            })),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       );
@@ -234,7 +359,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               }
             }
           }
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Success')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Success')));
           ref.read(dokuViewProvider.notifier).state = DokuViews.timeEntry;
         },
       ),
@@ -287,7 +412,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             value: _selectedMaterial,
             items: _materials
                 .map(
-                  (e) => DropdownMenuItem(value: e, child: Text(e)),
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
                 )
                 .toList(),
             onChanged: (e) {

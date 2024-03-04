@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/apptheme/app_theme.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 
 void main() {
@@ -16,14 +18,17 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return MaterialApp(
       themeMode: isDark == null
           ? ThemeMode.system
           : isDark!
               ? ThemeMode.dark
               : ThemeMode.light,
-      darkTheme: ThemeData.dark(),
-      theme: ThemeData.light(),
+      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(),
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,
