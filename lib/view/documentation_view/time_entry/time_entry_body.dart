@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/execution/execution.dart';
+import 'package:handwerker_app/models/time_entry/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
@@ -23,14 +22,14 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _startController = TextEditingController();
   DateTime? selecedDate;
   TimeOfDay? selectedTime;
-  static const customerProject = [
+  static const _customerProject = [
     'Wählen',
     'Koch / Fenster Montage',
     'Meier/ Bad verfliesen',
     'Berger/ Putzen',
   ];
   static const services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
-  String _project = customerProject.first;
+  String _project = _customerProject.first;
   String _executedService = services.first;
   @override
   void initState() {
@@ -47,8 +46,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
 
   @override
   Widget build(BuildContext context) {
-    final collection = ref.read(dokuProvider.notifier);
-    final language = ref.watch(languangeProvider);
+    final language = ref.read(languangeProvider);
+    final collectionNotifier = ref.watch(dokuProvider.notifier);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
@@ -60,7 +59,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           _buildServiceButton(),
           _buildDescription(),
           const SizedBox(height: 46),
-          _submitInput(collection, language),
+          _submitInput(collectionNotifier, language),
           SizedBox(
             child: Image.asset(
               'assets/images/img_techtool.png',
@@ -93,20 +92,15 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               ),
             );
           } else {
-            final execution = _createExecution();
-            collection.saveStart(start: execution.start);
-            collection.saveDescription(description: execution.descritpion);
-            collection.saveProject(project: execution.project);
-            collection.saveEnd(end: execution.end);
-            collection.saveService(service: execution.service);
-            collection.saveUser(users: execution.users);
+            final entry = _createTimeEntry();
+            collection.addTimeEntry(entry);
           }
         },
       ),
     );
   }
 
-  Execution _createExecution() {
+  TimeEntry _createTimeEntry() {
     final startTime = _startController.text.split(':').map((e) => int.parse(e)).toList();
     final startAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
     final start = DateTime(
@@ -124,13 +118,15 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
       endTime.first,
       endTime.last,
     );
-    return Execution(
-      project: _project,
-      start: start,
-      end: end,
-      descritpion:
-          'Dauer: ${_durationController.text.split('m').first}min. ${_descriptionController.text}',
+    // TODO: update with Api call for correct ProjectID
+    return TimeEntry(
+      date: start,
+      duration: int.tryParse(_durationController.text.split('m').first),
+      description: _descriptionController.text,
+      endTime: end,
+      projectID: _project,
       service: _executedService,
+      startTime: start,
     );
   }
 
@@ -149,7 +145,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             underline: const SizedBox(),
             isExpanded: true,
             value: _project,
-            items: customerProject
+            items: _customerProject
                 .map(
                   (e) => DropdownMenuItem(value: e, child: Text(e)),
                 )

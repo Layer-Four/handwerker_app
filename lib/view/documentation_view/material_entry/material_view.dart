@@ -24,10 +24,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
   String _unit = _units.first;
-  static final _durationSteps = List.generate(20, (index) {
-    return index * 0.5;
+  static final _durationSteps = List.generate(25, (index) {
+    if (index == 0) return 'in Stunden';
+    final x = (index * 0.5).toString().split('.');
+    return '${x.first},${x.last} h.';
   });
-  double _duration = _durationSteps.first;
+  String _duration = _durationSteps.first;
   static const _units = [
     'Stk.',
     'CM',
@@ -35,7 +37,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     'Liter',
     'Meter',
   ];
-  static const customerProject = [
+  static const _customerProject = [
     ' Wählen',
     ' Koch / Fenster Montage',
     ' Meier/ Bad verfliesen',
@@ -44,11 +46,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   static const _materials = [
     ' Wählen',
     ' Tür',
+    ' Fliesen',
     ' PU-Schaum',
     ' Schrauben',
     ' Latte',
   ];
-  String _project = customerProject.first;
+  String _project = _customerProject.first;
   String _selectedMaterial = _materials.first;
   File? _file;
   bool _isStorageSource = false;
@@ -61,12 +64,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   @override
   Widget build(BuildContext context) {
     if (mounted) {
-      final savedData = ref.watch(dokuProvider);
-      if (savedData.isNotEmpty) {
-        final startDate =
-            savedData.where((element) => element.containsKey('start')).first.values.toList();
-        log(startDate.toString());
-      }
+      _preFillPage();
     }
     return SingleChildScrollView(
       child: Padding(
@@ -88,6 +86,27 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       ),
     );
+  }
+
+  _preFillPage() {
+    // final collection = ref.watch(dokuProvider);
+    // if (collection.contains('start')) {
+    //   final start = collection.where(
+    //     (element) => element.keys.contains('start'),
+    //   );
+    //   final day = DateTime.tryParse(start.first.values.first);
+    //   if (day != null) {
+    //     setState(() => _dayPickerController.text = '${day.day}.${day.month}.${day.year}');
+    //   }
+    //   log('material log ${_dayPickerController.text} TextEdingController');
+    //   if (collection.contains('project')) {
+    //     final searched = collection.where(
+    //       (element) => element.keys.contains('project'),
+    //     );
+    //     _project =
+    //         _customerProject.where((element) => element == searched.first.values.first) as String;
+    //   }
+    // }
   }
 
   Container _buildChooseMedai() {
@@ -297,43 +316,33 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               ],
             ),
             SizedBox(
-              width: 400,
+              width: 500,
               height: 35,
               child: Row(
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Text('Geschätze Dauer'),
                   ),
                   SizedBox(
-                    width: 100,
-                    // height: 100,
+                    width: 150,
                     child: DropdownButton(
                         isExpanded: true,
                         value: _duration,
-                        items: _durationSteps.map(
-                          (e) {
-                            final x =
-                                '${e.toString().split('.').first},${e.toString().split('.').last}';
-                            log(x.toString());
-                            // String value = '';
-                            // if (e.) {
-                            //   final whole = (e / 2).toStringAsFixed(0);
-                            //   value = '$whole,5';
-                            // } else {
-                            //   value = (e ~/ 2).toString();
-                            // }
-
-                            return DropdownMenuItem(
-                              value: e,
-                              child: Text(e.toString()),
-                            );
-                          },
-                        ).toList(),
-                        onChanged: (e) => setState(() {
-                              log(e.toString());
-                              _duration = e!;
-                            })),
+                        items: _durationSteps
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (e) => setState(
+                              () => _duration = e!,
+                            )),
                   ),
                 ],
               ),
@@ -381,7 +390,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             underline: const SizedBox(),
             isExpanded: true,
             value: _project,
-            items: customerProject
+            items: _customerProject
                 .map(
                   (e) => DropdownMenuItem(value: e, child: Text(e)),
                 )
@@ -453,11 +462,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ));
   }
 
-  Widget _addMoreMaterial() {
-    return Row(
-      children: [
-        SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
-      ],
-    );
-  }
+  // Widget _addMoreMaterial() {
+  //   return Row(
+  //     children: [
+  //       SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
+  //     ],
+  //   );
+  // }
 }

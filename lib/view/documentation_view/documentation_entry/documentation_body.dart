@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -42,12 +41,8 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   Widget build(BuildContext context) {
     if (mounted) {
       final savedData = ref.watch(dokuProvider);
-      if (savedData.isNotEmpty) {
-        final startDate =
-            savedData.where((element) => element.containsKey('start')).first.values.toList();
-        log(startDate.toString());
-      }
     }
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
@@ -188,14 +183,14 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
-          switch (_isStorageSource) {
-            case true:
-              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-              break;
-            default:
-              ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-              break;
-          }
+          // switch (_isStorageSource) {
+          //   case true:
+          //     ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+          //     break;
+          //   default:
+          //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+          //     break;
+          // }
 
           // if (_startController.text.isEmpty || _endController.text.isEmpty) {
           //   return ScaffoldMessenger.of(context).showSnackBar(

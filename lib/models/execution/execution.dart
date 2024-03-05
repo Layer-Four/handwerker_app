@@ -7,12 +7,17 @@ part 'execution.g.dart';
 class Execution with _$Execution {
   const factory Execution({
     String? executionID,
+    String? projectID,
+    required DateTime date,
     required String project,
-    required DateTime start,
-    required DateTime end,
+    required DateTime timeStart,
+    required DateTime timeEnd,
+    DateTime? pasueStart,
+    DateTime? pauseEnd,
+    int? duration,
     String? service,
-    List<String>? consumables,
-    List<String>? users,
+    @Default(<String>[]) List<String?> consumables,
+    @Default(<String>[]) List<String?> usersID,
     String? descritpion,
   }) = _Execution;
 
