@@ -56,18 +56,7 @@ class Utilits {
   static Future<dynamic> askForPermission(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (context) =>
-          // Material(
-          //   child: Card(
-          //     child: Container(
-          //       margin: const EdgeInsets.symmetric(horizontal: 60, vertical: 250),
-          //       padding: const EdgeInsets.all(8),
-          //       decoration: BoxDecoration(
-          //         borderRadius: BorderRadius.circular(12),
-          //         color: AppColor.kWhite,
-          //       ),
-          //       child:
-          CupertinoAlertDialog(
+      builder: (context) => CupertinoAlertDialog(
         title: const Text('Zugriff verweigert'),
         content: const Text(
           'Bitter erlauben sie den Zugriff auf ihr Fotos oder Kamera',
@@ -83,9 +72,6 @@ class Utilits {
             child: const Text('Einstellungen'),
           ),
         ],
-        // ),
-        // ),
-        // ),
       ),
     );
   }

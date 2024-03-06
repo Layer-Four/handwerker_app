@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/models/consumable/consumable.dart';
+import 'package:handwerker_app/models/consumableEntry/consumable_entry.dart';
+import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -20,6 +25,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
   String _unit = _units.first;
+  ConsumeEntry _entry = const ConsumeEntry();
   static final _durationSteps = List.generate(25, (index) {
     if (index == 0) return 'in Stunden';
     final x = (index * 0.5).toString().split('.');
@@ -49,8 +55,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   ];
   String _project = _customerProject.first;
   String _selectedMaterial = _materials.first;
-  File? _file;
-  bool _isStorageSource = false;
 
   @override
   void initState() {
@@ -88,24 +92,26 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   _preFillPage() {
-    // final collection = ref.watch(dokuProvider);
-    // if (collection.contains('start')) {
-    //   final start = collection.where(
-    //     (element) => element.keys.contains('start'),
-    //   );
-    //   final day = DateTime.tryParse(start.first.values.first);
-    //   if (day != null) {
-    //     setState(() => _dayPickerController.text = '${day.day}.${day.month}.${day.year}');
-    //   }
-    //   log('material log ${_dayPickerController.text} TextEdingController');
-    //   if (collection.contains('project')) {
-    //     final searched = collection.where(
-    //       (element) => element.keys.contains('project'),
-    //     );
-    //     _project =
-    //         _customerProject.where((element) => element == searched.first.values.first) as String;
-    //   }
-    // }
+    // TODO: set default time? set default time equal to last time entry?
+    final timeEntry = ref.watch(timeEntryProvider);
+    final project = ref.watch((projectProvider));
+    if (timeEntry.isNotEmpty) {
+      final date = timeEntry.last!.date;
+      setState(() {
+        _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+        _project = timeEntry.last!.projectID ?? _customerProject.first;
+        _entry = _entry.copyWith(createDate: date);
+      });
+    } else {
+      final now = DateTime.now();
+      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+    }
+    if (project.isNotEmpty) {
+      setState(() {
+        _project = _customerProject.firstWhere((element) => element == project.last.name);
+        _entry = _entry.copyWith(project: _project);
+      });
+    }
   }
 
   Container _buildChooseMedai() {
@@ -139,9 +145,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         backgroundColor: AppColor.kPrimaryButtonColor,
                       ),
                     );
+                    final name = '$_project /${DateTime.timestamp()}';
                     setState(() {
-                      _file = image;
-                      _isStorageSource = false;
+                      ref.read(consumableSourceProvider.notifier).state = [
+                        ...ref.watch(consumableSourceProvider),
+                        (name, image),
+                      ];
                     });
                     // }
                   }
@@ -161,9 +170,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text(' Bild ausgewählt')),
                     );
+                    final name = '$_project /${DateTime.timestamp()}';
                     setState(() {
-                      _file = image;
-                      _isStorageSource = true;
+                      ref.read(consumableSourceProvider.notifier).state = [
+                        ...ref.watch(consumableSourceProvider),
+                        (name, image),
+                      ];
                     });
                   }
                 },
@@ -305,6 +317,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         ),
                         onChanged: (value) => setState(
                           () {
+                            _entry = _entry.copyWith(cost: int.tryParse(value));
                             _summeryController.text = value;
                           },
                         ),
@@ -358,17 +371,17 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
-          if (_file != null) {
-            // if (_isStorageSource) {
-            //   ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-            // } else {
-            //   if (_file != null) {
-            //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-            //   }
-            // }
-          }
+          _entry = _entry.copyWith(
+            consumables: [
+              ..._entry.consumables,
+              Consumable(
+                name: _selectedMaterial,
+                amount: int.tryParse(_amountController.text) ?? 1,
+              )
+            ],
+          );
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Success')));
-          ref.read(dokuViewProvider.notifier).state = DokuViews.timeEntry;
+          _selectedMaterial = _materials.first;
         },
       ),
     );
@@ -395,7 +408,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 )
                 .toList(),
             onChanged: (e) {
-              setState(() => _project = e!);
+              setState(() {
+                _project = e!;
+                _entry = _entry.copyWith(project: e);
+              });
             },
           ),
         ),
@@ -427,7 +443,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 )
                 .toList(),
             onChanged: (e) {
-              setState(() => _selectedMaterial = e!);
+              setState(() {
+                _selectedMaterial = e!;
+              });
             },
           ),
         ),
@@ -446,6 +464,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             if (date != null) {
               setState(() {
                 _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                _entry = _entry.copyWith(createDate: date);
               });
             }
           },

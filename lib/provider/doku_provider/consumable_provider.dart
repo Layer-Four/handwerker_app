@@ -1,18 +1,18 @@
 import 'dart:developer';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/models/consumable/consumable.dart';
 
-final projectProvider = NotifierProvider<ProjectNotifer, List<Project>>(() => ProjectNotifer());
+final consumableProvider =
+    NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
 
-class ProjectNotifer extends Notifier<List<Project>> {
+class ConsumableNotifier extends Notifier<List<Consumable>> {
   @override
-  List<Project> build() => [];
-  void addProject(Project project) => state = [...state, project];
+  List<Consumable> build() => [];
+  void addConsumable(Consumable consumable) => state = [...state, consumable];
 
-  // TODO: write request provider for encaplusalted logic
-  void uploadProjectEntry(Project entry) async {
+  void uploadConsumableEntry(Consumable entry) async {
     // * var request = new http.MultipartRequest("POST", url);
     // * request.fields['user'] = 'someone@somewhere.com';
     // * request.files.add(http.MultipartFile.fromPath(

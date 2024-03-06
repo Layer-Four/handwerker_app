@@ -20,7 +20,11 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Project {
+  String? get projectID => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   DateTime get createDate => throw _privateConstructorUsedError;
+  List<String> get dokusPath => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -32,7 +36,12 @@ abstract class $ProjectCopyWith<$Res> {
   factory $ProjectCopyWith(Project value, $Res Function(Project) then) =
       _$ProjectCopyWithImpl<$Res, Project>;
   @useResult
-  $Res call({DateTime createDate});
+  $Res call(
+      {String? projectID,
+      String? name,
+      DateTime createDate,
+      List<String> dokusPath,
+      String? description});
 }
 
 /// @nodoc
@@ -48,13 +57,33 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? projectID = freezed,
+    Object? name = freezed,
     Object? createDate = null,
+    Object? dokusPath = null,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      dokusPath: null == dokusPath
+          ? _value.dokusPath
+          : dokusPath // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -66,7 +95,12 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
       __$$ProjectImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime createDate});
+  $Res call(
+      {String? projectID,
+      String? name,
+      DateTime createDate,
+      List<String> dokusPath,
+      String? description});
 }
 
 /// @nodoc
@@ -80,13 +114,33 @@ class __$$ProjectImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? projectID = freezed,
+    Object? name = freezed,
     Object? createDate = null,
+    Object? dokusPath = null,
+    Object? description = freezed,
   }) {
     return _then(_$ProjectImpl(
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
       createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      dokusPath: null == dokusPath
+          ? _value._dokusPath
+          : dokusPath // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -94,17 +148,38 @@ class __$$ProjectImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ProjectImpl implements _Project {
-  const _$ProjectImpl({required this.createDate});
+  const _$ProjectImpl(
+      {this.projectID,
+      this.name,
+      required this.createDate,
+      final List<String> dokusPath = const <String>[],
+      this.description})
+      : _dokusPath = dokusPath;
 
   factory _$ProjectImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectImplFromJson(json);
 
   @override
+  final String? projectID;
+  @override
+  final String? name;
+  @override
   final DateTime createDate;
+  final List<String> _dokusPath;
+  @override
+  @JsonKey()
+  List<String> get dokusPath {
+    if (_dokusPath is EqualUnmodifiableListView) return _dokusPath;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_dokusPath);
+  }
+
+  @override
+  final String? description;
 
   @override
   String toString() {
-    return 'Project(createDate: $createDate)';
+    return 'Project(projectID: $projectID, name: $name, createDate: $createDate, dokusPath: $dokusPath, description: $description)';
   }
 
   @override
@@ -112,13 +187,21 @@ class _$ProjectImpl implements _Project {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProjectImpl &&
+            (identical(other.projectID, projectID) ||
+                other.projectID == projectID) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.createDate, createDate) ||
-                other.createDate == createDate));
+                other.createDate == createDate) &&
+            const DeepCollectionEquality()
+                .equals(other._dokusPath, _dokusPath) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, createDate);
+  int get hashCode => Object.hash(runtimeType, projectID, name, createDate,
+      const DeepCollectionEquality().hash(_dokusPath), description);
 
   @JsonKey(ignore: true)
   @override
@@ -135,12 +218,25 @@ class _$ProjectImpl implements _Project {
 }
 
 abstract class _Project implements Project {
-  const factory _Project({required final DateTime createDate}) = _$ProjectImpl;
+  const factory _Project(
+      {final String? projectID,
+      final String? name,
+      required final DateTime createDate,
+      final List<String> dokusPath,
+      final String? description}) = _$ProjectImpl;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$ProjectImpl.fromJson;
 
   @override
+  String? get projectID;
+  @override
+  String? get name;
+  @override
   DateTime get createDate;
+  @override
+  List<String> get dokusPath;
+  @override
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$ProjectImplCopyWith<_$ProjectImpl> get copyWith =>

@@ -25,10 +25,10 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _startController = TextEditingController();
   TimeOfDay? selectedTime;
   static const _customerProject = [
-    'Wählen',
-    'Koch / Fenster Montage',
-    'Meier/ Bad verfliesen',
-    'Berger/ Putzen',
+    ' Wählen',
+    ' Koch / Fenster Montage',
+    ' Meier/ Bad verfliesen',
+    ' Berger/ Putzen',
   ];
   static const _services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
   String _project = _customerProject.first;
@@ -343,7 +343,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     final hours = sum ~/ 60;
     final minutes = sum % 60;
     // TODO: exclude pause?
-    _durationController.text = '$sum min. $hours:${minutes < 10 ? '0$minutes' : minutes} h.';
+    _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
   }
 
   Padding _buildDescription(Dictionary language) {

@@ -1,14 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -16,10 +19,10 @@ class ProjectBody extends ConsumerStatefulWidget {
   const ProjectBody({super.key});
 
   @override
-  ConsumerState<ProjectBody> createState() => _DokumentationBodyState();
+  ConsumerState<ProjectBody> createState() => _ProjectBodyState();
 }
 
-class _DokumentationBodyState extends ConsumerState<ProjectBody> {
+class _ProjectBodyState extends ConsumerState<ProjectBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   Project _entry = Project(createDate: DateTime.now());
@@ -29,11 +32,7 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  // static const services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
   String _project = customerProject.first;
-  // String _executedService = services.first;
-  File? _file;
-  bool _isStorageSource = true;
 
   @override
   void initState() {
@@ -52,10 +51,13 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
         _dayPickerController.text =
             '${lastTimeEntry!.date.day}.${lastTimeEntry.date.month}.${lastTimeEntry.date.year}';
         _entry = _entry.copyWith(createDate: lastTimeEntry.date);
-        _project = customerProject.firstWhere(
-          (element) => element == lastTimeEntry.projectID,
-        );
+        final i = customerProject.indexWhere((e) => e == lastTimeEntry.projectID);
+        setState(() {
+          _project = customerProject[i];
+          _entry = _entry.copyWith(createDate: lastTimeEntry.date, name: _project);
+        });
       }
+      log(_entry.toJson().toString());
     }
     final lanugage = ref.watch(languangeProvider);
     return SingleChildScrollView(
@@ -109,14 +111,18 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
                             color: AppColor.kPrimaryButtonColor,
                           ),
                         ),
-                        backgroundColor: AppColor.kPrimaryButtonColor,
+                        backgroundColor: AppColor.kPrimary,
                       ),
                     );
+                    final filename = '$_project /${DateTime.timestamp()}';
                     setState(() {
-                      _file = image;
-                      _isStorageSource = false;
+                      _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
                     });
-                    // }
+                    ref.read(projectSourceProvider.notifier).state = [
+                      ...ref.watch(projectSourceProvider),
+                      (filename, image),
+                    ];
+                    log(ref.watch(projectSourceProvider)[0].$1);
                   }
                 },
               ),
@@ -142,10 +148,15 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
                         backgroundColor: AppColor.kPrimaryButtonColor,
                       ),
                     );
+                    final filename = '$_project /${DateTime.timestamp()}';
                     setState(() {
-                      _file = image;
-                      _isStorageSource = false;
+                      _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                      ref.read(projectSourceProvider.notifier).state = [
+                        ...ref.watch(projectSourceProvider),
+                        (filename, image),
+                      ];
                     });
+                    log(ref.watch(projectSourceProvider).length.toString());
                     // }
                   }
                 },
@@ -187,6 +198,10 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
                 borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
               ),
             ),
+            onChanged: (value) {
+              _descriptionController.text = value;
+              _entry = _entry.copyWith(description: value);
+            },
           ),
         ),
       ),
@@ -201,36 +216,24 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
-          // switch (_isStorageSource) {
-          //   case true:
-          //     ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-          //     break;
-          //   default:
-          //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-          //     break;
-          // }
-
-          // if (_startController.text.isEmpty || _endController.text.isEmpty) {
-          //   return ScaffoldMessenger.of(context).showSnackBar(
-          //     const SnackBar(
-          //       content: Text('Bitte gib Start und eine Endzeit an'),
-          //     ),
-          //   );
-          // } else if (_project == 'Wählen' || _executedService == 'Wählen') {
-          //   return ScaffoldMessenger.of(context).showSnackBar(
-          //     const SnackBar(
-          //       content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
-          //     ),
-          //   );
-          // } else {
-          //   final execution = _createExecution();
-          //   collection.saveStart(start: execution.start);
-          //   collection.saveDescription(description: execution.descritpion);
-          //   collection.saveProject(project: execution.project);
-          //   collection.saveEnd(end: execution.end);
-          //   collection.saveService(service: execution.service);
-          //   collection.saveUser(users: execution.users);
-          // }
+          if (_dayPickerController.text.isEmpty) {
+            return ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bitte wähle ein anderes Datum'),
+              ),
+            );
+          } else if (_project == 'Wählen') {
+            return ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bitte wähle einen Kunde und Projekt'),
+              ),
+            );
+          }
+          if (_dayPickerController.text.isNotEmpty && _project != 'Wählen') {
+            log(_entry.toJson().toString());
+            ref.read(projectProvider.notifier).addProject(_entry);
+            ref.read(dokuViewProvider.notifier).state = DokuViews.consumables;
+          }
         },
       ),
     );
@@ -257,7 +260,10 @@ class _DokumentationBodyState extends ConsumerState<ProjectBody> {
                 )
                 .toList(),
             onChanged: (e) {
-              setState(() => _project = e!);
+              setState(() {
+                _project = e!;
+                _entry = _entry.copyWith(name: e);
+              });
             },
           ),
         ),
