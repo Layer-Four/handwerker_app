@@ -76,7 +76,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             // const SizedBox(height: 10),
             _submitInput(),
             SizedBox(
-              child: Image.asset('assets/images/img_techtool.png', height: 70),
+              height: 70,
+              child: Center(
+                child: Image.asset('assets/images/img_techtool.png', height: 20),
+              ),
             ),
           ],
         ),

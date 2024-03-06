@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/time_entry/time_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -22,7 +23,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
-  DateTime? selecedDate;
   TimeOfDay? selectedTime;
   static const _customerProject = [
     'Wählen',
@@ -52,7 +52,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   @override
   Widget build(BuildContext context) {
     final language = ref.read(languangeProvider);
-    final collectionNotifier = ref.watch(dokuProvider.notifier);
+    final collectionNotifier = ref.watch(timeEntryProvider.notifier);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
@@ -66,9 +66,9 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           const SizedBox(height: 46),
           _submitInput(collectionNotifier, language),
           SizedBox(
-            child: Image.asset(
-              'assets/images/img_techtool.png',
-              height: 70,
+            height: 70,
+            child: Center(
+              child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
           ),
         ],
@@ -76,7 +76,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     );
   }
 
-  Padding _submitInput(InputNotifier collection, Dictionary language) {
+  Padding _submitInput(TimeEntryNotifier collection, Dictionary language) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
@@ -98,7 +98,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             );
           } else {
             collection.addTimeEntry(_entry);
-            log('länge zeiteintrag ${ref.watch(dokuProvider).length}');
+            log('länge zeiteintrag ${ref.watch(timeEntryProvider).length}');
+            ref.read(dokuViewProvider.notifier).state = DokuViews.project;
             setState(() {
               _startController.clear();
               _descriptionController.clear();
@@ -289,7 +290,13 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                     ),
                   ),
                   onTap: () async {
-                    final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(
+                        hour: int.tryParse(_endController.text.split(':').first) ?? 16,
+                        minute: int.tryParse(_endController.text.split(':').last) ?? 30,
+                      ),
+                    );
                     if (time != null) {
                       setState(() {
                         _entry = _entry.copyWith(

@@ -6,20 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
-class DokumentationBody extends ConsumerStatefulWidget {
-  const DokumentationBody({super.key});
+class ProjectBody extends ConsumerStatefulWidget {
+  const ProjectBody({super.key});
 
   @override
-  ConsumerState<DokumentationBody> createState() => _DokumentationBodyState();
+  ConsumerState<ProjectBody> createState() => _DokumentationBodyState();
 }
 
-class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
+class _DokumentationBodyState extends ConsumerState<ProjectBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  Project _entry = Project(createDate: DateTime.now());
   static const customerProject = [
     ' Wählen',
     ' Koch / Fenster Montage',
@@ -35,12 +38,24 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
   }
 
   @override
   Widget build(BuildContext context) {
     if (mounted) {
-      // final savedData = ref.watch(dokuProvider);
+      // TODO: show the date from last TimeEntry, or default the current day?
+      final timeEntry = ref.watch(timeEntryProvider);
+      if (timeEntry.isNotEmpty && timeEntry.last != null) {
+        final lastTimeEntry = timeEntry.last;
+        _dayPickerController.text =
+            '${lastTimeEntry!.date.day}.${lastTimeEntry.date.month}.${lastTimeEntry.date.year}';
+        _entry = _entry.copyWith(createDate: lastTimeEntry.date);
+        _project = customerProject.firstWhere(
+          (element) => element == lastTimeEntry.projectID,
+        );
+      }
     }
     final lanugage = ref.watch(languangeProvider);
     return SingleChildScrollView(
@@ -55,7 +70,10 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
             const SizedBox(height: 18),
             _submitInput(),
             SizedBox(
-              child: Image.asset('assets/images/img_techtool.png', height: 70),
+              height: 70,
+              child: Center(
+                child: Image.asset('assets/images/img_techtool.png', height: 20),
+              ),
             ),
           ],
         ),
@@ -258,6 +276,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
             if (date != null) {
               setState(() {
                 _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                _entry = _entry.copyWith(createDate: date);
               });
             }
           },
