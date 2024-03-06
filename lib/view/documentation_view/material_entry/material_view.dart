@@ -1,13 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -360,13 +356,13 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           if (_file != null) {
-            if (_isStorageSource) {
-              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-            } else {
-              if (_file != null) {
-                ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-              }
-            }
+            // if (_isStorageSource) {
+            //   ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+            // } else {
+            //   if (_file != null) {
+            //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+            //   }
+            // }
           }
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Success')));
           ref.read(dokuViewProvider.notifier).state = DokuViews.timeEntry;

@@ -6,6 +6,9 @@ import 'package:handwerker_app/routes/app_routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
   runApp(const ProviderScope(
     child: MainApp(),
   ));
@@ -18,9 +21,6 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     return MaterialApp(
       themeMode: isDark == null
           ? ThemeMode.system

@@ -6,6 +6,7 @@ abstract class Dictionary {
   String get enterUserName;
   String get enterPassword;
   String get date;
+  String get description;
   String get start;
   String get end;
   String get dokumentation;
@@ -15,9 +16,17 @@ abstract class Dictionary {
   String get forgetPassword;
   String get createPassword;
   String get createEntry;
+  String get customerProject;
+  String get service;
 }
 
 class GermanLanguage implements Dictionary {
+  @override
+  String get customerProject => 'KUNDE/PROJEKT';
+
+  @override
+  String get description => 'BESCHREIBUNG';
+
   @override
   String get enterUserName => 'Bitte gib dein Nutzternamen ein';
 
@@ -53,52 +62,55 @@ class GermanLanguage implements Dictionary {
 
   @override
   String get createEntry => 'Eintrag Erstellen';
+
+  @override
+  String get service => 'LEISTUNG';
 }
 
 class EnglishLanguage extends Dictionary {
   @override
-  String get enterUserName => throw 'Please enter your username';
+  String get customerProject => 'COSTUMER/PROJECT';
 
   @override
-  // TODO: implement createPassword
-  String get createPassword => throw UnimplementedError();
+  String get description => 'DESCRIPTION';
 
   @override
-  // TODO: implement date
+  String get enterUserName => 'Please enter your username';
+
+  @override
+  String get createPassword => 'Create new password';
+
+  @override
   String get date => 'DATE';
 
   @override
-  // TODO: implement dokumentation
-  String get dokumentation => throw UnimplementedError();
+  String get dokumentation => 'DOCUMENTATION';
 
   @override
-  // TODO: implement end
-  String get end => throw UnimplementedError();
+  String get end => 'END';
 
   @override
-  // TODO: implement enterPassword
-  String get enterPassword => throw UnimplementedError();
+  String get enterPassword => 'Password';
 
   @override
-  // TODO: implement forgetPassword
-  String get forgetPassword => throw UnimplementedError();
+  String get forgetPassword => 'Forgot password';
 
   @override
-  // TODO: implement login
-  String get login => throw UnimplementedError();
+  String get login => 'LOGIN';
 
   @override
-  // TODO: implement logout
-  String get logout => throw UnimplementedError();
+  //
+  String get logout => 'LOGOUT';
 
   @override
-  // TODO: implement start
-  String get start => throw UnimplementedError();
+  String get start => 'BEGIN';
 
   @override
-  // TODO: implement duration
   String get duration => 'DURATIOM';
 
   @override
-  String get createEntry => 'new entry';
+  String get createEntry => 'New entry';
+
+  @override
+  String get service => 'SERVICE';
 }
