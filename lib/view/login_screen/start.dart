@@ -17,7 +17,7 @@ class _StartViewState extends State<StartView> {
     return Scaffold(
       body: BackgroundWidget(
         body: Padding(
-          padding: const EdgeInsets.only(top: 60, left: 0, right: 0),
+          padding: const EdgeInsets.only(top: 44, left: 0, right: 0),
           child: Column(
             children: [
               Flexible(

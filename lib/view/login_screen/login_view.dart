@@ -18,8 +18,9 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     TextEditingController emailCon = TextEditingController();
     TextEditingController passCon = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+    GlobalKey<FormState> formstate = GlobalKey();
 
+    bool isOTP = true;
     return Scaffold(
       body: BackgroundWidget(
           body: Padding(
@@ -45,29 +46,44 @@ class _LoginViewState extends State<LoginView> {
                     height: 15,
                   ),
                   Form(
-                    key: formKey,
+                    key: formstate,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "E-Mail",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColor.kWhilteWOpacity, fontWeight: FontWeight.bold),
+                          "Nutzername",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: AppColor.kWhilteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
                         ),
                         UserAndPasswordField(
                           controller: emailCon,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            // Additional validation logic if needed
+                            return null; // Return null if the value is valid
+                          },
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColor.kWhilteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: AppColor.kWhilteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -86,16 +102,13 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style:
-                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    color: AppColor.kWhite,
+                                    fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ForgetScreen(),
-                                  ),
-                                );
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -109,7 +122,18 @@ class _LoginViewState extends State<LoginView> {
                             height: 35,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+                                if (formstate.currentState!.validate()) {
+                                  print("valid");
+                                } else {
+                                  print("Not Valid");
+                                }
+                                if (isOTP) {
+                                  Navigator.of(context)
+                                      .pushNamed(AppRoutes.setPasswordScreen);
+                                } else {
+                                  Navigator.of(context).pushReplacementNamed(
+                                      AppRoutes.viewScreen);
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -119,7 +143,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                               child: const Center(
                                 child: Text(
-                                  "Anmedlen",
+                                  "Anmelden",
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),

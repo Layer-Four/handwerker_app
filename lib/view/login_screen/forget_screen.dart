@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/main.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
@@ -24,20 +26,44 @@ class _ForgetScreenState extends ConsumerState<ForgetScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Positioned(
+                    child: Transform.scale(
+                      scale: 0.6,
+                      child: Switch(
+                        value: ref.watch(themeProvider),
+                        onChanged: (_) {
+                          ref.read(themeProvider.notifier).state =
+                              !ref.watch(themeProvider);
+                        },
+                        activeColor: AppColor
+                            .kPrimaryButtonColor, // Specify active color
+                        inactiveThumbColor:
+                            Colors.grey, // Specify inactive thumb color
+                        inactiveTrackColor: Colors.grey.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                ),
                 const LogoApp(),
                 const SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "Reset Password,",
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
-                ),
-                Text(
-                  "Please Enter Your Email",
+                  "bitte benachrichtige den Adminstrator",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                UserAndPasswordField(
-                  controller: emailCon,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                        color: Colors.black, width: 2), // Add border here
+                  ),
+                  child: UserAndPasswordField(
+                    hintText: 'Nutzername',
+                    controller: emailCon,
+                  ),
                 ),
                 const SizedBox(
                   height: 16,
@@ -45,13 +71,14 @@ class _ForgetScreenState extends ConsumerState<ForgetScreen> {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     backgroundColor: AppColor.kPrimaryButtonColor,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(10),
                   ),
                   child: Center(
                     child: Text(
-                      "Send Email".toUpperCase(),
+                      "Senden".toUpperCase(),
                       style: const TextStyle(color: Colors.black),
                     ),
                   ),
