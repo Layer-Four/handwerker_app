@@ -247,16 +247,16 @@ class _PasswordViewState extends State<PasswordView> {
       // backgroundColor: Color.fromARGB(255, 247, 247, 247),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(33.0),
+          padding: const EdgeInsets.only(bottom: 40.0, left: 33, right: 33),
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 children: [
-                  const LogoApp(),
-                  const SizedBox(
-                    height: 9,
-                  ),
+                  LogoApp(),
+                  // const SizedBox(
+                  //   height: 9,
+                  // ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -294,7 +294,7 @@ class _PasswordViewState extends State<PasswordView> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Altes Passwort",
+                      "Neues Passwort",
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -324,7 +324,7 @@ class _PasswordViewState extends State<PasswordView> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Passwort Widerholen",
+                      "Passwort widerholen",
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
@@ -368,28 +368,32 @@ class _PasswordViewState extends State<PasswordView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 15,
-                            ),
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:
-                                  isPassword8Char ? Colors.green : Colors.white,
-                              border: Border.all(
-                                  color: Color.fromARGB(255, 189, 189, 189)),
-                            ),
+                          Row(
+                            children: [
+                              Container(
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                                height: 20,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isPassword8Char
+                                      ? Colors.green
+                                      : Colors.white,
+                                  border: Border.all(
+                                      color:
+                                          Color.fromARGB(255, 189, 189, 189)),
+                                ),
+                              ),
+                              SizedBox(width: 11),
+                              Text("mindestens 8 Zeichen"),
+                            ],
                           ),
-                          SizedBox(
-                            width: 11,
-                          ),
-                          Text("mindestens 8"),
                           const SizedBox(
-                            height: 15,
+                            height: 9,
                           ),
                           Row(
                             children: [
@@ -416,10 +420,13 @@ class _PasswordViewState extends State<PasswordView> {
                                   SizedBox(
                                     width: 11,
                                   ),
-                                  Text("mindenstens 1 "),
+                                  Text("mindenstens 1 Nummer"),
                                 ],
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                            height: 9,
                           ),
                           Row(
                             children: [
@@ -444,18 +451,12 @@ class _PasswordViewState extends State<PasswordView> {
                               SizedBox(
                                 width: 11,
                               ),
-                              Text("Uppercase"),
+                              Text("Großbuchstabe"),
                             ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                          const SizedBox(
+                            height: 11,
+                          ),
                           Row(
                             children: [
                               Container(
@@ -479,11 +480,11 @@ class _PasswordViewState extends State<PasswordView> {
                               SizedBox(
                                 width: 11,
                               ),
-                              Text("Lowercase "),
+                              Text("Kleinbuchstabe "),
                             ],
                           ),
                           const SizedBox(
-                            height: 15,
+                            height: 11,
                           ),
                           Row(
                             children: [

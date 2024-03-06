@@ -7,12 +7,11 @@ class LogoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Image.asset(
-          'assets/images/img_techtool.png',
-        ),
-      ],
+    return SizedBox(
+      // height: 120,
+      child: Image.asset(
+        'assets/images/img_techtool.png',
+      ),
     );
   }
 }
