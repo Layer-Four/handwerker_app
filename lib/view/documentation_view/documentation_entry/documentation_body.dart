@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -41,19 +40,15 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
   @override
   Widget build(BuildContext context) {
     if (mounted) {
-      final savedData = ref.watch(dokuProvider);
-      if (savedData.isNotEmpty) {
-        final startDate =
-            savedData.where((element) => element.containsKey('start')).first.values.toList();
-        log(startDate.toString());
-      }
+      // final savedData = ref.watch(dokuProvider);
     }
+    final lanugage = ref.watch(languangeProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
         child: Column(
           children: [
-            _dayInputWidget(),
+            _dayInputWidget(lanugage),
             _buildCustomerProjectField(),
             _buildChooseMedai(),
             _buildDescription(),
@@ -171,7 +166,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColor.kBlue),
+                borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
               ),
             ),
           ),
@@ -188,14 +183,14 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
         text: 'Eintrag erstellen',
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
-          switch (_isStorageSource) {
-            case true:
-              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-              break;
-            default:
-              ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-              break;
-          }
+          // switch (_isStorageSource) {
+          //   case true:
+          //     ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+          //     break;
+          //   default:
+          //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+          //     break;
+          // }
 
           // if (_startController.text.isEmpty || _endController.text.isEmpty) {
           //   return ScaffoldMessenger.of(context).showSnackBar(
@@ -252,9 +247,9 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
     );
   }
 
-  Widget _dayInputWidget() {
+  Widget _dayInputWidget(Dictionary language) {
     return LabeledInputWidget(
-        label: 'TAG',
+        label: language.date,
         child: TextField(
           controller: _dayPickerController,
           keyboardType: TextInputType.datetime,
@@ -274,7 +269,7 @@ class _DokumentationBodyState extends ConsumerState<DokumentationBody> {
               ),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColor.kBlue))),
+                  borderSide: BorderSide(color: AppColor.kPrimaryButtonColor))),
         ));
   }
 }

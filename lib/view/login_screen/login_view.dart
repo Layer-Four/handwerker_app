@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/forget_screen.dart';
@@ -39,7 +40,7 @@ class _LoginViewState extends State<LoginView> {
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall
-                          ?.copyWith(color: AppColor.kWhilteWOpacity),
+                          ?.copyWith(color: AppColor.kWhiteWOpacity),
                     ),
                   ),
                   const SizedBox(
@@ -57,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
                               .textTheme
                               .bodyMedium
                               ?.copyWith(
-                                  color: AppColor.kWhilteWOpacity,
+                                  color: AppColor.kWhiteWOpacity,
                                   fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
@@ -82,7 +83,7 @@ class _LoginViewState extends State<LoginView> {
                               .textTheme
                               .bodyLarge
                               ?.copyWith(
-                                  color: AppColor.kWhilteWOpacity,
+                                  color: AppColor.kWhiteWOpacity,
                                   fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(

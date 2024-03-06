@@ -33,7 +33,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: AppColor.kWhilteWOpacity,
+        color: AppColor.kWhiteWOpacity,
       ),
       child: Focus(
         onFocusChange: (hasFocus) {
@@ -44,9 +44,8 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
         child: SizedBox(
           height: 35,
           child: TextFormField(
-            autofocus: false,
-            key: formstate,
-            validator: widget.validator,
+            textInputAction: TextInputAction.next,
+            validator: (value) => value!.length < 6 ? "Required" : null,
             obscureText: widget.isPass ? obscure : false,
             controller: widget.controller,
             decoration: InputDecoration(

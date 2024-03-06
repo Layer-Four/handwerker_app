@@ -1,13 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -23,7 +19,21 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
-  static const customerProject = [
+  String _unit = _units.first;
+  static final _durationSteps = List.generate(25, (index) {
+    if (index == 0) return 'in Stunden';
+    final x = (index * 0.5).toString().split('.');
+    return '${x.first},${x.last} h.';
+  });
+  String _duration = _durationSteps.first;
+  static const _units = [
+    'Stk.',
+    'CM',
+    'KG',
+    'Liter',
+    'Meter',
+  ];
+  static const _customerProject = [
     ' Wählen',
     ' Koch / Fenster Montage',
     ' Meier/ Bad verfliesen',
@@ -32,11 +42,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   static const _materials = [
     ' Wählen',
     ' Tür',
+    ' Fliesen',
     ' PU-Schaum',
     ' Schrauben',
     ' Latte',
   ];
-  String _project = customerProject.first;
+  String _project = _customerProject.first;
   String _selectedMaterial = _materials.first;
   File? _file;
   bool _isStorageSource = false;
@@ -49,12 +60,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   @override
   Widget build(BuildContext context) {
     if (mounted) {
-      final savedData = ref.watch(dokuProvider);
-      if (savedData.isNotEmpty) {
-        final startDate =
-            savedData.where((element) => element.containsKey('start')).first.values.toList();
-        log(startDate.toString());
-      }
+      _preFillPage();
     }
     return SingleChildScrollView(
       child: Padding(
@@ -65,6 +71,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             _buildCustomerProjectField(),
             _buildMaterialField(),
             _buildAmountPriceFields(),
+
             _buildChooseMedai(),
             // const SizedBox(height: 10),
             _submitInput(),
@@ -75,6 +82,27 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       ),
     );
+  }
+
+  _preFillPage() {
+    // final collection = ref.watch(dokuProvider);
+    // if (collection.contains('start')) {
+    //   final start = collection.where(
+    //     (element) => element.keys.contains('start'),
+    //   );
+    //   final day = DateTime.tryParse(start.first.values.first);
+    //   if (day != null) {
+    //     setState(() => _dayPickerController.text = '${day.day}.${day.month}.${day.year}');
+    //   }
+    //   log('material log ${_dayPickerController.text} TextEdingController');
+    //   if (collection.contains('project')) {
+    //     final searched = collection.where(
+    //       (element) => element.keys.contains('project'),
+    //     );
+    //     _project =
+    //         _customerProject.where((element) => element == searched.first.values.first) as String;
+    //   }
+    // }
   }
 
   Container _buildChooseMedai() {
@@ -146,73 +174,175 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   Widget _buildAmountPriceFields() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SmallLabelInputWidget(
-              label: 'MENGE',
-              child: SizedBox(
-                height: 35,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  autofocus: false,
-                  cursorHeight: 20,
-                  textInputAction: TextInputAction.done,
-                  controller: _amountController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColor.kTextfieldBorder,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                            child: Text('MENGE', style: Theme.of(context).textTheme.labelMedium),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: SizedBox(
+                              width: 50,
+                              height: 30,
+                              child: DropdownButton(
+                                underline: const SizedBox(),
+                                isExpanded: true,
+                                value: _unit,
+                                items: _units
+                                    .map(
+                                      (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            e,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .copyWith(color: AppColor.kPrimary),
+                                          )),
+                                    )
+                                    .toList(),
+                                onChanged: (e) {
+                                  setState(() => _unit = e!);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColor.kBlue),
-                    ),
-                  ),
-                  onChanged: (value) => setState(
-                    () => _amountController.text = value,
-                  ),
-                ),
-              ),
-            ),
-            SmallLabelInputWidget(
-              label: 'SUMME',
-              child: SizedBox(
-                height: 35,
-                child: TextField(
-                  keyboardType: TextInputType.datetime,
-                  autofocus: false,
-                  cursorHeight: 20,
-                  textInputAction: TextInputAction.done,
-                  controller: _summeryController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColor.kTextfieldBorder,
+                    SizedBox(
+                      height: 40,
+                      width: 150,
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        cursorHeight: 20,
+                        textInputAction: TextInputAction.done,
+                        controller: _amountController,
+                        decoration: InputDecoration(
+                          hintText: 'MENGE',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(color: AppColor.kTextfieldBorder),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColor.kTextfieldBorder,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: AppColor.kBlue),
+                          ),
+                        ),
+                        onChanged: (value) => setState(
+                          () => _amountController.text = value,
+                        ),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: AppColor.kBlue),
-                    ),
-                  ),
-                  onChanged: (value) => setState(() {
-                    _summeryController.text = value;
-                  }),
+                  ],
                 ),
-              ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                      child: Text(
+                        'SUMME',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                      width: 150,
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        autofocus: false,
+                        cursorHeight: 20,
+                        textInputAction: TextInputAction.done,
+                        controller: _summeryController,
+                        decoration: InputDecoration(
+                          hintText: 'SUMME €',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(color: AppColor.kTextfieldBorder),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppColor.kTextfieldBorder,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: AppColor.kBlue),
+                          ),
+                        ),
+                        onChanged: (value) => setState(
+                          () {
+                            _summeryController.text = value;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+            SizedBox(
+              width: 500,
+              height: 35,
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text('Geschätze Dauer'),
+                  ),
+                  SizedBox(
+                    width: 150,
+                    child: DropdownButton(
+                        isExpanded: true,
+                        value: _duration,
+                        items: _durationSteps
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (e) => setState(
+                              () => _duration = e!,
+                            )),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       );
@@ -226,15 +356,15 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           if (_file != null) {
-            if (_isStorageSource) {
-              ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
-            } else {
-              if (_file != null) {
-                ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
-              }
-            }
+            // if (_isStorageSource) {
+            //   ref.read(dokuProvider.notifier).saveGalleryFile(galleryFile: _file);
+            // } else {
+            //   if (_file != null) {
+            //     ref.read(dokuProvider.notifier).saveStorageFile(storageFile: _file);
+            //   }
+            // }
           }
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Success')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Success')));
           ref.read(dokuViewProvider.notifier).state = DokuViews.timeEntry;
         },
       ),
@@ -256,7 +386,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             underline: const SizedBox(),
             isExpanded: true,
             value: _project,
-            items: customerProject
+            items: _customerProject
                 .map(
                   (e) => DropdownMenuItem(value: e, child: Text(e)),
                 )
@@ -287,7 +417,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             value: _selectedMaterial,
             items: _materials
                 .map(
-                  (e) => DropdownMenuItem(value: e, child: Text(e)),
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
                 )
                 .toList(),
             onChanged: (e) {
@@ -325,11 +458,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ));
   }
 
-  Widget _addMoreMaterial() {
-    return Row(
-      children: [
-        SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
-      ],
-    );
-  }
+  // Widget _addMoreMaterial() {
+  //   return Row(
+  //     children: [
+  //       SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
+  //     ],
+  //   );
+  // }
 }

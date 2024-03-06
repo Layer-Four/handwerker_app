@@ -21,12 +21,17 @@ Execution _$ExecutionFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Execution {
   String? get executionID => throw _privateConstructorUsedError;
+  String? get projectID => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
   String get project => throw _privateConstructorUsedError;
-  DateTime get start => throw _privateConstructorUsedError;
-  DateTime get end => throw _privateConstructorUsedError;
+  DateTime get timeStart => throw _privateConstructorUsedError;
+  DateTime get timeEnd => throw _privateConstructorUsedError;
+  DateTime? get pasueStart => throw _privateConstructorUsedError;
+  DateTime? get pauseEnd => throw _privateConstructorUsedError;
+  int? get duration => throw _privateConstructorUsedError;
   String? get service => throw _privateConstructorUsedError;
-  List<String>? get consumables => throw _privateConstructorUsedError;
-  List<String>? get users => throw _privateConstructorUsedError;
+  List<String?> get consumables => throw _privateConstructorUsedError;
+  List<String?> get usersID => throw _privateConstructorUsedError;
   String? get descritpion => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,12 +47,17 @@ abstract class $ExecutionCopyWith<$Res> {
   @useResult
   $Res call(
       {String? executionID,
+      String? projectID,
+      DateTime date,
       String project,
-      DateTime start,
-      DateTime end,
+      DateTime timeStart,
+      DateTime timeEnd,
+      DateTime? pasueStart,
+      DateTime? pauseEnd,
+      int? duration,
       String? service,
-      List<String>? consumables,
-      List<String>? users,
+      List<String?> consumables,
+      List<String?> usersID,
       String? descritpion});
 }
 
@@ -65,12 +75,17 @@ class _$ExecutionCopyWithImpl<$Res, $Val extends Execution>
   @override
   $Res call({
     Object? executionID = freezed,
+    Object? projectID = freezed,
+    Object? date = null,
     Object? project = null,
-    Object? start = null,
-    Object? end = null,
+    Object? timeStart = null,
+    Object? timeEnd = null,
+    Object? pasueStart = freezed,
+    Object? pauseEnd = freezed,
+    Object? duration = freezed,
     Object? service = freezed,
-    Object? consumables = freezed,
-    Object? users = freezed,
+    Object? consumables = null,
+    Object? usersID = null,
     Object? descritpion = freezed,
   }) {
     return _then(_value.copyWith(
@@ -78,30 +93,50 @@ class _$ExecutionCopyWithImpl<$Res, $Val extends Execution>
           ? _value.executionID
           : executionID // ignore: cast_nullable_to_non_nullable
               as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       project: null == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
               as String,
-      start: null == start
-          ? _value.start
-          : start // ignore: cast_nullable_to_non_nullable
+      timeStart: null == timeStart
+          ? _value.timeStart
+          : timeStart // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      end: null == end
-          ? _value.end
-          : end // ignore: cast_nullable_to_non_nullable
+      timeEnd: null == timeEnd
+          ? _value.timeEnd
+          : timeEnd // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      pasueStart: freezed == pasueStart
+          ? _value.pasueStart
+          : pasueStart // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      pauseEnd: freezed == pauseEnd
+          ? _value.pauseEnd
+          : pauseEnd // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      duration: freezed == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int?,
       service: freezed == service
           ? _value.service
           : service // ignore: cast_nullable_to_non_nullable
               as String?,
-      consumables: freezed == consumables
+      consumables: null == consumables
           ? _value.consumables
           : consumables // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      users: freezed == users
-          ? _value.users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String?>,
+      usersID: null == usersID
+          ? _value.usersID
+          : usersID // ignore: cast_nullable_to_non_nullable
+              as List<String?>,
       descritpion: freezed == descritpion
           ? _value.descritpion
           : descritpion // ignore: cast_nullable_to_non_nullable
@@ -120,12 +155,17 @@ abstract class _$$ExecutionImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? executionID,
+      String? projectID,
+      DateTime date,
       String project,
-      DateTime start,
-      DateTime end,
+      DateTime timeStart,
+      DateTime timeEnd,
+      DateTime? pasueStart,
+      DateTime? pauseEnd,
+      int? duration,
       String? service,
-      List<String>? consumables,
-      List<String>? users,
+      List<String?> consumables,
+      List<String?> usersID,
       String? descritpion});
 }
 
@@ -141,12 +181,17 @@ class __$$ExecutionImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? executionID = freezed,
+    Object? projectID = freezed,
+    Object? date = null,
     Object? project = null,
-    Object? start = null,
-    Object? end = null,
+    Object? timeStart = null,
+    Object? timeEnd = null,
+    Object? pasueStart = freezed,
+    Object? pauseEnd = freezed,
+    Object? duration = freezed,
     Object? service = freezed,
-    Object? consumables = freezed,
-    Object? users = freezed,
+    Object? consumables = null,
+    Object? usersID = null,
     Object? descritpion = freezed,
   }) {
     return _then(_$ExecutionImpl(
@@ -154,30 +199,50 @@ class __$$ExecutionImplCopyWithImpl<$Res>
           ? _value.executionID
           : executionID // ignore: cast_nullable_to_non_nullable
               as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       project: null == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
               as String,
-      start: null == start
-          ? _value.start
-          : start // ignore: cast_nullable_to_non_nullable
+      timeStart: null == timeStart
+          ? _value.timeStart
+          : timeStart // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      end: null == end
-          ? _value.end
-          : end // ignore: cast_nullable_to_non_nullable
+      timeEnd: null == timeEnd
+          ? _value.timeEnd
+          : timeEnd // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      pasueStart: freezed == pasueStart
+          ? _value.pasueStart
+          : pasueStart // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      pauseEnd: freezed == pauseEnd
+          ? _value.pauseEnd
+          : pauseEnd // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      duration: freezed == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int?,
       service: freezed == service
           ? _value.service
           : service // ignore: cast_nullable_to_non_nullable
               as String?,
-      consumables: freezed == consumables
+      consumables: null == consumables
           ? _value._consumables
           : consumables // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      users: freezed == users
-          ? _value._users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String?>,
+      usersID: null == usersID
+          ? _value._usersID
+          : usersID // ignore: cast_nullable_to_non_nullable
+              as List<String?>,
       descritpion: freezed == descritpion
           ? _value.descritpion
           : descritpion // ignore: cast_nullable_to_non_nullable
@@ -191,15 +256,20 @@ class __$$ExecutionImplCopyWithImpl<$Res>
 class _$ExecutionImpl implements _Execution {
   const _$ExecutionImpl(
       {this.executionID,
+      this.projectID,
+      required this.date,
       required this.project,
-      required this.start,
-      required this.end,
+      required this.timeStart,
+      required this.timeEnd,
+      this.pasueStart,
+      this.pauseEnd,
+      this.duration,
       this.service,
-      final List<String>? consumables,
-      final List<String>? users,
+      final List<String?> consumables = const <String>[],
+      final List<String?> usersID = const <String>[],
       this.descritpion})
       : _consumables = consumables,
-        _users = users;
+        _usersID = usersID;
 
   factory _$ExecutionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExecutionImplFromJson(json);
@@ -207,31 +277,39 @@ class _$ExecutionImpl implements _Execution {
   @override
   final String? executionID;
   @override
+  final String? projectID;
+  @override
+  final DateTime date;
+  @override
   final String project;
   @override
-  final DateTime start;
+  final DateTime timeStart;
   @override
-  final DateTime end;
+  final DateTime timeEnd;
+  @override
+  final DateTime? pasueStart;
+  @override
+  final DateTime? pauseEnd;
+  @override
+  final int? duration;
   @override
   final String? service;
-  final List<String>? _consumables;
+  final List<String?> _consumables;
   @override
-  List<String>? get consumables {
-    final value = _consumables;
-    if (value == null) return null;
+  @JsonKey()
+  List<String?> get consumables {
     if (_consumables is EqualUnmodifiableListView) return _consumables;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_consumables);
   }
 
-  final List<String>? _users;
+  final List<String?> _usersID;
   @override
-  List<String>? get users {
-    final value = _users;
-    if (value == null) return null;
-    if (_users is EqualUnmodifiableListView) return _users;
+  @JsonKey()
+  List<String?> get usersID {
+    if (_usersID is EqualUnmodifiableListView) return _usersID;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_usersID);
   }
 
   @override
@@ -239,7 +317,7 @@ class _$ExecutionImpl implements _Execution {
 
   @override
   String toString() {
-    return 'Execution(executionID: $executionID, project: $project, start: $start, end: $end, service: $service, consumables: $consumables, users: $users, descritpion: $descritpion)';
+    return 'Execution(executionID: $executionID, projectID: $projectID, date: $date, project: $project, timeStart: $timeStart, timeEnd: $timeEnd, pasueStart: $pasueStart, pauseEnd: $pauseEnd, duration: $duration, service: $service, consumables: $consumables, usersID: $usersID, descritpion: $descritpion)';
   }
 
   @override
@@ -249,13 +327,23 @@ class _$ExecutionImpl implements _Execution {
             other is _$ExecutionImpl &&
             (identical(other.executionID, executionID) ||
                 other.executionID == executionID) &&
+            (identical(other.projectID, projectID) ||
+                other.projectID == projectID) &&
+            (identical(other.date, date) || other.date == date) &&
             (identical(other.project, project) || other.project == project) &&
-            (identical(other.start, start) || other.start == start) &&
-            (identical(other.end, end) || other.end == end) &&
+            (identical(other.timeStart, timeStart) ||
+                other.timeStart == timeStart) &&
+            (identical(other.timeEnd, timeEnd) || other.timeEnd == timeEnd) &&
+            (identical(other.pasueStart, pasueStart) ||
+                other.pasueStart == pasueStart) &&
+            (identical(other.pauseEnd, pauseEnd) ||
+                other.pauseEnd == pauseEnd) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
             (identical(other.service, service) || other.service == service) &&
             const DeepCollectionEquality()
                 .equals(other._consumables, _consumables) &&
-            const DeepCollectionEquality().equals(other._users, _users) &&
+            const DeepCollectionEquality().equals(other._usersID, _usersID) &&
             (identical(other.descritpion, descritpion) ||
                 other.descritpion == descritpion));
   }
@@ -265,12 +353,17 @@ class _$ExecutionImpl implements _Execution {
   int get hashCode => Object.hash(
       runtimeType,
       executionID,
+      projectID,
+      date,
       project,
-      start,
-      end,
+      timeStart,
+      timeEnd,
+      pasueStart,
+      pauseEnd,
+      duration,
       service,
       const DeepCollectionEquality().hash(_consumables),
-      const DeepCollectionEquality().hash(_users),
+      const DeepCollectionEquality().hash(_usersID),
       descritpion);
 
   @JsonKey(ignore: true)
@@ -290,12 +383,17 @@ class _$ExecutionImpl implements _Execution {
 abstract class _Execution implements Execution {
   const factory _Execution(
       {final String? executionID,
+      final String? projectID,
+      required final DateTime date,
       required final String project,
-      required final DateTime start,
-      required final DateTime end,
+      required final DateTime timeStart,
+      required final DateTime timeEnd,
+      final DateTime? pasueStart,
+      final DateTime? pauseEnd,
+      final int? duration,
       final String? service,
-      final List<String>? consumables,
-      final List<String>? users,
+      final List<String?> consumables,
+      final List<String?> usersID,
       final String? descritpion}) = _$ExecutionImpl;
 
   factory _Execution.fromJson(Map<String, dynamic> json) =
@@ -304,17 +402,27 @@ abstract class _Execution implements Execution {
   @override
   String? get executionID;
   @override
+  String? get projectID;
+  @override
+  DateTime get date;
+  @override
   String get project;
   @override
-  DateTime get start;
+  DateTime get timeStart;
   @override
-  DateTime get end;
+  DateTime get timeEnd;
+  @override
+  DateTime? get pasueStart;
+  @override
+  DateTime? get pauseEnd;
+  @override
+  int? get duration;
   @override
   String? get service;
   @override
-  List<String>? get consumables;
+  List<String?> get consumables;
   @override
-  List<String>? get users;
+  List<String?> get usersID;
   @override
   String? get descritpion;
   @override
