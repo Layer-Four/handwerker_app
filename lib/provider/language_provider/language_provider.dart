@@ -16,9 +16,12 @@ abstract class Dictionary {
   String get forgetPassword;
   String get login;
   String get logout;
+  String get makePicture;
+  String get pictureSucces;
   String get project;
   String get start;
   String get service;
+  String get takePicture;
 }
 
 class GermanLanguage implements Dictionary {
@@ -51,11 +54,15 @@ class GermanLanguage implements Dictionary {
 
   @override
   String get login => 'Anmelden';
-  @override
-  String get project => 'Projekt';
 
   @override
   String get logout => 'Ausloggen';
+
+  @override
+  String get pictureSucces => ' Bild ausgewählt';
+
+  @override
+  String get project => 'Projekt';
 
   @override
   String get start => 'VON';
@@ -64,10 +71,15 @@ class GermanLanguage implements Dictionary {
   String get duration => 'DAUER';
 
   @override
-  String get createEntry => 'Eintrag Erstellen';
+  String get createEntry => 'Eintrag erstellen';
 
   @override
   String get service => 'LEISTUNG';
+  @override
+  String get makePicture => 'Foto machen';
+
+  @override
+  String get takePicture => 'Bild wählen';
 }
 
 class EnglishLanguage extends Dictionary {
@@ -117,5 +129,14 @@ class EnglishLanguage extends Dictionary {
   String get createEntry => 'New entry';
 
   @override
+  String get makePicture => 'make a pciture';
+
+  @override
+  String get pictureSucces => ' picked picture';
+
+  @override
   String get service => 'SERVICE';
+
+  @override
+  String get takePicture => 'take a pciture';
 }

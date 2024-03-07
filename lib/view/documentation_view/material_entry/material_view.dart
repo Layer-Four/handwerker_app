@@ -31,11 +31,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   });
   String _duration = _durationSteps.first;
   static const _units = [
-    'Stk.',
-    'CM',
-    'KG',
-    'Liter',
-    'Meter',
+    ' Stk',
+    ' CM',
+    ' KG',
+    ' Liter',
+    ' Meter',
   ];
   static const _customerProject = [
     ' Wählen',

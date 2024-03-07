@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -7,7 +5,6 @@ import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/time_entry/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
-import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -97,8 +94,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               );
             } else {
               ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
-              log('länge zeiteintrag ${ref.watch(timeEntryProvider).length}');
-              ref.read(dokuViewProvider.notifier).state = DokuViews.project;
               setState(() {
                 _startController.clear();
                 _descriptionController.clear();
@@ -148,13 +143,13 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SmallLabelInputWidget(
-              label: ref.watch(languangeProvider).start,
+              label: ref.watch(languangeProvider).date,
               child: SizedBox(
                 height: 35,
                 child: TextField(
+                  controller: _dayPickerController,
                   cursorHeight: 20,
                   autofocus: false,
-                  controller: _dayPickerController,
                   keyboardType: TextInputType.datetime,
                   onTap: () async {
                     final date = await Utilits.selecetDate(context);
