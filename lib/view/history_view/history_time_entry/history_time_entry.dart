@@ -66,7 +66,7 @@ class _HingedWidgetState extends State<HingedWidget> {
     return AnimatedContainer(
       width: MediaQuery.of(context).size.width - 20,
       duration: const Duration(milliseconds: 180),
-      curve: Curves.easeInOut,
+      curve: Curves.easeInOutCubic,
       height: _isOpen ? 140 : 60,
       child: InkWell(
         onTap: () => setState(() => _isOpen = !_isOpen),
