@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -7,7 +5,6 @@ import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/time_entry/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
-import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -30,7 +27,12 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  static const _services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
+  static const _services = [
+    ' Wählen',
+    ' Fenster Montage',
+    ' Bad fliesen',
+    ' Reinigung',
+  ];
   String _project = _customerProject.first;
   String _executedService = _services.first;
 
@@ -80,20 +82,20 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           onPressed: () {
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte gib Start und eine Endzeit an'),
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseBeginEnd),
                 ),
               );
-            } else if (_project == 'Wählen' || _executedService == 'Wählen') {
+              // TODO: change wählen to an editable object
+            } else if (_project == ' Wählen' || _executedService == ' Wählen') {
               return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseProject),
                 ),
               );
             } else {
               ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
-              log('länge zeiteintrag ${ref.watch(timeEntryProvider).length}');
-              ref.read(dokuViewProvider.notifier).state = DokuViews.project;
+              final now = DateTime.now();
               setState(() {
                 _startController.clear();
                 _descriptionController.clear();
@@ -101,7 +103,13 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 _durationController.clear();
                 _executedService = _services.first;
                 _project = _customerProject.first;
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
               });
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).succes),
+                ),
+              );
             }
           },
         ),
@@ -143,13 +151,13 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SmallLabelInputWidget(
-              label: ref.watch(languangeProvider).start,
+              label: ref.watch(languangeProvider).date,
               child: SizedBox(
                 height: 35,
                 child: TextField(
+                  controller: _dayPickerController,
                   cursorHeight: 20,
                   autofocus: false,
-                  controller: _dayPickerController,
                   keyboardType: TextInputType.datetime,
                   onTap: () async {
                     final date = await Utilits.selecetDate(context);

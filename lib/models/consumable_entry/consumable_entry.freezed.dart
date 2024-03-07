@@ -20,10 +20,11 @@ ConsumeEntry _$ConsumeEntryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ConsumeEntry {
-  DateTime? get createDate => throw _privateConstructorUsedError;
+  DateTime get createDate => throw _privateConstructorUsedError;
   String? get project => throw _privateConstructorUsedError;
-  List<Consumable?> get consumables => throw _privateConstructorUsedError;
-  String? get duration => throw _privateConstructorUsedError;
+  List<Consumable> get consumables => throw _privateConstructorUsedError;
+  List<String> get dokusPath => throw _privateConstructorUsedError;
+  double? get estimatedDuration => throw _privateConstructorUsedError;
   int? get cost => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,10 +40,11 @@ abstract class $ConsumeEntryCopyWith<$Res> {
       _$ConsumeEntryCopyWithImpl<$Res, ConsumeEntry>;
   @useResult
   $Res call(
-      {DateTime? createDate,
+      {DateTime createDate,
       String? project,
-      List<Consumable?> consumables,
-      String? duration,
+      List<Consumable> consumables,
+      List<String> dokusPath,
+      double? estimatedDuration,
       int? cost});
 }
 
@@ -59,17 +61,18 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createDate = freezed,
+    Object? createDate = null,
     Object? project = freezed,
     Object? consumables = null,
-    Object? duration = freezed,
+    Object? dokusPath = null,
+    Object? estimatedDuration = freezed,
     Object? cost = freezed,
   }) {
     return _then(_value.copyWith(
-      createDate: freezed == createDate
+      createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       project: freezed == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
@@ -77,11 +80,15 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
       consumables: null == consumables
           ? _value.consumables
           : consumables // ignore: cast_nullable_to_non_nullable
-              as List<Consumable?>,
-      duration: freezed == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Consumable>,
+      dokusPath: null == dokusPath
+          ? _value.dokusPath
+          : dokusPath // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      estimatedDuration: freezed == estimatedDuration
+          ? _value.estimatedDuration
+          : estimatedDuration // ignore: cast_nullable_to_non_nullable
+              as double?,
       cost: freezed == cost
           ? _value.cost
           : cost // ignore: cast_nullable_to_non_nullable
@@ -99,10 +106,11 @@ abstract class _$$ConsumeEntryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime? createDate,
+      {DateTime createDate,
       String? project,
-      List<Consumable?> consumables,
-      String? duration,
+      List<Consumable> consumables,
+      List<String> dokusPath,
+      double? estimatedDuration,
       int? cost});
 }
 
@@ -117,17 +125,18 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createDate = freezed,
+    Object? createDate = null,
     Object? project = freezed,
     Object? consumables = null,
-    Object? duration = freezed,
+    Object? dokusPath = null,
+    Object? estimatedDuration = freezed,
     Object? cost = freezed,
   }) {
     return _then(_$ConsumeEntryImpl(
-      createDate: freezed == createDate
+      createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       project: freezed == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
@@ -135,11 +144,15 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
       consumables: null == consumables
           ? _value._consumables
           : consumables // ignore: cast_nullable_to_non_nullable
-              as List<Consumable?>,
-      duration: freezed == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<Consumable>,
+      dokusPath: null == dokusPath
+          ? _value._dokusPath
+          : dokusPath // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      estimatedDuration: freezed == estimatedDuration
+          ? _value.estimatedDuration
+          : estimatedDuration // ignore: cast_nullable_to_non_nullable
+              as double?,
       cost: freezed == cost
           ? _value.cost
           : cost // ignore: cast_nullable_to_non_nullable
@@ -152,37 +165,48 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsumeEntryImpl implements _ConsumeEntry {
   const _$ConsumeEntryImpl(
-      {this.createDate,
+      {required this.createDate,
       this.project,
-      final List<Consumable?> consumables = const [],
-      this.duration,
+      final List<Consumable> consumables = const <Consumable>[],
+      final List<String> dokusPath = const <String>[],
+      this.estimatedDuration,
       this.cost})
-      : _consumables = consumables;
+      : _consumables = consumables,
+        _dokusPath = dokusPath;
 
   factory _$ConsumeEntryImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumeEntryImplFromJson(json);
 
   @override
-  final DateTime? createDate;
+  final DateTime createDate;
   @override
   final String? project;
-  final List<Consumable?> _consumables;
+  final List<Consumable> _consumables;
   @override
   @JsonKey()
-  List<Consumable?> get consumables {
+  List<Consumable> get consumables {
     if (_consumables is EqualUnmodifiableListView) return _consumables;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_consumables);
   }
 
+  final List<String> _dokusPath;
   @override
-  final String? duration;
+  @JsonKey()
+  List<String> get dokusPath {
+    if (_dokusPath is EqualUnmodifiableListView) return _dokusPath;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_dokusPath);
+  }
+
+  @override
+  final double? estimatedDuration;
   @override
   final int? cost;
 
   @override
   String toString() {
-    return 'ConsumeEntry(createDate: $createDate, project: $project, consumables: $consumables, duration: $duration, cost: $cost)';
+    return 'ConsumeEntry(createDate: $createDate, project: $project, consumables: $consumables, dokusPath: $dokusPath, estimatedDuration: $estimatedDuration, cost: $cost)';
   }
 
   @override
@@ -195,15 +219,23 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
             (identical(other.project, project) || other.project == project) &&
             const DeepCollectionEquality()
                 .equals(other._consumables, _consumables) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
+            const DeepCollectionEquality()
+                .equals(other._dokusPath, _dokusPath) &&
+            (identical(other.estimatedDuration, estimatedDuration) ||
+                other.estimatedDuration == estimatedDuration) &&
             (identical(other.cost, cost) || other.cost == cost));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, createDate, project,
-      const DeepCollectionEquality().hash(_consumables), duration, cost);
+  int get hashCode => Object.hash(
+      runtimeType,
+      createDate,
+      project,
+      const DeepCollectionEquality().hash(_consumables),
+      const DeepCollectionEquality().hash(_dokusPath),
+      estimatedDuration,
+      cost);
 
   @JsonKey(ignore: true)
   @override
@@ -221,23 +253,26 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
 
 abstract class _ConsumeEntry implements ConsumeEntry {
   const factory _ConsumeEntry(
-      {final DateTime? createDate,
+      {required final DateTime createDate,
       final String? project,
-      final List<Consumable?> consumables,
-      final String? duration,
+      final List<Consumable> consumables,
+      final List<String> dokusPath,
+      final double? estimatedDuration,
       final int? cost}) = _$ConsumeEntryImpl;
 
   factory _ConsumeEntry.fromJson(Map<String, dynamic> json) =
       _$ConsumeEntryImpl.fromJson;
 
   @override
-  DateTime? get createDate;
+  DateTime get createDate;
   @override
   String? get project;
   @override
-  List<Consumable?> get consumables;
+  List<Consumable> get consumables;
   @override
-  String? get duration;
+  List<String> get dokusPath;
+  @override
+  double? get estimatedDuration;
   @override
   int? get cost;
   @override

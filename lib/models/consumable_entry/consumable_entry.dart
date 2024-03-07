@@ -6,10 +6,11 @@ part 'consumable_entry.g.dart';
 @freezed
 class ConsumeEntry with _$ConsumeEntry {
   const factory ConsumeEntry({
-    DateTime? createDate,
+    required DateTime createDate,
     String? project,
-    @Default([]) List<Consumable?> consumables,
-    String? duration,
+    @Default(<Consumable>[]) List<Consumable> consumables,
+    @Default(<String>[]) List<String> dokusPath,
+    double? estimatedDuration,
     int? cost,
   }) = _ConsumeEntry;
 
