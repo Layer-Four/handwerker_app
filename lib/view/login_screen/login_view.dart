@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
-import 'package:handwerker_app/view/login_screen/forget_screen.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
@@ -119,6 +117,32 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Center(
                           child: SizedBox(
+                            width: 250,
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.anmeldeScreen,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                backgroundColor: AppColor.kPrimaryButtonColor,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Los gehts!",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: SizedBox(
                             width: 235,
                             height: 35,
                             child: ElevatedButton(
@@ -131,10 +155,12 @@ class _LoginViewState extends State<LoginView> {
                                 if (isOTP) {
                                   Navigator.of(context)
                                       .pushNamed(AppRoutes.setPasswordScreen);
-                                } else {
-                                  Navigator.of(context).pushReplacementNamed(
-                                      AppRoutes.viewScreen);
                                 }
+
+                                // else {
+                                //   Navigator.of(context).pushReplacementNamed(
+                                //       AppRoutes.viewScreen);
+                                // }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(

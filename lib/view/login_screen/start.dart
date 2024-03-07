@@ -19,11 +19,11 @@ class _StartViewState extends State<StartView> {
       child: Scaffold(
         body: BackgroundWidget(
           body: Padding(
-            padding: const EdgeInsets.only(top: 44, left: 0, right: 0),
+            padding: const EdgeInsets.only(top: 60, left: 0, right: 0),
             child: Column(
               children: [
                 Flexible(
-                  flex: 1, // Adjust flex value as needed
+                  flex: 2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -32,17 +32,14 @@ class _StartViewState extends State<StartView> {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: AppColor.kWhiteWOpacity,
                             fontWeight: FontWeight.bold,
-                            fontSize: 25),
+                            fontSize: 27),
                       ),
                       Text(
                         "Alles, was Sie brauchen, in einer App!",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(color: AppColor.kPrimaryButtonColor),
-                      ),
-                      const SizedBox(
-                        height: 15,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppColor.kPrimaryButtonColor,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15),
                       ),
                     ],
                   ),
@@ -53,11 +50,10 @@ class _StartViewState extends State<StartView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 235,
-                        height: 35,
+                        width: 250,
+                        height: 40,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to the other page when the button is clicked
                             Navigator.pushReplacementNamed(
                               context,
                               AppRoutes.anmeldeScreen,
@@ -76,6 +72,9 @@ class _StartViewState extends State<StartView> {
                             ),
                           ),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 40,
                       ),
                       const LogoApp(),
                     ],
