@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/models/time_entry/time_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/dokumentation_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -20,8 +20,8 @@ void main() {
     expect(description, '');
   });
   test('load data in mockProvider', () {
-    final mockProvider = NotifierProvider<InputNotifier, List<TimeEntry?>>(
-      () => InputNotifier(),
+    final mockProvider = NotifierProvider<TimeEntryNotifier, List<TimeEntry?>>(
+      () => TimeEntryNotifier(),
     );
     final container = ProviderContainer();
     addTearDown(() => container.dispose());

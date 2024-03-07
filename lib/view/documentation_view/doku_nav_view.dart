@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
-import 'package:handwerker_app/view/documentation_view/documentation_entry/documentation_body.dart';
+import 'package:handwerker_app/view/documentation_view/project_entry/project_body.dart';
 import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
 import 'package:handwerker_app/view/documentation_view/time_entry/time_entry_body.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
@@ -20,7 +21,7 @@ class DokuNavigationView extends ConsumerWidget {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: switch (dokuViewRef) {
-            DokuViews.doku => const DokumentationBody(),
+            DokuViews.project => const ProjectBody(),
             DokuViews.consumables => const MaterialBody(),
             _ => const TimeEntryBody(),
           },
@@ -35,31 +36,42 @@ class NavAppBarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final language = ref.watch(languangeProvider);
     final viewProvider = ref.watch(dokuViewProvider);
     final viewNotifier = ref.read(dokuViewProvider.notifier);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // TODO: InkWell or GesturDetector???
         InkWell(
           onTap: () => viewNotifier.state = DokuViews.timeEntry,
-          child: NavigationIcon(
-            title: 'Zeiteintrag',
-            isCurrent: viewProvider == DokuViews.timeEntry,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+            child: NavigationIcon(
+              title: 'Zeiteintrag',
+              isCurrent: viewProvider == DokuViews.timeEntry,
+            ),
           ),
           // child: NavigationIcon(title: 'Zeiteintrag', isCurrent: index == 0),
         ),
-        InkWell(
-          onTap: () => viewNotifier.state = DokuViews.doku,
-          child: NavigationIcon(
-            title: 'Dokumentation',
-            isCurrent: viewProvider == DokuViews.doku,
+        GestureDetector(
+          onTap: () => viewNotifier.state = DokuViews.project,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+            child: NavigationIcon(
+              title: language.project,
+              isCurrent: viewProvider == DokuViews.project,
+            ),
           ),
         ),
-        InkWell(
+        GestureDetector(
           onTap: () => viewNotifier.state = DokuViews.consumables,
-          child: NavigationIcon(
-            title: 'Material',
-            isCurrent: viewProvider == DokuViews.consumables,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+            child: NavigationIcon(
+              title: 'Material',
+              isCurrent: viewProvider == DokuViews.consumables,
+            ),
           ),
         ),
       ],

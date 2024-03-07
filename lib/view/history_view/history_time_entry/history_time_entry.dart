@@ -48,10 +48,10 @@ class HingedWidget extends StatefulWidget {
   final Column content;
 
   const HingedWidget({
-    Key? key,
+    super.key,
     required this.header,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   State<HingedWidget> createState() => _HingedWidgetState();

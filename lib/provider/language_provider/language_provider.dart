@@ -3,20 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final languangeProvider = StateProvider<Dictionary>((ref) => GermanLanguage());
 
 abstract class Dictionary {
-  String get enterUserName;
-  String get enterPassword;
+  String get createEntry;
+  String get createPassword;
+  String get customerProject;
   String get date;
   String get description;
-  String get start;
-  String get end;
   String get dokumentation;
-  String get logout;
-  String get login;
   String get duration;
+  String get end;
+  String get enterPassword;
+  String get enterUserName;
   String get forgetPassword;
-  String get createPassword;
-  String get createEntry;
-  String get customerProject;
+  String get login;
+  String get logout;
+  String get project;
+  String get start;
   String get service;
 }
 
@@ -34,7 +35,7 @@ class GermanLanguage implements Dictionary {
   String get createPassword => 'Erstelle neues Password';
 
   @override
-  String get date => 'Tag';
+  String get date => 'TAG';
 
   @override
   String get dokumentation => 'DOKUMENTATION';
@@ -50,6 +51,8 @@ class GermanLanguage implements Dictionary {
 
   @override
   String get login => 'Anmelden';
+  @override
+  String get project => 'Projekt';
 
   @override
   String get logout => 'Ausloggen';
@@ -76,6 +79,8 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get enterUserName => 'Please enter your username';
+  @override
+  String get project => 'Project';
 
   @override
   String get createPassword => 'Create new password';
