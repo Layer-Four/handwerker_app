@@ -3,10 +3,10 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 class AppNavigationBar extends StatefulWidget {
   const AppNavigationBar({
-    Key? key,
+    super.key,
     required this.index,
     required this.onChangedTab,
-  }) : super(key: key);
+  });
 
   final int index;
   final ValueChanged<int> onChangedTab;

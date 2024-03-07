@@ -73,48 +73,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         ),
       );
 
-  Padding _submitInput() => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SymmetricButton(
-          color: AppColor.kPrimaryButtonColor,
-          text: ref.watch(languangeProvider).createEntry,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-          onPressed: () {
-            if (_startController.text.isEmpty || _endController.text.isEmpty) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseBeginEnd),
-                ),
-              );
-              // TODO: change wählen to an editable object
-            } else if (_project == ' Wählen' || _executedService == ' Wählen') {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseProject),
-                ),
-              );
-            } else {
-              ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
-              final now = DateTime.now();
-              setState(() {
-                _startController.clear();
-                _descriptionController.clear();
-                _endController.clear();
-                _durationController.clear();
-                _executedService = _services.first;
-                _project = _customerProject.first;
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-              });
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).succes),
-                ),
-              );
-            }
-          },
-        ),
-      );
-
   Padding _buildCustomerProjectField() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: LabeledInputWidget(
@@ -144,6 +102,94 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           ),
         ),
       );
+
+  Padding _buildDescription() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: LabeledInputWidget(
+          label: ref.watch(languangeProvider).description,
+          child: SizedBox(
+            height: 80,
+            child: TextField(
+              cursorHeight: 20,
+              controller: _descriptionController,
+              textAlignVertical: TextAlignVertical.top,
+              expands: true,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              maxLines: null,
+              decoration: Utilits.textFieldDecorator(context),
+              onChanged: (value) {
+                setState(() {
+                  _descriptionController.text = value;
+                  _entry = _entry.copyWith(description: _descriptionController.text);
+                });
+              },
+            ),
+          ),
+        ),
+      );
+
+  Padding _buildServiceButton() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: LabeledInputWidget(
+          label: ref.watch(languangeProvider).service,
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton(
+              underline: const SizedBox(),
+              isExpanded: true,
+              value: _executedService,
+              items: _services.map(
+                (e) {
+                  return DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  );
+                },
+              ).toList(),
+              onChanged: (e) => setState(() {
+                _executedService = e!;
+                _entry = _entry.copyWith(service: e);
+              }),
+            ),
+          ),
+        ),
+      );
+
+  /// Split the [String] values from the TextEdingController with the given
+  /// format and build [DateTime] objects with the Compination from
+  /// _dayPickerController and _startController.
+  /// than do  the same translation with _dayPickerController and _endController
+  /// and return the different between this [DateTime] object in minutes.
+  void _calculateDuration() {
+    final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+    final start = DateTime(
+      dateAsList[2],
+      dateAsList[1],
+      dateAsList[0],
+      int.parse(_startController.text.split(':').first),
+      int.parse(_startController.text.split(':').last),
+    );
+    final end = DateTime(
+      start.year,
+      start.month,
+      start.day,
+      int.parse(_endController.text.split(':').first),
+      int.parse(_endController.text.split(':').last),
+    );
+    final sum = ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/ 60;
+    setState(() {
+      _entry = _entry.copyWith(duration: sum);
+    });
+    final hours = sum ~/ 60;
+    final minutes = sum % 60;
+    // TODO: exclude pause?
+    _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
+  }
 
   _dayInputRow() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -192,6 +238,48 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               ),
             ),
           ],
+        ),
+      );
+
+  Padding _submitInput() => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SymmetricButton(
+          color: AppColor.kPrimaryButtonColor,
+          text: ref.watch(languangeProvider).createEntry,
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+          onPressed: () {
+            if (_startController.text.isEmpty || _endController.text.isEmpty) {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseBeginEnd),
+                ),
+              );
+              // TODO: change wählen to an editable object
+            } else if (_project == ' Wählen' || _executedService == ' Wählen') {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseProject),
+                ),
+              );
+            } else {
+              ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
+              final now = DateTime.now();
+              setState(() {
+                _startController.clear();
+                _descriptionController.clear();
+                _endController.clear();
+                _durationController.clear();
+                _executedService = _services.first;
+                _project = _customerProject.first;
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+              });
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).succes),
+                ),
+              );
+            }
+          },
         ),
       );
 
@@ -268,94 +356,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               ),
             ),
           ],
-        ),
-      );
-
-  /// Split the [String] values from the TextEdingController with the given
-  /// format and build [DateTime] objects with the Compination from
-  /// _dayPickerController and _startController.
-  /// than do  the same translation with _dayPickerController and _endController
-  /// and return the different between this [DateTime] object in minutes.
-  void _calculateDuration() {
-    final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
-    final start = DateTime(
-      dateAsList[2],
-      dateAsList[1],
-      dateAsList[0],
-      int.parse(_startController.text.split(':').first),
-      int.parse(_startController.text.split(':').last),
-    );
-    final end = DateTime(
-      start.year,
-      start.month,
-      start.day,
-      int.parse(_endController.text.split(':').first),
-      int.parse(_endController.text.split(':').last),
-    );
-    final sum = ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/ 60;
-    setState(() {
-      _entry = _entry.copyWith(duration: sum);
-    });
-    final hours = sum ~/ 60;
-    final minutes = sum % 60;
-    // TODO: exclude pause?
-    _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
-  }
-
-  Padding _buildDescription() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).description,
-          child: SizedBox(
-            height: 80,
-            child: TextField(
-              cursorHeight: 20,
-              controller: _descriptionController,
-              textAlignVertical: TextAlignVertical.top,
-              expands: true,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-              decoration: Utilits.textFieldDecorator(context),
-              onChanged: (value) {
-                setState(() {
-                  _descriptionController.text = value;
-                  _entry = _entry.copyWith(description: _descriptionController.text);
-                });
-              },
-            ),
-          ),
-        ),
-      );
-
-  Padding _buildServiceButton() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).service,
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColor.kTextfieldBorder),
-            ),
-            child: DropdownButton(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: _executedService,
-              items: _services.map(
-                (e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  );
-                },
-              ).toList(),
-              onChanged: (e) => setState(() {
-                _executedService = e!;
-                _entry = _entry.copyWith(service: e);
-              }),
-            ),
-          ),
         ),
       );
 }

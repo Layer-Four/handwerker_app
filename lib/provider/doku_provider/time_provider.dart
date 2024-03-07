@@ -16,9 +16,13 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry?>> {
 
   // TODO: write request provider for encaplusalted logic
   void uploadTimeEntry(TimeEntry entry) async {
-    final baseUri = 'https://www.azure.de/';
+    const baseUri = 'https://www.azure.de/';
     final uri = Uri.http('nutzer123', '${baseUri}zeiteintrag-speicherung');
-    final json = entry.toJson();
+    final json = {
+      'username': 'marten.meissern',
+      'password': 'abc.123',
+    };
+    // entry.toJson();
     try {
       final response = await http.post(uri, body: json);
       if (response.statusCode == 200) {
