@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
-import 'package:handwerker_app/view/history_view/history_consumable/history_consumable_view.dart';
-import 'package:handwerker_app/view/history_view/history_project/project_overview.dart';
-import 'package:handwerker_app/view/history_view/history_time_entry/history_time_entry.dart';
+import 'package:handwerker_app/view/history_views/history_consumable/history_consumable_view.dart';
+import 'package:handwerker_app/view/history_views/history_project/project_overview.dart';
+import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
 
 class HistoryNavigationView extends ConsumerWidget {
@@ -40,26 +42,34 @@ class NavBarHistoryVWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        InkWell(
+        GestureDetector(
           onTap: () => viewNotifier.state = HistoryViews.timeEntry,
-          child: NavigationIcon(
-            title: 'Zeiteintrag',
-            isCurrent: viewProvider == HistoryViews.timeEntry,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+            child: NavigationIcon(
+              title: 'Zeiteintrag',
+              isCurrent: viewProvider == HistoryViews.timeEntry,
+            ),
           ),
-          // child: NavigationIcon(title: 'Zeiteintrag', isCurrent: index == 0),
         ),
-        InkWell(
+        GestureDetector(
           onTap: () => viewNotifier.state = HistoryViews.project,
-          child: NavigationIcon(
-            title: 'Projekt',
-            isCurrent: viewProvider == HistoryViews.project,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+            child: NavigationIcon(
+              title: 'Projekt',
+              isCurrent: viewProvider == HistoryViews.project,
+            ),
           ),
         ),
-        InkWell(
+        GestureDetector(
           onTap: () => viewNotifier.state = HistoryViews.consumables,
-          child: NavigationIcon(
-            title: 'Material',
-            isCurrent: viewProvider == HistoryViews.consumables,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+            child: NavigationIcon(
+              title: 'Material',
+              isCurrent: viewProvider == HistoryViews.consumables,
+            ),
           ),
         ),
       ],

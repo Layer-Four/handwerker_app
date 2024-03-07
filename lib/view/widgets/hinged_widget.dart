@@ -1,47 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/models/testmodel.dart';
-
-class HistoryTimeBody extends StatelessWidget {
-  const HistoryTimeBody({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'TAG',
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
-          ),
-          for (var work in workAccount)
-            HingedWidget(
-              header: Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text('${work.head.day}.${work.head.month}.${work.head.year}'),
-                  Text('${work.sum} Stunden'),
-                ]),
-              ),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (var service in work.works) Text(service),
-                ],
-              ),
-            )
-        ],
-      ),
-    );
-  }
-}
 
 class HingedWidget extends StatefulWidget {
   final Widget header;
@@ -109,49 +67,3 @@ class _HingedWidgetState extends State<HingedWidget> {
     );
   }
 }
-
-final workAccount = [
-  TestModel(
-    head: DateTime(2022, 5, 15),
-    sum: 12,
-    works: [
-      'Fensterausbau  4h',
-      'Fensterrahmen  4h',
-      'Fenstereinbau  4h',
-    ],
-  ),
-  TestModel(
-    head: DateTime(2022, 7, 37),
-    sum: 8,
-    works: [
-      'Fensterausbau  2h',
-      'Fensterrahmen  2h',
-      'Fenstereinbau  4h',
-    ],
-  ),
-  TestModel(
-    head: DateTime(1990, 3, 7),
-    sum: 2,
-    works: [
-      'Fensterausbau  2h',
-    ],
-  ),
-  TestModel(
-    head: DateTime(2022, 5, 15),
-    sum: 9,
-    works: [
-      'Fundament vorbereiten  4h',
-      'Ring Anker mauern  4h',
-      'Gutachten mit Bier  1h',
-    ],
-  ),
-  TestModel(
-    head: DateTime(2024, 2, 25),
-    sum: 7,
-    works: [
-      'Haus Reinigung  3h',
-      'Fenster putzen  1h',
-      'Straße fegen  3h',
-    ],
-  ),
-];
