@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -23,8 +22,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
-  String _unit = _units.first;
   ConsumeEntry _entry = const ConsumeEntry();
+  String _unit = _units.first;
   static final _durationSteps = List.generate(25, (index) {
     if (index == 0) return 'in Stunden';
     final x = (index * 0.5).toString().split('.');
@@ -57,6 +56,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   @override
   void initState() {
+    final now = DateTime.now();
+    setState(() {
+      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+    });
     super.initState();
   }
 

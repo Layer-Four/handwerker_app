@@ -30,7 +30,12 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  static const _services = ['Wählen', 'Fenster Montage', 'Bad fliesen', 'Reinigung'];
+  static const _services = [
+    ' Wählen',
+    ' Fenster Montage',
+    ' Bad fliesen',
+    ' Reinigung',
+  ];
   String _project = _customerProject.first;
   String _executedService = _services.first;
 
