@@ -60,25 +60,23 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
       log(_entry.toJson().toString());
     }
     final lanugage = ref.watch(languangeProvider);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
-        child: Column(
-          children: [
-            _dayInputWidget(lanugage),
-            _buildCustomerProjectField(),
-            _buildChooseMedai(),
-            _buildDescription(),
-            const SizedBox(height: 18),
-            _submitInput(),
-            SizedBox(
-              height: 70,
-              child: Center(
-                child: Image.asset('assets/images/img_techtool.png', height: 20),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+      child: Column(
+        children: [
+          _dayInputWidget(lanugage),
+          _buildCustomerProjectField(),
+          _buildChooseMedai(),
+          _buildDescription(),
+          const SizedBox(height: 18),
+          _submitInput(),
+          SizedBox(
+            height: 70,
+            child: Center(
+              child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

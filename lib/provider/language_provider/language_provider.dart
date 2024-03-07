@@ -35,7 +35,7 @@ class GermanLanguage implements Dictionary {
   String get createPassword => 'Erstelle neues Password';
 
   @override
-  String get date => 'Tag';
+  String get date => 'TAG';
 
   @override
   String get dokumentation => 'DOKUMENTATION';

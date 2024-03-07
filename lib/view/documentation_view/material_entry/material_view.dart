@@ -9,7 +9,6 @@ import 'package:handwerker_app/models/consumableEntry/consumable_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
-import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -66,27 +65,25 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     if (mounted) {
       _preFillPage();
     }
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            _dayInputWidget(),
-            _buildCustomerProjectField(),
-            _buildMaterialField(),
-            _buildAmountPriceFields(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          _dayInputWidget(),
+          _buildCustomerProjectField(),
+          _buildMaterialField(),
+          _buildAmountPriceFields(),
 
-            _buildChooseMedai(),
-            // const SizedBox(height: 10),
-            _submitInput(),
-            SizedBox(
-              height: 70,
-              child: Center(
-                child: Image.asset('assets/images/img_techtool.png', height: 20),
-              ),
+          _buildChooseMedai(),
+          // const SizedBox(height: 10),
+          _submitInput(),
+          SizedBox(
+            height: 70,
+            child: Center(
+              child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -454,30 +451,33 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _dayInputWidget() {
-    return LabeledInputWidget(
-        label: 'TAG',
-        child: TextField(
-          controller: _dayPickerController,
-          keyboardType: TextInputType.datetime,
-          onTap: () async {
-            final date = await Utilits.selecetDate(context);
-            if (date != null) {
-              setState(() {
-                _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                _entry = _entry.copyWith(createDate: date);
-              });
-            }
-          },
-          decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColor.kTextfieldBorder),
-              ),
-              focusedBorder: OutlineInputBorder(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: LabeledInputWidget(
+          label: 'TAG',
+          child: TextField(
+            controller: _dayPickerController,
+            keyboardType: TextInputType.datetime,
+            onTap: () async {
+              final date = await Utilits.selecetDate(context);
+              if (date != null) {
+                setState(() {
+                  _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                  _entry = _entry.copyWith(createDate: date);
+                });
+              }
+            },
+            decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColor.kBlue))),
-        ));
+                  borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColor.kBlue))),
+          )),
+    );
   }
 
   // Widget _addMoreMaterial() {

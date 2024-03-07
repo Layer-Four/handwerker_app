@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -75,4 +76,26 @@ class Utilits {
       ),
     );
   }
+
+  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+      InputDecoration(
+        hintText: hintText,
+        hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: AppColor.kTextfieldBorder,
+            ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 5,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColor.kTextfieldBorder,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
+        ),
+      );
 }
