@@ -20,7 +20,7 @@ ConsumeEntry _$ConsumeEntryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ConsumeEntry {
-  DateTime? get createDate => throw _privateConstructorUsedError;
+  DateTime get createDate => throw _privateConstructorUsedError;
   String? get project => throw _privateConstructorUsedError;
   List<Consumable?> get consumables => throw _privateConstructorUsedError;
   String? get duration => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $ConsumeEntryCopyWith<$Res> {
       _$ConsumeEntryCopyWithImpl<$Res, ConsumeEntry>;
   @useResult
   $Res call(
-      {DateTime? createDate,
+      {DateTime createDate,
       String? project,
       List<Consumable?> consumables,
       String? duration,
@@ -59,17 +59,17 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createDate = freezed,
+    Object? createDate = null,
     Object? project = freezed,
     Object? consumables = null,
     Object? duration = freezed,
     Object? cost = freezed,
   }) {
     return _then(_value.copyWith(
-      createDate: freezed == createDate
+      createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       project: freezed == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
@@ -99,7 +99,7 @@ abstract class _$$ConsumeEntryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime? createDate,
+      {DateTime createDate,
       String? project,
       List<Consumable?> consumables,
       String? duration,
@@ -117,17 +117,17 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? createDate = freezed,
+    Object? createDate = null,
     Object? project = freezed,
     Object? consumables = null,
     Object? duration = freezed,
     Object? cost = freezed,
   }) {
     return _then(_$ConsumeEntryImpl(
-      createDate: freezed == createDate
+      createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       project: freezed == project
           ? _value.project
           : project // ignore: cast_nullable_to_non_nullable
@@ -152,7 +152,7 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsumeEntryImpl implements _ConsumeEntry {
   const _$ConsumeEntryImpl(
-      {this.createDate,
+      {required this.createDate,
       this.project,
       final List<Consumable?> consumables = const [],
       this.duration,
@@ -163,7 +163,7 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
       _$$ConsumeEntryImplFromJson(json);
 
   @override
-  final DateTime? createDate;
+  final DateTime createDate;
   @override
   final String? project;
   final List<Consumable?> _consumables;
@@ -221,7 +221,7 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
 
 abstract class _ConsumeEntry implements ConsumeEntry {
   const factory _ConsumeEntry(
-      {final DateTime? createDate,
+      {required final DateTime createDate,
       final String? project,
       final List<Consumable?> consumables,
       final String? duration,
@@ -231,7 +231,7 @@ abstract class _ConsumeEntry implements ConsumeEntry {
       _$ConsumeEntryImpl.fromJson;
 
   @override
-  DateTime? get createDate;
+  DateTime get createDate;
   @override
   String? get project;
   @override

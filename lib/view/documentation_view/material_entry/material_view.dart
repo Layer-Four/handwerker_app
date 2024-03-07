@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable/consumable.dart';
-import 'package:handwerker_app/models/consumableEntry/consumable_entry.dart';
+import 'package:handwerker_app/models/consumable_entry/consumable_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
@@ -22,10 +22,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
-  ConsumeEntry _entry = const ConsumeEntry();
+  late ConsumeEntry _entry;
   String _unit = _units.first;
   static final _durationSteps = List.generate(25, (index) {
-    if (index == 0) return 'in Stunden';
+    if (index == 0) return ' in Stunden';
     final x = (index * 0.5).toString().split('.');
     return '${x.first},${x.last} h.';
   });
@@ -58,6 +58,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   void initState() {
     final now = DateTime.now();
     setState(() {
+      _entry = ConsumeEntry(createDate: now);
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
     });
     super.initState();
