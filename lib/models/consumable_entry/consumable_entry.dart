@@ -8,8 +8,9 @@ class ConsumeEntry with _$ConsumeEntry {
   const factory ConsumeEntry({
     required DateTime createDate,
     String? project,
-    @Default([]) List<Consumable?> consumables,
-    String? duration,
+    @Default(<Consumable>[]) List<Consumable> consumables,
+    @Default(<String>[]) List<String> dokusPath,
+    double? estimatedDuration,
     int? cost,
   }) = _ConsumeEntry;
 

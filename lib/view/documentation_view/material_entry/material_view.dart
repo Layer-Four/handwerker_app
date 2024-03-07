@@ -5,9 +5,8 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable/consumable.dart';
 import 'package:handwerker_app/models/consumable_entry/consumable_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
+import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -66,9 +65,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   @override
   Widget build(BuildContext context) {
-    if (mounted) {
-      _preFillPage();
-    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -77,9 +73,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           _buildCustomerProjectField(),
           _buildMaterialField(),
           _buildAmountPriceFields(),
-
           _buildChooseMedai(),
-          // const SizedBox(height: 10),
+          const SizedBox(height: 25),
           _submitInput(),
           SizedBox(
             height: 70,
@@ -92,104 +87,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  _preFillPage() {
-    // TODO: set default time? set default time equal to last time entry?
-    final timeEntry = ref.watch(timeEntryProvider);
-    final project = ref.watch((projectProvider));
-    if (timeEntry.isNotEmpty) {
-      final date = timeEntry.last!.date;
-      setState(() {
-        _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-        _project = timeEntry.last!.projectID ?? _customerProject.first;
-        _entry = _entry.copyWith(createDate: date);
-      });
-    } else {
-      final now = DateTime.now();
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-    }
-    if (project.isNotEmpty) {
-      setState(() {
-        _project = _customerProject.firstWhere((element) => element == project.last.name);
-        _entry = _entry.copyWith(project: _project);
-      });
-    }
-  }
-
-  Container _buildChooseMedai() {
-    return Container(
-      height: 160,
-      width: 500,
-      decoration: BoxDecoration(
-        color: AppColor.kTextfieldBorder,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Foto machen'),
-              IconButton(
-                icon: const Icon(Icons.camera_alt, size: 75),
-                onPressed: () async {
-                  final image = await Utilits.pickImageFromCamera(context);
-                  if (image != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          ' Bild ausgewählt',
-                          style: TextStyle(
-                            color: AppColor.kPrimaryButtonColor,
-                          ),
-                        ),
-                        backgroundColor: AppColor.kPrimaryButtonColor,
-                      ),
-                    );
-                    final name = '$_project /${DateTime.timestamp()}';
-                    setState(() {
-                      ref.read(consumableSourceProvider.notifier).state = [
-                        ...ref.watch(consumableSourceProvider),
-                        (name, image),
-                      ];
-                    });
-                    // }
-                  }
-                },
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Bild wählen'),
-              IconButton(
-                icon: const Icon(Icons.image, size: 70),
-                onPressed: () async {
-                  final image = await Utilits.pickImageFromGalery(context);
-                  if (image != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(' Bild ausgewählt')),
-                    );
-                    final name = '$_project /${DateTime.timestamp()}';
-                    setState(() {
-                      ref.read(consumableSourceProvider.notifier).state = [
-                        ...ref.watch(consumableSourceProvider),
-                        (name, image),
-                      ];
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildAmountPriceFields() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -200,18 +99,21 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 200,
+                      width: 150,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                            child: Text('MENGE', style: Theme.of(context).textTheme.labelMedium),
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            child: Text(
+                              ref.watch(languangeProvider).amount,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.only(left: 25.0),
                             child: SizedBox(
-                              width: 50,
+                              width: 70,
                               height: 30,
                               child: DropdownButton(
                                 underline: const SizedBox(),
@@ -220,19 +122,18 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                                 items: _units
                                     .map(
                                       (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(
-                                            e,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall!
-                                                .copyWith(color: AppColor.kPrimary),
-                                          )),
+                                        value: e,
+                                        child: Text(
+                                          e,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall!
+                                              .copyWith(color: AppColor.kPrimary),
+                                        ),
+                                      ),
                                     )
                                     .toList(),
-                                onChanged: (e) {
-                                  setState(() => _unit = e!);
-                                },
+                                onChanged: (e) => setState(() => _unit = e!),
                               ),
                             ),
                           ),
@@ -240,7 +141,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                       ),
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 35,
                       width: 150,
                       child: TextField(
                         keyboardType: TextInputType.number,
@@ -248,30 +149,13 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         cursorHeight: 20,
                         textInputAction: TextInputAction.done,
                         controller: _amountController,
-                        decoration: InputDecoration(
-                          hintText: 'MENGE',
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(color: AppColor.kTextfieldBorder),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: AppColor.kTextfieldBorder,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColor.kBlue),
-                          ),
+                        decoration: Utilits.textFieldDecorator(
+                          context,
+                          hintText: ref.watch(languangeProvider).amount,
                         ),
-                        onChanged: (value) => setState(
-                          () => _amountController.text = value,
-                        ),
+                        onChanged: (value) {
+                          setState(() => _amountController.text = value);
+                        },
                       ),
                     ),
                   ],
@@ -282,12 +166,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                       child: Text(
-                        'SUMME',
+                        ref.watch(languangeProvider).sum,
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
                     SizedBox(
-                      height: 40,
+                      height: 35,
                       width: 150,
                       child: TextField(
                         keyboardType: TextInputType.number,
@@ -295,33 +179,16 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         cursorHeight: 20,
                         textInputAction: TextInputAction.done,
                         controller: _summeryController,
-                        decoration: InputDecoration(
-                          hintText: 'SUMME €',
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(color: AppColor.kTextfieldBorder),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 5,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: AppColor.kTextfieldBorder,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColor.kBlue),
-                          ),
+                        decoration: Utilits.textFieldDecorator(
+                          context,
+                          hintText: '${ref.watch(languangeProvider).sum} €',
                         ),
-                        onChanged: (value) => setState(
-                          () {
+                        onChanged: (value) {
+                          setState(() {
                             _entry = _entry.copyWith(cost: int.tryParse(value));
                             _summeryController.text = value;
-                          },
-                        ),
+                          });
+                        },
                       ),
                     ),
                   ],
@@ -329,33 +196,31 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               ],
             ),
             SizedBox(
-              width: 500,
-              height: 35,
+              width: 390,
+              height: 40,
               child: Row(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text('Geschätze Dauer'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    child: Text(ref.watch(languangeProvider).estimatedDuration),
                   ),
                   SizedBox(
-                    width: 150,
+                    width: 210,
                     child: DropdownButton(
                         isExpanded: true,
                         value: _duration,
                         items: _durationSteps
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  e,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ),
-                            )
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ))
                             .toList(),
-                        onChanged: (e) => setState(
-                              () => _duration = e!,
-                            )),
+                        onChanged: (e) {
+                          setState(() => _duration = e!);
+                        }),
                   ),
                 ],
               ),
@@ -364,39 +229,106 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       );
 
-  Padding _submitInput() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SymmetricButton(
-        color: AppColor.kPrimaryButtonColor,
-        text: 'Eintrag erstellen',
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-        onPressed: () {
-          _entry = _entry.copyWith(
-            consumables: [
-              ..._entry.consumables,
-              Consumable(
-                name: _selectedMaterial,
-                amount: int.tryParse(_amountController.text) ?? 1,
-              )
-            ],
-          );
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Success')));
-          _selectedMaterial = _materials.first;
-        },
-      ),
-    );
-  }
+  Container _buildChooseMedai() => Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        height: 150,
+        decoration: BoxDecoration(
+          color: AppColor.kTextfieldBorder,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(ref.watch(languangeProvider).makePicture),
+                    IconButton(
+                      icon: const Icon(Icons.camera_alt, size: 75),
+                      onPressed: () async {
+                        final image = await Utilits.pickImageFromCamera(context);
+                        if (image != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                ref.watch(languangeProvider).pictureSucces,
+                              ),
+                              backgroundColor: AppColor.kPrimaryButtonColor,
+                            ),
+                          );
+                          final filename = '$_project /${DateTime.timestamp()}.jpg';
+                          setState(() {
+                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                          });
+                          ref.read(consumableSourceProvider.notifier).state = [
+                            ...ref.watch(consumableSourceProvider),
+                            (filename, image),
+                          ];
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(ref.watch(languangeProvider).takePicture),
+                    IconButton(
+                      icon: const Icon(Icons.image, size: 70),
+                      onPressed: () async {
+                        final image = await Utilits.pickImageFromGalery(context);
+                        if (image != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                ref.watch(languangeProvider).pictureSucces,
+                                style: TextStyle(
+                                  color: AppColor.kPrimaryButtonColor,
+                                ),
+                              ),
+                              backgroundColor: AppColor.kPrimaryButtonColor,
+                            ),
+                          );
+                          //TODO: check to translate file to a JPG with mime or something else
+                          final filename = '$_project /${DateTime.timestamp()}.jpg';
+                          setState(() {
+                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                            ref.read(projectSourceProvider.notifier).state = [
+                              ...ref.watch(projectSourceProvider),
+                              (filename, image),
+                            ];
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Text(
+              ref.watch(consumableSourceProvider).isEmpty
+                  ? ''
+                  : '${ref.watch(consumableSourceProvider).length} ${ref.watch(languangeProvider).choosedImage}',
+              style: ref.watch(consumableSourceProvider).isEmpty
+                  ? const TextStyle(fontSize: 0)
+                  : Theme.of(context).textTheme.labelSmall,
+            ),
+          ],
+        ),
+      );
 
   Padding _buildCustomerProjectField() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: LabeledInputWidget(
-        label: 'KUNDE/PROJEKT',
+        label: ref.watch(languangeProvider).customerProject,
         child: Container(
           height: 40,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColor.kTextfieldBorder),
           ),
           child: DropdownButton(
@@ -420,45 +352,39 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Padding _buildMaterialField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: LabeledInputWidget(
-        label: 'MATERIAL',
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColor.kTextfieldBorder),
-          ),
-          child: DropdownButton(
-            underline: const SizedBox(),
-            isExpanded: true,
-            value: _selectedMaterial,
-            items: _materials
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  ),
-                )
-                .toList(),
-            onChanged: (e) {
-              setState(() {
-                _selectedMaterial = e!;
-              });
-            },
+  Padding _buildMaterialField() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: LabeledInputWidget(
+          label: ref.watch(languangeProvider).material,
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton(
+              underline: const SizedBox(),
+              isExpanded: true,
+              value: _selectedMaterial,
+              items: _materials
+                  .map(
+                    (e) => DropdownMenuItem(value: e, child: Text(e)),
+                  )
+                  .toList(),
+              onChanged: (e) {
+                setState(() {
+                  _selectedMaterial = e!;
+                });
+              },
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _dayInputWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: LabeledInputWidget(
-          label: 'TAG',
+  Widget _dayInputWidget() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: LabeledInputWidget(
+          label: ref.watch(languangeProvider).date,
           child: TextField(
             controller: _dayPickerController,
             keyboardType: TextInputType.datetime,
@@ -471,16 +397,49 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 });
               }
             },
-            decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColor.kTextfieldBorder),
-                ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppColor.kBlue))),
-          )),
+            decoration: Utilits.textFieldDecorator(context),
+          ),
+        ),
+      );
+
+  Padding _submitInput() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SymmetricButton(
+        color: AppColor.kPrimaryButtonColor,
+        text: ref.watch(languangeProvider).createEntry,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+        onPressed: () {
+          if (_project != ' Wählen' && _selectedMaterial != ' Wählen') {
+            final material = Consumable(
+              name: _selectedMaterial,
+              amount: int.tryParse(_amountController.text) ?? 1,
+            );
+            _entry = _entry.copyWith(
+              consumables: [..._entry.consumables, material],
+              cost: int.tryParse(_summeryController.text) ?? 0,
+              estimatedDuration: double.tryParse(_duration),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(ref.watch(languangeProvider).succes),
+            ));
+            final now = DateTime.now();
+            setState(() {
+              _project = _customerProject.first;
+              _selectedMaterial = _materials.first;
+              _amountController.clear();
+              _summeryController.clear();
+              ref.read(consumableSourceProvider.notifier).state = [];
+              _duration = _durationSteps.first;
+              _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(ref.watch(languangeProvider).checkInput),
+            ));
+          }
+        },
+      ),
     );
   }
 

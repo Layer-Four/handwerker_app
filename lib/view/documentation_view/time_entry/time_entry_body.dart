@@ -82,18 +82,20 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           onPressed: () {
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte gib Start und eine Endzeit an'),
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseBeginEnd),
                 ),
               );
-            } else if (_project == 'Wählen' || _executedService == 'Wählen') {
+              // TODO: change wählen to an editable object
+            } else if (_project == ' Wählen' || _executedService == ' Wählen') {
               return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte wähle einen Kunde/Projekt und eine Leistung'),
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseProject),
                 ),
               );
             } else {
               ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
+              final now = DateTime.now();
               setState(() {
                 _startController.clear();
                 _descriptionController.clear();
@@ -101,7 +103,13 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 _durationController.clear();
                 _executedService = _services.first;
                 _project = _customerProject.first;
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
               });
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).succes),
+                ),
+              );
             }
           },
         ),

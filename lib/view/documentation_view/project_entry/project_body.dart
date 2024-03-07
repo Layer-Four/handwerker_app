@@ -21,13 +21,13 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late Project _entry;
-  static const customerProject = [
+  static const _customerProject = [
     ' Wählen',
     ' Koch / Fenster Montage',
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  String _project = customerProject.first;
+  String _project = _customerProject.first;
 
   @override
   void initState() {
@@ -92,7 +92,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           );
                           final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                            _entry = _entry.copyWith(
+                              dokusPath: [..._entry.dokusPath, filename],
+                            );
                           });
                           ref.read(projectSourceProvider.notifier).state = [
                             ...ref.watch(projectSourceProvider),
@@ -126,7 +128,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           //TODO: check to translate file to a JPG with mime or something else
                           final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                            _entry = _entry.copyWith(
+                              dokusPath: [..._entry.dokusPath, filename],
+                            );
                             ref.read(projectSourceProvider.notifier).state = [
                               ...ref.watch(projectSourceProvider),
                               (filename, image),
@@ -142,12 +146,42 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             Text(
               ref.watch(projectSourceProvider).isEmpty
                   ? ''
-                  : '${ref.watch(projectSourceProvider).length} Bilder ausgewählt',
+                  : '${ref.watch(projectSourceProvider).length} ${ref.watch(languangeProvider).choosedImage}',
               style: ref.watch(projectSourceProvider).isEmpty
                   ? const TextStyle(fontSize: 0)
                   : Theme.of(context).textTheme.labelSmall,
             ),
           ],
+        ),
+      );
+
+  Padding _buildCustomerProjectField() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: LabeledInputWidget(
+          label: ref.watch(languangeProvider).customerProject,
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton(
+              underline: const SizedBox(),
+              isExpanded: true,
+              value: _project,
+              items: _customerProject
+                  .map(
+                    (e) => DropdownMenuItem(value: e, child: Text(e)),
+                  )
+                  .toList(),
+              onChanged: (e) {
+                setState(() {
+                  _project = e!;
+                  _entry = _entry.copyWith(name: e);
+                });
+              },
+            ),
+          ),
         ),
       );
 
@@ -168,63 +202,6 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               onChanged: (value) {
                 _descriptionController.text = value;
                 _entry = _entry.copyWith(description: value);
-              },
-            ),
-          ),
-        ),
-      );
-
-  Padding _submitInput() => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SymmetricButton(
-          color: AppColor.kPrimaryButtonColor,
-          text: ref.watch(languangeProvider).createEntry,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-          onPressed: () {
-            if (_dayPickerController.text.isEmpty) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte wähle ein anderes Datum'),
-                ),
-              );
-            } else if (_project == 'Wählen') {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Bitte wähle einen Kunde und Projekt'),
-                ),
-              );
-            }
-            if (_dayPickerController.text.isNotEmpty && _project != 'Wählen') {
-              ref.read(projectProvider.notifier).addProject(_entry);
-            }
-          },
-        ),
-      );
-
-  Padding _buildCustomerProjectField() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: 'KUNDE/PROJEKT',
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColor.kTextfieldBorder),
-            ),
-            child: DropdownButton(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: _project,
-              items: customerProject
-                  .map(
-                    (e) => DropdownMenuItem(value: e, child: Text(e)),
-                  )
-                  .toList(),
-              onChanged: (e) {
-                setState(() {
-                  _project = e!;
-                  _entry = _entry.copyWith(name: e);
-                });
               },
             ),
           ),
@@ -253,4 +230,44 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
       ),
     );
   }
+
+  Padding _submitInput() => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SymmetricButton(
+          color: AppColor.kPrimaryButtonColor,
+          text: ref.watch(languangeProvider).createEntry,
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+          onPressed: () {
+            if (_dayPickerController.text.isEmpty) {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseDay),
+                ),
+              );
+              // TODO: change wählen to an editable object
+            } else if (_project == ' Wählen') {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseProject),
+                ),
+              );
+            }
+            if (_dayPickerController.text.isNotEmpty && _project != ' Wählen') {
+              ref.read(projectProvider.notifier).addProject(_entry);
+              final now = DateTime.now();
+              setState(() {
+                _project = _customerProject.first;
+                ref.read(projectSourceProvider.notifier).state = [];
+                _descriptionController.clear();
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+              });
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).succes),
+                ),
+              );
+            }
+          },
+        ),
+      );
 }
