@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -101,6 +102,15 @@ class HistoryProjectBody extends ConsumerWidget {
                     ),
                   );
                 }),
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 70, bottom: 20),
+              child: Image.asset(
+                'assets/images/img_techtool.png',
+                height: 20,
+              ),
+            ),
           )
         ],
       ),
