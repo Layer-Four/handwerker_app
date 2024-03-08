@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 class UserAndPasswordField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool isPass;
+  final String? hintText;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final FormFieldValidator<String>? validator;
+
   const UserAndPasswordField({
-    super.key,
-    required this.controller,
+    Key? key,
+    this.controller,
     this.isPass = false,
-  });
+    this.validator,
+    this.hintText,
+    this.keyboardType,
+    this.obscureText = true,
+  }) : super(key: key);
 
   @override
   State<UserAndPasswordField> createState() => _UserAndPasswordFieldState();
@@ -17,6 +26,7 @@ class UserAndPasswordField extends StatefulWidget {
 class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
   bool obscure = true;
   bool isFocused = false;
+  GlobalKey<FormState> formstate = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +41,17 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
             isFocused = hasFocus;
           });
         },
-        child: SizedBox(
-          height: 35,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: isFocused ? 40 : 35,
           child: TextFormField(
             textInputAction: TextInputAction.next,
             validator: (value) => value!.length < 6 ? "Required" : null,
             obscureText: widget.isPass ? obscure : false,
             controller: widget.controller,
             decoration: InputDecoration(
+              hintText: widget.hintText,
+              hintStyle: TextStyle(color: Colors.grey),
               filled: true,
               fillColor: Colors.transparent,
               suffixIcon: widget.isPass
@@ -58,7 +71,9 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused ? AppColor.kPrimaryButtonColor : Colors.transparent,
+                  color: isFocused
+                      ? AppColor.kPrimaryButtonColor
+                      : Colors.transparent,
                 ),
               ),
             ),

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_theme.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 
+final themeProvider = StateProvider<bool>((ref) => true);
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -14,18 +16,15 @@ void main() {
   ));
 }
 
-bool? isDark = false;
-
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLightTheme = ref.watch(themeProvider);
+
     return MaterialApp(
-      // isDark == null  ? ThemeMode.system:
-      themeMode: isDark! ? ThemeMode.dark : ThemeMode.light,
-      darkTheme: AppTheme.dark(),
-      theme: AppTheme.light(),
+      theme: isLightTheme ? ThemeData.light() : ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,

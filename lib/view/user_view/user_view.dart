@@ -11,25 +11,30 @@ class UserView extends ConsumerWidget {
   const UserView({super.key});
   @override
   Widget build(BuildContext context, ref) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('User Information'),
+    return Stack(
+      children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('User Information'),
+              ),
+              SymmetricButton(
+                color: AppColor.kPrimaryButtonColor,
+                text: 'Logout',
+                onPressed: () {
+                  log('log user out');
+                  ref.read(viewProvider.notifier).state = MainViews.doku;
+                  Navigator.of(context)
+                      .pushReplacementNamed(AppRoutes.initialRoute);
+                },
+              )
+            ],
           ),
-          SymmetricButton(
-            color: AppColor.kPrimaryButtonColor,
-            text: 'Logout',
-            onPressed: () {
-              log('log user out');
-              ref.read(viewProvider.notifier).state = MainViews.doku;
-              Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
-            },
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
