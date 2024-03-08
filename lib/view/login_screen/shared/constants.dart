@@ -7,13 +7,9 @@ InputDecoration decorationTextfield = InputDecoration(
   ),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
-    borderSide: BorderSide(
-      color: const Color.fromARGB(255, 223, 221, 221),
-    ),
+    borderSide: const BorderSide(),
   ),
-  fillColor: Color.fromARGB(255, 243, 242, 242),
   filled: true,
-  contentPadding: EdgeInsets.all(8),
 );
 
 

@@ -117,32 +117,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Center(
                           child: SizedBox(
-                            width: 250,
-                            height: 40,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.anmeldeScreen,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                backgroundColor: AppColor.kPrimaryButtonColor,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "Los gehts!",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: SizedBox(
                             width: 235,
                             height: 35,
                             child: ElevatedButton(
@@ -156,7 +130,6 @@ class _LoginViewState extends State<LoginView> {
                                   Navigator.of(context)
                                       .pushNamed(AppRoutes.setPasswordScreen);
                                 }
-
                                 // else {
                                 //   Navigator.of(context).pushReplacementNamed(
                                 //       AppRoutes.viewScreen);

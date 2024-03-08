@@ -41,8 +41,9 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
             isFocused = hasFocus;
           });
         },
-        child: SizedBox(
-          height: 35,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: isFocused ? 40 : 35,
           child: TextFormField(
             textInputAction: TextInputAction.next,
             validator: (value) => value!.length < 6 ? "Required" : null,

@@ -8,7 +8,7 @@ class LogoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
+      height: 40,
       child: Image.asset(
         'assets/images/img_techtool.png',
       ),

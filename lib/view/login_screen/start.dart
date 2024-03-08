@@ -50,7 +50,7 @@ class _StartViewState extends State<StartView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 250,
+                        width: 240,
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () {

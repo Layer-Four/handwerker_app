@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 // import 'package:handwerker_app/constants/apptheme/app_theme.dart';
 // import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/login_view.dart';
 import 'package:handwerker_app/view/login_screen/shared/constants.dart';
+import 'package:handwerker_app/view/login_screen/shared/custom_text_field.dart';
 import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
@@ -16,6 +18,7 @@ class PasswordView extends StatefulWidget {
 
 class _PasswordViewState extends State<PasswordView> {
   bool isVisable = true;
+  bool isPasswordVisible = false;
 
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -78,26 +81,26 @@ class _PasswordViewState extends State<PasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    bool hasError = false;
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      // extendBodyBehindAppBar: true,
 
       appBar: AppBar(
         toolbarHeight: 30.0,
-        backgroundColor: Colors.transparent,
-        elevation: 0, // Set the elevation to 0 to remove any shadow
+        // backgroundColor: Color.fromARGB(0, 228, 15, 15),
       ),
       // backgroundColor: Color.fromARGB(255, 247, 247, 247),
       body: Padding(
-        padding: const EdgeInsets.only(bottom: 40.0, left: 33, right: 33),
+        padding: const EdgeInsets.only(top: 20.0, left: 33, right: 33),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               children: [
                 const LogoApp(),
-                // const SizedBox(
-                //   height: 9,
-                // ),
+                const SizedBox(
+                  height: 30,
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -109,7 +112,7 @@ class _PasswordViewState extends State<PasswordView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -121,14 +124,14 @@ class _PasswordViewState extends State<PasswordView> {
                         ?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: decorationTextfield.copyWith(
+                    contentPadding: const EdgeInsets.all(8),
+                    // isDense: true,
+                  ),
                 ),
-
-                TextField(
-                    keyboardType: TextInputType.text,
-                    obscureText: false,
-                    decoration: decorationTextfield.copyWith()),
                 const SizedBox(
                   height: 20,
                 ),
@@ -143,23 +146,34 @@ class _PasswordViewState extends State<PasswordView> {
                         ?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
-                const SizedBox(
-                  height: 7,
-                ),
                 TextFormField(
                   onChanged: (password) {
+                    setState(() {
+                      newpasswordController.text = password;
+                    });
+                    log(newpasswordController.text);
                     onPasswordChanged(password);
                   },
                   validator: (value) {
-                    return value!.length < 6
-                        ? "Enter at least 6 Zeichen"
-                        : null;
+                    if (value!.isEmpty) {
+                      return null;
+                    } else if (value.length < 6) {
+                      hasError = true;
+
+                      return "Enter at least 6 Zeichen";
+                    }
+
+                    return null;
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: newpasswordController,
                   keyboardType: TextInputType.text,
                   obscureText: isVisable ? true : false,
                   decoration: decorationTextfield.copyWith(
+                    contentPadding: const EdgeInsets.all(8),
+                    isDense: true,
+                    // contentPadding:
+                    //     EdgeInsets.symmetric(horizontal: hasError ? 0.0 : 10.0),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -170,8 +184,21 @@ class _PasswordViewState extends State<PasswordView> {
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: AppColor.kRed),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: AppColor.kRed),
+                    ),
                   ),
                 ),
+
+                const SizedBox(
+                  height: 7,
+                ),
+
                 const SizedBox(
                   height: 15,
                 ),
@@ -188,6 +215,7 @@ class _PasswordViewState extends State<PasswordView> {
                 const SizedBox(
                   height: 7,
                 ),
+
                 TextFormField(
                   onChanged: (password) {
                     onPasswordChanged(password);
@@ -202,6 +230,8 @@ class _PasswordViewState extends State<PasswordView> {
                   keyboardType: TextInputType.text,
                   obscureText: isVisable ? true : false,
                   decoration: decorationTextfield.copyWith(
+                    contentPadding: const EdgeInsets.all(8),
+                    isDense: true,
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -212,8 +242,21 @@ class _PasswordViewState extends State<PasswordView> {
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: AppColor.kRed),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: AppColor.kRed),
+                    ),
                   ),
                 ),
+
+                const SizedBox(
+                  height: 7,
+                ),
+
                 const SizedBox(
                   height: 15,
                 ),
@@ -414,7 +457,7 @@ class _PasswordViewState extends State<PasswordView> {
                       ),
                       child: const Center(
                         child: Text(
-                          "Save",
+                          "Speichern",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
