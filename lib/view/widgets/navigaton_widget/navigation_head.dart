@@ -32,7 +32,7 @@ class NavigationIcon extends StatelessWidget {
                   decoration: BoxDecoration(
                       border: Border.all(width: 1.5, color: AppColor.kPrimaryButtonColor)),
                 )
-              : const SizedBox()
+              : const SizedBox(height: 11)
         ],
       );
 }

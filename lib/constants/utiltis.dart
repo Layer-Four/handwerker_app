@@ -5,12 +5,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Utilits {
   static Future<DateTime?> selecetDate(context) async {
-    return await showDatePicker(
+    return showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2023),
@@ -56,18 +57,7 @@ class Utilits {
   static Future<dynamic> askForPermission(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (context) =>
-          // Material(
-          //   child: Card(
-          //     child: Container(
-          //       margin: const EdgeInsets.symmetric(horizontal: 60, vertical: 250),
-          //       padding: const EdgeInsets.all(8),
-          //       decoration: BoxDecoration(
-          //         borderRadius: BorderRadius.circular(12),
-          //         color: AppColor.kWhite,
-          //       ),
-          //       child:
-          CupertinoAlertDialog(
+      builder: (context) => CupertinoAlertDialog(
         title: const Text('Zugriff verweigert'),
         content: const Text(
           'Bitter erlauben sie den Zugriff auf ihr Fotos oder Kamera',
@@ -83,10 +73,29 @@ class Utilits {
             child: const Text('Einstellungen'),
           ),
         ],
-        // ),
-        // ),
-        // ),
       ),
     );
   }
+
+  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+      InputDecoration(
+        hintText: hintText,
+        hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: AppColor.kTextfieldBorder,
+            ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 5,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColor.kTextfieldBorder,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
+        ),
+      );
 }

@@ -19,7 +19,7 @@ extension MainViewsExention on MainViews {
       };
 }
 
-enum DokuViews { timeEntry, doku, consumables }
+enum DokuViews { timeEntry, project, consumables }
 
 final dokuViewProvider = StateProvider<DokuViews>((ref) => DokuViews.timeEntry);
 
