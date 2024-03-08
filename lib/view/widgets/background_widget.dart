@@ -23,7 +23,7 @@ class BackgroundWidget extends StatelessWidget {
         Container(
           height: double.infinity,
           decoration: const BoxDecoration(
-            color: Color.fromARGB(111, 66, 64, 64),
+            color: Color.fromARGB(75, 126, 122, 122),
           ),
           padding: const EdgeInsets.all(20),
           child: body,

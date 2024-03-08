@@ -25,10 +25,13 @@ class HistoryTimeBody extends StatelessWidget {
             HingedWidget(
               header: Padding(
                 padding: const EdgeInsets.only(left: 18.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text('${work.head.day}.${work.head.month}.${work.head.year}'),
-                  Text('${work.sum} Stunden'),
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          '${work.head.day}.${work.head.month}.${work.head.year}'),
+                      Text('${work.sum} Stunden'),
+                    ]),
               ),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +102,9 @@ class _HingedWidgetState extends State<HingedWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       width: MediaQuery.of(context).size.width - 30,
                       child: widget.content),
-                  crossFadeState: _isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  crossFadeState: _isOpen
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
                 ),
               ],
             ),
