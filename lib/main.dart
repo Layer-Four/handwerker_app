@@ -14,7 +14,7 @@ void main() {
   ));
 }
 
-bool? isDark;
+bool? isDark = false;
 
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
@@ -22,11 +22,8 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     return MaterialApp(
-      themeMode: isDark == null
-          ? ThemeMode.system
-          : isDark!
-              ? ThemeMode.dark
-              : ThemeMode.light,
+      // isDark == null  ? ThemeMode.system:
+      themeMode: isDark! ? ThemeMode.dark : ThemeMode.light,
       darkTheme: AppTheme.dark(),
       theme: AppTheme.light(),
       debugShowCheckedModeBanner: false,

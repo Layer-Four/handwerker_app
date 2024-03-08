@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:handwerker_app/models/project_vm/project.dart';
 import 'package:handwerker_app/models/work_vm.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
