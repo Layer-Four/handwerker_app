@@ -11,11 +11,10 @@ class TimeEntry with _$TimeEntry {
     DateTime? endTime,
     DateTime? pauseEnd,
     DateTime? pauseStart,
-    String? projectID,
-    String? service,
+    BigInt? projectID,
+    BigInt? serviceID,
     required DateTime startTime,
     String? userID,
   }) = _TimeEntry;
-
   factory TimeEntry.fromJson(Map<String, dynamic> json) => _$TimeEntryFromJson(json);
 }

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:handwerker_app/models/project_vm/project.dart';
 
 final projectProvider = NotifierProvider<ProjectNotifer, List<Project>>(() => ProjectNotifer());
 

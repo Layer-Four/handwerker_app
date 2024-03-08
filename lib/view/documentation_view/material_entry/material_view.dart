@@ -249,7 +249,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromCamera(context);
+                        final image = await Utilits.pickImageFromCamera(context, _project);
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -279,7 +279,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromGalery(context);
+                        final image = await Utilits.pickImageFromGalery(context, _project);
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

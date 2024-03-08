@@ -1,14 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/projectVM/project.dart';
+import 'package:handwerker_app/models/project_vm/project.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProjectBody extends ConsumerStatefulWidget {
   const ProjectBody({super.key});
@@ -80,8 +84,13 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromCamera(context);
+                        final image = await Utilits.pickImageFromCamera(context, _project);
+                        log('${image!.name}');
+                        final newImage =
+                            XFile(image.path, name: _project + DateTime.timestamp().toString());
+                        log('${newImage!.name}');
                         if (image != null) {
+                          //TODO: Maybe show image in popUp?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -90,10 +99,17 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Image.file(
+                              File(image.path),
+                              height: 100,
+                              width: 100,
+                            ),
+                          ));
                           final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              dokusPath: [..._entry.dokusPath, filename],
+                              imageUrl: [..._entry.imageUrl, filename],
                             );
                           });
                           ref.read(projectSourceProvider.notifier).state = [
@@ -112,7 +128,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromGalery(context);
+                        final image = await Utilits.pickImageFromGalery(context, _project);
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -125,11 +141,12 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
+                          log('${image!.name}');
                           //TODO: check to translate file to a JPG with mime or something else
                           final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              dokusPath: [..._entry.dokusPath, filename],
+                              imageUrl: [..._entry.imageUrl, filename],
                             );
                             ref.read(projectSourceProvider.notifier).state = [
                               ...ref.watch(projectSourceProvider),

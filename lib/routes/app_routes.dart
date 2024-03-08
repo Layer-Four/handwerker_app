@@ -16,7 +16,7 @@ class AppRoutes {
     anmeldeScreen: (context) => const LoginView(),
     forgotPassword: (context) => const ForgetScreen(),
     initialRoute: (context) => const StartView(),
-    setPasswordScreen: (context) => PasswordView(),
+    setPasswordScreen: (context) => const PasswordView(),
     viewScreen: (context) => const MainViewNavigator(),
   };
 }

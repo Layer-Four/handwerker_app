@@ -13,13 +13,12 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  bool isOTP = false;
+  TextEditingController emailCon = TextEditingController();
+  TextEditingController passCon = TextEditingController();
+  GlobalKey<FormState> formstate = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailCon = TextEditingController();
-    TextEditingController passCon = TextEditingController();
-    GlobalKey<FormState> formstate = GlobalKey();
-
-    bool isOTP = true;
     return Scaffold(
       body: BackgroundWidget(
           body: Padding(
@@ -52,12 +51,8 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "Nutzername",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -77,12 +72,8 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -94,6 +85,17 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(
                           height: 5,
                         ),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Switch(
+                            value: isOTP,
+                            onChanged: (value) {
+                              setState(() {
+                                isOTP = value;
+                              });
+                            },
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.topRight,
                           child: Padding(
@@ -101,13 +103,11 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style: TextStyle(
-                                    color: AppColor.kWhite,
-                                    fontWeight: FontWeight.w500),
+                                style:
+                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.forgotPassword);
+                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -127,13 +127,10 @@ class _LoginViewState extends State<LoginView> {
                                   print("Not Valid");
                                 }
                                 if (isOTP) {
-                                  Navigator.of(context)
-                                      .pushNamed(AppRoutes.setPasswordScreen);
+                                  Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
+                                } else {
+                                  Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
                                 }
-                                // else {
-                                //   Navigator.of(context).pushReplacementNamed(
-                                //       AppRoutes.viewScreen);
-                                // }
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
