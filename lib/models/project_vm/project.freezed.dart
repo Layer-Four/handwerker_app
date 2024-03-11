@@ -20,10 +20,11 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Project {
-  String? get projectID => throw _privateConstructorUsedError;
+  BigInt? get projectID => throw _privateConstructorUsedError;
+  BigInt? get customer => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   DateTime get createDate => throw _privateConstructorUsedError;
-  List<String> get dokusPath => throw _privateConstructorUsedError;
+  List<String> get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,10 +38,11 @@ abstract class $ProjectCopyWith<$Res> {
       _$ProjectCopyWithImpl<$Res, Project>;
   @useResult
   $Res call(
-      {String? projectID,
+      {BigInt? projectID,
+      BigInt? customer,
       String? name,
       DateTime createDate,
-      List<String> dokusPath,
+      List<String> imageUrl,
       String? description});
 }
 
@@ -58,16 +60,21 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
   @override
   $Res call({
     Object? projectID = freezed,
+    Object? customer = freezed,
     Object? name = freezed,
     Object? createDate = null,
-    Object? dokusPath = null,
+    Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as BigInt?,
+      customer: freezed == customer
+          ? _value.customer
+          : customer // ignore: cast_nullable_to_non_nullable
+              as BigInt?,
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -76,9 +83,9 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      dokusPath: null == dokusPath
-          ? _value.dokusPath
-          : dokusPath // ignore: cast_nullable_to_non_nullable
+      imageUrl: null == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as List<String>,
       description: freezed == description
           ? _value.description
@@ -96,10 +103,11 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String? projectID,
+      {BigInt? projectID,
+      BigInt? customer,
       String? name,
       DateTime createDate,
-      List<String> dokusPath,
+      List<String> imageUrl,
       String? description});
 }
 
@@ -115,16 +123,21 @@ class __$$ProjectImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? projectID = freezed,
+    Object? customer = freezed,
     Object? name = freezed,
     Object? createDate = null,
-    Object? dokusPath = null,
+    Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_$ProjectImpl(
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as BigInt?,
+      customer: freezed == customer
+          ? _value.customer
+          : customer // ignore: cast_nullable_to_non_nullable
+              as BigInt?,
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -133,9 +146,9 @@ class __$$ProjectImplCopyWithImpl<$Res>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      dokusPath: null == dokusPath
-          ? _value._dokusPath
-          : dokusPath // ignore: cast_nullable_to_non_nullable
+      imageUrl: null == imageUrl
+          ? _value._imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as List<String>,
       description: freezed == description
           ? _value.description
@@ -150,28 +163,31 @@ class __$$ProjectImplCopyWithImpl<$Res>
 class _$ProjectImpl implements _Project {
   const _$ProjectImpl(
       {this.projectID,
+      this.customer,
       this.name,
       required this.createDate,
-      final List<String> dokusPath = const <String>[],
+      final List<String> imageUrl = const <String>[],
       this.description})
-      : _dokusPath = dokusPath;
+      : _imageUrl = imageUrl;
 
   factory _$ProjectImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectImplFromJson(json);
 
   @override
-  final String? projectID;
+  final BigInt? projectID;
+  @override
+  final BigInt? customer;
   @override
   final String? name;
   @override
   final DateTime createDate;
-  final List<String> _dokusPath;
+  final List<String> _imageUrl;
   @override
   @JsonKey()
-  List<String> get dokusPath {
-    if (_dokusPath is EqualUnmodifiableListView) return _dokusPath;
+  List<String> get imageUrl {
+    if (_imageUrl is EqualUnmodifiableListView) return _imageUrl;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_dokusPath);
+    return EqualUnmodifiableListView(_imageUrl);
   }
 
   @override
@@ -179,7 +195,7 @@ class _$ProjectImpl implements _Project {
 
   @override
   String toString() {
-    return 'Project(projectID: $projectID, name: $name, createDate: $createDate, dokusPath: $dokusPath, description: $description)';
+    return 'Project(projectID: $projectID, customer: $customer, name: $name, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
@@ -189,19 +205,20 @@ class _$ProjectImpl implements _Project {
             other is _$ProjectImpl &&
             (identical(other.projectID, projectID) ||
                 other.projectID == projectID) &&
+            (identical(other.customer, customer) ||
+                other.customer == customer) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
-            const DeepCollectionEquality()
-                .equals(other._dokusPath, _dokusPath) &&
+            const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, projectID, name, createDate,
-      const DeepCollectionEquality().hash(_dokusPath), description);
+  int get hashCode => Object.hash(runtimeType, projectID, customer, name,
+      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
 
   @JsonKey(ignore: true)
   @override
@@ -219,22 +236,25 @@ class _$ProjectImpl implements _Project {
 
 abstract class _Project implements Project {
   const factory _Project(
-      {final String? projectID,
+      {final BigInt? projectID,
+      final BigInt? customer,
       final String? name,
       required final DateTime createDate,
-      final List<String> dokusPath,
+      final List<String> imageUrl,
       final String? description}) = _$ProjectImpl;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$ProjectImpl.fromJson;
 
   @override
-  String? get projectID;
+  BigInt? get projectID;
+  @override
+  BigInt? get customer;
   @override
   String? get name;
   @override
   DateTime get createDate;
   @override
-  List<String> get dokusPath;
+  List<String> get imageUrl;
   @override
   String? get description;
   @override

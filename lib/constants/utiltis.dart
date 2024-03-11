@@ -15,17 +15,26 @@ class Utilits {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2023),
-        lastDate: DateTime(2100));
+        lastDate: DateTime(2100),
+        locale: const Locale('de', 'DE'));
   }
 
-  static Future<File?> pickImageFromCamera(BuildContext context) async {
+  static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
     try {
       final XFile? file = await ImagePicker().pickImage(
         source: ImageSource.camera,
         maxHeight: 1024,
         maxWidth: 1024,
       );
-      if (file != null) return File(file.path);
+      //TODO: save image on local device?
+      log('filename ${file?.name} ,mimeType: ${file?.mimeType} / ${file?.path}');
+      if (file != null) {
+        final newfile = XFile(file.path,
+            name:
+                '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
+        log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
+        return newfile;
+      }
     } catch (e) {
       final status = await Permission.camera.status;
       log('permission was denied: $e');
@@ -36,14 +45,21 @@ class Utilits {
     return null;
   }
 
-  static Future<File?> pickImageFromGalery(BuildContext context) async {
+  static Future<XFile?> pickImageFromGalery(BuildContext context, String projectName) async {
     try {
       final XFile? file = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         maxHeight: 1024,
         maxWidth: 1024,
       );
-      if (file != null) return File(file.path);
+      log('filename ${file?.name} ,mimeType: ${file?.mimeType}');
+      if (file != null) {
+        final newfile = XFile(file.path,
+            name:
+                '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
+        log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
+        return newfile;
+      }
     } catch (e) {
       final status = await Permission.storage.status;
       log('permission was denied: $e');

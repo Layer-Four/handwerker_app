@@ -95,7 +95,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               onChanged: (e) {
                 setState(() {
                   _project = e!;
-                  _entry = _entry.copyWith(projectID: e);
+                  _entry = _entry.copyWith(projectID: BigInt.two);
                 });
               },
             ),
@@ -153,7 +153,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               ).toList(),
               onChanged: (e) => setState(() {
                 _executedService = e!;
-                _entry = _entry.copyWith(service: e);
+                _entry = _entry.copyWith(serviceID: BigInt.one);
               }),
             ),
           ),
