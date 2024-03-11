@@ -11,3 +11,5 @@ InputDecoration decorationTextfield = InputDecoration(
   ),
   filled: true,
 );
+
+const baseUrl = 'https://r-wa-happ-be.azurewebsites.net/api';

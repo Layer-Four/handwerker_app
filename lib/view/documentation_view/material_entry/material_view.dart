@@ -1,11 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable/consumable.dart';
 import 'package:handwerker_app/models/consumable_entry/consumable_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -251,6 +252,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                       onPressed: () async {
                         final image = await Utilits.pickImageFromCamera(context, _project);
                         if (image != null) {
+                          log('imagePath: $image');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -259,14 +261,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
+                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, image]);
                           });
-                          ref.read(consumableSourceProvider.notifier).state = [
-                            ...ref.watch(consumableSourceProvider),
-                            (filename, image),
-                          ];
                         }
                       },
                     ),
@@ -292,14 +289,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
-                          //TODO: check to translate file to a JPG with mime or something else
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, filename]);
-                            ref.read(projectSourceProvider.notifier).state = [
-                              ...ref.watch(projectSourceProvider),
-                              (filename, image),
-                            ];
+                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, image]);
                           });
                         }
                       },
@@ -309,10 +300,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               ],
             ),
             Text(
-              ref.watch(consumableSourceProvider).isEmpty
+              _entry.dokusPath.isEmpty
                   ? ''
-                  : '${ref.watch(consumableSourceProvider).length} ${ref.watch(languangeProvider).choosedImage}',
-              style: ref.watch(consumableSourceProvider).isEmpty
+                  : '${_entry.dokusPath.length} ${ref.watch(languangeProvider).choosedImage}',
+              style: _entry.dokusPath.isEmpty
                   ? const TextStyle(fontSize: 0)
                   : Theme.of(context).textTheme.labelSmall,
             ),
@@ -429,7 +420,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               _selectedMaterial = _materials.first;
               _amountController.clear();
               _summeryController.clear();
-              ref.read(consumableSourceProvider.notifier).state = [];
               _duration = _durationSteps.first;
               _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
             });

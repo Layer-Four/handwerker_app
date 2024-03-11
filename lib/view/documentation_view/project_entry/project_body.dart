@@ -8,11 +8,9 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_vm/project.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProjectBody extends ConsumerStatefulWidget {
   const ProjectBody({super.key});
@@ -85,11 +83,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
                         final image = await Utilits.pickImageFromCamera(context, _project);
-                        log('${image!.name}');
-                        final newImage =
-                            XFile(image.path, name: _project + DateTime.timestamp().toString());
-                        log('${newImage!.name}');
                         if (image != null) {
+                          log('returned paht ${image}');
                           //TODO: Maybe show image in popUp?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -101,21 +96,16 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Image.file(
-                              File(image.path),
+                              File(image),
                               height: 100,
                               width: 100,
                             ),
                           ));
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, filename],
+                              imageUrl: [..._entry.imageUrl, image],
                             );
                           });
-                          ref.read(projectSourceProvider.notifier).state = [
-                            ...ref.watch(projectSourceProvider),
-                            (filename, image),
-                          ];
                         }
                       },
                     ),
@@ -130,6 +120,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                       onPressed: () async {
                         final image = await Utilits.pickImageFromGalery(context, _project);
                         if (image != null) {
+                          log('imagepath: $image');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -141,17 +132,10 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
-                          log('${image!.name}');
-                          //TODO: check to translate file to a JPG with mime or something else
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, filename],
+                              imageUrl: [..._entry.imageUrl, image],
                             );
-                            ref.read(projectSourceProvider.notifier).state = [
-                              ...ref.watch(projectSourceProvider),
-                              (filename, image),
-                            ];
                           });
                         }
                       },
@@ -161,10 +145,10 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               ],
             ),
             Text(
-              ref.watch(projectSourceProvider).isEmpty
+              _entry.imageUrl.isEmpty
                   ? ''
-                  : '${ref.watch(projectSourceProvider).length} ${ref.watch(languangeProvider).choosedImage}',
-              style: ref.watch(projectSourceProvider).isEmpty
+                  : '${_entry.imageUrl.length} ${ref.watch(languangeProvider).choosedImage}',
+              style: _entry.imageUrl.isEmpty
                   ? const TextStyle(fontSize: 0)
                   : Theme.of(context).textTheme.labelSmall,
             ),
@@ -274,7 +258,6 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               final now = DateTime.now();
               setState(() {
                 _project = _customerProject.first;
-                ref.read(projectSourceProvider.notifier).state = [];
                 _descriptionController.clear();
                 _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
               });
