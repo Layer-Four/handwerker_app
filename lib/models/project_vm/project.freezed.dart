@@ -20,9 +20,10 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Project {
-  BigInt? get projectID => throw _privateConstructorUsedError;
-  BigInt? get customer => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
+  BigInt get projectID => throw _privateConstructorUsedError;
+  BigInt get customerID => throw _privateConstructorUsedError;
+  String get customerName => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
   DateTime get createDate => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
@@ -38,9 +39,10 @@ abstract class $ProjectCopyWith<$Res> {
       _$ProjectCopyWithImpl<$Res, Project>;
   @useResult
   $Res call(
-      {BigInt? projectID,
-      BigInt? customer,
-      String? name,
+      {BigInt projectID,
+      BigInt customerID,
+      String customerName,
+      String? projectName,
       DateTime createDate,
       List<String> imageUrl,
       String? description});
@@ -59,25 +61,30 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? projectID = freezed,
-    Object? customer = freezed,
-    Object? name = freezed,
+    Object? projectID = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
-      projectID: freezed == projectID
+      projectID: null == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      customer: freezed == customer
-          ? _value.customer
-          : customer // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
       createDate: null == createDate
           ? _value.createDate
@@ -103,9 +110,10 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {BigInt? projectID,
-      BigInt? customer,
-      String? name,
+      {BigInt projectID,
+      BigInt customerID,
+      String customerName,
+      String? projectName,
       DateTime createDate,
       List<String> imageUrl,
       String? description});
@@ -122,25 +130,30 @@ class __$$ProjectImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? projectID = freezed,
-    Object? customer = freezed,
-    Object? name = freezed,
+    Object? projectID = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_$ProjectImpl(
-      projectID: freezed == projectID
+      projectID: null == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      customer: freezed == customer
-          ? _value.customer
-          : customer // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
       createDate: null == createDate
           ? _value.createDate
@@ -162,9 +175,10 @@ class __$$ProjectImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectImpl implements _Project {
   const _$ProjectImpl(
-      {this.projectID,
-      this.customer,
-      this.name,
+      {required this.projectID,
+      required this.customerID,
+      required this.customerName,
+      this.projectName,
       required this.createDate,
       final List<String> imageUrl = const <String>[],
       this.description})
@@ -174,11 +188,13 @@ class _$ProjectImpl implements _Project {
       _$$ProjectImplFromJson(json);
 
   @override
-  final BigInt? projectID;
+  final BigInt projectID;
   @override
-  final BigInt? customer;
+  final BigInt customerID;
   @override
-  final String? name;
+  final String customerName;
+  @override
+  final String? projectName;
   @override
   final DateTime createDate;
   final List<String> _imageUrl;
@@ -195,7 +211,7 @@ class _$ProjectImpl implements _Project {
 
   @override
   String toString() {
-    return 'Project(projectID: $projectID, customer: $customer, name: $name, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'Project(projectID: $projectID, customerID: $customerID, customerName: $customerName, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
@@ -205,9 +221,12 @@ class _$ProjectImpl implements _Project {
             other is _$ProjectImpl &&
             (identical(other.projectID, projectID) ||
                 other.projectID == projectID) &&
-            (identical(other.customer, customer) ||
-                other.customer == customer) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.customerID, customerID) ||
+                other.customerID == customerID) &&
+            (identical(other.customerName, customerName) ||
+                other.customerName == customerName) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
             const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
@@ -217,8 +236,15 @@ class _$ProjectImpl implements _Project {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, projectID, customer, name,
-      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
+  int get hashCode => Object.hash(
+      runtimeType,
+      projectID,
+      customerID,
+      customerName,
+      projectName,
+      createDate,
+      const DeepCollectionEquality().hash(_imageUrl),
+      description);
 
   @JsonKey(ignore: true)
   @override
@@ -236,9 +262,10 @@ class _$ProjectImpl implements _Project {
 
 abstract class _Project implements Project {
   const factory _Project(
-      {final BigInt? projectID,
-      final BigInt? customer,
-      final String? name,
+      {required final BigInt projectID,
+      required final BigInt customerID,
+      required final String customerName,
+      final String? projectName,
       required final DateTime createDate,
       final List<String> imageUrl,
       final String? description}) = _$ProjectImpl;
@@ -246,11 +273,13 @@ abstract class _Project implements Project {
   factory _Project.fromJson(Map<String, dynamic> json) = _$ProjectImpl.fromJson;
 
   @override
-  BigInt? get projectID;
+  BigInt get projectID;
   @override
-  BigInt? get customer;
+  BigInt get customerID;
   @override
-  String? get name;
+  String get customerName;
+  @override
+  String? get projectName;
   @override
   DateTime get createDate;
   @override

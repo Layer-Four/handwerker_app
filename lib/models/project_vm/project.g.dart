@@ -8,13 +8,10 @@ part of 'project.dart';
 
 _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
     _$ProjectImpl(
-      projectID: json['projectID'] == null
-          ? null
-          : BigInt.parse(json['projectID'] as String),
-      customer: json['customer'] == null
-          ? null
-          : BigInt.parse(json['customer'] as String),
-      name: json['name'] as String?,
+      projectID: BigInt.parse(json['projectID'] as String),
+      customerID: BigInt.parse(json['customerID'] as String),
+      customerName: json['customerName'] as String,
+      projectName: json['projectName'] as String?,
       createDate: DateTime.parse(json['createDate'] as String),
       imageUrl: (json['imageUrl'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -25,9 +22,10 @@ _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$ProjectImplToJson(_$ProjectImpl instance) =>
     <String, dynamic>{
-      'projectID': instance.projectID?.toString(),
-      'customer': instance.customer?.toString(),
-      'name': instance.name,
+      'projectID': instance.projectID.toString(),
+      'customerID': instance.customerID.toString(),
+      'customerName': instance.customerName,
+      'projectName': instance.projectName,
       'createDate': instance.createDate.toIso8601String(),
       'imageUrl': instance.imageUrl,
       'description': instance.description,

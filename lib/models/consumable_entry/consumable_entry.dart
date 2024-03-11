@@ -7,7 +7,8 @@ part 'consumable_entry.g.dart';
 class ConsumeEntry with _$ConsumeEntry {
   const factory ConsumeEntry({
     required DateTime createDate,
-    String? project,
+    @Default('') String entryID,
+    String? projectName,
     @Default(<Consumable>[]) List<Consumable> consumables,
     @Default(<String>[]) List<String> dokusPath,
     double? estimatedDuration,

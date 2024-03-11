@@ -20,6 +20,8 @@ Consumable _$ConsumableFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consumable {
+  String? get consumableID => throw _privateConstructorUsedError;
+  int? get price => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get amount => throw _privateConstructorUsedError;
 
@@ -35,7 +37,7 @@ abstract class $ConsumableCopyWith<$Res> {
           Consumable value, $Res Function(Consumable) then) =
       _$ConsumableCopyWithImpl<$Res, Consumable>;
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String? consumableID, int? price, String name, int amount});
 }
 
 /// @nodoc
@@ -51,10 +53,20 @@ class _$ConsumableCopyWithImpl<$Res, $Val extends Consumable>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? consumableID = freezed,
+    Object? price = freezed,
     Object? name = null,
     Object? amount = null,
   }) {
     return _then(_value.copyWith(
+      consumableID: freezed == consumableID
+          ? _value.consumableID
+          : consumableID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -75,7 +87,7 @@ abstract class _$$ConsumableImplCopyWith<$Res>
       __$$ConsumableImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String? consumableID, int? price, String name, int amount});
 }
 
 /// @nodoc
@@ -89,10 +101,20 @@ class __$$ConsumableImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? consumableID = freezed,
+    Object? price = freezed,
     Object? name = null,
     Object? amount = null,
   }) {
     return _then(_$ConsumableImpl(
+      consumableID: freezed == consumableID
+          ? _value.consumableID
+          : consumableID // ignore: cast_nullable_to_non_nullable
+              as String?,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -108,11 +130,16 @@ class __$$ConsumableImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ConsumableImpl implements _Consumable {
-  const _$ConsumableImpl({required this.name, this.amount = 1});
+  const _$ConsumableImpl(
+      {this.consumableID, this.price, required this.name, this.amount = 1});
 
   factory _$ConsumableImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumableImplFromJson(json);
 
+  @override
+  final String? consumableID;
+  @override
+  final int? price;
   @override
   final String name;
   @override
@@ -121,7 +148,7 @@ class _$ConsumableImpl implements _Consumable {
 
   @override
   String toString() {
-    return 'Consumable(name: $name, amount: $amount)';
+    return 'Consumable(consumableID: $consumableID, price: $price, name: $name, amount: $amount)';
   }
 
   @override
@@ -129,13 +156,17 @@ class _$ConsumableImpl implements _Consumable {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsumableImpl &&
+            (identical(other.consumableID, consumableID) ||
+                other.consumableID == consumableID) &&
+            (identical(other.price, price) || other.price == price) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.amount, amount) || other.amount == amount));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, amount);
+  int get hashCode =>
+      Object.hash(runtimeType, consumableID, price, name, amount);
 
   @JsonKey(ignore: true)
   @override
@@ -152,12 +183,19 @@ class _$ConsumableImpl implements _Consumable {
 }
 
 abstract class _Consumable implements Consumable {
-  const factory _Consumable({required final String name, final int amount}) =
-      _$ConsumableImpl;
+  const factory _Consumable(
+      {final String? consumableID,
+      final int? price,
+      required final String name,
+      final int amount}) = _$ConsumableImpl;
 
   factory _Consumable.fromJson(Map<String, dynamic> json) =
       _$ConsumableImpl.fromJson;
 
+  @override
+  String? get consumableID;
+  @override
+  int? get price;
   @override
   String get name;
   @override

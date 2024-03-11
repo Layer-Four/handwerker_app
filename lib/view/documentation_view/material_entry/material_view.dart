@@ -334,7 +334,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             onChanged: (e) {
               setState(() {
                 _project = e!;
-                _entry = _entry.copyWith(project: e);
+                _entry = _entry.copyWith(projectName: e);
               });
             },
           ),
@@ -401,6 +401,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         text: ref.watch(languangeProvider).createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
+          log(_entry.toJson().toString());
           if (_project != ' Wählen' && _selectedMaterial != ' Wählen') {
             final material = Consumable(
               name: _selectedMaterial,

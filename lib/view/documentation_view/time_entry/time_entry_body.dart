@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/models/service_vm/service.dart';
 import 'package:handwerker_app/models/time_entry/time_entry.dart';
+import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
@@ -27,16 +32,21 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  static const _services = [
-    ' Wählen',
-    ' Fenster Montage',
-    ' Bad fliesen',
-    ' Reinigung',
-  ];
-  String _project = _customerProject.first;
-  String _executedService = _services.first;
+  List<ServiceVM>? _services = [];
+  // ' Wählen',
+  // ' Fenster Montage',
+  // ' Bad fliesen',
+  // ' Reinigung',
+  ServiceVM? _choosenService;
+  Future<List<ServiceVM>> loadServices() async {
+    final data = await Utilits.loadServices();
+    return data;
+  }
 
+  //  Future<List<ServiceVM>?> _services = loadServices();
+  String _project = _customerProject.first;
   late TimeEntry _entry;
+
   @override
   void initState() {
     super.initState();
@@ -49,29 +59,32 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
       selectedTime = TimeOfDay(hour: _entry.startTime.hour, minute: _entry.startTime.minute);
     }
     _startController.text = '${selectedTime!.hour}:$minute';
+    // _choosenService = _services?.first;
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            _dayInputRow(),
-            _timeInputRow(),
-            _buildCustomerProjectField(),
-            _buildServiceButton(),
-            _buildDescription(),
-            const SizedBox(height: 46),
-            _submitInput(),
-            SizedBox(
-              height: 70,
-              child: Center(
-                child: Image.asset('assets/images/img_techtool.png', height: 20),
-              ),
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          _dayInputRow(),
+          _timeInputRow(),
+          _buildCustomerProjectField(),
+          _buildServiceDropdown(),
+          _buildDescription(),
+          const SizedBox(height: 46),
+          _submitInput(),
+          SizedBox(
+            height: 70,
+            child: Center(
+              child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   Padding _buildCustomerProjectField() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -129,36 +142,51 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         ),
       );
 
-  Padding _buildServiceButton() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).service,
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColor.kTextfieldBorder),
-            ),
-            child: DropdownButton(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: _executedService,
-              items: _services.map(
-                (e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  );
-                },
-              ).toList(),
-              onChanged: (e) => setState(() {
-                _executedService = e!;
-                _entry = _entry.copyWith(serviceID: BigInt.one);
-              }),
+  Widget _buildServiceDropdown() {
+    return ref.watch(serviceProvider).when(
+      data: (data) {
+        _services = data;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: LabeledInputWidget(
+            label: ref.watch(languangeProvider).service,
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColor.kTextfieldBorder),
+              ),
+              child: DropdownButton(
+                underline: const SizedBox(),
+                isExpanded: true,
+                value: _choosenService,
+                items: _services!.map(
+                  (e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(' ${e.name}'),
+                    );
+                  },
+                ).toList(),
+                onChanged: (e) => setState(() {
+                  _choosenService = e;
+                  _entry = _entry.copyWith(serviceID: BigInt.from(e!.id));
+                }),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      },
+      loading: () {
+        return CircularProgressIndicator.adaptive();
+      },
+      error: (error, stackTrace) {
+        return Container(
+          child: Text('$error'),
+        );
+      },
+    );
+  }
 
   /// Split the [String] values from the TextEdingController with the given
   /// format and build [DateTime] objects with the Compination from
@@ -248,6 +276,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
+            log(_entry.toJson().toString());
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -255,7 +284,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 ),
               );
               // TODO: change wählen to an editable object
-            } else if (_project == ' Wählen' || _executedService == ' Wählen') {
+            } else if (_project == ' Wählen') {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(ref.watch(languangeProvider).plsChooseProject),
@@ -269,7 +298,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 _descriptionController.clear();
                 _endController.clear();
                 _durationController.clear();
-                _executedService = _services.first;
                 _project = _customerProject.first;
                 _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
               });

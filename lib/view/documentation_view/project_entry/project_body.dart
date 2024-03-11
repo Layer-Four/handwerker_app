@@ -37,7 +37,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
     final now = DateTime.now();
     setState(() {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      _entry = Project(createDate: now);
+      _entry = Project(
+          createDate: now, projectID: BigInt.one, customerID: BigInt.from(0), customerName: '');
     });
   }
 
@@ -178,7 +179,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               onChanged: (e) {
                 setState(() {
                   _project = e!;
-                  _entry = _entry.copyWith(name: e);
+                  _entry = _entry.copyWith(customerName: e);
                 });
               },
             ),
@@ -239,6 +240,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
+            log(_entry.toJson().toString());
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
