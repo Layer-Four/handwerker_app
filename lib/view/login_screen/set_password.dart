@@ -5,7 +5,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 // import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/login_view.dart';
 import 'package:handwerker_app/view/login_screen/shared/constants.dart';
-import 'package:handwerker_app/view/login_screen/shared/custom_text_field.dart';
+// import 'package:handwerker_app/view/login_screen/shared/custom_text_field.dart';
 import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
@@ -81,7 +81,6 @@ class _PasswordViewState extends State<PasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasError = false;
     return Scaffold(
       // extendBodyBehindAppBar: true,
 
@@ -158,8 +157,6 @@ class _PasswordViewState extends State<PasswordView> {
                     if (value!.isEmpty) {
                       return null;
                     } else if (value.length < 6) {
-                      hasError = true;
-
                       return "Enter at least 6 Zeichen";
                     }
 

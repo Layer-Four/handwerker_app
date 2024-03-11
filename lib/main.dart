@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/apptheme/app_theme.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 
 final themeProvider = StateProvider<bool>((ref) => true);
