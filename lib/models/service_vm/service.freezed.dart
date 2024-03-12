@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'consumable.dart';
+part of 'service.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,34 +14,33 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Consumable _$ConsumableFromJson(Map<String, dynamic> json) {
-  return _Consumable.fromJson(json);
+ServiceVM _$ServiceVMFromJson(Map<String, dynamic> json) {
+  return _Service.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Consumable {
+mixin _$ServiceVM {
   String get name => throw _privateConstructorUsedError;
-  int get amount => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ConsumableCopyWith<Consumable> get copyWith =>
+  $ServiceVMCopyWith<ServiceVM> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ConsumableCopyWith<$Res> {
-  factory $ConsumableCopyWith(
-          Consumable value, $Res Function(Consumable) then) =
-      _$ConsumableCopyWithImpl<$Res, Consumable>;
+abstract class $ServiceVMCopyWith<$Res> {
+  factory $ServiceVMCopyWith(ServiceVM value, $Res Function(ServiceVM) then) =
+      _$ServiceVMCopyWithImpl<$Res, ServiceVM>;
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String name, int id});
 }
 
 /// @nodoc
-class _$ConsumableCopyWithImpl<$Res, $Val extends Consumable>
-    implements $ConsumableCopyWith<$Res> {
-  _$ConsumableCopyWithImpl(this._value, this._then);
+class _$ServiceVMCopyWithImpl<$Res, $Val extends ServiceVM>
+    implements $ServiceVMCopyWith<$Res> {
+  _$ServiceVMCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -52,54 +51,54 @@ class _$ConsumableCopyWithImpl<$Res, $Val extends Consumable>
   @override
   $Res call({
     Object? name = null,
-    Object? amount = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$ConsumableImplCopyWith<$Res>
-    implements $ConsumableCopyWith<$Res> {
-  factory _$$ConsumableImplCopyWith(
-          _$ConsumableImpl value, $Res Function(_$ConsumableImpl) then) =
-      __$$ConsumableImplCopyWithImpl<$Res>;
+abstract class _$$ServiceImplCopyWith<$Res>
+    implements $ServiceVMCopyWith<$Res> {
+  factory _$$ServiceImplCopyWith(
+          _$ServiceImpl value, $Res Function(_$ServiceImpl) then) =
+      __$$ServiceImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String name, int id});
 }
 
 /// @nodoc
-class __$$ConsumableImplCopyWithImpl<$Res>
-    extends _$ConsumableCopyWithImpl<$Res, _$ConsumableImpl>
-    implements _$$ConsumableImplCopyWith<$Res> {
-  __$$ConsumableImplCopyWithImpl(
-      _$ConsumableImpl _value, $Res Function(_$ConsumableImpl) _then)
+class __$$ServiceImplCopyWithImpl<$Res>
+    extends _$ServiceVMCopyWithImpl<$Res, _$ServiceImpl>
+    implements _$$ServiceImplCopyWith<$Res> {
+  __$$ServiceImplCopyWithImpl(
+      _$ServiceImpl _value, $Res Function(_$ServiceImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? name = null,
-    Object? amount = null,
+    Object? id = null,
   }) {
-    return _then(_$ConsumableImpl(
+    return _then(_$ServiceImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -107,63 +106,61 @@ class __$$ConsumableImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ConsumableImpl implements _Consumable {
-  const _$ConsumableImpl({required this.name, this.amount = 1});
+class _$ServiceImpl implements _Service {
+  const _$ServiceImpl({required this.name, required this.id});
 
-  factory _$ConsumableImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ConsumableImplFromJson(json);
+  factory _$ServiceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ServiceImplFromJson(json);
 
   @override
   final String name;
   @override
-  @JsonKey()
-  final int amount;
+  final int id;
 
   @override
   String toString() {
-    return 'Consumable(name: $name, amount: $amount)';
+    return 'ServiceVM(name: $name, id: $id)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ConsumableImpl &&
+            other is _$ServiceImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.amount, amount) || other.amount == amount));
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, amount);
+  int get hashCode => Object.hash(runtimeType, name, id);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ConsumableImplCopyWith<_$ConsumableImpl> get copyWith =>
-      __$$ConsumableImplCopyWithImpl<_$ConsumableImpl>(this, _$identity);
+  _$$ServiceImplCopyWith<_$ServiceImpl> get copyWith =>
+      __$$ServiceImplCopyWithImpl<_$ServiceImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsumableImplToJson(
+    return _$$ServiceImplToJson(
       this,
     );
   }
 }
 
-abstract class _Consumable implements Consumable {
-  const factory _Consumable({required final String name, final int amount}) =
-      _$ConsumableImpl;
+abstract class _Service implements ServiceVM {
+  const factory _Service({required final String name, required final int id}) =
+      _$ServiceImpl;
 
-  factory _Consumable.fromJson(Map<String, dynamic> json) =
-      _$ConsumableImpl.fromJson;
+  factory _Service.fromJson(Map<String, dynamic> json) = _$ServiceImpl.fromJson;
 
   @override
   String get name;
   @override
-  int get amount;
+  int get id;
   @override
   @JsonKey(ignore: true)
-  _$$ConsumableImplCopyWith<_$ConsumableImpl> get copyWith =>
+  _$$ServiceImplCopyWith<_$ServiceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

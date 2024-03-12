@@ -9,7 +9,11 @@ part of 'consumable_entry.dart';
 _$ConsumeEntryImpl _$$ConsumeEntryImplFromJson(Map<String, dynamic> json) =>
     _$ConsumeEntryImpl(
       createDate: DateTime.parse(json['createDate'] as String),
-      project: json['project'] as String?,
+      entryID: json['entryID'] as String? ?? '',
+      projectName: json['projectName'] as String?,
+      projectID: json['projectID'] == null
+          ? null
+          : BigInt.parse(json['projectID'] as String),
       consumables: (json['consumables'] as List<dynamic>?)
               ?.map((e) => Consumable.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -25,7 +29,9 @@ _$ConsumeEntryImpl _$$ConsumeEntryImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$ConsumeEntryImplToJson(_$ConsumeEntryImpl instance) =>
     <String, dynamic>{
       'createDate': instance.createDate.toIso8601String(),
-      'project': instance.project,
+      'entryID': instance.entryID,
+      'projectName': instance.projectName,
+      'projectID': instance.projectID?.toString(),
       'consumables': instance.consumables,
       'dokusPath': instance.dokusPath,
       'estimatedDuration': instance.estimatedDuration,

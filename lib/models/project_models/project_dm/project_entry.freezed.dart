@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'project.dart';
+part of 'project_entry.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,42 +14,46 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Project _$ProjectFromJson(Map<String, dynamic> json) {
-  return _Project.fromJson(json);
+ProjectEntry _$ProjectEntryFromJson(Map<String, dynamic> json) {
+  return _ProjecEntryt.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Project {
-  BigInt? get projectID => throw _privateConstructorUsedError;
-  BigInt? get customer => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
+mixin _$ProjectEntry {
+  BigInt get projectID => throw _privateConstructorUsedError;
+  BigInt get customerID => throw _privateConstructorUsedError;
+  String get customerName => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
   DateTime get createDate => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ProjectCopyWith<Project> get copyWith => throw _privateConstructorUsedError;
+  $ProjectEntryCopyWith<ProjectEntry> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProjectCopyWith<$Res> {
-  factory $ProjectCopyWith(Project value, $Res Function(Project) then) =
-      _$ProjectCopyWithImpl<$Res, Project>;
+abstract class $ProjectEntryCopyWith<$Res> {
+  factory $ProjectEntryCopyWith(
+          ProjectEntry value, $Res Function(ProjectEntry) then) =
+      _$ProjectEntryCopyWithImpl<$Res, ProjectEntry>;
   @useResult
   $Res call(
-      {BigInt? projectID,
-      BigInt? customer,
-      String? name,
+      {BigInt projectID,
+      BigInt customerID,
+      String customerName,
+      String? projectName,
       DateTime createDate,
       List<String> imageUrl,
       String? description});
 }
 
 /// @nodoc
-class _$ProjectCopyWithImpl<$Res, $Val extends Project>
-    implements $ProjectCopyWith<$Res> {
-  _$ProjectCopyWithImpl(this._value, this._then);
+class _$ProjectEntryCopyWithImpl<$Res, $Val extends ProjectEntry>
+    implements $ProjectEntryCopyWith<$Res> {
+  _$ProjectEntryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -59,25 +63,30 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? projectID = freezed,
-    Object? customer = freezed,
-    Object? name = freezed,
+    Object? projectID = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
-      projectID: freezed == projectID
+      projectID: null == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      customer: freezed == customer
-          ? _value.customer
-          : customer // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
       createDate: null == createDate
           ? _value.createDate
@@ -96,51 +105,58 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
 }
 
 /// @nodoc
-abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
-  factory _$$ProjectImplCopyWith(
-          _$ProjectImpl value, $Res Function(_$ProjectImpl) then) =
-      __$$ProjectImplCopyWithImpl<$Res>;
+abstract class _$$ProjecEntrytImplCopyWith<$Res>
+    implements $ProjectEntryCopyWith<$Res> {
+  factory _$$ProjecEntrytImplCopyWith(
+          _$ProjecEntrytImpl value, $Res Function(_$ProjecEntrytImpl) then) =
+      __$$ProjecEntrytImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {BigInt? projectID,
-      BigInt? customer,
-      String? name,
+      {BigInt projectID,
+      BigInt customerID,
+      String customerName,
+      String? projectName,
       DateTime createDate,
       List<String> imageUrl,
       String? description});
 }
 
 /// @nodoc
-class __$$ProjectImplCopyWithImpl<$Res>
-    extends _$ProjectCopyWithImpl<$Res, _$ProjectImpl>
-    implements _$$ProjectImplCopyWith<$Res> {
-  __$$ProjectImplCopyWithImpl(
-      _$ProjectImpl _value, $Res Function(_$ProjectImpl) _then)
+class __$$ProjecEntrytImplCopyWithImpl<$Res>
+    extends _$ProjectEntryCopyWithImpl<$Res, _$ProjecEntrytImpl>
+    implements _$$ProjecEntrytImplCopyWith<$Res> {
+  __$$ProjecEntrytImplCopyWithImpl(
+      _$ProjecEntrytImpl _value, $Res Function(_$ProjecEntrytImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? projectID = freezed,
-    Object? customer = freezed,
-    Object? name = freezed,
+    Object? projectID = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
-    return _then(_$ProjectImpl(
-      projectID: freezed == projectID
+    return _then(_$ProjecEntrytImpl(
+      projectID: null == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      customer: freezed == customer
-          ? _value.customer
-          : customer // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
       createDate: null == createDate
           ? _value.createDate
@@ -160,25 +176,28 @@ class __$$ProjectImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProjectImpl implements _Project {
-  const _$ProjectImpl(
-      {this.projectID,
-      this.customer,
-      this.name,
+class _$ProjecEntrytImpl implements _ProjecEntryt {
+  const _$ProjecEntrytImpl(
+      {required this.projectID,
+      required this.customerID,
+      required this.customerName,
+      this.projectName,
       required this.createDate,
       final List<String> imageUrl = const <String>[],
       this.description})
       : _imageUrl = imageUrl;
 
-  factory _$ProjectImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProjectImplFromJson(json);
+  factory _$ProjecEntrytImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProjecEntrytImplFromJson(json);
 
   @override
-  final BigInt? projectID;
+  final BigInt projectID;
   @override
-  final BigInt? customer;
+  final BigInt customerID;
   @override
-  final String? name;
+  final String customerName;
+  @override
+  final String? projectName;
   @override
   final DateTime createDate;
   final List<String> _imageUrl;
@@ -195,19 +214,22 @@ class _$ProjectImpl implements _Project {
 
   @override
   String toString() {
-    return 'Project(projectID: $projectID, customer: $customer, name: $name, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'ProjectEntry(projectID: $projectID, customerID: $customerID, customerName: $customerName, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectImpl &&
+            other is _$ProjecEntrytImpl &&
             (identical(other.projectID, projectID) ||
                 other.projectID == projectID) &&
-            (identical(other.customer, customer) ||
-                other.customer == customer) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.customerID, customerID) ||
+                other.customerID == customerID) &&
+            (identical(other.customerName, customerName) ||
+                other.customerName == customerName) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
             const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
@@ -217,40 +239,51 @@ class _$ProjectImpl implements _Project {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, projectID, customer, name,
-      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
+  int get hashCode => Object.hash(
+      runtimeType,
+      projectID,
+      customerID,
+      customerName,
+      projectName,
+      createDate,
+      const DeepCollectionEquality().hash(_imageUrl),
+      description);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjectImplCopyWith<_$ProjectImpl> get copyWith =>
-      __$$ProjectImplCopyWithImpl<_$ProjectImpl>(this, _$identity);
+  _$$ProjecEntrytImplCopyWith<_$ProjecEntrytImpl> get copyWith =>
+      __$$ProjecEntrytImplCopyWithImpl<_$ProjecEntrytImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjectImplToJson(
+    return _$$ProjecEntrytImplToJson(
       this,
     );
   }
 }
 
-abstract class _Project implements Project {
-  const factory _Project(
-      {final BigInt? projectID,
-      final BigInt? customer,
-      final String? name,
+abstract class _ProjecEntryt implements ProjectEntry {
+  const factory _ProjecEntryt(
+      {required final BigInt projectID,
+      required final BigInt customerID,
+      required final String customerName,
+      final String? projectName,
       required final DateTime createDate,
       final List<String> imageUrl,
-      final String? description}) = _$ProjectImpl;
+      final String? description}) = _$ProjecEntrytImpl;
 
-  factory _Project.fromJson(Map<String, dynamic> json) = _$ProjectImpl.fromJson;
+  factory _ProjecEntryt.fromJson(Map<String, dynamic> json) =
+      _$ProjecEntrytImpl.fromJson;
 
   @override
-  BigInt? get projectID;
+  BigInt get projectID;
   @override
-  BigInt? get customer;
+  BigInt get customerID;
   @override
-  String? get name;
+  String get customerName;
+  @override
+  String? get projectName;
   @override
   DateTime get createDate;
   @override
@@ -259,6 +292,6 @@ abstract class _Project implements Project {
   String? get description;
   @override
   @JsonKey(ignore: true)
-  _$$ProjectImplCopyWith<_$ProjectImpl> get copyWith =>
+  _$$ProjecEntrytImplCopyWith<_$ProjecEntrytImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -21,7 +21,9 @@ ConsumeEntry _$ConsumeEntryFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ConsumeEntry {
   DateTime get createDate => throw _privateConstructorUsedError;
-  String? get project => throw _privateConstructorUsedError;
+  String get entryID => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
+  BigInt? get projectID => throw _privateConstructorUsedError;
   List<Consumable> get consumables => throw _privateConstructorUsedError;
   List<String> get dokusPath => throw _privateConstructorUsedError;
   double? get estimatedDuration => throw _privateConstructorUsedError;
@@ -41,7 +43,9 @@ abstract class $ConsumeEntryCopyWith<$Res> {
   @useResult
   $Res call(
       {DateTime createDate,
-      String? project,
+      String entryID,
+      String? projectName,
+      BigInt? projectID,
       List<Consumable> consumables,
       List<String> dokusPath,
       double? estimatedDuration,
@@ -62,7 +66,9 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
   @override
   $Res call({
     Object? createDate = null,
-    Object? project = freezed,
+    Object? entryID = null,
+    Object? projectName = freezed,
+    Object? projectID = freezed,
     Object? consumables = null,
     Object? dokusPath = null,
     Object? estimatedDuration = freezed,
@@ -73,10 +79,18 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      project: freezed == project
-          ? _value.project
-          : project // ignore: cast_nullable_to_non_nullable
+      entryID: null == entryID
+          ? _value.entryID
+          : entryID // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as BigInt?,
       consumables: null == consumables
           ? _value.consumables
           : consumables // ignore: cast_nullable_to_non_nullable
@@ -107,7 +121,9 @@ abstract class _$$ConsumeEntryImplCopyWith<$Res>
   @useResult
   $Res call(
       {DateTime createDate,
-      String? project,
+      String entryID,
+      String? projectName,
+      BigInt? projectID,
       List<Consumable> consumables,
       List<String> dokusPath,
       double? estimatedDuration,
@@ -126,7 +142,9 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? createDate = null,
-    Object? project = freezed,
+    Object? entryID = null,
+    Object? projectName = freezed,
+    Object? projectID = freezed,
     Object? consumables = null,
     Object? dokusPath = null,
     Object? estimatedDuration = freezed,
@@ -137,10 +155,18 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      project: freezed == project
-          ? _value.project
-          : project // ignore: cast_nullable_to_non_nullable
+      entryID: null == entryID
+          ? _value.entryID
+          : entryID // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectName: freezed == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as BigInt?,
       consumables: null == consumables
           ? _value._consumables
           : consumables // ignore: cast_nullable_to_non_nullable
@@ -166,7 +192,9 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
 class _$ConsumeEntryImpl implements _ConsumeEntry {
   const _$ConsumeEntryImpl(
       {required this.createDate,
-      this.project,
+      this.entryID = '',
+      this.projectName,
+      this.projectID,
       final List<Consumable> consumables = const <Consumable>[],
       final List<String> dokusPath = const <String>[],
       this.estimatedDuration,
@@ -180,7 +208,12 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
   @override
   final DateTime createDate;
   @override
-  final String? project;
+  @JsonKey()
+  final String entryID;
+  @override
+  final String? projectName;
+  @override
+  final BigInt? projectID;
   final List<Consumable> _consumables;
   @override
   @JsonKey()
@@ -206,7 +239,7 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
 
   @override
   String toString() {
-    return 'ConsumeEntry(createDate: $createDate, project: $project, consumables: $consumables, dokusPath: $dokusPath, estimatedDuration: $estimatedDuration, cost: $cost)';
+    return 'ConsumeEntry(createDate: $createDate, entryID: $entryID, projectName: $projectName, projectID: $projectID, consumables: $consumables, dokusPath: $dokusPath, estimatedDuration: $estimatedDuration, cost: $cost)';
   }
 
   @override
@@ -216,7 +249,11 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
             other is _$ConsumeEntryImpl &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
-            (identical(other.project, project) || other.project == project) &&
+            (identical(other.entryID, entryID) || other.entryID == entryID) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
+            (identical(other.projectID, projectID) ||
+                other.projectID == projectID) &&
             const DeepCollectionEquality()
                 .equals(other._consumables, _consumables) &&
             const DeepCollectionEquality()
@@ -231,7 +268,9 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
   int get hashCode => Object.hash(
       runtimeType,
       createDate,
-      project,
+      entryID,
+      projectName,
+      projectID,
       const DeepCollectionEquality().hash(_consumables),
       const DeepCollectionEquality().hash(_dokusPath),
       estimatedDuration,
@@ -254,7 +293,9 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
 abstract class _ConsumeEntry implements ConsumeEntry {
   const factory _ConsumeEntry(
       {required final DateTime createDate,
-      final String? project,
+      final String entryID,
+      final String? projectName,
+      final BigInt? projectID,
       final List<Consumable> consumables,
       final List<String> dokusPath,
       final double? estimatedDuration,
@@ -266,7 +307,11 @@ abstract class _ConsumeEntry implements ConsumeEntry {
   @override
   DateTime get createDate;
   @override
-  String? get project;
+  String get entryID;
+  @override
+  String? get projectName;
+  @override
+  BigInt? get projectID;
   @override
   List<Consumable> get consumables;
   @override
