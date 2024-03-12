@@ -12,11 +12,12 @@ import 'package:image_picker/image_picker.dart';
 class Utilits {
   static Future<DateTime?> selecetDate(context) async {
     return showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2023),
-        lastDate: DateTime(2100),
-        locale: const Locale('de', 'DE'));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2100),
+      // locale: const Locale('de', 'DE')
+    );
   }
 
   static Future<String?> pickImageFromCamera(BuildContext context, String projectName) async {

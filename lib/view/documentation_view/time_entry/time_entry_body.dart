@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -25,6 +24,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
+  int counter = 1;
   TimeOfDay? selectedTime;
   static const _customerProject = [
     ' Wählen',
@@ -32,18 +32,15 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     ' Meier/ Bad verfliesen',
     ' Berger/ Putzen',
   ];
-  List<ServiceVM>? _services = [];
+  // List<ServiceVM>? _services = [
+  //   ServiceVM(name: '', id: 555555),
+  // ];
   // ' Wählen',
   // ' Fenster Montage',
   // ' Bad fliesen',
   // ' Reinigung',
   ServiceVM? _choosenService;
-  Future<List<ServiceVM>> loadServices() async {
-    final data = await Utilits.loadServices();
-    return data;
-  }
 
-  //  Future<List<ServiceVM>?> _services = loadServices();
   String _project = _customerProject.first;
   late TimeEntry _entry;
 
@@ -59,7 +56,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
       selectedTime = TimeOfDay(hour: _entry.startTime.hour, minute: _entry.startTime.minute);
     }
     _startController.text = '${selectedTime!.hour}:$minute';
-    // _choosenService = _services?.first;
   }
 
   @override
@@ -145,7 +141,16 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   Widget _buildServiceDropdown() {
     return ref.watch(serviceProvider).when(
       data: (data) {
-        _services = data;
+        if (data == null) {
+          ref.watch(serviceProvider.notifier).loadServices();
+        }
+        final services = data;
+        if (services != null) {
+          setState(() {
+            _choosenService = services.first;
+          });
+        }
+        // _services = data;
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: LabeledInputWidget(
@@ -160,7 +165,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 underline: const SizedBox(),
                 isExpanded: true,
                 value: _choosenService,
-                items: _services!.map(
+                items: services?.map(
                   (e) {
                     return DropdownMenuItem(
                       value: e,
@@ -178,12 +183,10 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         );
       },
       loading: () {
-        return CircularProgressIndicator.adaptive();
+        return const CircularProgressIndicator.adaptive();
       },
       error: (error, stackTrace) {
-        return Container(
-          child: Text('$error'),
-        );
+        return const SizedBox();
       },
     );
   }
@@ -236,6 +239,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                   onTap: () async {
                     final date = await Utilits.selecetDate(context);
                     if (date != null) {
+                      log(date.toString());
                       setState(() {
                         _entry = _entry.copyWith(date: date);
                         _dayPickerController.text = '${date.day}.${date.month}.${date.year}';

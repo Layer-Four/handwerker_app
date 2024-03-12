@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/view/login_screen/shared/constants.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:handwerker_app/models/project_vm/project.dart';
@@ -30,12 +29,11 @@ class ProjectNotifer extends Notifier<List<Project>> {
     // * });
     // * response = await dio.post("/info", data: formData)
 
-    final uri = Uri.http('nutzer123', '${baseUrl}zeiteintrag-speicherung');
     //TODO: change List of File paths to list of FormData
     final json = entry.toJson();
 
     try {
-      final response = await http.post(uri, body: json);
+      final response = await http.post(Uri.base, body: json);
       if (response.statusCode == 200) {
         final jsonResponse = convert.jsonDecode(response.body);
         log('request success, this was the response: $jsonResponse');
