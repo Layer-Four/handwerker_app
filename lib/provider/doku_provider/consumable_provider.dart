@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/models/consumable/consumable.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 
 final consumableProvider =
     NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());

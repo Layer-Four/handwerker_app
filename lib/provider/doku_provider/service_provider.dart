@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
@@ -16,6 +17,7 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceVM>?> {
 
   void loadServices() async {
     const uri = DbAdress();
+    log(uri.servicesUri.path);
     try {
       final response = await http.get(uri.servicesUri);
       if (response.statusCode == 200) {

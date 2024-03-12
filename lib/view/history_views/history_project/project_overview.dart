@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/project_vm/project.dart';
-import 'package:handwerker_app/models/time_entry/time_entry.dart';
+import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
+import 'package:handwerker_app/models/time_dm/time_entry.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -168,19 +168,19 @@ class _ProjectCardState extends ConsumerState<ProjectCard> {
 }
 
 final projects = [
-  Project(
+  ProjectEntry(
     customerName: 'Sternburger Abc',
     projectID: BigInt.from(0),
     createDate: DateTime(2022, 05, 04),
     customerID: BigInt.from(0),
   ),
-  Project(
+  ProjectEntry(
     customerID: BigInt.from(1),
     customerName: 'Layer Four Def',
     projectID: BigInt.from(1),
     createDate: DateTime(2022, 01, 04),
   ),
-  Project(
+  ProjectEntry(
     customerName: 'Tech Ghi',
     customerID: BigInt.from(2),
     projectID: BigInt.from(2),

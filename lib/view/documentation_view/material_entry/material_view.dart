@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/consumable/consumable.dart';
-import 'package:handwerker_app/models/consumable_entry/consumable_entry.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
+import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -37,12 +39,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ' Liter',
     ' Meter',
   ];
-  static const _customerProject = [
-    ' Wählen',
-    ' Koch / Fenster Montage',
-    ' Meier/ Bad verfliesen',
-    ' Berger/ Putzen',
-  ];
+
   static const _materials = [
     ' Wählen',
     ' Tür',
@@ -51,7 +48,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ' Schrauben',
     ' Latte',
   ];
-  String _project = _customerProject.first;
+  ProjectVM? _project;
   String _selectedMaterial = _materials.first;
 
   @override
@@ -250,7 +247,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromCamera(context, _project);
+                        final image =
+                            await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
                           log('imagePath: $image');
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -276,7 +274,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromGalery(context, _project);
+                        final image =
+                            await Utilits.pickImageFromGalery(context, _project?.title ?? '');
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -311,36 +310,50 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       );
 
-  Padding _buildCustomerProjectField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: LabeledInputWidget(
-        label: ref.watch(languangeProvider).customerProject,
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColor.kTextfieldBorder),
-          ),
-          child: DropdownButton(
-            underline: const SizedBox(),
-            isExpanded: true,
-            value: _project,
-            items: _customerProject
-                .map(
-                  (e) => DropdownMenuItem(value: e, child: Text(e)),
-                )
-                .toList(),
-            onChanged: (e) {
-              setState(() {
-                _project = e!;
-                _entry = _entry.copyWith(projectName: e);
-              });
-            },
-          ),
-        ),
-      ),
-    );
+  Widget _buildCustomerProjectField() {
+    return ref.read(projectProvider).when(
+          error: (error, stackTrace) => const SizedBox(),
+          loading: () => const CircularProgressIndicator.adaptive(),
+          data: (data) {
+            if (data == null) {
+              ref.read(projectProvider.notifier).loadpProject();
+            }
+            final projects = data;
+            if (projects != null) {
+              _project = projects.first;
+              _entry = _entry.copyWith(projectID: BigInt.from(projects.first.id));
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: LabeledInputWidget(
+                label: ref.watch(languangeProvider).customerProject,
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
+                  ),
+                  child: DropdownButton(
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: _project,
+                    items: projects
+                        ?.map(
+                          (e) => DropdownMenuItem(value: e, child: Text(' ${e.title}')),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      setState(() {
+                        _project = e!;
+                        _entry = _entry.copyWith(projectID: BigInt.from(e.id));
+                      });
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        );
   }
 
   Padding _buildMaterialField() => Padding(
@@ -417,7 +430,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             ));
             final now = DateTime.now();
             setState(() {
-              _project = _customerProject.first;
               _selectedMaterial = _materials.first;
               _amountController.clear();
               _summeryController.clear();

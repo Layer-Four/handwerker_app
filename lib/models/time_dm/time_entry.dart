@@ -14,7 +14,7 @@ class TimeEntry with _$TimeEntry {
     BigInt? projectID,
     BigInt? serviceID,
     required DateTime startTime,
-    String? userID,
+    @Default('f7e8b09a-ac4f-4a30-a7c5-b6f829cff9aa') String userID,
   }) = _TimeEntry;
   factory TimeEntry.fromJson(Map<String, dynamic> json) => _$TimeEntryFromJson(json);
 }

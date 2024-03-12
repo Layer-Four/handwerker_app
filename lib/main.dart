@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 
@@ -25,6 +26,9 @@ class MainApp extends ConsumerWidget {
     final isLightTheme = ref.watch(themeProvider);
     if (ref.watch(serviceProvider).value == null) {
       ref.read(serviceProvider.notifier).loadServices();
+    }
+    if (ref.watch(projectProvider).value == null) {
+      ref.read(projectProvider.notifier).loadpProject();
     }
 
     return MaterialApp(

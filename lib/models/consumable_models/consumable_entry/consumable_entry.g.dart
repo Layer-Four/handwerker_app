@@ -11,6 +11,9 @@ _$ConsumeEntryImpl _$$ConsumeEntryImplFromJson(Map<String, dynamic> json) =>
       createDate: DateTime.parse(json['createDate'] as String),
       entryID: json['entryID'] as String? ?? '',
       projectName: json['projectName'] as String?,
+      projectID: json['projectID'] == null
+          ? null
+          : BigInt.parse(json['projectID'] as String),
       consumables: (json['consumables'] as List<dynamic>?)
               ?.map((e) => Consumable.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -28,6 +31,7 @@ Map<String, dynamic> _$$ConsumeEntryImplToJson(_$ConsumeEntryImpl instance) =>
       'createDate': instance.createDate.toIso8601String(),
       'entryID': instance.entryID,
       'projectName': instance.projectName,
+      'projectID': instance.projectID?.toString(),
       'consumables': instance.consumables,
       'dokusPath': instance.dokusPath,
       'estimatedDuration': instance.estimatedDuration,
