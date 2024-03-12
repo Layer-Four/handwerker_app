@@ -17,7 +17,6 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     final uri = const DbAdress().projects;
     try {
       final response = await http.get(uri);
-      log(uri.path);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final projects = data.map<ProjectVM>((e) => ProjectVM.fromJson(e)).toList();

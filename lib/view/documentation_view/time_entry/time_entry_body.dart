@@ -286,7 +286,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
             // TODO: uncommand this, after API is ready           ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
-            log(_entry.toJson().toString());
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
