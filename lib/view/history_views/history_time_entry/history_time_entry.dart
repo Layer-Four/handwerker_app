@@ -41,7 +41,15 @@ class HistoryTimeBody extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (var e in work.timeEntries)
-                    Text('${e.serviceTitle ?? ''}  ${e.getDurationInHours()} Stunden')
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 200,
+                          child: Text(e.serviceTitle ?? ''),
+                        ),
+                        Text(' ${e.getDurationInHours()} Stunden')
+                      ],
+                    )
                 ],
               ),
             )
