@@ -4,11 +4,13 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 class HingedWidget extends StatefulWidget {
   final Widget header;
   final Column content;
+  final int contentLength;
 
   const HingedWidget({
     super.key,
     required this.header,
     required this.content,
+    required this.contentLength,
   });
 
   @override
@@ -25,7 +27,7 @@ class _HingedWidgetState extends State<HingedWidget> {
       width: MediaQuery.of(context).size.width - 20,
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeInOutCubic,
-      height: _isOpen ? 140 : 60,
+      height: _isOpen ? widget.contentLength * 70 : 60,
       child: InkWell(
         onTap: () => setState(() => _isOpen = !_isOpen),
         child: Card(

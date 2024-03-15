@@ -8,6 +8,7 @@ part of 'time_entry.dart';
 
 _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntryImpl(
+      id: json['id'] as int?,
       date: DateTime.parse(json['date'] as String),
       duration: json['duration'] as int?,
       description: json['description'] as String?,
@@ -26,6 +27,7 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       serviceID: json['serviceID'] == null
           ? null
           : BigInt.parse(json['serviceID'] as String),
+      serviceTitle: json['serviceTitle'] as String?,
       startTime: DateTime.parse(json['startTime'] as String),
       userID:
           json['userID'] as String? ?? 'f7e8b09a-ac4f-4a30-a7c5-b6f829cff9aa',
@@ -33,6 +35,7 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'date': instance.date.toIso8601String(),
       'duration': instance.duration,
       'description': instance.description,
@@ -41,6 +44,7 @@ Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
       'pauseStart': instance.pauseStart?.toIso8601String(),
       'projectID': instance.projectID?.toString(),
       'serviceID': instance.serviceID?.toString(),
+      'serviceTitle': instance.serviceTitle,
       'startTime': instance.startTime.toIso8601String(),
       'userID': instance.userID,
     };

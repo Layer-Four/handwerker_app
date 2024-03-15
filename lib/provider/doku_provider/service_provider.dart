@@ -1,9 +1,9 @@
-import 'dart:convert';
+import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
-import 'package:handwerker_app/models/service_vm/service.dart';
-import 'package:http/http.dart' as http;
+import 'package:handwerker_app/models/service_models/service_vm/service.dart';
 
 final serviceProvider =
     AsyncNotifierProvider<ServiceNotifer, List<ServiceVM>?>(() => ServiceNotifer());
@@ -15,14 +15,17 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceVM>?> {
   }
 
   void loadServices() async {
-    const uri = DbAdress();
+    final uri = const DbAdress().getExecuteableServices;
+    final Dio http = Dio();
     try {
-      final response = await http.get(uri.servicesUri);
+      final response = await http.get(uri);
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = response.data;
         final services = data.map<ServiceVM>((e) => ServiceVM.fromJson(e)).toList();
 
         state = AsyncValue.data(services);
+      } else {
+        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
       }
     } catch (e) {
       throw Exception(e);

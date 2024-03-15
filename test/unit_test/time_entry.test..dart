@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/models/time_dm/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:test/test.dart';
 
@@ -11,6 +11,7 @@ void main() {
   const String service = 'Bad fliesen';
   const String material = ' Fliesen';
   const String description = '';
+
   test('valiaded Data', () {
     expect(date, start);
     expect(DateTime.parse(end).isAfter(DateTime.parse(start)), true);
@@ -19,6 +20,7 @@ void main() {
     expect(service, 'Bad fliesen');
     expect(description, '');
   });
+
   test('load data in mockProvider', () {
     final mockProvider = NotifierProvider<TimeEntryNotifier, List<TimeEntry?>>(
       () => TimeEntryNotifier(),
