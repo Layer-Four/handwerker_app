@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
 import 'package:handwerker_app/models/project_models/project_vm/project.dart';
-import 'package:http/http.dart' as http;
 import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
 
 final projectProvider =
@@ -14,17 +14,17 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
   List<ProjectVM>? build() => null;
 
   void loadpProject() async {
-    final uri = const DbAdress().projects;
+    final uri = const DbAdress().getCostumerProjects;
+    final Dio http = Dio();
     try {
       final response = await http.get(uri);
-      log(uri.path);
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = response.data;
         final projects = data.map<ProjectVM>((e) => ProjectVM.fromJson(e)).toList();
         state = AsyncValue.data(projects);
       }
       if (response.statusCode != 200) {
-        log('request dismissed statuscode: ${response.statusCode}');
+        log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
         return;
       }
     } catch (e) {
@@ -52,14 +52,15 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     // * response = await dio.post("/info", data: formData)
 
     //TODO: change List of File paths to list of FormData
-
+    final uri = const DbAdress().postProjectEntry;
+    final Dio http = Dio();
     try {
-      final response = await http.post(Uri.base, body: entry.toJson());
+      final response = await http.post(uri, data: entry.toJson());
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = json.decode(response.data);
         log('request success, this was the response: $data');
       } else {
-        throw 'statuscode: ${response.statusCode}';
+        log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
       }
     } catch (e) {
       log('request was incompleted this was the error: $e');

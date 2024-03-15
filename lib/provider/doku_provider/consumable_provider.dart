@@ -1,7 +1,7 @@
 import 'dart:developer';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/api/url.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 
 final consumableProvider =
@@ -29,18 +29,17 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     // * });
     // * response = await dio.post("/info", data: formData)
 
-    const baseUri = 'https://www.azure.de/';
-    final uri = Uri.http('nutzer123', '${baseUri}zeiteintrag-speicherung');
     //TODO: change List of File paths to list of FormData
     final json = entry.toJson();
+    final Dio http = Dio();
 
     try {
-      final response = await http.post(uri, body: json);
+      final response = await http.post(const DbAdress().postProjectConsumable, data: json);
       if (response.statusCode == 200) {
-        final jsonResponse = convert.jsonDecode(response.body);
+        final jsonResponse = response.data;
         log('request success, this was the response: $jsonResponse');
       } else {
-        throw 'statuscode: ${response.statusCode}';
+        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
       }
     } catch (e) {
       log('request was incompleted this was the error: $e');

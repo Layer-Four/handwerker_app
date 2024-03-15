@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_vm/project.dart';
-import 'package:handwerker_app/models/service_vm/service.dart';
-import 'package:handwerker_app/models/time_dm/time_entry.dart';
+import 'package:handwerker_app/models/service_models/service_vm/service.dart';
+import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
@@ -26,6 +25,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
+  bool isServiceSet = false;
+  bool isProjectSet = false;
   TimeOfDay? selectedTime;
 
   ServiceVM? _choosenService;
@@ -80,9 +81,10 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               ref.read(projectProvider.notifier).loadpProject();
             }
             final projects = data;
-            if (projects != null) {
+            if (projects != null && !isProjectSet) {
               _project = projects.first;
               _entry = _entry.copyWith(projectID: BigInt.from(projects.first.id));
+              isProjectSet = true;
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -150,10 +152,11 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           ref.watch(serviceProvider.notifier).loadServices();
         }
         final services = data;
-        if (services != null) {
+        if (services != null && !isServiceSet) {
           setState(() {
             _choosenService = services.first;
             _entry = _entry.copyWith(serviceID: BigInt.from(services.first.id));
+            isServiceSet = true;
           });
         }
         return Padding(
@@ -179,7 +182,9 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                   },
                 ).toList(),
                 onChanged: (e) => setState(() {
+                  log(_choosenService!.name);
                   _choosenService = e;
+                  log(_choosenService!.name);
                   _entry = _entry.copyWith(serviceID: BigInt.from(e!.id));
                 }),
               ),
@@ -286,7 +291,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
             // TODO: uncommand this, after API is ready           ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
-            log(_entry.toJson().toString());
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -296,8 +300,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               // TODO: change wählen to an editable object
             } else {
               final data = _entry.toJson();
-              log(json.encode(data));
-              // ref.read(timeEntryProvider.notifier).addTimeEntry(_entry);
+              log(data.toString());
+              ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
               final now = DateTime.now();
               setState(() {
                 _startController.clear();

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/history_views/history_consumable/history_consumable_view.dart';
