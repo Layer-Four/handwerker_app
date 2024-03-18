@@ -15,11 +15,13 @@ class DbAdress {
   final String _postProjectConsumabele = '/userProjectMaterial/create';
   final String _putProjectDay = '/userProjectDay/update';
   final String _putProjectMaterial = '/userProjectMaterial/update';
+  final String _getCustomerProject = '/customer/project/read/all';
   const DbAdress();
 // Getter
   String get getAllProjects => _baseUrl + _getAllProjects;
   String get getAllTimeEntrys => _baseUrl + _getAllTimeTacks;
-  String get getCostumerProjects => _baseUrl + _getProjectsAdress;
+  String get getProjectsDM => _baseUrl + _getProjectsAdress;
+  String get getCustomerProjects => _baseUrl + _getCustomerProject;
   String get getExecuteableServices => _baseUrl + _getServiceAdress;
   String get getProjectConsumableEntry => _baseUrl + _getProjectsConsumable;
   String get getProjectsTimeEntrys => _baseUrl + _getTimeTacks;

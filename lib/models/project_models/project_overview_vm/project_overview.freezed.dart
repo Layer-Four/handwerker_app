@@ -20,11 +20,16 @@ ProjectOverview _$ProjectOverviewFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProjectOverview {
-  String get title => throw _privateConstructorUsedError;
-  DateTime get dateOfTermination => throw _privateConstructorUsedError;
+  BigInt get customerID => throw _privateConstructorUsedError;
+  String get customerName => throw _privateConstructorUsedError;
+  bool get hasDocumentations =>
+      throw _privateConstructorUsedError; // @Default(<ProjectMaterialVM>[]) List<ProjectMaterialVM> materialViewModels,
+  List<String> get materialViewModels => throw _privateConstructorUsedError;
+  DateTime get projectCreated => throw _privateConstructorUsedError;
+  BigInt get projectID => throw _privateConstructorUsedError;
   List<dynamic> get projectMaterials => throw _privateConstructorUsedError;
-  List<UserProjectDay> get userProjectDays =>
-      throw _privateConstructorUsedError;
+  String get projectName => throw _privateConstructorUsedError;
+  List<ProjectTimeVM> get timeViewModels => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,10 +44,15 @@ abstract class $ProjectOverviewCopyWith<$Res> {
       _$ProjectOverviewCopyWithImpl<$Res, ProjectOverview>;
   @useResult
   $Res call(
-      {String title,
-      DateTime dateOfTermination,
+      {BigInt customerID,
+      String customerName,
+      bool hasDocumentations,
+      List<String> materialViewModels,
+      DateTime projectCreated,
+      BigInt projectID,
       List<dynamic> projectMaterials,
-      List<UserProjectDay> userProjectDays});
+      String projectName,
+      List<ProjectTimeVM> timeViewModels});
 }
 
 /// @nodoc
@@ -58,28 +68,53 @@ class _$ProjectOverviewCopyWithImpl<$Res, $Val extends ProjectOverview>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
-    Object? dateOfTermination = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? hasDocumentations = null,
+    Object? materialViewModels = null,
+    Object? projectCreated = null,
+    Object? projectID = null,
     Object? projectMaterials = null,
-    Object? userProjectDays = null,
+    Object? projectName = null,
+    Object? timeViewModels = null,
   }) {
     return _then(_value.copyWith(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
               as String,
-      dateOfTermination: null == dateOfTermination
-          ? _value.dateOfTermination
-          : dateOfTermination // ignore: cast_nullable_to_non_nullable
+      hasDocumentations: null == hasDocumentations
+          ? _value.hasDocumentations
+          : hasDocumentations // ignore: cast_nullable_to_non_nullable
+              as bool,
+      materialViewModels: null == materialViewModels
+          ? _value.materialViewModels
+          : materialViewModels // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      projectCreated: null == projectCreated
+          ? _value.projectCreated
+          : projectCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      projectID: null == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
       projectMaterials: null == projectMaterials
           ? _value.projectMaterials
           : projectMaterials // ignore: cast_nullable_to_non_nullable
               as List<dynamic>,
-      userProjectDays: null == userProjectDays
-          ? _value.userProjectDays
-          : userProjectDays // ignore: cast_nullable_to_non_nullable
-              as List<UserProjectDay>,
+      projectName: null == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
+              as String,
+      timeViewModels: null == timeViewModels
+          ? _value.timeViewModels
+          : timeViewModels // ignore: cast_nullable_to_non_nullable
+              as List<ProjectTimeVM>,
     ) as $Val);
   }
 }
@@ -93,10 +128,15 @@ abstract class _$$ProjectOverViewImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title,
-      DateTime dateOfTermination,
+      {BigInt customerID,
+      String customerName,
+      bool hasDocumentations,
+      List<String> materialViewModels,
+      DateTime projectCreated,
+      BigInt projectID,
       List<dynamic> projectMaterials,
-      List<UserProjectDay> userProjectDays});
+      String projectName,
+      List<ProjectTimeVM> timeViewModels});
 }
 
 /// @nodoc
@@ -110,28 +150,53 @@ class __$$ProjectOverViewImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
-    Object? dateOfTermination = null,
+    Object? customerID = null,
+    Object? customerName = null,
+    Object? hasDocumentations = null,
+    Object? materialViewModels = null,
+    Object? projectCreated = null,
+    Object? projectID = null,
     Object? projectMaterials = null,
-    Object? userProjectDays = null,
+    Object? projectName = null,
+    Object? timeViewModels = null,
   }) {
     return _then(_$ProjectOverViewImpl(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      customerID: null == customerID
+          ? _value.customerID
+          : customerID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
+      customerName: null == customerName
+          ? _value.customerName
+          : customerName // ignore: cast_nullable_to_non_nullable
               as String,
-      dateOfTermination: null == dateOfTermination
-          ? _value.dateOfTermination
-          : dateOfTermination // ignore: cast_nullable_to_non_nullable
+      hasDocumentations: null == hasDocumentations
+          ? _value.hasDocumentations
+          : hasDocumentations // ignore: cast_nullable_to_non_nullable
+              as bool,
+      materialViewModels: null == materialViewModels
+          ? _value._materialViewModels
+          : materialViewModels // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      projectCreated: null == projectCreated
+          ? _value.projectCreated
+          : projectCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      projectID: null == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as BigInt,
       projectMaterials: null == projectMaterials
           ? _value._projectMaterials
           : projectMaterials // ignore: cast_nullable_to_non_nullable
               as List<dynamic>,
-      userProjectDays: null == userProjectDays
-          ? _value._userProjectDays
-          : userProjectDays // ignore: cast_nullable_to_non_nullable
-              as List<UserProjectDay>,
+      projectName: null == projectName
+          ? _value.projectName
+          : projectName // ignore: cast_nullable_to_non_nullable
+              as String,
+      timeViewModels: null == timeViewModels
+          ? _value._timeViewModels
+          : timeViewModels // ignore: cast_nullable_to_non_nullable
+              as List<ProjectTimeVM>,
     ));
   }
 }
@@ -140,21 +205,46 @@ class __$$ProjectOverViewImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectOverViewImpl extends _ProjectOverView {
   const _$ProjectOverViewImpl(
-      {required this.title,
-      required this.dateOfTermination,
+      {required this.customerID,
+      required this.customerName,
+      this.hasDocumentations = false,
+      final List<String> materialViewModels = const <String>[],
+      required this.projectCreated,
+      required this.projectID,
       final List<dynamic> projectMaterials = const [],
-      final List<UserProjectDay> userProjectDays = const <UserProjectDay>[]})
-      : _projectMaterials = projectMaterials,
-        _userProjectDays = userProjectDays,
+      required this.projectName,
+      final List<ProjectTimeVM> timeViewModels = const <ProjectTimeVM>[]})
+      : _materialViewModels = materialViewModels,
+        _projectMaterials = projectMaterials,
+        _timeViewModels = timeViewModels,
         super._();
 
   factory _$ProjectOverViewImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectOverViewImplFromJson(json);
 
   @override
-  final String title;
+  final BigInt customerID;
   @override
-  final DateTime dateOfTermination;
+  final String customerName;
+  @override
+  @JsonKey()
+  final bool hasDocumentations;
+// @Default(<ProjectMaterialVM>[]) List<ProjectMaterialVM> materialViewModels,
+  final List<String> _materialViewModels;
+// @Default(<ProjectMaterialVM>[]) List<ProjectMaterialVM> materialViewModels,
+  @override
+  @JsonKey()
+  List<String> get materialViewModels {
+    if (_materialViewModels is EqualUnmodifiableListView)
+      return _materialViewModels;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_materialViewModels);
+  }
+
+  @override
+  final DateTime projectCreated;
+  @override
+  final BigInt projectID;
   final List<dynamic> _projectMaterials;
   @override
   @JsonKey()
@@ -165,18 +255,20 @@ class _$ProjectOverViewImpl extends _ProjectOverView {
     return EqualUnmodifiableListView(_projectMaterials);
   }
 
-  final List<UserProjectDay> _userProjectDays;
+  @override
+  final String projectName;
+  final List<ProjectTimeVM> _timeViewModels;
   @override
   @JsonKey()
-  List<UserProjectDay> get userProjectDays {
-    if (_userProjectDays is EqualUnmodifiableListView) return _userProjectDays;
+  List<ProjectTimeVM> get timeViewModels {
+    if (_timeViewModels is EqualUnmodifiableListView) return _timeViewModels;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_userProjectDays);
+    return EqualUnmodifiableListView(_timeViewModels);
   }
 
   @override
   String toString() {
-    return 'ProjectOverview(title: $title, dateOfTermination: $dateOfTermination, projectMaterials: $projectMaterials, userProjectDays: $userProjectDays)';
+    return 'ProjectOverview(customerID: $customerID, customerName: $customerName, hasDocumentations: $hasDocumentations, materialViewModels: $materialViewModels, projectCreated: $projectCreated, projectID: $projectID, projectMaterials: $projectMaterials, projectName: $projectName, timeViewModels: $timeViewModels)';
   }
 
   @override
@@ -184,23 +276,39 @@ class _$ProjectOverViewImpl extends _ProjectOverView {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProjectOverViewImpl &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.dateOfTermination, dateOfTermination) ||
-                other.dateOfTermination == dateOfTermination) &&
+            (identical(other.customerID, customerID) ||
+                other.customerID == customerID) &&
+            (identical(other.customerName, customerName) ||
+                other.customerName == customerName) &&
+            (identical(other.hasDocumentations, hasDocumentations) ||
+                other.hasDocumentations == hasDocumentations) &&
+            const DeepCollectionEquality()
+                .equals(other._materialViewModels, _materialViewModels) &&
+            (identical(other.projectCreated, projectCreated) ||
+                other.projectCreated == projectCreated) &&
+            (identical(other.projectID, projectID) ||
+                other.projectID == projectID) &&
             const DeepCollectionEquality()
                 .equals(other._projectMaterials, _projectMaterials) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
             const DeepCollectionEquality()
-                .equals(other._userProjectDays, _userProjectDays));
+                .equals(other._timeViewModels, _timeViewModels));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      title,
-      dateOfTermination,
+      customerID,
+      customerName,
+      hasDocumentations,
+      const DeepCollectionEquality().hash(_materialViewModels),
+      projectCreated,
+      projectID,
       const DeepCollectionEquality().hash(_projectMaterials),
-      const DeepCollectionEquality().hash(_userProjectDays));
+      projectName,
+      const DeepCollectionEquality().hash(_timeViewModels));
 
   @JsonKey(ignore: true)
   @override
@@ -219,23 +327,38 @@ class _$ProjectOverViewImpl extends _ProjectOverView {
 
 abstract class _ProjectOverView extends ProjectOverview {
   const factory _ProjectOverView(
-      {required final String title,
-      required final DateTime dateOfTermination,
+      {required final BigInt customerID,
+      required final String customerName,
+      final bool hasDocumentations,
+      final List<String> materialViewModels,
+      required final DateTime projectCreated,
+      required final BigInt projectID,
       final List<dynamic> projectMaterials,
-      final List<UserProjectDay> userProjectDays}) = _$ProjectOverViewImpl;
+      required final String projectName,
+      final List<ProjectTimeVM> timeViewModels}) = _$ProjectOverViewImpl;
   const _ProjectOverView._() : super._();
 
   factory _ProjectOverView.fromJson(Map<String, dynamic> json) =
       _$ProjectOverViewImpl.fromJson;
 
   @override
-  String get title;
+  BigInt get customerID;
   @override
-  DateTime get dateOfTermination;
+  String get customerName;
+  @override
+  bool get hasDocumentations;
+  @override // @Default(<ProjectMaterialVM>[]) List<ProjectMaterialVM> materialViewModels,
+  List<String> get materialViewModels;
+  @override
+  DateTime get projectCreated;
+  @override
+  BigInt get projectID;
   @override
   List<dynamic> get projectMaterials;
   @override
-  List<UserProjectDay> get userProjectDays;
+  String get projectName;
+  @override
+  List<ProjectTimeVM> get timeViewModels;
   @override
   @JsonKey(ignore: true)
   _$$ProjectOverViewImplCopyWith<_$ProjectOverViewImpl> get copyWith =>

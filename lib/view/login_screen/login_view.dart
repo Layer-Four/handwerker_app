@@ -27,7 +27,7 @@ class _LoginViewState extends State<LoginView> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const LogoApp(),
+                  const AppLogo(),
                   const SizedBox(
                     height: 9,
                   ),

@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
-import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
+import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_vm/project.dart';
 import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
 
@@ -16,7 +15,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
   List<ProjectVM>? build() => null;
 
   void loadpProject() async {
-    final uri = const DbAdress().getCostumerProjects;
+    final uri = const DbAdress().getProjectsDM;
     final Dio http = Dio();
     try {
       final response = await http.get(uri);
@@ -59,8 +58,9 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     try {
       final response = await http.post(uri, data: entry.toJson());
       if (response.statusCode == 200) {
-        final data = json.decode(response.data);
-        log('request success, this was the response: $data');
+        // TODO: when is possible catch response and load it on State or update some values
+        // final data = json.decode(response.data);
+        log('request was successful');
       } else {
         log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
       }
@@ -69,10 +69,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     }
   }
 
-  Future<List<ProjectOverview?>> getAllProjectEntries() async {
+  Future<List<ProjectCustomer?>> getAllProjectEntries() async {
     final Dio dio = Dio();
-    final url = const DbAdress().getAllProjects;
-    final result = <ProjectOverview?>[];
+    final url = const DbAdress().getCustomerProjects;
+    final result = <ProjectCustomer?>[];
     // int count = 0;
 
     try {
@@ -83,7 +83,11 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
         }
         final List data = response.data.map((e) => e).toList();
         data.map((e) => e.asMap());
-        final project = data.map((e) => ProjectOverview.fromJson(e)).toSet().toList();
+        log(data.toString());
+        for (var i in data) {
+          log(i);
+        }
+        final project = data.map((e) => ProjectCustomer.fromJson(e)).toSet().toList();
         result.addAll(project);
         return AsyncValue.data(result);
       });
@@ -92,6 +96,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
       throw Exception(e);
     }
   }
+
 // TODO: can update single project not the whole project api doesent fit gui
   // Future<bool> updateProjectOverView(ProjectOverview project) async {
   //   final Dio dio = Dio();

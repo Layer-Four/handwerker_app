@@ -95,7 +95,7 @@ class _PasswordViewState extends State<PasswordView> {
             key: _formKey,
             child: Column(
               children: [
-                const LogoApp(),
+                const AppLogo(),
                 const SizedBox(
                   height: 30,
                 ),

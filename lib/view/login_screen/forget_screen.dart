@@ -144,7 +144,7 @@ class _ForgetScreenState extends ConsumerState<ForgetScreen> {
                 //     ),
                 //   ),
                 // ),
-                const LogoApp(),
+                const AppLogo(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -155,8 +155,7 @@ class _ForgetScreenState extends ConsumerState<ForgetScreen> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: Colors.black, width: 2), // Add border here
+                    border: Border.all(color: Colors.black, width: 2), // Add border here
                   ),
                   child: UserAndPasswordField(
                     hintText: 'Nutzername',
@@ -169,8 +168,7 @@ class _ForgetScreenState extends ConsumerState<ForgetScreen> {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     backgroundColor: AppColor.kPrimaryButtonColor,
                     padding: const EdgeInsets.all(10),
                   ),

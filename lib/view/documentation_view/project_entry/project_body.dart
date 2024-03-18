@@ -24,12 +24,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late ProjectEntry _entry;
-  // static const _customerProject = [
-  //   ' Wählen',
-  //   ' Koch / Fenster Montage',
-  //   ' Meier/ Bad verfliesen',
-  //   ' Berger/ Putzen',
-  // ];
+
   ProjectVM? _project;
 
   @override
@@ -87,7 +82,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log('returned paht $image');
+                          log('image was successfully convert to Base64');
                           //TODO: Maybe show image in popUp?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -106,7 +101,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           ));
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, image],
+                              imageUrl: [image],
                             );
                           });
                         }
@@ -124,7 +119,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                         final image =
                             await Utilits.pickImageFromGalery(context, _project?.title ?? '');
                         if (image != null) {
-                          log('imagepath: $image');
+                          log('image are successfully translate to Base64');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -138,7 +133,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           );
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, image],
+                              imageUrl: [image],
                             );
                           });
                         }
@@ -162,7 +157,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
 
   Widget _buildCustomerProjectField() {
     return ref.read(projectProvider).when(
-          error: (error, stackTrace) => const SizedBox(),
+          error: (error, stackTrace) => const SizedBox(
+            child: Text('please restart App'),
+          ),
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
             if (data == null) {
@@ -171,7 +168,12 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             final projects = data;
             if (projects != null) {
               _project = projects.first;
-              _entry = _entry.copyWith(projectID: BigInt.from(projects.first.id));
+              _entry = _entry.copyWith(
+                projectID: BigInt.from(projects.first.id),
+                projectName: projects.first.title,
+                customerID: BigInt.from(projects.first.id),
+                customerName: projects.first.title,
+              );
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -195,7 +197,12 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                     onChanged: (e) {
                       setState(() {
                         _project = e!;
-                        _entry = _entry.copyWith(projectID: BigInt.from(e.id));
+                        _entry = _entry.copyWith(
+                          projectID: BigInt.from(e.id),
+                          customerID: BigInt.from(e.id),
+                          projectName: e.title,
+                          customerName: e.title,
+                        );
                       });
                     },
                   ),
@@ -259,7 +266,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
-            log(_entry.toJson().toString());
+            if (_entry.imageUrl.isEmpty) {
+              log((_entry.toJson().toString()));
+            }
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -273,13 +282,20 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               //     ),
               //   );
             }
-            if (_dayPickerController.text.isNotEmpty &&
-                (_project != null && _project!.title != ' Wählen')) {
+            if (_dayPickerController.text.isNotEmpty) {
               ref.read(projectProvider.notifier).uploadProjectEntry(_entry);
               final now = DateTime.now();
               setState(() {
                 _descriptionController.clear();
                 _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+                _entry = ProjectEntry(
+                    projectID: BigInt.from(_project!.id),
+                    customerID: BigInt.from(_project!.id),
+                    customerName: _project!.title,
+                    projectName: null,
+                    imageUrl: [],
+                    description: null,
+                    createDate: DateTime.now());
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

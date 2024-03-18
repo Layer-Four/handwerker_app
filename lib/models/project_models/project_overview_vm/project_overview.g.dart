@@ -9,20 +9,33 @@ part of 'project_overview.dart';
 _$ProjectOverViewImpl _$$ProjectOverViewImplFromJson(
         Map<String, dynamic> json) =>
     _$ProjectOverViewImpl(
-      title: json['title'] as String,
-      dateOfTermination: DateTime.parse(json['dateOfTermination'] as String),
-      projectMaterials: json['projectMaterials'] as List<dynamic>? ?? const [],
-      userProjectDays: (json['userProjectDays'] as List<dynamic>?)
-              ?.map((e) => UserProjectDay.fromJson(e as Map<String, dynamic>))
+      customerID: BigInt.parse(json['customerID'] as String),
+      customerName: json['customerName'] as String,
+      hasDocumentations: json['hasDocumentations'] as bool? ?? false,
+      materialViewModels: (json['materialViewModels'] as List<dynamic>?)
+              ?.map((e) => e as String)
               .toList() ??
-          const <UserProjectDay>[],
+          const <String>[],
+      projectCreated: DateTime.parse(json['projectCreated'] as String),
+      projectID: BigInt.parse(json['projectID'] as String),
+      projectMaterials: json['projectMaterials'] as List<dynamic>? ?? const [],
+      projectName: json['projectName'] as String,
+      timeViewModels: (json['timeViewModels'] as List<dynamic>?)
+              ?.map((e) => ProjectTimeVM.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <ProjectTimeVM>[],
     );
 
 Map<String, dynamic> _$$ProjectOverViewImplToJson(
         _$ProjectOverViewImpl instance) =>
     <String, dynamic>{
-      'title': instance.title,
-      'dateOfTermination': instance.dateOfTermination.toIso8601String(),
+      'customerID': instance.customerID.toString(),
+      'customerName': instance.customerName,
+      'hasDocumentations': instance.hasDocumentations,
+      'materialViewModels': instance.materialViewModels,
+      'projectCreated': instance.projectCreated.toIso8601String(),
+      'projectID': instance.projectID.toString(),
       'projectMaterials': instance.projectMaterials,
-      'userProjectDays': instance.userProjectDays,
+      'projectName': instance.projectName,
+      'timeViewModels': instance.timeViewModels,
     };

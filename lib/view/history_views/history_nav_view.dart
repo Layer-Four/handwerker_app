@@ -21,7 +21,7 @@ class HistoryNavigationView extends ConsumerWidget {
         child: switch (historyViewRef) {
           HistoryViews.timeEntry => const HistoryTimeBody(),
           HistoryViews.consumables => const HistoryMaterialBody(),
-          _ => const HistoryProjectBody(),
+          _ => const CostumerOverviewBody(),
         },
       ),
     );

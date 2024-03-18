@@ -26,8 +26,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _summeryController = TextEditingController();
   late ConsumeEntry _entry;
   String _unit = _units.first;
+  //! Overthinking so thats int
+
   static final _durationSteps = List.generate(25, (index) {
     if (index == 0) return ' in Stunden';
+
     final x = (index * 0.5).toString().split('.');
     return '${x.first},${x.last} h.';
   });
@@ -250,7 +253,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log('imagePath: $image');
+                          log('image convert was successful');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -260,7 +263,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                             ),
                           );
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [..._entry.dokusPath, image]);
+                            _entry = _entry.copyWith(dokusPath: [image]);
                           });
                         }
                       },
@@ -414,6 +417,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         text: ref.watch(languangeProvider).createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
+          if (_entry.dokusPath.isEmpty) {
+            log(_entry.toJson().toString());
+          }
           log(_entry.toJson().toString());
           if (_project != ' Wählen' && _selectedMaterial != ' Wählen') {
             final material = Consumable(

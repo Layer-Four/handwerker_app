@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -12,27 +13,27 @@ import 'package:image_picker/image_picker.dart';
 class Utilits {
   static Future<DateTime?> selecetDate(context) async {
     return showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(2100),
-      // locale: const Locale('de', 'DE')
-    );
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2023),
+        lastDate: DateTime(2100),
+        locale: Locale('de'));
   }
 
   static Future<String?> pickImageFromCamera(BuildContext context, String projectName) async {
-    final dir = await getApplicationDocumentsDirectory();
-    const Permission storagePermission = Permission.storage;
-    if (await storagePermission.isDenied) {
-      await askForPermission(context);
-    }
-    final now = '${DateTime.now().day}.${DateTime.now().month},${DateTime.now().year}';
-    final path = '${dir.path}/$projectName/$now.jpg';
+    // final dir = await getApplicationDocumentsDirectory();
+    // const Permission storagePermission = Permission.storage;
+    // if (await storagePermission.isDenied) {
+    //   await askForPermission(context);
+    // }
+    // final now = '${DateTime.now().day}.${DateTime.now().month},${DateTime.now().year}';
+    // final path = '${dir.path}/$projectName/$now.jpg';
+    // ignore: unused_local_variable
     final permission = await Permission.camera.status;
-    log(' permission denied: ${permission.isDenied} \n permission granded: ${permission.isGranted}\n permission Limited: ${permission.isLimited} permisison Storage  denied: ${await Permission.storage.isDenied} ');
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
+    // log(' permission denied: ${permission.isDenied} \n permission granded: ${permission.isGranted}\n permission Limited: ${permission.isLimited} permisison Storage  denied: ${await Permission.storage.isDenied} ');
+    // if (!await dir.exists()) {
+    // await dir.create(recursive: true);
+    // }
     try {
       final XFile? file = await ImagePicker().pickImage(
         source: ImageSource.camera,
@@ -40,9 +41,9 @@ class Utilits {
         maxWidth: 1024,
       );
       if (file != null) {
-        final newfile = await File(file.path).copy(path);
-        log('imagePath: ${newfile.path}');
-        return newfile.path;
+        final fileAsByte = File(file.path).readAsBytesSync();
+
+        return base64Encode(fileAsByte);
       }
     } catch (e) {
       final status = await Permission.camera.status;
@@ -74,11 +75,13 @@ class Utilits {
       if (file != null) {
         final newfile = await File(file.path).copy(path);
         log('imagePath: ${newfile.path}');
+        final iamgeAsByte = newfile.readAsBytesSync();
+        return base64Encode(iamgeAsByte);
         // final newfile = XFile(file.path,
         //     name:
         //         '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
         // log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
-        return newfile.path;
+        // return newfile.path;
       }
     } catch (e) {
       final status = await Permission.storage.status;

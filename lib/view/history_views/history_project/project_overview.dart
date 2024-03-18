@@ -1,116 +1,87 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
-class HistoryProjectBody extends StatelessWidget {
-  const HistoryProjectBody({super.key});
+class CostumerOverviewBody extends StatelessWidget {
+  const CostumerOverviewBody({super.key});
   @override
-  Widget build(context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-              child: Text(
-                'PROJEKT ÜBERSICHT',
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
-            _buildAsyncProjectOverview(context),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 70, bottom: 20),
-                child: Image.asset(
-                  'assets/images/img_techtool.png',
-                  height: 20,
+  Widget build(context) => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                  child: Text(
+                    'KUNDEN ÜBERSICHT',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                 ),
-              ),
-            )
-          ],
+                _buildAsyncProjectOverview(context),
+                // Center(
+                //   child: Padding(
+                //     padding: const EdgeInsets.only(top: 20, bottom: 20),
+                //     child: Image.asset(
+                //       'assets/images/img_techtool.png',
+                //       height: 20,
+                //     ),
+                //   ),
+                // )
+              ],
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildAsyncProjectOverview(BuildContext context) =>
       Consumer(builder: (context, ref, child) {
         final futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
-        return FutureBuilder<List<ProjectOverview?>>(
+        return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
-            builder: (context, snpsht) {
-              if (snpsht.data != null) {
+            builder: (context, snapshot) {
+              if (snapshot.data != null) {
+                log((snapshot.data.toString()));
+                final customerProjectList = snapshot.data;
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView.builder(
-                      itemCount: snpsht.data!.length,
-                      itemBuilder: (BuildContext context, i) {
-                        final project = snpsht.data![i];
-                        return LargeHingedWidget(
-                          contentLength: snpsht.data!.length,
-                          header: _buildHeadLine(project, context),
-                          content: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              for (var work in project!.userProjectDays)
-                                SizedBox(
-                                  height: 18,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 100,
-                                          child: Text(
-                                            '${work.date.day < 10 ? "0${work.date.day}" : work.date.day}.${work.date.month < 10 ? "0${work.date.month}" : work.date.month}.${work.date.year}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(color: AppColor.kTextfieldBorder),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 120,
-                                          child: Text(
-                                            work.documentationDescription,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(color: AppColor.kTextfieldBorder),
-                                          ),
-                                        ),
-                                        // SizedBox(
-                                        //     child:
-                                        //      Text(
-                                        //       '${work. != null ? work.duration! ~/ 60 : 0} Stunden',
-                                        //       style: Theme.of(context)
-                                        //           .textTheme
-                                        //           .labelMedium!
-                                        //           .copyWith(color: AppColor.kTextfieldBorder),
-                                        //     ),
-                                        //     ),
-                                      ],
+                  // height: 500,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: customerProjectList!
+                        .map((e) => ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: customerProjectList.length,
+                            itemBuilder: (BuildContext context, i) {
+                              final customer = customerProjectList[i];
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.height - 250,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                      child: Text(customer?.customer ?? 'Kein Kunde??'),
                                     ),
-                                  ),
+                                    SizedBox(height: 400, child: _buildProjectDetails(customer)),
+                                  ],
                                 ),
-                              // TODO: ask for, project, all entries need own update card
-                              ProjectCard(project),
-                            ],
-                          ),
-                        );
-                      }),
+                              );
+                            }))
+                        .toList(),
+                  ),
                 );
               }
               return const SizedBox(
@@ -122,21 +93,82 @@ class HistoryProjectBody extends StatelessWidget {
             });
       });
 
-  Row _buildHeadLine(ProjectOverview? j, BuildContext context) {
+  ListView _buildProjectDetails(ProjectCustomer? customer) {
+    return ListView.builder(
+        itemCount: customer?.projects.length,
+        itemBuilder: (context, int j) {
+          final project = customer?.projects[j];
+          return LargeHingedWidget(
+            contentLength: project!.timeViewModels.length,
+            header: _buildHeadLine(project, context),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var work in project.timeViewModels)
+                  SizedBox(
+                    height: 18,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: Text(
+                              '${work.start!.day < 10 ? "0${work.start!.day}" : work.start!.day}.${work.start!.month < 10 ? "0${work.start!.month}" : work.start!.month}.${work.start!.year}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: AppColor.kTextfieldBorder),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
+                            child: Text(
+                              work.servciceName!,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: AppColor.kTextfieldBorder),
+                            ),
+                          ),
+                          SizedBox(
+                            child: Text(
+                              '${work.durationTotal} Stunden',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(color: AppColor.kTextfieldBorder),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                // TODO: ask for, project, all entries need own update card
+                // ProjectCard(project),
+              ],
+            ),
+          );
+        });
+  }
+
+  Row _buildHeadLine(ProjectOverview j, BuildContext context) {
+    final initDate = '${j.projectCreated.day}.${j.projectCreated.month}.${j.projectCreated.year}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
-            j!.title,
+            j!.projectName,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
-            '${j.dateOfTermination.day}.${j.dateOfTermination.month}.${j.dateOfTermination.year}',
+            initDate,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         )
