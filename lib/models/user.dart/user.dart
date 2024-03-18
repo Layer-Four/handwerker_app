@@ -8,7 +8,7 @@ class User with _$User {
   const factory User({
     @Default('') String userID,
     @Default('') String userToken,
-    required String username,
+    @Default('') String username,
     String? firstName,
     String? lastName,
     DateTime? hiringDate,

@@ -241,7 +241,7 @@ class _$UserImpl implements _User {
   const _$UserImpl(
       {this.userID = '',
       this.userToken = '',
-      required this.username,
+      this.username = '',
       this.firstName,
       this.lastName,
       this.hiringDate,
@@ -262,6 +262,7 @@ class _$UserImpl implements _User {
   @JsonKey()
   final String userToken;
   @override
+  @JsonKey()
   final String username;
   @override
   final String? firstName;
@@ -350,7 +351,7 @@ abstract class _User implements User {
   const factory _User(
       {final String userID,
       final String userToken,
-      required final String username,
+      final String username,
       final String? firstName,
       final String? lastName,
       final DateTime? hiringDate,

@@ -4,7 +4,8 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:handwerker_app/models/project_vm/project.dart';
 
-final projectProvider = NotifierProvider<ProjectNotifer, List<Project>>(() => ProjectNotifer());
+final projectProvider =
+    NotifierProvider<ProjectNotifer, List<Project>>(() => ProjectNotifer());
 
 class ProjectNotifer extends Notifier<List<Project>> {
   @override
