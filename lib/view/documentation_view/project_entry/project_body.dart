@@ -266,13 +266,12 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                   content: Text(ref.watch(languangeProvider).plsChooseDay),
                 ),
               );
-              // TODO: change wählen to an editable object
-            } else if (_project != null && _project!.title == ' Wählen') {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseProject),
-                ),
-              );
+              // } else if (_project != null && _project!.title == ' Wählen') {
+              //   return ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(
+              //       content: Text(ref.watch(languangeProvider).plsChooseProject),
+              //     ),
+              //   );
             }
             if (_dayPickerController.text.isNotEmpty &&
                 (_project != null && _project!.title != ' Wählen')) {
