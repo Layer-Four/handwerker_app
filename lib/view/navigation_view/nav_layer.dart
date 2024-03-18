@@ -20,6 +20,7 @@ class MainViewNavigator extends ConsumerWidget {
         MainViews.doku => const DokuNavigationView(),
         MainViews.history => const HistoryNavigationView(),
         MainViews.user => const UserView(),
+        // _ => const UserView(),
       },
       bottomNavigationBar: AppNavigationBar(
         index: provider.index,

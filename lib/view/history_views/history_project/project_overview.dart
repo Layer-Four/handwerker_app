@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/project_vm/project.dart';
-import 'package:handwerker_app/models/work_vm.dart';
+import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -39,7 +38,7 @@ class HistoryProjectBody extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
-                            j.name ?? 'Kunde unbenannt',
+                            j.customerName,
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),
@@ -56,7 +55,7 @@ class HistoryProjectBody extends ConsumerWidget {
                     content: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (var work in workEntry.where((k) => k.projectID == j.name))
+                        for (var work in workEntry.where((k) => k.projectID!.toInt() == i))
                           SizedBox(
                             height: 18,
                             child: Padding(
@@ -76,7 +75,7 @@ class HistoryProjectBody extends ConsumerWidget {
                                   SizedBox(
                                     width: 150,
                                     child: Text(
-                                      work.work,
+                                      services[work.serviceID!.toInt()],
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context)
                                           .textTheme
@@ -86,7 +85,7 @@ class HistoryProjectBody extends ConsumerWidget {
                                   ),
                                   SizedBox(
                                     child: Text(
-                                      '${work.duration ~/ 60} Stunden',
+                                      '${work.duration != null ? work.duration! ~/ 60 : 0} Stunden',
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium!
@@ -105,7 +104,7 @@ class HistoryProjectBody extends ConsumerWidget {
           ),
           Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 70, bottom: 20),
+              padding: const EdgeInsets.only(top: 70, bottom: 20),
               child: Image.asset(
                 'assets/images/img_techtool.png',
                 height: 20,
@@ -169,83 +168,137 @@ class _ProjectCardState extends ConsumerState<ProjectCard> {
 }
 
 final projects = [
-  Project(
-    name: 'Sternburger Abc',
+  ProjectEntry(
+    customerName: 'Sternburger Abc',
+    projectID: BigInt.from(0),
     createDate: DateTime(2022, 05, 04),
+    customerID: BigInt.from(0),
   ),
-  Project(
-    name: 'Layer Four Def',
+  ProjectEntry(
+    customerID: BigInt.from(1),
+    customerName: 'Layer Four Def',
+    projectID: BigInt.from(1),
     createDate: DateTime(2022, 01, 04),
   ),
-  Project(
-    name: 'Tech Ghi',
+  ProjectEntry(
+    customerName: 'Tech Ghi',
+    customerID: BigInt.from(2),
+    projectID: BigInt.from(2),
     createDate: DateTime(2022, 10, 04),
   ),
 ];
+final services = [
+  'Fensterausbau',
+  'Fensterrahmen',
+  'Fenstereinbau',
+  'Fundament vorbereiten',
+  'Ring Anker mauern',
+  'Haus Reinigung',
+  'Fenster putzen',
+  'Straße fegen',
+];
 final workEntry = [
-  WorkVM(
-      duration: 240,
-      date: DateTime(2022, 5, 15),
-      projectID: 'Sternburger Abc',
-      work: 'Fensterausbau'),
-  WorkVM(
-      duration: 240,
-      date: DateTime(2022, 5, 15),
-      projectID: 'Layer Four Def',
-      work: 'Fensterrahmen'),
-  WorkVM(
+  TimeEntry(
+    duration: 240,
+    date: DateTime(2022, 5, 15),
+    startTime: DateTime(2022, 5, 15, 08),
+    endTime: DateTime(2022, 5, 15, 12),
+    projectID: BigInt.from(0),
+    serviceID: BigInt.from(0),
+  ),
+  TimeEntry(
+    duration: 240,
+    date: DateTime(2022, 5, 15),
+    startTime: DateTime(2022, 5, 15, 12),
+    endTime: DateTime(2022, 5, 15, 16),
+    projectID: BigInt.from(1),
+    serviceID: BigInt.from(1),
+  ),
+  TimeEntry(
     duration: 60,
     date: DateTime(2022, 5, 15),
-    projectID: 'Tech Ghi',
-    work: 'Fenstereinbau',
+    startTime: DateTime(2022, 5, 15, 16, 30),
+    endTime: DateTime(2022, 5, 15, 17, 30),
+    projectID: BigInt.from(2),
+    serviceID: BigInt.from(2),
   ),
-  WorkVM(
-      duration: 120,
-      date: DateTime(2022, 7, 37),
-      projectID: 'Sternburger Abc',
-      work: 'Fensterausbau'),
-  WorkVM(
-      duration: 120,
-      date: DateTime(2022, 7, 37),
-      projectID: 'Layer Four Def',
-      work: 'Fensterrahmen'),
-  WorkVM(
+  TimeEntry(
+    duration: 120,
+    date: DateTime(2022, 7, 37),
+    startTime: DateTime(2022, 7, 37, 7),
+    endTime: DateTime(2022, 7, 37, 9),
+    projectID: BigInt.from(0),
+    serviceID: BigInt.from(0),
+  ),
+  TimeEntry(
+    duration: 120,
+    date: DateTime(2022, 7, 37),
+    startTime: DateTime(2022, 7, 37, 9),
+    endTime: DateTime(2022, 7, 37, 11),
+    projectID: BigInt.from(1),
+    serviceID: BigInt.from(1),
+  ),
+  TimeEntry(
     duration: 240,
     date: DateTime(2022, 7, 37),
-    projectID: 'Tech Ghi',
-    work: 'Fenstereinbau',
+    startTime: DateTime(2022, 7, 37, 11),
+    pauseStart: DateTime(2022, 7, 37, 13),
+    pauseEnd: DateTime(2022, 7, 37, 13, 30),
+    endTime: DateTime(2022, 7, 37, 15, 30),
+    projectID: BigInt.from(2),
+    serviceID: BigInt.from(3),
   ),
-  WorkVM(
-      duration: 120,
-      date: DateTime(1990, 3, 7),
-      projectID: 'Sternburger Abc',
-      work: 'Fensterausbau'),
-  WorkVM(
-      duration: 240,
-      date: DateTime(2022, 5, 15),
-      projectID: 'Layer Four Def',
-      work: 'Fundament vorbereiten'),
-  WorkVM(
+  TimeEntry(
+    duration: 120,
+    date: DateTime(1990, 3, 7),
+    startTime: DateTime(1990, 3, 7, 10),
+    endTime: DateTime(1990, 3, 7, 12),
+    projectID: BigInt.from(0),
+    serviceID: BigInt.from(0),
+  ),
+  TimeEntry(
     duration: 240,
-    date: DateTime(2022, 5, 15),
-    projectID: 'Tech Ghi',
-    work: 'Ring Anker mauern',
+    date: DateTime(2020, 5, 15),
+    startTime: DateTime(2020, 5, 15, 7),
+    endTime: DateTime(2020, 5, 15, 11),
+    projectID: BigInt.from(1),
+    serviceID: BigInt.from(3),
   ),
-  WorkVM(
-      duration: 180,
-      date: DateTime(2024, 2, 25),
-      projectID: 'Sternburger Abc',
-      work: 'Haus Reinigung '),
-  WorkVM(
-      duration: 60,
-      date: DateTime(2024, 2, 25),
-      projectID: 'Layer Four Def',
-      work: 'Fenster putzen'),
-  WorkVM(
+  TimeEntry(
+    duration: 240,
+    date: DateTime(2020, 5, 15),
+    startTime: DateTime(2020, 5, 15, 11),
+    endTime: DateTime(2020, 5, 15, 15, 30),
+    pauseStart: DateTime(2020, 5, 15, 13),
+    pauseEnd: DateTime(2020, 5, 15, 13, 30),
+    projectID: BigInt.from(2),
+    serviceID: BigInt.from(4),
+  ),
+  TimeEntry(
     duration: 180,
     date: DateTime(2024, 2, 25),
-    projectID: 'Tech Ghi',
-    work: 'Straße fegen',
+    startTime: DateTime(2024, 2, 25, 8),
+    endTime: DateTime(2024, 2, 25, 11),
+    pauseStart: DateTime(2024, 2, 25, 9, 30),
+    pauseEnd: DateTime(2024, 2, 25, 10),
+    projectID: BigInt.from(0),
+    serviceID: BigInt.from(5),
+  ),
+  TimeEntry(
+    duration: 60,
+    date: DateTime(2024, 2, 25),
+    startTime: DateTime(2024, 2, 25, 11),
+    endTime: DateTime(2024, 2, 25, 12),
+    projectID: BigInt.from(1),
+    serviceID: BigInt.from(6),
+  ),
+  TimeEntry(
+    duration: 180,
+    date: DateTime(2024, 2, 25),
+    startTime: DateTime(2024, 2, 25, 12),
+    endTime: DateTime(2024, 2, 25, 15),
+    projectID: BigInt.from(2),
+    serviceID: BigInt.from(7),
   ),
 ];
 

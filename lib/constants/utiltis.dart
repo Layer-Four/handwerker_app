@@ -1,8 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -12,28 +12,37 @@ import 'package:image_picker/image_picker.dart';
 class Utilits {
   static Future<DateTime?> selecetDate(context) async {
     return showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2023),
-        lastDate: DateTime(2100),
-        locale: const Locale('de', 'DE'));
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2100),
+      // locale: const Locale('de', 'DE')
+    );
   }
 
-  static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
+  static Future<String?> pickImageFromCamera(BuildContext context, String projectName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    const Permission storagePermission = Permission.storage;
+    if (await storagePermission.isDenied) {
+      await askForPermission(context);
+    }
+    final now = '${DateTime.now().day}.${DateTime.now().month},${DateTime.now().year}';
+    final path = '${dir.path}/$projectName/$now.jpg';
+    final permission = await Permission.camera.status;
+    log(' permission denied: ${permission.isDenied} \n permission granded: ${permission.isGranted}\n permission Limited: ${permission.isLimited} permisison Storage  denied: ${await Permission.storage.isDenied} ');
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
     try {
       final XFile? file = await ImagePicker().pickImage(
         source: ImageSource.camera,
         maxHeight: 1024,
         maxWidth: 1024,
       );
-      //TODO: save image on local device?
-      log('filename ${file?.name} ,mimeType: ${file?.mimeType} / ${file?.path}');
       if (file != null) {
-        final newfile = XFile(file.path,
-            name:
-                '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
-        log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
-        return newfile;
+        final newfile = await File(file.path).copy(path);
+        log('imagePath: ${newfile.path}');
+        return newfile.path;
       }
     } catch (e) {
       final status = await Permission.camera.status;
@@ -41,24 +50,35 @@ class Utilits {
       if (status.isDenied) {
         askForPermission(context);
       }
+      //  XFile(file.path,
+      //     name:
+      //         '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
+      // log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
+      // return newfile;
     }
     return null;
   }
 
-  static Future<XFile?> pickImageFromGalery(BuildContext context, String projectName) async {
+  static Future<String?> pickImageFromGalery(BuildContext context, String projectName) async {
+    final dir = await getApplicationCacheDirectory();
+    final now = '${DateTime.now().day}.${DateTime.now().month},${DateTime.now().year}';
+    final path = '${dir.path}/$projectName/$now.jpg';
+    final permission = Permission.storage.status;
+    log('storage permission: $permission');
     try {
       final XFile? file = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         maxHeight: 1024,
         maxWidth: 1024,
       );
-      log('filename ${file?.name} ,mimeType: ${file?.mimeType}');
       if (file != null) {
-        final newfile = XFile(file.path,
-            name:
-                '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
-        log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
-        return newfile;
+        final newfile = await File(file.path).copy(path);
+        log('imagePath: ${newfile.path}');
+        // final newfile = XFile(file.path,
+        //     name:
+        //         '$projectName/${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}');
+        // log('filename ${newfile.name} ,mimeType: ${newfile.mimeType}');
+        return newfile.path;
       }
     } catch (e) {
       final status = await Permission.storage.status;

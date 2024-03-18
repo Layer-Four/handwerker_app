@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
+import 'package:handwerker_app/models/project_models/project_vm/project.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/source_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProjectBody extends ConsumerStatefulWidget {
   const ProjectBody({super.key});
@@ -24,14 +23,14 @@ class ProjectBody extends ConsumerStatefulWidget {
 class _ProjectBodyState extends ConsumerState<ProjectBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  late Project _entry;
-  static const _customerProject = [
-    ' Wählen',
-    ' Koch / Fenster Montage',
-    ' Meier/ Bad verfliesen',
-    ' Berger/ Putzen',
-  ];
-  String _project = _customerProject.first;
+  late ProjectEntry _entry;
+  // static const _customerProject = [
+  //   ' Wählen',
+  //   ' Koch / Fenster Montage',
+  //   ' Meier/ Bad verfliesen',
+  //   ' Berger/ Putzen',
+  // ];
+  ProjectVM? _project;
 
   @override
   void initState() {
@@ -39,7 +38,11 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
     final now = DateTime.now();
     setState(() {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      _entry = Project(createDate: now);
+      _entry = ProjectEntry(
+          createDate: now,
+          projectID: BigInt.one,
+          customerID: BigInt.from(0),
+          customerName: '');
     });
   }
 
@@ -86,12 +89,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
                         final image = await Utilits.pickImageFromCamera(
-                            context, _project);
-                        log('${image!.name}');
-                        final newImage = XFile(image.path,
-                            name: _project + DateTime.timestamp().toString());
-                        log('${newImage!.name}');
+                            context, _project?.title ?? '');
                         if (image != null) {
+                          log('returned paht ${image}');
                           //TODO: Maybe show image in popUp?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -103,22 +103,16 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Image.file(
-                              File(image.path),
+                              File(image),
                               height: 100,
                               width: 100,
                             ),
                           ));
-                          final filename =
-                              '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, filename],
+                              imageUrl: [..._entry.imageUrl, image],
                             );
                           });
-                          ref.read(projectSourceProvider.notifier).state = [
-                            ...ref.watch(projectSourceProvider),
-                            (filename, image),
-                          ];
                         }
                       },
                     ),
@@ -132,8 +126,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
                         final image = await Utilits.pickImageFromGalery(
-                            context, _project);
+                            context, _project?.title ?? '');
                         if (image != null) {
+                          log('imagepath: $image');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -145,18 +140,10 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                               backgroundColor: AppColor.kPrimaryButtonColor,
                             ),
                           );
-                          log('${image!.name}');
-                          //TODO: check to translate file to a JPG with mime or something else
-                          final filename =
-                              '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, filename],
+                              imageUrl: [..._entry.imageUrl, image],
                             );
-                            ref.read(projectSourceProvider.notifier).state = [
-                              ...ref.watch(projectSourceProvider),
-                              (filename, image),
-                            ];
                           });
                         }
                       },
@@ -166,10 +153,10 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               ],
             ),
             Text(
-              ref.watch(projectSourceProvider).isEmpty
+              _entry.imageUrl.isEmpty
                   ? ''
-                  : '${ref.watch(projectSourceProvider).length} ${ref.watch(languangeProvider).choosedImage}',
-              style: ref.watch(projectSourceProvider).isEmpty
+                  : '${_entry.imageUrl.length} ${ref.watch(languangeProvider).choosedImage}',
+              style: _entry.imageUrl.isEmpty
                   ? const TextStyle(fontSize: 0)
                   : Theme.of(context).textTheme.labelSmall,
             ),
@@ -177,35 +164,53 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
         ),
       );
 
-  Padding _buildCustomerProjectField() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).customerProject,
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColor.kTextfieldBorder),
-            ),
-            child: DropdownButton(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: _project,
-              items: _customerProject
-                  .map(
-                    (e) => DropdownMenuItem(value: e, child: Text(e)),
-                  )
-                  .toList(),
-              onChanged: (e) {
-                setState(() {
-                  _project = e!;
-                  _entry = _entry.copyWith(name: e);
-                });
-              },
-            ),
-          ),
-        ),
-      );
+  Widget _buildCustomerProjectField() {
+    return ref.read(projectProvider).when(
+          error: (error, stackTrace) => const SizedBox(),
+          loading: () => const CircularProgressIndicator.adaptive(),
+          data: (data) {
+            if (data == null) {
+              ref.read(projectProvider.notifier).loadpProject();
+            }
+            final projects = data;
+            if (projects != null) {
+              _project = projects.first;
+              _entry =
+                  _entry.copyWith(projectID: BigInt.from(projects.first.id));
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: LabeledInputWidget(
+                label: ref.watch(languangeProvider).customerProject,
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
+                  ),
+                  child: DropdownButton(
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: _project,
+                    items: projects
+                        ?.map(
+                          (e) => DropdownMenuItem(
+                              value: e, child: Text(' ${e.title}')),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      setState(() {
+                        _project = e!;
+                        _entry = _entry.copyWith(projectID: BigInt.from(e.id));
+                      });
+                    },
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+  }
 
   Padding _buildDescription() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -261,6 +266,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
+            log(_entry.toJson().toString());
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -276,11 +282,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
               );
             }
             if (_dayPickerController.text.isNotEmpty && _project != ' Wählen') {
-              ref.read(projectProvider.notifier).addProject(_entry);
+              ref.read(projectProvider.notifier).uploadProjectEntry(_entry);
               final now = DateTime.now();
               setState(() {
-                _project = _customerProject.first;
-                ref.read(projectSourceProvider.notifier).state = [];
                 _descriptionController.clear();
                 _dayPickerController.text =
                     '${now.day}.${now.month}.${now.year}';

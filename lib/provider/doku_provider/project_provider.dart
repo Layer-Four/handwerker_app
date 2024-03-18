@@ -1,19 +1,41 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
-import 'package:handwerker_app/models/project_vm/project.dart';
+import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
 
-final projectProvider =
-    NotifierProvider<ProjectNotifer, List<Project>>(() => ProjectNotifer());
+final projectProvider = AsyncNotifierProvider<ProjectNotifer, List<ProjectVM>?>(
+    () => ProjectNotifer());
 
-class ProjectNotifer extends Notifier<List<Project>> {
+class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
   @override
-  List<Project> build() => [];
-  void addProject(Project project) => state = [...state, project];
+  List<ProjectVM>? build() => null;
+
+  void loadpProject() async {
+    final uri = const DbAdress().getCostumerProjects;
+    final Dio http = Dio();
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final projects =
+            data.map<ProjectVM>((e) => ProjectVM.fromJson(e)).toList();
+        state = AsyncValue.data(projects);
+      }
+      if (response.statusCode != 200) {
+        log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
+        return;
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+    return;
+  }
 
   // TODO: write request provider for encaplusalted logic
-  void uploadProjectEntry(Project entry) async {
+  void uploadProjectEntry(ProjectEntry entry) async {
     // * var request = new http.MultipartRequest("POST", url);
     // * request.fields['user'] = 'someone@somewhere.com';
     // * request.files.add(http.MultipartFile.fromPath(
@@ -30,18 +52,16 @@ class ProjectNotifer extends Notifier<List<Project>> {
     // * });
     // * response = await dio.post("/info", data: formData)
 
-    const baseUri = 'https://www.azure.de/';
-    final uri = Uri.http('nutzer123', '${baseUri}zeiteintrag-speicherung');
     //TODO: change List of File paths to list of FormData
-    final json = entry.toJson();
-
+    final uri = const DbAdress().postProjectEntry;
+    final Dio http = Dio();
     try {
-      final response = await http.post(uri, body: json);
+      final response = await http.post(uri, data: entry.toJson());
       if (response.statusCode == 200) {
-        final jsonResponse = convert.jsonDecode(response.body);
-        log('request success, this was the response: $jsonResponse');
+        final data = json.decode(response.data);
+        log('request success, this was the response: $data');
       } else {
-        throw 'statuscode: ${response.statusCode}';
+        log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
       }
     } catch (e) {
       log('request was incompleted this was the error: $e');

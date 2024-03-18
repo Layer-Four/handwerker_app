@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:handwerker_app/models/consumable/consumable.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 part 'consumable_entry.freezed.dart';
 part 'consumable_entry.g.dart';
 
@@ -7,7 +7,9 @@ part 'consumable_entry.g.dart';
 class ConsumeEntry with _$ConsumeEntry {
   const factory ConsumeEntry({
     required DateTime createDate,
-    String? project,
+    @Default('') String entryID,
+    String? projectName,
+    BigInt? projectID,
     @Default(<Consumable>[]) List<Consumable> consumables,
     @Default(<String>[]) List<String> dokusPath,
     double? estimatedDuration,
