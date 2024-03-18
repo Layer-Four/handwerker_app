@@ -87,7 +87,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log('returned paht ${image}');
+                          log('returned paht $image');
                           //TODO: Maybe show image in popUp?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -267,14 +267,15 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                 ),
               );
               // TODO: change wählen to an editable object
-            } else if (_project == ' Wählen') {
+            } else if (_project != null && _project!.title == ' Wählen') {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(ref.watch(languangeProvider).plsChooseProject),
                 ),
               );
             }
-            if (_dayPickerController.text.isNotEmpty && _project != ' Wählen') {
+            if (_dayPickerController.text.isNotEmpty &&
+                (_project != null && _project!.title != ' Wählen')) {
               ref.read(projectProvider.notifier).uploadProjectEntry(_entry);
               final now = DateTime.now();
               setState(() {

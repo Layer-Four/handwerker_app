@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
@@ -86,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 5,
                         ),
                         Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Switch(
                             value: isOTP,
                             onChanged: (value) {
@@ -122,9 +123,13 @@ class _LoginViewState extends State<LoginView> {
                             child: ElevatedButton(
                               onPressed: () {
                                 if (formstate.currentState!.validate()) {
-                                  print("valid");
+                                  if (kDebugMode) {
+                                    print("valid");
+                                  }
                                 } else {
-                                  print("Not Valid");
+                                  if (kDebugMode) {
+                                    print("Not Valid");
+                                  }
                                 }
                                 if (isOTP) {
                                   Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);

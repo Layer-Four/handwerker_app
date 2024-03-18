@@ -10,14 +10,14 @@ class UserAndPasswordField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
 
   const UserAndPasswordField({
-    Key? key,
+    super.key,
     this.controller,
     this.isPass = false,
     this.validator,
     this.hintText,
     this.keyboardType,
     this.obscureText = true,
-  }) : super(key: key);
+  });
 
   @override
   State<UserAndPasswordField> createState() => _UserAndPasswordFieldState();
@@ -71,9 +71,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused
-                      ? AppColor.kPrimaryButtonColor
-                      : Colors.transparent,
+                  color: isFocused ? AppColor.kPrimaryButtonColor : Colors.transparent,
                 ),
               ),
             ),
