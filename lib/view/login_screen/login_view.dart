@@ -51,8 +51,12 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "Nutzername",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: AppColor.kWhiteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -63,8 +67,7 @@ class _LoginViewState extends State<LoginView> {
                             if (value!.isEmpty) {
                               return 'Please enter your email';
                             }
-                            // Additional validation logic if needed
-                            return null; // Return null if the value is valid
+                            return null;
                           },
                         ),
                         const SizedBox(
@@ -72,8 +75,12 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: AppColor.kWhiteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -86,7 +93,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 5,
                         ),
                         Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Switch(
                             value: isOTP,
                             onChanged: (value) {
@@ -103,11 +110,13 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style:
-                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    color: AppColor.kWhite,
+                                    fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -127,9 +136,11 @@ class _LoginViewState extends State<LoginView> {
                                   print("Not Valid");
                                 }
                                 if (isOTP) {
-                                  Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
+                                  Navigator.of(context)
+                                      .pushNamed(AppRoutes.setPasswordScreen);
                                 } else {
-                                  Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+                                  Navigator.of(context).pushReplacementNamed(
+                                      AppRoutes.viewScreen);
                                 }
                               },
                               style: ElevatedButton.styleFrom(

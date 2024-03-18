@@ -57,7 +57,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             SizedBox(
               height: 70,
               child: Center(
-                child: Image.asset('assets/images/img_techtool.png', height: 20),
+                child:
+                    Image.asset('assets/images/img_techtool.png', height: 20),
               ),
             ),
           ],
@@ -84,10 +85,11 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromCamera(context, _project);
+                        final image = await Utilits.pickImageFromCamera(
+                            context, _project);
                         log('${image!.name}');
-                        final newImage =
-                            XFile(image.path, name: _project + DateTime.timestamp().toString());
+                        final newImage = XFile(image.path,
+                            name: _project + DateTime.timestamp().toString());
                         log('${newImage!.name}');
                         if (image != null) {
                           //TODO: Maybe show image in popUp?
@@ -106,7 +108,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                               width: 100,
                             ),
                           ));
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
+                          final filename =
+                              '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
                               imageUrl: [..._entry.imageUrl, filename],
@@ -128,7 +131,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromGalery(context, _project);
+                        final image = await Utilits.pickImageFromGalery(
+                            context, _project);
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -143,7 +147,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                           );
                           log('${image!.name}');
                           //TODO: check to translate file to a JPG with mime or something else
-                          final filename = '$_project /${DateTime.timestamp()}.jpg';
+                          final filename =
+                              '$_project /${DateTime.timestamp()}.jpg';
                           setState(() {
                             _entry = _entry.copyWith(
                               imageUrl: [..._entry.imageUrl, filename],
@@ -237,7 +242,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             final date = await Utilits.selecetDate(context);
             if (date != null) {
               setState(() {
-                _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                _dayPickerController.text =
+                    '${date.day}.${date.month}.${date.year}';
                 _entry = _entry.copyWith(createDate: date);
               });
             }
@@ -276,7 +282,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                 _project = _customerProject.first;
                 ref.read(projectSourceProvider.notifier).state = [];
                 _descriptionController.clear();
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+                _dayPickerController.text =
+                    '${now.day}.${now.month}.${now.year}';
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
