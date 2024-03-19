@@ -82,7 +82,6 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
         return result;
       } else {
         final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
-        log(data.runtimeType.toString());
         final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
 
         // List<ProjectCustomer> project = [];

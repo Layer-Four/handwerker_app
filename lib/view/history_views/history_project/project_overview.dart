@@ -13,6 +13,7 @@ import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.d
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
+  static int counter = 0;
   @override
   Widget build(context) => SingleChildScrollView(
         child: Padding(
@@ -48,7 +49,12 @@ class CostumerOverviewBody extends StatelessWidget {
 
   Widget _buildAsyncProjectOverview(BuildContext context) =>
       Consumer(builder: (context, ref, child) {
-        final futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
+        log(counter.toString());
+        var futureProjects;
+        {
+          futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
+          counter++;
+        }
         return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
             builder: (context, snapshot) {
@@ -112,7 +118,7 @@ class CostumerOverviewBody extends StatelessWidget {
                       child: Row(
                         children: [
                           SizedBox(
-                            width: 100,
+                            width: 90,
                             child: Text(
                               '${work.start.day < 10 ? "0${work.start.day}" : work.start.day}.${work.start.month < 10 ? "0${work.start.month}" : work.start.month}.${work.start.year}',
                               style: Theme.of(context)
