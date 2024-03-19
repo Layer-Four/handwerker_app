@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
@@ -43,6 +44,16 @@ class MainApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.routes,
+      localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('de'),
+        Locale('ar'),
+      ],
     );
   }
 }

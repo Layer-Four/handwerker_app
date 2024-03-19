@@ -6,8 +6,8 @@ part 'project_entry.g.dart';
 @freezed
 class ProjectEntry with _$ProjectEntry {
   const factory ProjectEntry({
-    required BigInt projectID,
-    required BigInt customerID,
+    int? projectID,
+    int? customerID,
     required String customerName,
     String? projectName,
     required DateTime createDate,

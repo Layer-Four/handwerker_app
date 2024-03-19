@@ -10,6 +10,9 @@ dependencies:
   dio: ^5.4.1
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   flutter_riverpod: ^2.4.10
   flutter_svg: ^2.0.10+1
   freezed_annotation: ^2.4.1

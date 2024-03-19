@@ -10,14 +10,14 @@ class UserAndPasswordField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
 
   const UserAndPasswordField({
-    Key? key,
+    super.key,
     this.controller,
     this.isPass = false,
     this.validator,
     this.hintText,
     this.keyboardType,
     this.obscureText = true,
-  }) : super(key: key);
+  });
 
   @override
   State<UserAndPasswordField> createState() => _UserAndPasswordFieldState();
@@ -42,7 +42,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
           });
         },
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           height: isFocused ? 40 : 35,
           child: TextFormField(
             textInputAction: TextInputAction.next,
@@ -51,7 +51,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
             controller: widget.controller,
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.grey),
               filled: true,
               fillColor: Colors.transparent,
               suffixIcon: widget.isPass
@@ -71,9 +71,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused
-                      ? AppColor.kPrimaryButtonColor
-                      : Colors.transparent,
+                  color: isFocused ? AppColor.kPrimaryButtonColor : Colors.transparent,
                 ),
               ),
             ),

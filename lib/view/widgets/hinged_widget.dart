@@ -27,7 +27,7 @@ class _HingedWidgetState extends State<HingedWidget> {
       width: MediaQuery.of(context).size.width - 20,
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeInOutCubic,
-      height: _isOpen ? widget.contentLength * 70 : 60,
+      height: _isOpen ? (60 + (widget.contentLength * 22)) : 50,
       child: InkWell(
         onTap: () => setState(() => _isOpen = !_isOpen),
         child: Card(
@@ -43,7 +43,7 @@ class _HingedWidgetState extends State<HingedWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 90,
+                      width: MediaQuery.of(context).size.width - 80,
                       child: widget.header,
                     ),
                     Icon(
@@ -53,10 +53,10 @@ class _HingedWidgetState extends State<HingedWidget> {
                   ],
                 ),
                 AnimatedCrossFade(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 20),
                   firstChild: const SizedBox.shrink(),
                   secondChild: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       width: MediaQuery.of(context).size.width - 30,
                       child: widget.content),
                   crossFadeState: _isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,

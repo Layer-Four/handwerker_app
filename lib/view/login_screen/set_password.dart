@@ -80,7 +80,6 @@ class _PasswordViewState extends State<PasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasError = false;
     return Scaffold(
       // extendBodyBehindAppBar: true,
 
@@ -96,7 +95,7 @@ class _PasswordViewState extends State<PasswordView> {
             key: _formKey,
             child: Column(
               children: [
-                const LogoApp(),
+                const AppLogo(),
                 const SizedBox(
                   height: 30,
                 ),
@@ -155,8 +154,6 @@ class _PasswordViewState extends State<PasswordView> {
                     if (value!.isEmpty) {
                       return null;
                     } else if (value.length < 6) {
-                      hasError = true;
-
                       return "Enter at least 6 Zeichen";
                     }
 

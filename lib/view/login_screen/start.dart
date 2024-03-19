@@ -76,7 +76,7 @@ class _StartViewState extends State<StartView> {
                       const SizedBox(
                         height: 40,
                       ),
-                      const LogoApp(),
+                      const AppLogo(),
                     ],
                   ),
                 ),

@@ -9,7 +9,7 @@ class ConsumeEntry with _$ConsumeEntry {
     required DateTime createDate,
     @Default('') String entryID,
     String? projectName,
-    BigInt? projectID,
+    int? projectID,
     @Default(<Consumable>[]) List<Consumable> consumables,
     @Default(<String>[]) List<String> dokusPath,
     double? estimatedDuration,

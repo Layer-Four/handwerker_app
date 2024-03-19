@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LogoApp extends StatelessWidget {
-  const LogoApp({
+class AppLogo extends StatelessWidget {
+  const AppLogo({
     super.key,
   });
 
