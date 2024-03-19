@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
@@ -15,34 +16,36 @@ class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
   static int counter = 0;
   @override
-  Widget build(context) => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-                  child: Text(
-                    'KUNDEN ÜBERSICHT',
-                    style: Theme.of(context).textTheme.labelMedium,
+  Widget build(context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          color: Colors.amber,
+          height: MediaQuery.of(context).size.height - 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // TODO: delete headline "Kunde Übersicht"???
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+                child: Text(
+                  'KUNDEN ÜBERSICHT',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+              _buildAsyncProjectOverview(context),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Image.asset(
+                    'assets/images/img_techtool.png',
+                    height: 20,
                   ),
                 ),
-                _buildAsyncProjectOverview(context),
-                // Center(
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(top: 20, bottom: 20),
-                //     child: Image.asset(
-                //       'assets/images/img_techtool.png',
-                //       height: 20,
-                //     ),
-                //   ),
-                // )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       );
@@ -50,19 +53,18 @@ class CostumerOverviewBody extends StatelessWidget {
   Widget _buildAsyncProjectOverview(BuildContext context) =>
       Consumer(builder: (context, ref, child) {
         log(counter.toString());
-        var futureProjects;
-        {
-          futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
-          counter++;
-        }
+        Future<List<ProjectCustomer?>> futureProjects;
+
+        futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
+        counter++;
+
         return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
             builder: (context, snapshot) {
               if (snapshot.data != null) {
                 log((snapshot.data.toString()));
                 final customerProjectList = snapshot.data;
-                return SizedBox(
-                  // height: 500,
+                return SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: customerProjectList!
@@ -72,7 +74,7 @@ class CostumerOverviewBody extends StatelessWidget {
                             itemBuilder: (BuildContext context, i) {
                               final customer = customerProjectList[i];
                               return SizedBox(
-                                height: MediaQuery.of(context).size.height - 250,
+                                height: MediaQuery.of(context).size.height - 270,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -81,7 +83,9 @@ class CostumerOverviewBody extends StatelessWidget {
                                           const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                       child: Text(customer?.customer ?? 'Kein Kunde??'),
                                     ),
-                                    SizedBox(height: 400, child: _buildProjectDetails(customer)),
+                                    SizedBox(
+                                        height: MediaQuery.of(context).size.height - 300,
+                                        child: _buildProjectDetails(customer)),
                                   ],
                                 ),
                               );
@@ -128,7 +132,7 @@ class CostumerOverviewBody extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 120,
+                            width: 140,
                             child: Text(
                               work.serviceName,
                               overflow: TextOverflow.ellipsis,

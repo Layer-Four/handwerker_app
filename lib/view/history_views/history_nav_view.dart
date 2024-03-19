@@ -53,7 +53,7 @@ class NavBarHistoryVWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: 'Projekt',
+              title: 'Kunde',
               isCurrent: viewProvider == HistoryViews.project,
             ),
           ),
