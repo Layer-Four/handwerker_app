@@ -33,8 +33,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
     final now = DateTime.now();
     setState(() {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      _entry = ProjectEntry(
-          createDate: now, projectID: BigInt.one, customerID: BigInt.from(0), customerName: '');
+      _entry = ProjectEntry(createDate: now, customerName: '');
     });
   }
 
@@ -169,9 +168,9 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             if (projects != null) {
               _project = projects.first;
               _entry = _entry.copyWith(
-                projectID: BigInt.from(projects.first.id),
+                projectID: projects.first.id,
                 projectName: projects.first.title,
-                customerID: BigInt.from(projects.first.id),
+                customerID: projects.first.id,
                 customerName: projects.first.title,
               );
             }
@@ -198,8 +197,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                       setState(() {
                         _project = e!;
                         _entry = _entry.copyWith(
-                          projectID: BigInt.from(e.id),
-                          customerID: BigInt.from(e.id),
+                          projectID: e.id,
+                          customerID: e.id,
                           projectName: e.title,
                           customerName: e.title,
                         );
@@ -289,8 +288,8 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                 _descriptionController.clear();
                 _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
                 _entry = ProjectEntry(
-                    projectID: BigInt.from(_project!.id),
-                    customerID: BigInt.from(_project!.id),
+                    projectID: _project!.id,
+                    customerID: _project!.id,
                     customerName: _project!.title,
                     projectName: null,
                     imageUrl: [],

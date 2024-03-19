@@ -87,7 +87,7 @@ class CostumerOverviewBody extends StatelessWidget {
               return const SizedBox(
                 height: 400,
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 ),
               );
             });
@@ -114,7 +114,7 @@ class CostumerOverviewBody extends StatelessWidget {
                           SizedBox(
                             width: 100,
                             child: Text(
-                              '${work.start!.day < 10 ? "0${work.start!.day}" : work.start!.day}.${work.start!.month < 10 ? "0${work.start!.month}" : work.start!.month}.${work.start!.year}',
+                              '${work.start.day < 10 ? "0${work.start.day}" : work.start.day}.${work.start.month < 10 ? "0${work.start.month}" : work.start.month}.${work.start.year}',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
@@ -124,7 +124,7 @@ class CostumerOverviewBody extends StatelessWidget {
                           SizedBox(
                             width: 120,
                             child: Text(
-                              work.servciceName!,
+                              work.serviceName,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -161,7 +161,7 @@ class CostumerOverviewBody extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
-            j!.projectName,
+            j.projectName!,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ),

@@ -27,8 +27,8 @@ mixin _$TimeEntry {
   DateTime? get endTime => throw _privateConstructorUsedError;
   DateTime? get pauseEnd => throw _privateConstructorUsedError;
   DateTime? get pauseStart => throw _privateConstructorUsedError;
-  BigInt? get projectID => throw _privateConstructorUsedError;
-  BigInt? get serviceID => throw _privateConstructorUsedError;
+  int? get projectID => throw _privateConstructorUsedError;
+  int? get serviceID => throw _privateConstructorUsedError;
   String? get serviceTitle => throw _privateConstructorUsedError;
   DateTime get startTime => throw _privateConstructorUsedError;
   String get userID => throw _privateConstructorUsedError;
@@ -52,8 +52,8 @@ abstract class $TimeEntryCopyWith<$Res> {
       DateTime? endTime,
       DateTime? pauseEnd,
       DateTime? pauseStart,
-      BigInt? projectID,
-      BigInt? serviceID,
+      int? projectID,
+      int? serviceID,
       String? serviceTitle,
       DateTime startTime,
       String userID});
@@ -117,11 +117,11 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       serviceID: freezed == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       serviceTitle: freezed == serviceTitle
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
@@ -154,8 +154,8 @@ abstract class _$$TimeEntryImplCopyWith<$Res>
       DateTime? endTime,
       DateTime? pauseEnd,
       DateTime? pauseStart,
-      BigInt? projectID,
-      BigInt? serviceID,
+      int? projectID,
+      int? serviceID,
       String? serviceTitle,
       DateTime startTime,
       String userID});
@@ -217,11 +217,11 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       serviceID: freezed == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       serviceTitle: freezed == serviceTitle
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
@@ -274,9 +274,9 @@ class _$TimeEntryImpl extends _TimeEntry {
   @override
   final DateTime? pauseStart;
   @override
-  final BigInt? projectID;
+  final int? projectID;
   @override
-  final BigInt? serviceID;
+  final int? serviceID;
   @override
   final String? serviceTitle;
   @override
@@ -357,8 +357,8 @@ abstract class _TimeEntry extends TimeEntry {
       final DateTime? endTime,
       final DateTime? pauseEnd,
       final DateTime? pauseStart,
-      final BigInt? projectID,
-      final BigInt? serviceID,
+      final int? projectID,
+      final int? serviceID,
       final String? serviceTitle,
       required final DateTime startTime,
       final String userID}) = _$TimeEntryImpl;
@@ -382,9 +382,9 @@ abstract class _TimeEntry extends TimeEntry {
   @override
   DateTime? get pauseStart;
   @override
-  BigInt? get projectID;
+  int? get projectID;
   @override
-  BigInt? get serviceID;
+  int? get serviceID;
   @override
   String? get serviceTitle;
   @override

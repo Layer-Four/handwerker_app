@@ -324,7 +324,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             final projects = data;
             if (projects != null) {
               _project = projects.first;
-              _entry = _entry.copyWith(projectID: BigInt.from(projects.first.id));
+              _entry = _entry.copyWith(projectID: projects.first.id);
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -348,7 +348,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     onChanged: (e) {
                       setState(() {
                         _project = e!;
-                        _entry = _entry.copyWith(projectID: BigInt.from(e.id));
+                        _entry = _entry.copyWith(projectID: e.id);
                       });
                     },
                   ),
@@ -421,7 +421,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             log(_entry.toJson().toString());
           }
           log(_entry.toJson().toString());
-          if (_project != ' Wählen' && _selectedMaterial != ' Wählen') {
+          if (_project?.title != ' Wählen' && _selectedMaterial != ' Wählen') {
             final material = Consumable(
               name: _selectedMaterial,
               amount: int.tryParse(_amountController.text) ?? 1,

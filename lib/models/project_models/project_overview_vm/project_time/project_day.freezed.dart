@@ -20,10 +20,10 @@ ProjectTimeVM _$ProjectTimeVMFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProjectTimeVM {
-  String get durationTotal => throw _privateConstructorUsedError;
+  int? get durationTotal => throw _privateConstructorUsedError;
   DateTime get end => throw _privateConstructorUsedError;
-  BigInt get serviceID => throw _privateConstructorUsedError;
-  String get servciceName => throw _privateConstructorUsedError;
+  int get serviceID => throw _privateConstructorUsedError;
+  String get serviceName => throw _privateConstructorUsedError;
   DateTime get start => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,10 +39,10 @@ abstract class $ProjectTimeVMCopyWith<$Res> {
       _$ProjectTimeVMCopyWithImpl<$Res, ProjectTimeVM>;
   @useResult
   $Res call(
-      {String durationTotal,
+      {int? durationTotal,
       DateTime end,
-      BigInt serviceID,
-      String servciceName,
+      int serviceID,
+      String serviceName,
       DateTime start});
 }
 
@@ -59,17 +59,17 @@ class _$ProjectTimeVMCopyWithImpl<$Res, $Val extends ProjectTimeVM>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? durationTotal = null,
+    Object? durationTotal = freezed,
     Object? end = null,
     Object? serviceID = null,
-    Object? servciceName = null,
+    Object? serviceName = null,
     Object? start = null,
   }) {
     return _then(_value.copyWith(
-      durationTotal: null == durationTotal
+      durationTotal: freezed == durationTotal
           ? _value.durationTotal
           : durationTotal // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int?,
       end: null == end
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
@@ -77,10 +77,10 @@ class _$ProjectTimeVMCopyWithImpl<$Res, $Val extends ProjectTimeVM>
       serviceID: null == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as BigInt,
-      servciceName: null == servciceName
-          ? _value.servciceName
-          : servciceName // ignore: cast_nullable_to_non_nullable
+              as int,
+      serviceName: null == serviceName
+          ? _value.serviceName
+          : serviceName // ignore: cast_nullable_to_non_nullable
               as String,
       start: null == start
           ? _value.start
@@ -99,10 +99,10 @@ abstract class _$$ProjectTimeVMImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String durationTotal,
+      {int? durationTotal,
       DateTime end,
-      BigInt serviceID,
-      String servciceName,
+      int serviceID,
+      String serviceName,
       DateTime start});
 }
 
@@ -117,17 +117,17 @@ class __$$ProjectTimeVMImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? durationTotal = null,
+    Object? durationTotal = freezed,
     Object? end = null,
     Object? serviceID = null,
-    Object? servciceName = null,
+    Object? serviceName = null,
     Object? start = null,
   }) {
     return _then(_$ProjectTimeVMImpl(
-      durationTotal: null == durationTotal
+      durationTotal: freezed == durationTotal
           ? _value.durationTotal
           : durationTotal // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int?,
       end: null == end
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
@@ -135,10 +135,10 @@ class __$$ProjectTimeVMImplCopyWithImpl<$Res>
       serviceID: null == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as BigInt,
-      servciceName: null == servciceName
-          ? _value.servciceName
-          : servciceName // ignore: cast_nullable_to_non_nullable
+              as int,
+      serviceName: null == serviceName
+          ? _value.serviceName
+          : serviceName // ignore: cast_nullable_to_non_nullable
               as String,
       start: null == start
           ? _value.start
@@ -152,10 +152,10 @@ class __$$ProjectTimeVMImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectTimeVMImpl extends _ProjectTimeVM {
   const _$ProjectTimeVMImpl(
-      {required this.durationTotal,
+      {this.durationTotal,
       required this.end,
       required this.serviceID,
-      required this.servciceName,
+      required this.serviceName,
       required this.start})
       : super._();
 
@@ -163,19 +163,19 @@ class _$ProjectTimeVMImpl extends _ProjectTimeVM {
       _$$ProjectTimeVMImplFromJson(json);
 
   @override
-  final String durationTotal;
+  final int? durationTotal;
   @override
   final DateTime end;
   @override
-  final BigInt serviceID;
+  final int serviceID;
   @override
-  final String servciceName;
+  final String serviceName;
   @override
   final DateTime start;
 
   @override
   String toString() {
-    return 'ProjectTimeVM(durationTotal: $durationTotal, end: $end, serviceID: $serviceID, servciceName: $servciceName, start: $start)';
+    return 'ProjectTimeVM(durationTotal: $durationTotal, end: $end, serviceID: $serviceID, serviceName: $serviceName, start: $start)';
   }
 
   @override
@@ -188,15 +188,15 @@ class _$ProjectTimeVMImpl extends _ProjectTimeVM {
             (identical(other.end, end) || other.end == end) &&
             (identical(other.serviceID, serviceID) ||
                 other.serviceID == serviceID) &&
-            (identical(other.servciceName, servciceName) ||
-                other.servciceName == servciceName) &&
+            (identical(other.serviceName, serviceName) ||
+                other.serviceName == serviceName) &&
             (identical(other.start, start) || other.start == start));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, durationTotal, end, serviceID, servciceName, start);
+      runtimeType, durationTotal, end, serviceID, serviceName, start);
 
   @JsonKey(ignore: true)
   @override
@@ -214,10 +214,10 @@ class _$ProjectTimeVMImpl extends _ProjectTimeVM {
 
 abstract class _ProjectTimeVM extends ProjectTimeVM {
   const factory _ProjectTimeVM(
-      {required final String durationTotal,
+      {final int? durationTotal,
       required final DateTime end,
-      required final BigInt serviceID,
-      required final String servciceName,
+      required final int serviceID,
+      required final String serviceName,
       required final DateTime start}) = _$ProjectTimeVMImpl;
   const _ProjectTimeVM._() : super._();
 
@@ -225,13 +225,13 @@ abstract class _ProjectTimeVM extends ProjectTimeVM {
       _$ProjectTimeVMImpl.fromJson;
 
   @override
-  String get durationTotal;
+  int? get durationTotal;
   @override
   DateTime get end;
   @override
-  BigInt get serviceID;
+  int get serviceID;
   @override
-  String get servciceName;
+  String get serviceName;
   @override
   DateTime get start;
   @override

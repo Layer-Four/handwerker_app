@@ -10,12 +10,9 @@ _$ProjectCustomerImpl _$$ProjectCustomerImplFromJson(
         Map<String, dynamic> json) =>
     _$ProjectCustomerImpl(
       customer: json['customer'] as String,
-      projects: (json['projects'] as List<dynamic>?)
-              ?.map((e) => e == null
-                  ? null
-                  : ProjectOverview.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <ProjectOverview>[],
+      projects: (json['projects'] as List<dynamic>)
+          .map((e) => ProjectOverview.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$ProjectCustomerImplToJson(

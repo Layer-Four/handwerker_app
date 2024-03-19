@@ -3,12 +3,12 @@ part 'project_day.freezed.dart';
 part 'project_day.g.dart';
 
 @freezed
-class ProjectTimeVM with _$ProjectTimeVM {
+abstract class ProjectTimeVM with _$ProjectTimeVM {
   const factory ProjectTimeVM({
-    required String durationTotal,
+    int? durationTotal,
     required DateTime end,
-    required BigInt serviceID,
-    required String servciceName,
+    required int serviceID,
+    required String serviceName,
     required DateTime start,
   }) = _ProjectTimeVM;
 

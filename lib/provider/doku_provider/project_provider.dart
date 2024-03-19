@@ -76,23 +76,22 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     // int count = 0;
 
     try {
-      await dio.get(url).then((response) {
-        if (response.statusCode != 200) {
-          log(response.data);
-          return AsyncValue.data(result);
-        }
-        final List data = response.data.map((e) => e).toList();
-        data.map((e) => e.asMap());
-        log(data.toString());
-        for (var i in data) {
-          log(i);
-        }
-        final project = data.map((e) => ProjectCustomer.fromJson(e)).toSet().toList();
-        result.addAll(project);
-        return AsyncValue.data(result);
-      });
-      return result;
+      final response = await dio.get(url);
+      if (response.statusCode != 200) {
+        log(response.data);
+        return result;
+      } else {
+        final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
+        log(data.runtimeType.toString());
+        final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
+
+        // List<ProjectCustomer> project = [];
+        // log(response.data.runtimeType.toString());
+        result.addAll(projects);
+        return result;
+      }
     } catch (e) {
+      log('this error occurent-> $e');
       throw Exception(e);
     }
   }

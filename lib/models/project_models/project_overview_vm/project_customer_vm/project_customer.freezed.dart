@@ -21,7 +21,7 @@ ProjectCustomer _$ProjectCustomerFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ProjectCustomer {
   String get customer => throw _privateConstructorUsedError;
-  List<ProjectOverview?> get projects => throw _privateConstructorUsedError;
+  List<ProjectOverview> get projects => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $ProjectCustomerCopyWith<$Res> {
           ProjectCustomer value, $Res Function(ProjectCustomer) then) =
       _$ProjectCustomerCopyWithImpl<$Res, ProjectCustomer>;
   @useResult
-  $Res call({String customer, List<ProjectOverview?> projects});
+  $Res call({String customer, List<ProjectOverview> projects});
 }
 
 /// @nodoc
@@ -62,7 +62,7 @@ class _$ProjectCustomerCopyWithImpl<$Res, $Val extends ProjectCustomer>
       projects: null == projects
           ? _value.projects
           : projects // ignore: cast_nullable_to_non_nullable
-              as List<ProjectOverview?>,
+              as List<ProjectOverview>,
     ) as $Val);
   }
 }
@@ -75,7 +75,7 @@ abstract class _$$ProjectCustomerImplCopyWith<$Res>
       __$$ProjectCustomerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String customer, List<ProjectOverview?> projects});
+  $Res call({String customer, List<ProjectOverview> projects});
 }
 
 /// @nodoc
@@ -100,7 +100,7 @@ class __$$ProjectCustomerImplCopyWithImpl<$Res>
       projects: null == projects
           ? _value._projects
           : projects // ignore: cast_nullable_to_non_nullable
-              as List<ProjectOverview?>,
+              as List<ProjectOverview>,
     ));
   }
 }
@@ -109,8 +109,7 @@ class __$$ProjectCustomerImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectCustomerImpl extends _ProjectCustomer {
   const _$ProjectCustomerImpl(
-      {required this.customer,
-      final List<ProjectOverview?> projects = const <ProjectOverview>[]})
+      {required this.customer, required final List<ProjectOverview> projects})
       : _projects = projects,
         super._();
 
@@ -119,10 +118,9 @@ class _$ProjectCustomerImpl extends _ProjectCustomer {
 
   @override
   final String customer;
-  final List<ProjectOverview?> _projects;
+  final List<ProjectOverview> _projects;
   @override
-  @JsonKey()
-  List<ProjectOverview?> get projects {
+  List<ProjectOverview> get projects {
     if (_projects is EqualUnmodifiableListView) return _projects;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projects);
@@ -166,7 +164,7 @@ class _$ProjectCustomerImpl extends _ProjectCustomer {
 abstract class _ProjectCustomer extends ProjectCustomer {
   const factory _ProjectCustomer(
       {required final String customer,
-      final List<ProjectOverview?> projects}) = _$ProjectCustomerImpl;
+      required final List<ProjectOverview> projects}) = _$ProjectCustomerImpl;
   const _ProjectCustomer._() : super._();
 
   factory _ProjectCustomer.fromJson(Map<String, dynamic> json) =
@@ -175,7 +173,7 @@ abstract class _ProjectCustomer extends ProjectCustomer {
   @override
   String get customer;
   @override
-  List<ProjectOverview?> get projects;
+  List<ProjectOverview> get projects;
   @override
   @JsonKey(ignore: true)
   _$$ProjectCustomerImplCopyWith<_$ProjectCustomerImpl> get copyWith =>

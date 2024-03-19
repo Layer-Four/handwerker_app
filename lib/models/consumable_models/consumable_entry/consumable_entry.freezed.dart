@@ -23,7 +23,7 @@ mixin _$ConsumeEntry {
   DateTime get createDate => throw _privateConstructorUsedError;
   String get entryID => throw _privateConstructorUsedError;
   String? get projectName => throw _privateConstructorUsedError;
-  BigInt? get projectID => throw _privateConstructorUsedError;
+  int? get projectID => throw _privateConstructorUsedError;
   List<Consumable> get consumables => throw _privateConstructorUsedError;
   List<String> get dokusPath => throw _privateConstructorUsedError;
   double? get estimatedDuration => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $ConsumeEntryCopyWith<$Res> {
       {DateTime createDate,
       String entryID,
       String? projectName,
-      BigInt? projectID,
+      int? projectID,
       List<Consumable> consumables,
       List<String> dokusPath,
       double? estimatedDuration,
@@ -90,7 +90,7 @@ class _$ConsumeEntryCopyWithImpl<$Res, $Val extends ConsumeEntry>
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       consumables: null == consumables
           ? _value.consumables
           : consumables // ignore: cast_nullable_to_non_nullable
@@ -123,7 +123,7 @@ abstract class _$$ConsumeEntryImplCopyWith<$Res>
       {DateTime createDate,
       String entryID,
       String? projectName,
-      BigInt? projectID,
+      int? projectID,
       List<Consumable> consumables,
       List<String> dokusPath,
       double? estimatedDuration,
@@ -166,7 +166,7 @@ class __$$ConsumeEntryImplCopyWithImpl<$Res>
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
-              as BigInt?,
+              as int?,
       consumables: null == consumables
           ? _value._consumables
           : consumables // ignore: cast_nullable_to_non_nullable
@@ -213,7 +213,7 @@ class _$ConsumeEntryImpl implements _ConsumeEntry {
   @override
   final String? projectName;
   @override
-  final BigInt? projectID;
+  final int? projectID;
   final List<Consumable> _consumables;
   @override
   @JsonKey()
@@ -295,7 +295,7 @@ abstract class _ConsumeEntry implements ConsumeEntry {
       {required final DateTime createDate,
       final String entryID,
       final String? projectName,
-      final BigInt? projectID,
+      final int? projectID,
       final List<Consumable> consumables,
       final List<String> dokusPath,
       final double? estimatedDuration,
@@ -311,7 +311,7 @@ abstract class _ConsumeEntry implements ConsumeEntry {
   @override
   String? get projectName;
   @override
-  BigInt? get projectID;
+  int? get projectID;
   @override
   List<Consumable> get consumables;
   @override

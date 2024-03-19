@@ -17,7 +17,7 @@ class Utilits {
         initialDate: DateTime.now(),
         firstDate: DateTime(2023),
         lastDate: DateTime(2100),
-        locale: Locale('de'));
+        locale: const Locale('de'));
   }
 
   static Future<String?> pickImageFromCamera(BuildContext context, String projectName) async {
