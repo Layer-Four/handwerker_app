@@ -18,13 +18,11 @@ class HistoryNavigationView extends ConsumerWidget {
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: SingleChildScrollView(
-          child: switch (historyViewRef) {
-            HistoryViews.timeEntry => const HistoryTimeBody(),
-            HistoryViews.consumables => const HistoryMaterialBody(),
-            _ => const HistoryProjectBody(),
-          },
-        ),
+        child: switch (historyViewRef) {
+          HistoryViews.timeEntry => const HistoryTimeBody(),
+          HistoryViews.consumables => const HistoryMaterialBody(),
+          _ => const CostumerOverviewBody(),
+        },
       ),
     );
   }

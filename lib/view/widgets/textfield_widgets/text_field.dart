@@ -51,7 +51,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
             controller: widget.controller,
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.grey),
               filled: true,
               fillColor: Colors.transparent,
               suffixIcon: widget.isPass
@@ -71,9 +71,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: isFocused
-                      ? AppColor.kPrimaryButtonColor
-                      : Colors.transparent,
+                  color: isFocused ? AppColor.kPrimaryButtonColor : Colors.transparent,
                 ),
               ),
             ),

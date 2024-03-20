@@ -83,7 +83,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             final projects = data;
             if (projects != null && !isProjectSet) {
               _project = projects.first;
-              _entry = _entry.copyWith(projectID: BigInt.from(projects.first.id));
+              _entry = _entry.copyWith(projectID: projects.first.id);
               isProjectSet = true;
             }
             return Padding(
@@ -108,7 +108,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                     onChanged: (e) {
                       setState(() {
                         _project = e!;
-                        _entry = _entry.copyWith(projectID: BigInt.from(e.id));
+                        _entry = _entry.copyWith(projectID: e.id);
                       });
                     },
                   ),
@@ -155,7 +155,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         if (services != null && !isServiceSet) {
           setState(() {
             _choosenService = services.first;
-            _entry = _entry.copyWith(serviceID: BigInt.from(services.first.id));
+            _entry = _entry.copyWith(serviceID: services.first.id);
             isServiceSet = true;
           });
         }
@@ -185,7 +185,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                   log(_choosenService!.name);
                   _choosenService = e;
                   log(_choosenService!.name);
-                  _entry = _entry.copyWith(serviceID: BigInt.from(e!.id));
+                  _entry = _entry.copyWith(serviceID: e!.id);
                 }),
               ),
             ),

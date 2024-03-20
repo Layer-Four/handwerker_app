@@ -36,8 +36,8 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     try {
       final response = await http.post(const DbAdress().postProjectConsumable, data: json);
       if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        log('request success, this was the response: $jsonResponse');
+        // final jsonResponse = response.data;
+        log('request success');
       } else {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
       }

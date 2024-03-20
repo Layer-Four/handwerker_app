@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
@@ -26,7 +27,7 @@ class _LoginViewState extends State<LoginView> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const LogoApp(),
+                  const AppLogo(),
                   const SizedBox(
                     height: 9,
                   ),
@@ -131,9 +132,13 @@ class _LoginViewState extends State<LoginView> {
                             child: ElevatedButton(
                               onPressed: () {
                                 if (formstate.currentState!.validate()) {
-                                  print("valid");
+                                  if (kDebugMode) {
+                                    print("valid");
+                                  }
                                 } else {
-                                  print("Not Valid");
+                                  if (kDebugMode) {
+                                    print("Not Valid");
+                                  }
                                 }
                                 if (isOTP) {
                                   Navigator.of(context)

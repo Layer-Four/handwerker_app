@@ -21,12 +21,8 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       pauseStart: json['pauseStart'] == null
           ? null
           : DateTime.parse(json['pauseStart'] as String),
-      projectID: json['projectID'] == null
-          ? null
-          : BigInt.parse(json['projectID'] as String),
-      serviceID: json['serviceID'] == null
-          ? null
-          : BigInt.parse(json['serviceID'] as String),
+      projectID: json['projectID'] as int?,
+      serviceID: json['serviceID'] as int?,
       serviceTitle: json['serviceTitle'] as String?,
       startTime: DateTime.parse(json['startTime'] as String),
       userID:
@@ -42,8 +38,8 @@ Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
       'endTime': instance.endTime?.toIso8601String(),
       'pauseEnd': instance.pauseEnd?.toIso8601String(),
       'pauseStart': instance.pauseStart?.toIso8601String(),
-      'projectID': instance.projectID?.toString(),
-      'serviceID': instance.serviceID?.toString(),
+      'projectID': instance.projectID,
+      'serviceID': instance.serviceID,
       'serviceTitle': instance.serviceTitle,
       'startTime': instance.startTime.toIso8601String(),
       'userID': instance.userID,
