@@ -1,4 +1,4 @@
-class DbAdress {
+class DbAdresses {
   // BaseRoute
   final String _baseUrl = 'https://r-wa-happ-be.azurewebsites.net/api';
 // Routes
@@ -16,7 +16,7 @@ class DbAdress {
   final String _putProjectDay = '/userProjectDay/update';
   final String _putProjectMaterial = '/userProjectMaterial/update';
   final String _getCustomerProject = '/customer/project/read/all';
-  const DbAdress();
+  const DbAdresses();
 // Getter
   String get getAllProjects => _baseUrl + _getAllProjects;
   String get getAllTimeEntrys => _baseUrl + _getAllTimeTacks;

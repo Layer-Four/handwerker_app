@@ -1,96 +1,68 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/utiltis.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
-import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
-  static int counter = 0;
   @override
   Widget build(context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Container(
-          color: Colors.amber,
-          height: MediaQuery.of(context).size.height - 200,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // TODO: delete headline "Kunde Übersicht"???
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-                child: Text(
-                  'KUNDEN ÜBERSICHT',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-              ),
-              _buildAsyncProjectOverview(context),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Image.asset(
-                    'assets/images/img_techtool.png',
-                    height: 20,
-                  ),
-                ),
-              )
-            ],
-          ),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // TODO: delete headline "Kunde Übersicht"???
+            _buildCustomerOverviewHeadLin(context),
+            _buildAsyncProjectOverview(context),
+            _buildLogo()
+          ],
         ),
       );
 
   Widget _buildAsyncProjectOverview(BuildContext context) =>
       Consumer(builder: (context, ref, child) {
-        log(counter.toString());
         Future<List<ProjectCustomer?>> futureProjects;
-
         futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
-        counter++;
-
         return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
             builder: (context, snapshot) {
               if (snapshot.data != null) {
-                log((snapshot.data.toString()));
+                if (snapshot.data!.isEmpty) {
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height - 300,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: Text('Keine Kunden gefunden\noder keine Internet verbindung'),
+                    ),
+                  );
+                }
                 final customerProjectList = snapshot.data;
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: customerProjectList!
-                        .map((e) => ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: customerProjectList.length,
-                            itemBuilder: (BuildContext context, i) {
-                              final customer = customerProjectList[i];
-                              return SizedBox(
-                                height: MediaQuery.of(context).size.height - 270,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                      child: Text(customer?.customer ?? 'Kein Kunde??'),
-                                    ),
-                                    SizedBox(
-                                        height: MediaQuery.of(context).size.height - 300,
-                                        child: _buildProjectDetails(customer)),
-                                  ],
-                                ),
-                              );
-                            }))
-                        .toList(),
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: customerProjectList!.length,
+                    itemBuilder: (BuildContext context, i) {
+                      final customer = customerProjectList[i];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            child: Text(customer?.customer ?? 'Kein Kunde??'),
+                          ),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height - 300,
+                              child: _buildProjectDetails(customer)),
+                        ],
+                      );
+                    },
                   ),
                 );
               }
@@ -102,6 +74,52 @@ class CostumerOverviewBody extends StatelessWidget {
               );
             });
       });
+
+  Padding _buildCustomerOverviewHeadLin(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+      child: Text(
+        'KUNDEN ÜBERSICHT',
+        style: Theme.of(context).textTheme.labelLarge,
+      ),
+    );
+  }
+
+  Row _buildHeadLine(ProjectOverview j, BuildContext context) {
+    final initDate = '${j.projectCreated.day}.${j.projectCreated.month}.${j.projectCreated.year}';
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Text(
+            j.projectName!,
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Text(
+            initDate,
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+        )
+      ],
+    );
+  }
+
+  Padding _buildLogo() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: Image.asset(
+          'assets/images/img_techtool.png',
+          height: 20,
+        ),
+      ),
+    );
+  }
 
   ListView _buildProjectDetails(ProjectCustomer? customer) {
     return ListView.builder(
@@ -134,7 +152,7 @@ class CostumerOverviewBody extends StatelessWidget {
                           SizedBox(
                             width: 140,
                             child: Text(
-                              work.serviceName,
+                              work.serviceName ?? 'kein Service ausgewählt',
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -156,105 +174,11 @@ class CostumerOverviewBody extends StatelessWidget {
                     ),
                   ),
                 // TODO: ask for, project, all entries need own update card
-                // ProjectCard(project),
+                ProjectDetails(project),
               ],
             ),
           );
         });
-  }
-
-  Row _buildHeadLine(ProjectOverview j, BuildContext context) {
-    final initDate = '${j.projectCreated.day}.${j.projectCreated.month}.${j.projectCreated.year}';
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(
-            j.projectName!,
-            style: Theme.of(context).textTheme.labelMedium,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(
-            initDate,
-            style: Theme.of(context).textTheme.labelMedium,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class ProjectCard extends ConsumerStatefulWidget {
-  final ProjectOverview project;
-  const ProjectCard(this.project, {super.key});
-
-  @override
-  ConsumerState<ProjectCard> createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends ConsumerState<ProjectCard> {
-  final TextEditingController _descriptionController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 220,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: LabeledInputWidget(
-              label: ref.watch(languangeProvider).description,
-              child: SizedBox(
-                height: 60,
-                child: TextField(
-                  cursorHeight: 20,
-                  controller: _descriptionController,
-                  textAlignVertical: TextAlignVertical.top,
-                  expands: true,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  maxLines: null,
-                  decoration: Utilits.textFieldDecorator(context),
-                  onChanged: (value) {
-                    setState(() {
-                      _descriptionController.text = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset(
-              'assets/images/projekt_screen.png',
-              height: 150,
-              width: 150,
-            ),
-            SizedBox(
-              height: 35,
-              width: 90,
-              child: SymmetricButton(
-                color: AppColor.kPrimaryButtonColor,
-                text: 'Ändern',
-                onPressed: () {
-                  // ref.read(projectProvider.notifier).updateProjectOverView(widget.project).then(
-                  //     (value) =>
-                  //         value ? ref.read(projectProvider.notifier).getAllProjectEntries() : null);
-                  log('dies ist ein Text oder ist er fürs Löschen?');
-                },
-              ),
-            )
-          ],
-        ),
-      ],
-    );
   }
 }
 
@@ -274,6 +198,14 @@ class LargeHingedWidget extends StatefulWidget {
   State<LargeHingedWidget> createState() => _LargeHingedState();
 }
 
+class ProjectDetails extends ConsumerStatefulWidget {
+  final ProjectOverview project;
+  const ProjectDetails(this.project, {super.key});
+
+  @override
+  ConsumerState<ProjectDetails> createState() => _ProjectCardState();
+}
+
 class _LargeHingedState extends State<LargeHingedWidget> {
   bool _isOpen = false;
 
@@ -281,9 +213,9 @@ class _LargeHingedState extends State<LargeHingedWidget> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       width: MediaQuery.of(context).size.width - 20,
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeInOutCubic,
-      height: _isOpen ? (280 + (widget.contentLength * 50)) : 60,
+      duration: const Duration(milliseconds: 100),
+      // curve: Curves.linear,
+      height: _isOpen ? (250 + (widget.contentLength * 25)) : 60,
       child: InkWell(
         onTap: () => setState(() => _isOpen = !_isOpen),
         child: Card(
@@ -309,8 +241,11 @@ class _LargeHingedState extends State<LargeHingedWidget> {
                   ],
                 ),
                 AnimatedCrossFade(
+                  sizeCurve: Curves.easeIn,
+                  secondCurve: Curves.ease,
+                  firstCurve: Curves.easeIn,
                   duration: const Duration(milliseconds: 100),
-                  firstChild: const SizedBox.shrink(),
+                  firstChild: const SizedBox(),
                   secondChild: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       width: MediaQuery.of(context).size.width - 30,
@@ -323,5 +258,132 @@ class _LargeHingedState extends State<LargeHingedWidget> {
         ),
       ),
     );
+  }
+}
+
+class _ProjectCardState extends ConsumerState<ProjectDetails> {
+  final consumables = [
+    const Consumable(name: 'Bottle of Beer', amount: 99, unitTypeName: 'Stück'),
+    const Consumable(name: 'Bottle of Wine', amount: 98, unitTypeName: 'Meter'),
+    const Consumable(name: 'Bottle if Rum', amount: 97, unitTypeName: 'Kilo'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      height: 216,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: _showProjectDocumentation(context),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6),
+            child: Text(
+              'Material',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: consumables.length,
+                itemBuilder: ((context, index) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 220,
+                        child: Text(
+                          consumables[index].name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: AppColor.kTextfieldBorder),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Text(
+                          '${consumables[index].amount} ${consumables[index].unitTypeName}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: AppColor.kTextfieldBorder),
+                        ),
+                      ),
+                    ],
+                  );
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: [Text('${consumables[index]}')],
+                  // );
+                })),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _showProjectDocumentation(BuildContext context) {
+    return InkWell(
+      child: Container(
+        height: 20,
+        decoration:
+            BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder))),
+        child: Text(
+          'Dokumentation',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColor.kTextfieldBorder),
+        ),
+      ),
+      // Container(
+      //   margin: const EdgeInsets.only(left: 4),
+      //   decoration:
+      //       BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder))),
+      //   child: Text(
+      //     'Anzeigen',
+      //     style:
+      //         Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColor.kTextfieldBorder),
+      //   ),
+      // ),
+      onTap: () => showDialog(
+          context: context,
+          builder: (context) {
+            return Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 40,
+                vertical: 150,
+              ),
+              child: const Material(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Center(
+                        child: Text('Dokumentations details'),
+                      ),
+                    ),
+                    SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: Center(
+                          child: Text('Hier könnte ihr Bild sein'),
+                        ))
+                    // TODO: by multiple file's maybe open in CaruselSlider
+                    // Image.file(_writeFile()),
+                  ],
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
+  //  TODO: get image source from Documentation and convert it to a file for Image.file
+  File _writeFile() {
+    return File('');
   }
 }

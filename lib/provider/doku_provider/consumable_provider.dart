@@ -34,7 +34,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     final Dio http = Dio();
 
     try {
-      final response = await http.post(const DbAdress().postProjectConsumable, data: json);
+      final response = await http.post(const DbAdresses().postProjectConsumable, data: json);
       if (response.statusCode == 200) {
         // final jsonResponse = response.data;
         log('request success');

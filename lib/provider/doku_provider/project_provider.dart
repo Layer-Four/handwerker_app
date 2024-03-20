@@ -15,7 +15,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
   List<ProjectVM>? build() => null;
 
   void loadpProject() async {
-    final uri = const DbAdress().getProjectsDM;
+    final uri = const DbAdresses().getProjectsDM;
     final Dio http = Dio();
     try {
       final response = await http.get(uri);
@@ -53,7 +53,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     // * response = await dio.post("/info", data: formData)
 
     //TODO: change List of File paths to list of FormData
-    final uri = const DbAdress().postProjectEntry;
+    final uri = const DbAdresses().postProjectEntry;
     final Dio http = Dio();
     try {
       final response = await http.post(uri, data: entry.toJson());
@@ -71,7 +71,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
 
   Future<List<ProjectCustomer?>> getAllProjectEntries() async {
     final Dio dio = Dio();
-    final url = const DbAdress().getCustomerProjects;
+    final url = const DbAdresses().getCustomerProjects;
     final result = <ProjectCustomer?>[];
     // int count = 0;
 
@@ -82,10 +82,8 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
         return result;
       } else {
         final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
+        log(data.toString());
         final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
-
-        // List<ProjectCustomer> project = [];
-        // log(response.data.runtimeType.toString());
         result.addAll(projects);
         return result;
       }

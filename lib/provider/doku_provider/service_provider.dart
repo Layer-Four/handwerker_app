@@ -15,7 +15,7 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceVM>?> {
   }
 
   void loadServices() async {
-    final uri = const DbAdress().getExecuteableServices;
+    final uri = const DbAdresses().getExecuteableServices;
     final Dio http = Dio();
     try {
       final response = await http.get(uri);
