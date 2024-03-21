@@ -7,9 +7,9 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
-import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 
@@ -52,7 +52,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ' Schrauben',
     ' Latte',
   ];
-  ProjectVM? _project;
+  ProjectListVM? _project;
   String _selectedMaterial = _materials.first;
 
   @override

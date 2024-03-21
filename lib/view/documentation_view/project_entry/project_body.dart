@@ -7,9 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
-import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
@@ -26,7 +26,7 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
   final TextEditingController _descriptionController = TextEditingController();
   late ProjectEntry _entry;
 
-  ProjectVM? _project;
+  ProjectListVM? _project;
 
   @override
   void initState() {

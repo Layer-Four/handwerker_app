@@ -13,36 +13,7 @@ class AppColor {
   Color get black => Colors.black;
   static const appbarGreen = Color.fromARGB(255, 76, 141, 95);
 
-  static final lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.white,
-    appBarTheme: const AppBarTheme(
-      color: Colors.teal,
-      iconTheme: IconThemeData(
-        color: Colors.white,
-      ),
-    ),
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(
-        color: Colors.black,
-      ),
-    ),
-  );
-
-  static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.black,
-    appBarTheme: const AppBarTheme(
-      color: Colors.black,
-      iconTheme: IconThemeData(
-        color: Colors.white,
-      ),
-    ),
-    textTheme: const TextTheme(
-      bodyMedium: TextStyle(
-        color: Colors.white,
-      ),
-    ),
-  );
-  static const MaterialColor materialprimary = MaterialColor(_materialprimary, <int, Color>{
+  static const MaterialColor materialColorPrimary = MaterialColor(_materialprimary, <int, Color>{
     50: Color(0xFFECECEC),
     100: Color(0xFFD0D0D0),
     200: Color(0xFFB1B1B1),

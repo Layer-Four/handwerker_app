@@ -4,15 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
-import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
 
 final projectProvider =
-    AsyncNotifierProvider<ProjectNotifer, List<ProjectVM>?>(() => ProjectNotifer());
+    AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
 
-class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
+class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   @override
-  List<ProjectVM>? build() => null;
+  List<ProjectListVM>? build() => null;
 
   void loadpProject() async {
     final uri = const DbAdresses().getProjectsDM;
@@ -21,7 +21,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
         final data = response.data;
-        final projects = data.map<ProjectVM>((e) => ProjectVM.fromJson(e)).toList();
+        final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
         state = AsyncValue.data(projects);
       }
       if (response.statusCode != 200) {

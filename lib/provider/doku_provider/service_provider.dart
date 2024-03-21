@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
-import 'package:handwerker_app/models/service_models/service_vm/service.dart';
+import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 
 final serviceProvider =
-    AsyncNotifierProvider<ServiceNotifer, List<ServiceVM>?>(() => ServiceNotifer());
+    AsyncNotifierProvider<ServiceNotifer, List<ServiceListVM>?>(() => ServiceNotifer());
 
-class ServiceNotifer extends AsyncNotifier<List<ServiceVM>?> {
+class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
   @override
-  List<ServiceVM>? build() {
+  List<ServiceListVM>? build() {
     return null;
   }
 
@@ -21,7 +21,7 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceVM>?> {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
         final data = response.data;
-        final services = data.map<ServiceVM>((e) => ServiceVM.fromJson(e)).toList();
+        final services = data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
 
         state = AsyncValue.data(services);
       } else {

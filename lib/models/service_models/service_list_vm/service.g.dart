@@ -1,19 +1,17 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service.dart';
+part of 'service_list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ServiceImpl _$$ServiceImplFromJson(Map<String, dynamic> json) =>
-    _$ServiceImpl(
+_$ServiceImpl _$$ServiceImplFromJson(Map<String, dynamic> json) => _$ServiceImpl(
       name: json['name'] as String,
       id: json['id'] as int,
     );
 
-Map<String, dynamic> _$$ServiceImplToJson(_$ServiceImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$ServiceImplToJson(_$ServiceImpl instance) => <String, dynamic>{
       'name': instance.name,
       'id': instance.id,
     };
