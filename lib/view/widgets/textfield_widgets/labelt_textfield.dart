@@ -15,7 +15,7 @@ class LabeldTextfield extends StatelessWidget {
       {super.key,
       required this.label,
       required this.controller,
-      this.heigt = 80,
+      this.heigt = 35,
       this.width,
       this.onChanged,
       this.textInputType = TextInputType.text,

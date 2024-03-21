@@ -7,6 +7,7 @@ import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
@@ -33,15 +34,7 @@ class CostumerOverviewBody extends StatelessWidget {
             future: futureProjects,
             builder: (context, snapshot) {
               if (snapshot.data != null) {
-                if (snapshot.data!.isEmpty) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height - 300,
-                    width: MediaQuery.of(context).size.width,
-                    child: const Center(
-                      child: Text('Keine Kunden gefunden\noder keine Internet verbindung'),
-                    ),
-                  );
-                }
+                if (snapshot.data!.isEmpty) return const ShowEmptyMessage();
                 final customerProjectList = snapshot.data;
                 return Expanded(
                   child: ListView.builder(

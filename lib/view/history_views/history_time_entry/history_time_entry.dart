@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
+import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 
 class HistoryTimeBody extends ConsumerWidget {
@@ -13,6 +14,7 @@ class HistoryTimeBody extends ConsumerWidget {
       ref.read(timeEntryProvider.notifier).loadEntrys();
     }
     final workdays = ref.read(timeEntryProvider.notifier).getListOfWorkdays();
+    if (workdays.isEmpty) return const ShowEmptyMessage();
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(

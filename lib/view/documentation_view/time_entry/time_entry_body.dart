@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
@@ -13,23 +11,22 @@ import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
 class TimeEntryBody extends ConsumerStatefulWidget {
   const TimeEntryBody({super.key});
   @override
-  ConsumerState<TimeEntryBody> createState() => _ExecutionState();
+  ConsumerState<TimeEntryBody> createState() => _TimeEntryState();
 }
 
-class _ExecutionState extends ConsumerState<TimeEntryBody> {
+class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
   bool isServiceSet = false;
-  bool isProjectSet = false;
+  bool _isProjectSet = false;
   TimeOfDay? selectedTime;
 
   ServiceListVM? _choosenService;
@@ -77,56 +74,63 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
 
   Widget _buildCustomerProjectField() {
     return ref.watch(projectProvider).when(
-          error: (error, stackTrace) => const SizedBox(),
+          error: (error, stackTrace) {
+            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            return const SizedBox(child: Text('Etwas lief schief'));
+          },
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
             if (data == null) {
               ref.read(projectProvider.notifier).loadpProject();
             }
             final projects = data;
-            // final projects = List.generate(
-            //     20,
-            //     (index) => ProjectVM(
-            //         id: index,
-            //         title: 'Ein sehr langer arbeitstitle mit der sehr vielen unteraufgaben'));
-            if (projects != null && !isProjectSet) {
-              _project = projects.first;
-              _entry = _entry.copyWith(projectID: projects.first.id);
-              isProjectSet = true;
+            if (projects != null && !_isProjectSet) {
+              setState(() {
+                _project = projects.first;
+                _entry = _entry.copyWith(projectID: projects.first.id);
+                _isProjectSet = true;
+              });
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: LabeledInputWidget(
-                label: ref.watch(languangeProvider).customerProject,
-                child: Container(
-                  height: 40,
-                  padding: const EdgeInsets.only(left: 20, right: 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColor.kTextfieldBorder),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Text(ref.watch(languangeProvider).customerProject,
+                        style: Theme.of(context).textTheme.labelMedium),
                   ),
-                  child: DropdownButton(
-                    menuMaxHeight: 350,
-                    underline: const SizedBox(),
-                    isExpanded: true,
-                    value: _project,
-                    items: projects
-                        ?.map(
-                          (e) => DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: e,
-                            child: Text(' ${e.title}'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (e) {
-                      setState(() {
-                        _project = e!;
-                        _entry = _entry.copyWith(projectID: e.id);
-                      });
-                    },
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 20, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.kTextfieldBorder),
+                    ),
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      value: _project,
+                      items: projects
+                          ?.map(
+                            (e) => DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: e,
+                              child: Text(' ${e.title}'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) {
+                        setState(() {
+                          _project = e!;
+                          _entry = _entry.copyWith(projectID: e.id);
+                        });
+                      },
+                    ),
                   ),
-                ),
+                ],
               ),
             );
           },
@@ -134,6 +138,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   }
 
   Widget _buildDescription() => LabeldTextfield(
+        heigt: 80,
         textInputAction: TextInputAction.newline,
         textInputType: TextInputType.multiline,
         label: ref.watch(languangeProvider).description,
@@ -249,7 +254,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         children: [
           LabeldTextfield(
             label: ref.watch(languangeProvider).date,
-            heigt: 35,
             width: 150,
             textInputType: TextInputType.datetime,
             controller: _dayPickerController,
@@ -266,7 +270,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
           ),
           LabeldTextfield(
             label: ref.watch(languangeProvider).duration,
-            heigt: 35,
             width: 150,
             hintText: 'min.',
             textInputType: TextInputType.number,
@@ -319,7 +322,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           LabeldTextfield(
-            heigt: 35,
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.next,
@@ -345,7 +347,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
             },
           ),
           LabeldTextfield(
-            heigt: 35,
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.done,
