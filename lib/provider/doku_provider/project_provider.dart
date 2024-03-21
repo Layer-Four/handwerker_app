@@ -69,10 +69,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
     }
   }
 
-  Future<List<ProjectCustomer?>> getAllProjectEntries() async {
+  Future<List<ProjectCustomer>> getAllProjectEntries() async {
     final Dio dio = Dio();
     final url = const DbAdresses().getCustomerProjects;
-    final result = <ProjectCustomer?>[];
+    final result = <ProjectCustomer>[];
     // int count = 0;
 
     try {
@@ -80,13 +80,12 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectVM>?> {
       if (response.statusCode != 200) {
         log(response.data);
         return result;
-      } else {
-        final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
-        log(data.toString());
-        final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
-        result.addAll(projects);
-        return result;
       }
+      final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
+      log(data.toString());
+      final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
+      result.addAll(projects);
+      return result;
     } catch (e) {
       log('this error occurent-> $e');
       throw Exception(e);

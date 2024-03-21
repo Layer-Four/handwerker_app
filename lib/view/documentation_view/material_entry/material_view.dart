@@ -28,11 +28,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   String _unit = _units.first;
   //! Overthinking so thats int
 
-  static final _durationSteps = List.generate(25, (index) {
-    if (index == 0) return ' in Stunden';
-
-    final x = (index * 0.5).toString().split('.');
-    return '${x.first},${x.last} h.';
+  static final _durationSteps = List.generate(25, (i) {
+    if (i == 0) return ' in Stunden';
+    if (i == 1) return '0,5';
+    final diggits = (i * 5).toString().split('');
+    final hours = diggits.sublist(0, diggits.length - 1).join();
+    return ' $hours,${diggits.last}';
   });
   String _duration = _durationSteps.first;
   static const _units = [
@@ -206,12 +207,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     child: Text(ref.watch(languangeProvider).estimatedDuration),
                   ),
                   SizedBox(
-                    width: 210,
+                    width: 100,
                     child: DropdownButton(
+                        menuMaxHeight: 300,
                         isExpanded: true,
                         value: _duration,
                         items: _durationSteps
                             .map((e) => DropdownMenuItem(
+                                  alignment: Alignment.center,
                                   value: e,
                                   child: Text(
                                     e,

@@ -16,19 +16,18 @@ class CostumerOverviewBody extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: [
             // TODO: delete headline "Kunde Übersicht"???
             _buildCustomerOverviewHeadLin(context),
-            _buildAsyncProjectOverview(context),
+            _buildAsyncProjectOverview(),
             _buildLogo()
           ],
         ),
       );
 
-  Widget _buildAsyncProjectOverview(BuildContext context) =>
-      Consumer(builder: (context, ref, child) {
-        Future<List<ProjectCustomer?>> futureProjects;
+  Widget _buildAsyncProjectOverview() => Consumer(builder: (context, ref, child) {
+        Future<List<ProjectCustomer>> futureProjects;
         futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
         return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
@@ -75,12 +74,16 @@ class CostumerOverviewBody extends StatelessWidget {
             });
       });
 
-  Padding _buildCustomerOverviewHeadLin(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-      child: Text(
-        'KUNDEN ÜBERSICHT',
-        style: Theme.of(context).textTheme.labelLarge,
+  Widget _buildCustomerOverviewHeadLin(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+        child: Text(
+          'ÜBERSICHT',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
       ),
     );
   }
@@ -198,16 +201,9 @@ class LargeHingedWidget extends StatefulWidget {
   State<LargeHingedWidget> createState() => _LargeHingedState();
 }
 
-class ProjectDetails extends ConsumerStatefulWidget {
-  final ProjectOverview project;
-  const ProjectDetails(this.project, {super.key});
-
-  @override
-  ConsumerState<ProjectDetails> createState() => _ProjectCardState();
-}
-
 class _LargeHingedState extends State<LargeHingedWidget> {
   bool _isOpen = false;
+  bool _openContent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +212,20 @@ class _LargeHingedState extends State<LargeHingedWidget> {
       duration: const Duration(milliseconds: 100),
       // curve: Curves.linear,
       height: _isOpen ? (250 + (widget.contentLength * 25)) : 60,
-      child: InkWell(
-        onTap: () => setState(() => _isOpen = !_isOpen),
+      onEnd: () => setState(() {
+        if (_isOpen) {
+          if (!_openContent) {
+            _openContent = true;
+          }
+        }
+      }),
+      child: GestureDetector(
+        onTap: () => setState(() {
+          if (_isOpen) {
+            _openContent = false;
+          }
+          _isOpen = !_isOpen;
+        }),
         child: Card(
           elevation: 5,
           child: Container(
@@ -240,18 +248,24 @@ class _LargeHingedState extends State<LargeHingedWidget> {
                     ),
                   ],
                 ),
-                AnimatedCrossFade(
-                  sizeCurve: Curves.easeIn,
-                  secondCurve: Curves.ease,
-                  firstCurve: Curves.easeIn,
-                  duration: const Duration(milliseconds: 100),
-                  firstChild: const SizedBox(),
-                  secondChild: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      width: MediaQuery.of(context).size.width - 30,
-                      child: widget.content),
-                  crossFadeState: _isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                ),
+                _openContent
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        width: MediaQuery.of(context).size.width - 30,
+                        child: widget.content)
+                    : const SizedBox.shrink(),
+                // AnimatedCrossFade(
+                //   sizeCurve: Curves.easeIn,
+                //   secondCurve: Curves.ease,
+                //   firstCurve: Curves.easeIn,
+                //   duration: const Duration(milliseconds: 1000),
+                //   firstChild: const SizedBox(),
+                //   secondChild: Container(
+                //       padding: const EdgeInsets.symmetric(horizontal: 12),
+                //       width: MediaQuery.of(context).size.width - 30,
+                //       child: widget.content),
+                //   crossFadeState: _isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                // ),
               ],
             ),
           ),
@@ -259,6 +273,14 @@ class _LargeHingedState extends State<LargeHingedWidget> {
       ),
     );
   }
+}
+
+class ProjectDetails extends ConsumerStatefulWidget {
+  final ProjectOverview project;
+  const ProjectDetails(this.project, {super.key});
+
+  @override
+  ConsumerState<ProjectDetails> createState() => _ProjectCardState();
 }
 
 class _ProjectCardState extends ConsumerState<ProjectDetails> {
@@ -332,31 +354,15 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
     return InkWell(
       child: Container(
         height: 20,
-        decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder))),
-        child: Text(
-          'Dokumentation',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColor.kTextfieldBorder),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder)),
         ),
+        child: Text('Dokumentation', style: Theme.of(context).textTheme.bodyMedium),
       ),
-      // Container(
-      //   margin: const EdgeInsets.only(left: 4),
-      //   decoration:
-      //       BoxDecoration(border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder))),
-      //   child: Text(
-      //     'Anzeigen',
-      //     style:
-      //         Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColor.kTextfieldBorder),
-      //   ),
-      // ),
-      onTap: () => showDialog(
-          context: context,
-          builder: (context) {
-            return Container(
-              margin: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 150,
-              ),
+      onTap: () => (
+        context: context,
+        builder: (context) => Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
               child: const Material(
                 child: Column(
                   children: [
@@ -377,8 +383,8 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                   ],
                 ),
               ),
-            );
-          }),
+            )
+      ),
     );
   }
 
