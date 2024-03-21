@@ -1,18 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'project.dart';
+part of 'project_list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProjectVMImpl _$$ProjectVMImplFromJson(Map<String, dynamic> json) =>
-    _$ProjectVMImpl(
+_$ProjectListVMImpl _$$ProjectListVMImplFromJson(Map<String, dynamic> json) =>
+    _$ProjectListVMImpl(
       id: json['id'] as int,
       title: json['title'] as String,
     );
 
-Map<String, dynamic> _$$ProjectVMImplToJson(_$ProjectVMImpl instance) =>
+Map<String, dynamic> _$$ProjectListVMImplToJson(_$ProjectListVMImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,

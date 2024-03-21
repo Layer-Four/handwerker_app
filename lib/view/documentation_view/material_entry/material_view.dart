@@ -7,11 +7,11 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
-import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -26,13 +26,13 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _summeryController = TextEditingController();
   late ConsumeEntry _entry;
   String _unit = _units.first;
-  //! Overthinking so thats int
-
-  static final _durationSteps = List.generate(25, (index) {
-    if (index == 0) return ' in Stunden';
-
-    final x = (index * 0.5).toString().split('.');
-    return '${x.first},${x.last} h.';
+  bool _isProjectSet = false;
+  static final _durationSteps = List.generate(25, (i) {
+    if (i == 0) return ' in Stunden';
+    if (i == 1) return '0,5';
+    final diggits = (i * 5).toString().split('');
+    final hours = diggits.sublist(0, diggits.length - 1).join();
+    return ' $hours,${diggits.last}';
   });
   String _duration = _durationSteps.first;
   static const _units = [
@@ -51,7 +51,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ' Schrauben',
     ' Latte',
   ];
-  ProjectVM? _project;
+  ProjectListVM? _project;
   String _selectedMaterial = _materials.first;
 
   @override
@@ -71,14 +71,13 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       child: Column(
         children: [
           _dayInputWidget(),
-          _buildCustomerProjectField(),
-          _buildMaterialField(),
+          _chooseCustomerProjectField(),
+          _chooseMaterialField(),
           _buildAmountPriceFields(),
           _buildChooseMedai(),
-          const SizedBox(height: 25),
           _submitInput(),
           SizedBox(
-            height: 70,
+            height: 50,
             child: Center(
               child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
@@ -88,117 +87,121 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _buildAmountPriceFields() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 150,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                            child: Text(
-                              ref.watch(languangeProvider).amount,
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
+  Widget _buildAmountPriceFields() => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 150,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25.0),
-                            child: SizedBox(
-                              width: 70,
-                              height: 30,
-                              child: DropdownButton(
-                                underline: const SizedBox(),
-                                isExpanded: true,
-                                value: _unit,
-                                items: _units
-                                    .map(
-                                      (e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(
-                                          e,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelSmall!
-                                              .copyWith(color: AppColor.kPrimary),
-                                        ),
+                          child: Text(
+                            ref.watch(languangeProvider).amount,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25.0),
+                          child: SizedBox(
+                            width: 60,
+                            height: 30,
+                            child: DropdownButton(
+                              menuMaxHeight: 350,
+                              underline: const SizedBox(),
+                              isExpanded: true,
+                              value: _unit,
+                              items: _units
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      alignment: Alignment.center,
+                                      value: e,
+                                      child: Text(
+                                        e,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .copyWith(color: AppColor.kPrimary),
                                       ),
-                                    )
-                                    .toList(),
-                                onChanged: (e) => setState(() => _unit = e!),
-                              ),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (e) => setState(() => _unit = e!),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35,
-                      width: 150,
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        autofocus: false,
-                        cursorHeight: 20,
-                        textInputAction: TextInputAction.done,
-                        controller: _amountController,
-                        decoration: Utilits.textFieldDecorator(
-                          context,
-                          hintText: ref.watch(languangeProvider).amount,
                         ),
-                        onChanged: (value) {
-                          setState(() => _amountController.text = value);
-                        },
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-                      child: Text(
-                        ref.watch(languangeProvider).sum,
-                        style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  SizedBox(
+                    height: 35,
+                    width: 150,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      autofocus: false,
+                      cursorHeight: 20,
+                      textInputAction: TextInputAction.done,
+                      controller: _amountController,
+                      decoration: Utilits.textFieldDecorator(
+                        context,
+                        hintText: ref.watch(languangeProvider).amount,
                       ),
+                      onChanged: (value) {
+                        setState(() => _amountController.text = value);
+                      },
                     ),
-                    SizedBox(
-                      height: 35,
-                      width: 150,
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        autofocus: false,
-                        cursorHeight: 20,
-                        textInputAction: TextInputAction.done,
-                        controller: _summeryController,
-                        decoration: Utilits.textFieldDecorator(
-                          context,
-                          hintText: '${ref.watch(languangeProvider).sum} €',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _entry = _entry.copyWith(cost: int.tryParse(value));
-                            _summeryController.text = value;
-                          });
-                        },
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
+                    child: Text(
+                      ref.watch(languangeProvider).sum,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 35,
+                    width: 150,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      autofocus: false,
+                      cursorHeight: 20,
+                      textInputAction: TextInputAction.done,
+                      controller: _summeryController,
+                      decoration: Utilits.textFieldDecorator(
+                        context,
+                        hintText: '${ref.watch(languangeProvider).sum} €',
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _entry = _entry.copyWith(cost: int.tryParse(value));
+                          _summeryController.text = value;
+                        });
+                      },
                     ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: SizedBox(
               width: 390,
-              height: 40,
+              height: 41,
               child: Row(
                 children: [
                   Padding(
@@ -206,12 +209,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     child: Text(ref.watch(languangeProvider).estimatedDuration),
                   ),
                   SizedBox(
-                    width: 210,
+                    width: 150,
                     child: DropdownButton(
+                        menuMaxHeight: 340,
                         isExpanded: true,
                         value: _duration,
                         items: _durationSteps
                             .map((e) => DropdownMenuItem(
+                                  alignment: Alignment.center,
                                   value: e,
                                   child: Text(
                                     e,
@@ -225,14 +230,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   ),
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       );
 
   Container _buildChooseMedai() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        height: 150,
+        height: 145,
         decoration: BoxDecoration(
           color: AppColor.kTextfieldBorder,
           borderRadius: BorderRadius.circular(12),
@@ -313,100 +318,128 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       );
 
-  Widget _buildCustomerProjectField() {
+  Widget _chooseCustomerProjectField() {
     return ref.read(projectProvider).when(
-          error: (error, stackTrace) => const SizedBox(),
+          error: (error, stackTrace) {
+            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            return const SizedBox(child: Text('Etwas lief schief'));
+          },
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
             if (data == null) {
               ref.read(projectProvider.notifier).loadpProject();
             }
             final projects = data;
-            if (projects != null) {
-              _project = projects.first;
-              _entry = _entry.copyWith(projectID: projects.first.id);
+            if (projects != null && !_isProjectSet) {
+              setState(() {
+                _project = projects.first;
+                _entry = _entry.copyWith(projectID: projects.first.id);
+                _isProjectSet = true;
+              });
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: LabeledInputWidget(
-                label: ref.watch(languangeProvider).customerProject,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColor.kTextfieldBorder),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      ref.watch(languangeProvider).customerProject,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
                   ),
-                  child: DropdownButton(
-                    underline: const SizedBox(),
-                    isExpanded: true,
-                    value: _project,
-                    items: projects
-                        ?.map(
-                          (e) => DropdownMenuItem(value: e, child: Text(' ${e.title}')),
-                        )
-                        .toList(),
-                    onChanged: (e) {
-                      setState(() {
-                        _project = e!;
-                        _entry = _entry.copyWith(projectID: e.id);
-                      });
-                    },
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 20, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColor.kTextfieldBorder),
+                    ),
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      value: _project,
+                      items: projects
+                          ?.map(
+                            (e) => DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: e,
+                              child: Text(' ${e.title}'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) {
+                        setState(() {
+                          _project = e!;
+                          _entry = _entry.copyWith(projectID: e.id);
+                        });
+                      },
+                    ),
                   ),
-                ),
+                ],
               ),
             );
           },
         );
   }
 
-  Padding _buildMaterialField() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).material,
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColor.kTextfieldBorder),
+  Padding _chooseMaterialField() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Text(ref.watch(languangeProvider).material,
+                  style: Theme.of(context).textTheme.labelMedium),
             ),
-            child: DropdownButton(
-              underline: const SizedBox(),
-              isExpanded: true,
-              value: _selectedMaterial,
-              items: _materials
-                  .map(
-                    (e) => DropdownMenuItem(value: e, child: Text(e)),
-                  )
-                  .toList(),
-              onChanged: (e) {
-                setState(() {
-                  _selectedMaterial = e!;
-                });
-              },
+            Container(
+              height: 40,
+              padding: const EdgeInsets.only(left: 20, right: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColor.kTextfieldBorder),
+              ),
+              child: DropdownButton(
+                menuMaxHeight: 350,
+                underline: const SizedBox(),
+                isExpanded: true,
+                value: _selectedMaterial,
+                items: _materials
+                    .map(
+                      (e) => DropdownMenuItem(
+                        alignment: Alignment.center,
+                        value: e,
+                        child: Text(e),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (e) {
+                  setState(() {
+                    _selectedMaterial = e!;
+                  });
+                },
+              ),
             ),
-          ),
+          ],
         ),
       );
 
-  Widget _dayInputWidget() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).date,
-          child: TextField(
-            controller: _dayPickerController,
-            keyboardType: TextInputType.datetime,
-            onTap: () async {
-              final date = await Utilits.selecetDate(context);
-              if (date != null) {
-                setState(() {
-                  _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                  _entry = _entry.copyWith(createDate: date);
-                });
-              }
-            },
-            decoration: Utilits.textFieldDecorator(context),
-          ),
-        ),
+  Widget _dayInputWidget() => LabeldTextfield(
+        label: ref.watch(languangeProvider).date,
+        controller: _dayPickerController,
+        textInputType: TextInputType.datetime,
+        onTap: () async {
+          final date = await Utilits.selecetDate(context);
+          if (date != null) {
+            setState(() {
+              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+              _entry = _entry.copyWith(createDate: date);
+            });
+          }
+        },
       );
 
   Padding _submitInput() {

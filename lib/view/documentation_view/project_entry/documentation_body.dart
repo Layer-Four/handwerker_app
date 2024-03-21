@@ -7,25 +7,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_dm/project_entry.dart';
-import 'package:handwerker_app/models/project_models/project_vm/project.dart';
+import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
-class ProjectBody extends ConsumerStatefulWidget {
-  const ProjectBody({super.key});
+class DocumentationBody extends ConsumerStatefulWidget {
+  const DocumentationBody({super.key});
 
   @override
-  ConsumerState<ProjectBody> createState() => _ProjectBodyState();
+  ConsumerState<DocumentationBody> createState() => _ProjectBodyState();
 }
 
-class _ProjectBodyState extends ConsumerState<ProjectBody> {
+class _ProjectBodyState extends ConsumerState<DocumentationBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late ProjectEntry _entry;
+  bool isProjectSet = false;
 
-  ProjectVM? _project;
+  ProjectListVM? _project;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
             _buildCustomerProjectField(),
             _buildChooseMedai(),
             _buildDescription(),
-            const SizedBox(height: 38),
+            const SizedBox(height: 56),
             _submitInput(),
             SizedBox(
               height: 70,
@@ -60,7 +61,7 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
 
   Container _buildChooseMedai() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        height: 150,
+        height: 145,
         decoration: BoxDecoration(
           color: AppColor.kTextfieldBorder,
           borderRadius: BorderRadius.circular(12),
@@ -156,109 +157,114 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
 
   Widget _buildCustomerProjectField() {
     return ref.read(projectProvider).when(
-          error: (error, stackTrace) => const SizedBox(
-            child: Text('please restart App'),
-          ),
-          loading: () => const CircularProgressIndicator.adaptive(),
+          error: (error, stackTrace) {
+            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            return const SizedBox(child: Text('Etwas lief schief'));
+          },
+          loading: () => const CircularProgressIndicator(),
           data: (data) {
             if (data == null) {
               ref.read(projectProvider.notifier).loadpProject();
             }
             final projects = data;
-            if (projects != null) {
-              _project = projects.first;
-              _entry = _entry.copyWith(
-                projectID: projects.first.id,
-                projectName: projects.first.title,
-                customerID: projects.first.id,
-                customerName: projects.first.title,
-              );
+            if (projects != null && !isProjectSet) {
+              setState(() {
+                _project = projects.first;
+                _entry = _entry.copyWith(
+                  projectID: projects.first.id,
+                  projectName: projects.first.title,
+                  customerID: projects.first.id,
+                  customerName: projects.first.title,
+                );
+                isProjectSet = true;
+              });
             }
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: LabeledInputWidget(
-                label: ref.watch(languangeProvider).customerProject,
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColor.kTextfieldBorder),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      ref.watch(languangeProvider).customerProject,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
                   ),
-                  child: DropdownButton(
-                    underline: const SizedBox(),
-                    isExpanded: true,
-                    value: _project,
-                    items: projects
-                        ?.map(
-                          (e) => DropdownMenuItem(value: e, child: Text(' ${e.title}')),
-                        )
-                        .toList(),
-                    onChanged: (e) {
-                      setState(() {
-                        _project = e!;
-                        _entry = _entry.copyWith(
-                          projectID: e.id,
-                          customerID: e.id,
-                          projectName: e.title,
-                          customerName: e.title,
-                        );
-                      });
-                    },
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 20, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.kTextfieldBorder),
+                    ),
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      value: _project,
+                      items: projects
+                          ?.map(
+                            (e) => DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: e,
+                              child: Text(' ${e.title}'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) {
+                        setState(() {
+                          _project = e!;
+                          _entry = _entry.copyWith(
+                            projectID: e.id,
+                            customerID: e.id,
+                            projectName: e.title,
+                            customerName: e.title,
+                          );
+                        });
+                      },
+                    ),
                   ),
-                ),
+                ],
               ),
+              //  LabeledInputWidget(
+              //   label:
+              //   child:
+              // ),
             );
           },
         );
   }
 
-  Padding _buildDescription() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).description,
-          child: SizedBox(
-            height: 80,
-            child: TextField(
-              controller: _descriptionController,
-              textAlignVertical: TextAlignVertical.top,
-              expands: true,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-              decoration: Utilits.textFieldDecorator(context),
-              onChanged: (value) {
-                _descriptionController.text = value;
-                _entry = _entry.copyWith(description: value);
-              },
-            ),
-          ),
-        ),
+  Widget _buildDescription() => LabeldTextfield(
+        heigt: 80,
+        textInputAction: TextInputAction.newline,
+        textInputType: TextInputType.multiline,
+        label: ref.watch(languangeProvider).description,
+        controller: _descriptionController,
+        onChanged: (value) {
+          setState(() {
+            _descriptionController.text = value;
+            _entry = _entry.copyWith(description: _descriptionController.text);
+          });
+        },
+      );
+  Widget _dayInputWidget() => LabeldTextfield(
+        label: ref.watch(languangeProvider).date,
+        textInputType: TextInputType.datetime,
+        controller: _dayPickerController,
+        onTap: () async {
+          final date = await Utilits.selecetDate(context);
+          if (date != null) {
+            setState(() {
+              _entry = _entry.copyWith(createDate: date);
+              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+            });
+          }
+        },
       );
 
-  Widget _dayInputWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: LabeledInputWidget(
-        label: ref.watch(languangeProvider).date,
-        child: TextField(
-          controller: _dayPickerController,
-          keyboardType: TextInputType.datetime,
-          onTap: () async {
-            final date = await Utilits.selecetDate(context);
-            if (date != null) {
-              setState(() {
-                _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                _entry = _entry.copyWith(createDate: date);
-              });
-            }
-          },
-          decoration: Utilits.textFieldDecorator(context),
-        ),
-      ),
-    );
-  }
-
-  Padding _submitInput() => Padding(
+  Widget _submitInput() => Padding(
         padding: const EdgeInsets.all(16.0),
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
@@ -274,12 +280,6 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
                   content: Text(ref.watch(languangeProvider).plsChooseDay),
                 ),
               );
-              // } else if (_project != null && _project!.title == ' Wählen') {
-              //   return ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       content: Text(ref.watch(languangeProvider).plsChooseProject),
-              //     ),
-              //   );
             }
             if (_dayPickerController.text.isNotEmpty) {
               ref.read(projectProvider.notifier).uploadProjectEntry(_entry);

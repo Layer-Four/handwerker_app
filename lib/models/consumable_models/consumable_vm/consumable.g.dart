@@ -8,16 +8,20 @@ part of 'consumable.dart';
 
 _$ConsumableImpl _$$ConsumableImplFromJson(Map<String, dynamic> json) =>
     _$ConsumableImpl(
-      consumableID: json['consumableID'] as String?,
+      materialID: json['materialID'] as String?,
       price: json['price'] as int?,
       name: json['name'] as String,
       amount: json['amount'] as int? ?? 1,
+      unitTypeName: json['unitTypeName'] as String?,
+      materialUnitID: json['materialUnitID'] as int?,
     );
 
 Map<String, dynamic> _$$ConsumableImplToJson(_$ConsumableImpl instance) =>
     <String, dynamic>{
-      'consumableID': instance.consumableID,
+      'materialID': instance.materialID,
       'price': instance.price,
       'name': instance.name,
       'amount': instance.amount,
+      'unitTypeName': instance.unitTypeName,
+      'materialUnitID': instance.materialUnitID,
     };

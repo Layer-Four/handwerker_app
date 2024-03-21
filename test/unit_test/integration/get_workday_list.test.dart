@@ -10,7 +10,7 @@ void main() async {
   // Lad einträge vom Web.
   final dio = Dio();
   List<TimeEntry>? entries;
-  final response = await dio.get(const DbAdress().getAllTimeEntrys);
+  final response = await dio.get(const DbAdresses().getAllTimeEntrys);
   if (response.statusCode == 200) {
     final List data = response.data.map((e) => e).toList();
     data.map((e) => e.asMap());

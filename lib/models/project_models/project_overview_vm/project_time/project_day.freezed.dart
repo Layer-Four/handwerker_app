@@ -22,8 +22,8 @@ ProjectTimeVM _$ProjectTimeVMFromJson(Map<String, dynamic> json) {
 mixin _$ProjectTimeVM {
   int? get durationTotal => throw _privateConstructorUsedError;
   DateTime get end => throw _privateConstructorUsedError;
-  int get serviceID => throw _privateConstructorUsedError;
-  String get serviceName => throw _privateConstructorUsedError;
+  int? get serviceID => throw _privateConstructorUsedError;
+  String? get serviceName => throw _privateConstructorUsedError;
   DateTime get start => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,8 +41,8 @@ abstract class $ProjectTimeVMCopyWith<$Res> {
   $Res call(
       {int? durationTotal,
       DateTime end,
-      int serviceID,
-      String serviceName,
+      int? serviceID,
+      String? serviceName,
       DateTime start});
 }
 
@@ -61,8 +61,8 @@ class _$ProjectTimeVMCopyWithImpl<$Res, $Val extends ProjectTimeVM>
   $Res call({
     Object? durationTotal = freezed,
     Object? end = null,
-    Object? serviceID = null,
-    Object? serviceName = null,
+    Object? serviceID = freezed,
+    Object? serviceName = freezed,
     Object? start = null,
   }) {
     return _then(_value.copyWith(
@@ -74,14 +74,14 @@ class _$ProjectTimeVMCopyWithImpl<$Res, $Val extends ProjectTimeVM>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      serviceID: null == serviceID
+      serviceID: freezed == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as int,
-      serviceName: null == serviceName
+              as int?,
+      serviceName: freezed == serviceName
           ? _value.serviceName
           : serviceName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       start: null == start
           ? _value.start
           : start // ignore: cast_nullable_to_non_nullable
@@ -101,8 +101,8 @@ abstract class _$$ProjectTimeVMImplCopyWith<$Res>
   $Res call(
       {int? durationTotal,
       DateTime end,
-      int serviceID,
-      String serviceName,
+      int? serviceID,
+      String? serviceName,
       DateTime start});
 }
 
@@ -119,8 +119,8 @@ class __$$ProjectTimeVMImplCopyWithImpl<$Res>
   $Res call({
     Object? durationTotal = freezed,
     Object? end = null,
-    Object? serviceID = null,
-    Object? serviceName = null,
+    Object? serviceID = freezed,
+    Object? serviceName = freezed,
     Object? start = null,
   }) {
     return _then(_$ProjectTimeVMImpl(
@@ -132,14 +132,14 @@ class __$$ProjectTimeVMImplCopyWithImpl<$Res>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      serviceID: null == serviceID
+      serviceID: freezed == serviceID
           ? _value.serviceID
           : serviceID // ignore: cast_nullable_to_non_nullable
-              as int,
-      serviceName: null == serviceName
+              as int?,
+      serviceName: freezed == serviceName
           ? _value.serviceName
           : serviceName // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       start: null == start
           ? _value.start
           : start // ignore: cast_nullable_to_non_nullable
@@ -154,8 +154,8 @@ class _$ProjectTimeVMImpl extends _ProjectTimeVM {
   const _$ProjectTimeVMImpl(
       {this.durationTotal,
       required this.end,
-      required this.serviceID,
-      required this.serviceName,
+      this.serviceID,
+      this.serviceName,
       required this.start})
       : super._();
 
@@ -167,9 +167,9 @@ class _$ProjectTimeVMImpl extends _ProjectTimeVM {
   @override
   final DateTime end;
   @override
-  final int serviceID;
+  final int? serviceID;
   @override
-  final String serviceName;
+  final String? serviceName;
   @override
   final DateTime start;
 
@@ -216,8 +216,8 @@ abstract class _ProjectTimeVM extends ProjectTimeVM {
   const factory _ProjectTimeVM(
       {final int? durationTotal,
       required final DateTime end,
-      required final int serviceID,
-      required final String serviceName,
+      final int? serviceID,
+      final String? serviceName,
       required final DateTime start}) = _$ProjectTimeVMImpl;
   const _ProjectTimeVM._() : super._();
 
@@ -229,9 +229,9 @@ abstract class _ProjectTimeVM extends ProjectTimeVM {
   @override
   DateTime get end;
   @override
-  int get serviceID;
+  int? get serviceID;
   @override
-  String get serviceName;
+  String? get serviceName;
   @override
   DateTime get start;
   @override

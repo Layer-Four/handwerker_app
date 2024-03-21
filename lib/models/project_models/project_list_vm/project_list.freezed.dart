@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'project.dart';
+part of 'project_list.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,33 +14,34 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ProjectVM _$ProjectVMFromJson(Map<String, dynamic> json) {
-  return _ProjectVM.fromJson(json);
+ProjectListVM _$ProjectListVMFromJson(Map<String, dynamic> json) {
+  return _ProjectListVM.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ProjectVM {
+mixin _$ProjectListVM {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ProjectVMCopyWith<ProjectVM> get copyWith =>
+  $ProjectListVMCopyWith<ProjectListVM> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProjectVMCopyWith<$Res> {
-  factory $ProjectVMCopyWith(ProjectVM value, $Res Function(ProjectVM) then) =
-      _$ProjectVMCopyWithImpl<$Res, ProjectVM>;
+abstract class $ProjectListVMCopyWith<$Res> {
+  factory $ProjectListVMCopyWith(
+          ProjectListVM value, $Res Function(ProjectListVM) then) =
+      _$ProjectListVMCopyWithImpl<$Res, ProjectListVM>;
   @useResult
   $Res call({int id, String title});
 }
 
 /// @nodoc
-class _$ProjectVMCopyWithImpl<$Res, $Val extends ProjectVM>
-    implements $ProjectVMCopyWith<$Res> {
-  _$ProjectVMCopyWithImpl(this._value, this._then);
+class _$ProjectListVMCopyWithImpl<$Res, $Val extends ProjectListVM>
+    implements $ProjectListVMCopyWith<$Res> {
+  _$ProjectListVMCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -67,22 +68,22 @@ class _$ProjectVMCopyWithImpl<$Res, $Val extends ProjectVM>
 }
 
 /// @nodoc
-abstract class _$$ProjectVMImplCopyWith<$Res>
-    implements $ProjectVMCopyWith<$Res> {
-  factory _$$ProjectVMImplCopyWith(
-          _$ProjectVMImpl value, $Res Function(_$ProjectVMImpl) then) =
-      __$$ProjectVMImplCopyWithImpl<$Res>;
+abstract class _$$ProjectListVMImplCopyWith<$Res>
+    implements $ProjectListVMCopyWith<$Res> {
+  factory _$$ProjectListVMImplCopyWith(
+          _$ProjectListVMImpl value, $Res Function(_$ProjectListVMImpl) then) =
+      __$$ProjectListVMImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String title});
 }
 
 /// @nodoc
-class __$$ProjectVMImplCopyWithImpl<$Res>
-    extends _$ProjectVMCopyWithImpl<$Res, _$ProjectVMImpl>
-    implements _$$ProjectVMImplCopyWith<$Res> {
-  __$$ProjectVMImplCopyWithImpl(
-      _$ProjectVMImpl _value, $Res Function(_$ProjectVMImpl) _then)
+class __$$ProjectListVMImplCopyWithImpl<$Res>
+    extends _$ProjectListVMCopyWithImpl<$Res, _$ProjectListVMImpl>
+    implements _$$ProjectListVMImplCopyWith<$Res> {
+  __$$ProjectListVMImplCopyWithImpl(
+      _$ProjectListVMImpl _value, $Res Function(_$ProjectListVMImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -91,7 +92,7 @@ class __$$ProjectVMImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
   }) {
-    return _then(_$ProjectVMImpl(
+    return _then(_$ProjectListVMImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -106,11 +107,11 @@ class __$$ProjectVMImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProjectVMImpl implements _ProjectVM {
-  const _$ProjectVMImpl({required this.id, required this.title});
+class _$ProjectListVMImpl implements _ProjectListVM {
+  const _$ProjectListVMImpl({required this.id, required this.title});
 
-  factory _$ProjectVMImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProjectVMImplFromJson(json);
+  factory _$ProjectListVMImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProjectListVMImplFromJson(json);
 
   @override
   final int id;
@@ -119,14 +120,14 @@ class _$ProjectVMImpl implements _ProjectVM {
 
   @override
   String toString() {
-    return 'ProjectVM(id: $id, title: $title)';
+    return 'ProjectListVM(id: $id, title: $title)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectVMImpl &&
+            other is _$ProjectListVMImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title));
   }
@@ -138,23 +139,24 @@ class _$ProjectVMImpl implements _ProjectVM {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjectVMImplCopyWith<_$ProjectVMImpl> get copyWith =>
-      __$$ProjectVMImplCopyWithImpl<_$ProjectVMImpl>(this, _$identity);
+  _$$ProjectListVMImplCopyWith<_$ProjectListVMImpl> get copyWith =>
+      __$$ProjectListVMImplCopyWithImpl<_$ProjectListVMImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjectVMImplToJson(
+    return _$$ProjectListVMImplToJson(
       this,
     );
   }
 }
 
-abstract class _ProjectVM implements ProjectVM {
-  const factory _ProjectVM(
-      {required final int id, required final String title}) = _$ProjectVMImpl;
+abstract class _ProjectListVM implements ProjectListVM {
+  const factory _ProjectListVM(
+      {required final int id,
+      required final String title}) = _$ProjectListVMImpl;
 
-  factory _ProjectVM.fromJson(Map<String, dynamic> json) =
-      _$ProjectVMImpl.fromJson;
+  factory _ProjectListVM.fromJson(Map<String, dynamic> json) =
+      _$ProjectListVMImpl.fromJson;
 
   @override
   int get id;
@@ -162,6 +164,6 @@ abstract class _ProjectVM implements ProjectVM {
   String get title;
   @override
   @JsonKey(ignore: true)
-  _$$ProjectVMImplCopyWith<_$ProjectVMImpl> get copyWith =>
+  _$$ProjectListVMImplCopyWith<_$ProjectListVMImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

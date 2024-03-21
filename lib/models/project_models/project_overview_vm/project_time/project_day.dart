@@ -7,8 +7,8 @@ abstract class ProjectTimeVM with _$ProjectTimeVM {
   const factory ProjectTimeVM({
     int? durationTotal,
     required DateTime end,
-    required int serviceID,
-    required String serviceName,
+    int? serviceID,
+    String? serviceName,
     required DateTime start,
   }) = _ProjectTimeVM;
 

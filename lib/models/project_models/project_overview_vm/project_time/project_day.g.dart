@@ -10,8 +10,8 @@ _$ProjectTimeVMImpl _$$ProjectTimeVMImplFromJson(Map<String, dynamic> json) =>
     _$ProjectTimeVMImpl(
       durationTotal: json['durationTotal'] as int?,
       end: DateTime.parse(json['end'] as String),
-      serviceID: json['serviceID'] as int,
-      serviceName: json['serviceName'] as String,
+      serviceID: json['serviceID'] as int?,
+      serviceName: json['serviceName'] as String?,
       start: DateTime.parse(json['start'] as String),
     );
 

@@ -21,7 +21,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          color: AppColor.kPrimary,
+          // color: AppColor.kPrimary,
           // notchMargin: 16,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
