@@ -33,10 +33,20 @@ class MainApp extends ConsumerWidget {
     }
 
     return MaterialApp(
-      theme: ThemeData.light().copyWith(
-        primaryColor: AppColor.kPrimary,
-        primaryTextTheme: const TextTheme().apply(
-          displayColor: AppColor.kWhite,
+      theme: ThemeData(
+        canvasColor: AppColor.kWhite,
+        cardColor: AppColor.kWhite,
+        focusColor: AppColor.kPrimaryButtonColor,
+        bottomAppBarTheme: BottomAppBarTheme(color: AppColor.kPrimary),
+        useMaterial3: null,
+        fontFamily: 'poppins',
+        primarySwatch: AppColor.materialprimary,
+        scaffoldBackgroundColor: AppColor.kWhite,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          backgroundColor: AppColor.kWhite,
+          centerTitle: true,
         ),
       ),
       darkTheme: ThemeData.dark(),

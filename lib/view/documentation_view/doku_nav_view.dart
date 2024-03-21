@@ -21,7 +21,7 @@ class DokuNavigationView extends ConsumerWidget {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: switch (dokuViewRef) {
-            DokuViews.project => const ProjectBody(),
+            DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
             _ => const TimeEntryBody(),
           },

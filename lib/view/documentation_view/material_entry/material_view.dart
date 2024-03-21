@@ -207,7 +207,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     child: Text(ref.watch(languangeProvider).estimatedDuration),
                   ),
                   SizedBox(
-                    width: 100,
+                    width: 150,
                     child: DropdownButton(
                         menuMaxHeight: 300,
                         isExpanded: true,

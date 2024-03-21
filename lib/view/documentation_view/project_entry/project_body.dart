@@ -12,15 +12,16 @@ import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/language_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labeld_textfield.dart';
+import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
-class ProjectBody extends ConsumerStatefulWidget {
-  const ProjectBody({super.key});
+class DocumentationBody extends ConsumerStatefulWidget {
+  const DocumentationBody({super.key});
 
   @override
-  ConsumerState<ProjectBody> createState() => _ProjectBodyState();
+  ConsumerState<DocumentationBody> createState() => _ProjectBodyState();
 }
 
-class _ProjectBodyState extends ConsumerState<ProjectBody> {
+class _ProjectBodyState extends ConsumerState<DocumentationBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late ProjectEntry _entry;
@@ -212,29 +213,18 @@ class _ProjectBodyState extends ConsumerState<ProjectBody> {
         );
   }
 
-  Padding _buildDescription() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: LabeledInputWidget(
-          label: ref.watch(languangeProvider).description,
-          child: SizedBox(
-            height: 80,
-            child: TextField(
-              controller: _descriptionController,
-              textAlignVertical: TextAlignVertical.top,
-              expands: true,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-              decoration: Utilits.textFieldDecorator(context),
-              onChanged: (value) {
-                _descriptionController.text = value;
-                _entry = _entry.copyWith(description: value);
-              },
-            ),
-          ),
-        ),
+  Widget _buildDescription() => LabeldTextfield(
+        textInputAction: TextInputAction.newline,
+        textInputType: TextInputType.multiline,
+        label: ref.watch(languangeProvider).description,
+        controller: _descriptionController,
+        onChanged: (value) {
+          setState(() {
+            _descriptionController.text = value;
+            _entry = _entry.copyWith(description: _descriptionController.text);
+          });
+        },
       );
-
   Widget _dayInputWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
