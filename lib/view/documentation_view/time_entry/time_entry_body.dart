@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,7 +102,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                   height: 40,
                   padding: const EdgeInsets.only(left: 20, right: 15),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: AppColor.kTextfieldBorder),
                   ),
                   child: DropdownButton(
@@ -110,7 +111,6 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                     isExpanded: true,
                     value: _project,
                     items: projects
-                        // TODO: Center input value?
                         ?.map(
                           (e) => DropdownMenuItem(
                             alignment: Alignment.center,
@@ -148,58 +148,69 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
 
   Widget _buildServiceDropdown() {
     return ref.watch(serviceProvider).when(
-      data: (data) {
-        if (data == null) {
-          ref.watch(serviceProvider.notifier).loadServices();
-        }
-        final services = data;
-        if (services != null && !isServiceSet) {
-          setState(() {
-            _choosenService = services.first;
-            _entry = _entry.copyWith(serviceID: services.first.id);
-            isServiceSet = true;
-          });
-        }
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: LabeledInputWidget(
-            label: ref.watch(languangeProvider).service,
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColor.kTextfieldBorder),
+          error: (error, stackTrace) {
+            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            return const SizedBox(child: Text('Etwas lief schief'));
+          },
+          loading: () => const CircularProgressIndicator.adaptive(),
+          data: (data) {
+            if (data == null) {
+              ref.watch(serviceProvider.notifier).loadServices();
+            }
+            final services = data;
+            if (services != null && !isServiceSet) {
+              setState(() {
+                _choosenService = services.first;
+                _entry = _entry.copyWith(serviceID: services.first.id);
+                isServiceSet = true;
+              });
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      ref.watch(languangeProvider).service,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 20, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColor.kTextfieldBorder),
+                    ),
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      value: _choosenService,
+                      items: services?.map(
+                        (e) {
+                          return DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.name}'),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (e) => setState(() {
+                        log(_choosenService!.name);
+                        _choosenService = e;
+                        log(_choosenService!.name);
+                        _entry = _entry.copyWith(serviceID: e!.id);
+                      }),
+                    ),
+                  ),
+                ],
               ),
-              child: DropdownButton(
-                underline: const SizedBox(),
-                isExpanded: true,
-                value: _choosenService,
-                items: services?.map(
-                  (e) {
-                    return DropdownMenuItem(
-                      value: e,
-                      child: Text(' ${e.name}'),
-                    );
-                  },
-                ).toList(),
-                onChanged: (e) => setState(() {
-                  log(_choosenService!.name);
-                  _choosenService = e;
-                  log(_choosenService!.name);
-                  _entry = _entry.copyWith(serviceID: e!.id);
-                }),
-              ),
-            ),
-          ),
+            );
+          },
         );
-      },
-      loading: () {
-        return const CircularProgressIndicator.adaptive();
-      },
-      error: (error, stackTrace) {
-        return const SizedBox();
-      },
-    );
   }
 
   /// Split the [String] values from the TextEdingController with the given
@@ -233,42 +244,39 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
     _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
   }
 
-  _dayInputRow() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            LabeldTextfield(
-              label: ref.watch(languangeProvider).date,
-              heigt: 35,
-              width: 150,
-              textInputType: TextInputType.datetime,
-              controller: _dayPickerController,
-              onTap: () async {
-                final date = await Utilits.selecetDate(context);
-                if (date != null) {
-                  log(date.toString());
-                  setState(() {
-                    _entry = _entry.copyWith(date: date);
-                    _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                  });
-                }
-              },
-            ),
-            LabeldTextfield(
-              label: ref.watch(languangeProvider).duration,
-              heigt: 35,
-              width: 150,
-              hintText: 'min.',
-              textInputType: TextInputType.number,
-              controller: _durationController,
-              // TODO: implement a wheelspinner for pick Hours and minutes?
-              onChanged: (value) {
-                _entry = _entry.copyWith(duration: int.tryParse(value));
-              },
-            ),
-          ],
-        ),
+  _dayInputRow() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          LabeldTextfield(
+            label: ref.watch(languangeProvider).date,
+            heigt: 35,
+            width: 150,
+            textInputType: TextInputType.datetime,
+            controller: _dayPickerController,
+            onTap: () async {
+              final date = await Utilits.selecetDate(context);
+              if (date != null) {
+                log(date.toString());
+                setState(() {
+                  _entry = _entry.copyWith(date: date);
+                  _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                });
+              }
+            },
+          ),
+          LabeldTextfield(
+            label: ref.watch(languangeProvider).duration,
+            heigt: 35,
+            width: 150,
+            hintText: 'min.',
+            textInputType: TextInputType.number,
+            controller: _durationController,
+            // TODO: implement a wheelspinner for pick Hours and minutes?
+            onChanged: (value) {
+              _entry = _entry.copyWith(duration: int.tryParse(value));
+            },
+          ),
+        ],
       );
 
   Padding _submitInput() => Padding(
@@ -307,70 +315,67 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
         ),
       );
 
-  Widget _timeInputRow() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            LabeldTextfield(
-              heigt: 35,
-              width: 150,
-              textInputType: TextInputType.datetime,
-              textInputAction: TextInputAction.next,
-              label: ref.watch(languangeProvider).start,
-              controller: _startController,
-              onTap: () async {
-                final time = await showTimePicker(
-                  context: context,
-                  initialTime: selectedTime!,
-                );
-                if (time != null) {
-                  final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+  Widget _timeInputRow() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          LabeldTextfield(
+            heigt: 35,
+            width: 150,
+            textInputType: TextInputType.datetime,
+            textInputAction: TextInputAction.next,
+            label: ref.watch(languangeProvider).start,
+            controller: _startController,
+            onTap: () async {
+              final time = await showTimePicker(
+                context: context,
+                initialTime: selectedTime!,
+              );
+              if (time != null) {
+                final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                _entry = _entry.copyWith(
+                    startTime: DateTime(
+                  _entry.date.year,
+                  _entry.date.month,
+                  _entry.date.day,
+                  time.hour,
+                  time.minute,
+                ));
+                _startController.text = '${time.hour}:$minute';
+              }
+            },
+          ),
+          LabeldTextfield(
+            heigt: 35,
+            width: 150,
+            textInputType: TextInputType.datetime,
+            textInputAction: TextInputAction.done,
+            label: ref.watch(languangeProvider).end,
+            controller: _endController,
+            onTap: () async {
+              final time = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay(
+                  hour: int.tryParse(_endController.text.split(':').first) ?? 16,
+                  minute: int.tryParse(_endController.text.split(':').last) ?? 30,
+                ),
+              );
+              if (time != null) {
+                setState(() {
                   _entry = _entry.copyWith(
-                      startTime: DateTime(
+                      endTime: DateTime(
                     _entry.date.year,
                     _entry.date.month,
                     _entry.date.day,
                     time.hour,
                     time.minute,
                   ));
-                  _startController.text = '${time.hour}:$minute';
-                }
-              },
-            ),
-            LabeldTextfield(
-              heigt: 35,
-              width: 150,
-              textInputType: TextInputType.datetime,
-              textInputAction: TextInputAction.done,
-              label: ref.watch(languangeProvider).end,
-              controller: _endController,
-              onTap: () async {
-                final time = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay(
-                    hour: int.tryParse(_endController.text.split(':').first) ?? 16,
-                    minute: int.tryParse(_endController.text.split(':').last) ?? 30,
-                  ),
-                );
-                if (time != null) {
-                  setState(() {
-                    _entry = _entry.copyWith(
-                        endTime: DateTime(
-                      _entry.date.year,
-                      _entry.date.month,
-                      _entry.date.day,
-                      time.hour,
-                      time.minute,
-                    ));
-                    final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
-                    _endController.text = '${time.hour}:$minute';
-                  });
-                  _calculateDuration();
-                }
-              },
-            ),
-          ],
-        ),
+                  final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                  _endController.text = '${time.hour}:$minute';
+                });
+                _calculateDuration();
+              }
+            },
+          ),
+        ],
       );
 }
