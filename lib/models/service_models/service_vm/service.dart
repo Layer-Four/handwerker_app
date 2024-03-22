@@ -3,11 +3,11 @@ part 'service.freezed.dart';
 part 'service.g.dart';
 
 @freezed
-class ServiceVM with _$ServiceVM {
-  const factory ServiceVM({
+class User with _$ServiceVM {
+  const factory User({
     required String name,
     required int id,
   }) = _Service;
 
-  factory ServiceVM.fromJson(Map<String, dynamic> json) => _$ServiceVMFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$ServiceVMFromJson(json);
 }

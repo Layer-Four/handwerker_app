@@ -29,7 +29,7 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   bool isProjectSet = false;
   TimeOfDay? selectedTime;
 
-  ServiceVM? _choosenService;
+  User? _choosenService;
 
   ProjectVM? _project;
   late TimeEntry _entry;
@@ -38,12 +38,14 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   void initState() {
     super.initState();
     _entry = TimeEntry(date: DateTime.now(), startTime: DateTime.now());
-    final minute =
-        _entry.startTime.minute < 10 ? '0${_entry.startTime.minute}' : '${_entry.startTime.minute}';
+    final minute = _entry.startTime.minute < 10
+        ? '0${_entry.startTime.minute}'
+        : '${_entry.startTime.minute}';
     if (selectedTime == null || _dayPickerController.text.isEmpty) {
       _dayPickerController.text =
           '${_entry.startTime.day}.${_entry.startTime.month}.${_entry.startTime.year}';
-      selectedTime = TimeOfDay(hour: _entry.startTime.hour, minute: _entry.startTime.minute);
+      selectedTime = TimeOfDay(
+          hour: _entry.startTime.hour, minute: _entry.startTime.minute);
     }
     _startController.text = '${selectedTime!.hour}:$minute';
   }
@@ -102,7 +104,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                     value: _project,
                     items: projects
                         ?.map(
-                          (e) => DropdownMenuItem(value: e, child: Text(' ${e.title}')),
+                          (e) => DropdownMenuItem(
+                              value: e, child: Text(' ${e.title}')),
                         )
                         .toList(),
                     onChanged: (e) {
@@ -137,7 +140,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
               onChanged: (value) {
                 setState(() {
                   _descriptionController.text = value;
-                  _entry = _entry.copyWith(description: _descriptionController.text);
+                  _entry =
+                      _entry.copyWith(description: _descriptionController.text);
                 });
               },
             ),
@@ -207,7 +211,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
   /// than do  the same translation with _dayPickerController and _endController
   /// and return the different between this [DateTime] object in minutes.
   void _calculateDuration() {
-    final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+    final dateAsList =
+        _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
     final start = DateTime(
       dateAsList[2],
       dateAsList[1],
@@ -222,14 +227,17 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
       int.parse(_endController.text.split(':').first),
       int.parse(_endController.text.split(':').last),
     );
-    final sum = ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/ 60;
+    final sum =
+        ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/
+            60;
     setState(() {
       _entry = _entry.copyWith(duration: sum);
     });
     final hours = sum ~/ 60;
     final minutes = sum % 60;
     // TODO: exclude pause?
-    _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
+    _durationController.text =
+        '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
   }
 
   _dayInputRow() => Padding(
@@ -252,7 +260,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                       log(date.toString());
                       setState(() {
                         _entry = _entry.copyWith(date: date);
-                        _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+                        _dayPickerController.text =
+                            '${date.day}.${date.month}.${date.year}';
                       });
                     }
                   },
@@ -275,7 +284,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                       _entry = _entry.copyWith(duration: int.tryParse(value));
                     });
                   },
-                  decoration: Utilits.textFieldDecorator(context, hintText: 'min.'),
+                  decoration:
+                      Utilits.textFieldDecorator(context, hintText: 'min.'),
                 ),
               ),
             ),
@@ -308,7 +318,8 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                 _descriptionController.clear();
                 _endController.clear();
                 _durationController.clear();
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+                _dayPickerController.text =
+                    '${now.day}.${now.month}.${now.year}';
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -337,9 +348,12 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                   controller: _startController,
                   decoration: Utilits.textFieldDecorator(context),
                   onTap: () async {
-                    final time = await showTimePicker(context: context, initialTime: selectedTime!);
+                    final time = await showTimePicker(
+                        context: context, initialTime: selectedTime!);
                     if (time != null) {
-                      final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                      final minute = time.minute < 10
+                          ? '0${time.minute}'
+                          : '${time.minute}';
                       _entry = _entry.copyWith(
                           startTime: DateTime(
                         _entry.date.year,
@@ -369,8 +383,12 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                     final time = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay(
-                        hour: int.tryParse(_endController.text.split(':').first) ?? 16,
-                        minute: int.tryParse(_endController.text.split(':').last) ?? 30,
+                        hour: int.tryParse(
+                                _endController.text.split(':').first) ??
+                            16,
+                        minute:
+                            int.tryParse(_endController.text.split(':').last) ??
+                                30,
                       ),
                     );
                     if (time != null) {
@@ -383,7 +401,9 @@ class _ExecutionState extends ConsumerState<TimeEntryBody> {
                           time.hour,
                           time.minute,
                         ));
-                        final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                        final minute = time.minute < 10
+                            ? '0${time.minute}'
+                            : '${time.minute}';
                         _endController.text = '${time.hour}:$minute';
                       });
                       _calculateDuration();

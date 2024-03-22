@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ServiceVM _$ServiceVMFromJson(Map<String, dynamic> json) {
+User _$ServiceVMFromJson(Map<String, dynamic> json) {
   return _Service.fromJson(json);
 }
 
@@ -25,20 +25,19 @@ mixin _$ServiceVM {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ServiceVMCopyWith<ServiceVM> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ServiceVMCopyWith<User> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ServiceVMCopyWith<$Res> {
-  factory $ServiceVMCopyWith(ServiceVM value, $Res Function(ServiceVM) then) =
-      _$ServiceVMCopyWithImpl<$Res, ServiceVM>;
+  factory $ServiceVMCopyWith(User value, $Res Function(User) then) =
+      _$ServiceVMCopyWithImpl<$Res, User>;
   @useResult
   $Res call({String name, int id});
 }
 
 /// @nodoc
-class _$ServiceVMCopyWithImpl<$Res, $Val extends ServiceVM>
+class _$ServiceVMCopyWithImpl<$Res, $Val extends User>
     implements $ServiceVMCopyWith<$Res> {
   _$ServiceVMCopyWithImpl(this._value, this._then);
 
@@ -149,7 +148,7 @@ class _$ServiceImpl implements _Service {
   }
 }
 
-abstract class _Service implements ServiceVM {
+abstract class _Service implements User {
   const factory _Service({required final String name, required final int id}) =
       _$ServiceImpl;
 
