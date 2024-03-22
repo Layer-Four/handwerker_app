@@ -352,32 +352,31 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
         ),
         child: Text('Dokumentation', style: Theme.of(context).textTheme.bodyMedium),
       ),
-      onTap: () => (
-        context: context,
-        builder: (context) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
-              child: const Material(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Center(
-                        child: Text('Dokumentations details'),
-                      ),
-                    ),
-                    SizedBox(
-                        width: 200,
-                        height: 200,
+      onTap: () => showDialog(
+          context: context,
+          builder: (context) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
+                child: const Material(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(12.0),
                         child: Center(
-                          child: Text('Hier könnte ihr Bild sein'),
-                        ))
-                    // TODO: by multiple file's maybe open in CaruselSlider
-                    // Image.file(_writeFile()),
-                  ],
+                          child: Text('Dokumentations details'),
+                        ),
+                      ),
+                      SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: Center(
+                            child: Text('Hier könnte ihr Bild sein'),
+                          ))
+                      // TODO: by multiple file's maybe open in CaruselSlider
+                      // Image.file(_writeFile()),
+                    ],
+                  ),
                 ),
-              ),
-            )
-      ),
+              )),
     );
   }
 
