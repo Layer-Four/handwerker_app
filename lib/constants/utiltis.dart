@@ -137,4 +137,7 @@ class Utilits {
           borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
         ),
       );
+
+  ///need a base64 input string and returned a Image.memory from UInt8List(Base64String)
+  static Image writeImage(String base64String) => Image.memory(base64Decode(base64String));
 }

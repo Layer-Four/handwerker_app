@@ -20,9 +20,8 @@ ProjectEntry _$ProjectEntryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProjectEntry {
+  int? get id => throw _privateConstructorUsedError;
   int? get projectID => throw _privateConstructorUsedError;
-  int? get customerID => throw _privateConstructorUsedError;
-  String get customerName => throw _privateConstructorUsedError;
   String? get projectName => throw _privateConstructorUsedError;
   DateTime get createDate => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
@@ -41,9 +40,8 @@ abstract class $ProjectEntryCopyWith<$Res> {
       _$ProjectEntryCopyWithImpl<$Res, ProjectEntry>;
   @useResult
   $Res call(
-      {int? projectID,
-      int? customerID,
-      String customerName,
+      {int? id,
+      int? projectID,
       String? projectName,
       DateTime createDate,
       List<String> imageUrl,
@@ -63,27 +61,22 @@ class _$ProjectEntryCopyWithImpl<$Res, $Val extends ProjectEntry>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? projectID = freezed,
-    Object? customerID = freezed,
-    Object? customerName = null,
     Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
               as int?,
-      customerID: freezed == customerID
-          ? _value.customerID
-          : customerID // ignore: cast_nullable_to_non_nullable
-              as int?,
-      customerName: null == customerName
-          ? _value.customerName
-          : customerName // ignore: cast_nullable_to_non_nullable
-              as String,
       projectName: freezed == projectName
           ? _value.projectName
           : projectName // ignore: cast_nullable_to_non_nullable
@@ -113,9 +106,8 @@ abstract class _$$ProjecEntrytImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int? projectID,
-      int? customerID,
-      String customerName,
+      {int? id,
+      int? projectID,
       String? projectName,
       DateTime createDate,
       List<String> imageUrl,
@@ -133,27 +125,22 @@ class __$$ProjecEntrytImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? projectID = freezed,
-    Object? customerID = freezed,
-    Object? customerName = null,
     Object? projectName = freezed,
     Object? createDate = null,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
     return _then(_$ProjecEntrytImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       projectID: freezed == projectID
           ? _value.projectID
           : projectID // ignore: cast_nullable_to_non_nullable
               as int?,
-      customerID: freezed == customerID
-          ? _value.customerID
-          : customerID // ignore: cast_nullable_to_non_nullable
-              as int?,
-      customerName: null == customerName
-          ? _value.customerName
-          : customerName // ignore: cast_nullable_to_non_nullable
-              as String,
       projectName: freezed == projectName
           ? _value.projectName
           : projectName // ignore: cast_nullable_to_non_nullable
@@ -178,9 +165,8 @@ class __$$ProjecEntrytImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjecEntrytImpl implements _ProjecEntryt {
   const _$ProjecEntrytImpl(
-      {this.projectID,
-      this.customerID,
-      required this.customerName,
+      {this.id,
+      this.projectID,
       this.projectName,
       required this.createDate,
       final List<String> imageUrl = const <String>[],
@@ -191,11 +177,9 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
       _$$ProjecEntrytImplFromJson(json);
 
   @override
+  final int? id;
+  @override
   final int? projectID;
-  @override
-  final int? customerID;
-  @override
-  final String customerName;
   @override
   final String? projectName;
   @override
@@ -214,7 +198,7 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
 
   @override
   String toString() {
-    return 'ProjectEntry(projectID: $projectID, customerID: $customerID, customerName: $customerName, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'ProjectEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
@@ -222,12 +206,9 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProjecEntrytImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.projectID, projectID) ||
                 other.projectID == projectID) &&
-            (identical(other.customerID, customerID) ||
-                other.customerID == customerID) &&
-            (identical(other.customerName, customerName) ||
-                other.customerName == customerName) &&
             (identical(other.projectName, projectName) ||
                 other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
@@ -239,15 +220,8 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      projectID,
-      customerID,
-      customerName,
-      projectName,
-      createDate,
-      const DeepCollectionEquality().hash(_imageUrl),
-      description);
+  int get hashCode => Object.hash(runtimeType, id, projectID, projectName,
+      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
 
   @JsonKey(ignore: true)
   @override
@@ -265,9 +239,8 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
 
 abstract class _ProjecEntryt implements ProjectEntry {
   const factory _ProjecEntryt(
-      {final int? projectID,
-      final int? customerID,
-      required final String customerName,
+      {final int? id,
+      final int? projectID,
       final String? projectName,
       required final DateTime createDate,
       final List<String> imageUrl,
@@ -277,11 +250,9 @@ abstract class _ProjecEntryt implements ProjectEntry {
       _$ProjecEntrytImpl.fromJson;
 
   @override
+  int? get id;
+  @override
   int? get projectID;
-  @override
-  int? get customerID;
-  @override
-  String get customerName;
   @override
   String? get projectName;
   @override

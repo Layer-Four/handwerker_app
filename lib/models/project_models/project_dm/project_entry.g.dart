@@ -8,9 +8,8 @@ part of 'project_entry.dart';
 
 _$ProjecEntrytImpl _$$ProjecEntrytImplFromJson(Map<String, dynamic> json) =>
     _$ProjecEntrytImpl(
+      id: json['id'] as int?,
       projectID: json['projectID'] as int?,
-      customerID: json['customerID'] as int?,
-      customerName: json['customerName'] as String,
       projectName: json['projectName'] as String?,
       createDate: DateTime.parse(json['createDate'] as String),
       imageUrl: (json['imageUrl'] as List<dynamic>?)
@@ -22,9 +21,8 @@ _$ProjecEntrytImpl _$$ProjecEntrytImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$ProjecEntrytImplToJson(_$ProjecEntrytImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'projectID': instance.projectID,
-      'customerID': instance.customerID,
-      'customerName': instance.customerName,
       'projectName': instance.projectName,
       'createDate': instance.createDate.toIso8601String(),
       'imageUrl': instance.imageUrl,

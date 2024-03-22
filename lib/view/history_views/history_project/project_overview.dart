@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -8,12 +6,13 @@ import 'package:handwerker_app/models/project_models/project_overview_vm/project
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
+import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
   @override
   Widget build(context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +121,7 @@ class CostumerOverviewBody extends StatelessWidget {
         itemCount: customer?.projects.length,
         itemBuilder: (context, int j) {
           final project = customer?.projects[j];
-          return LargeHingedWidget(
+          return HingedWidget(
             contentLength: project!.timeViewModels.length,
             header: _buildHeadLine(project, context),
             content: Column(
@@ -136,9 +135,9 @@ class CostumerOverviewBody extends StatelessWidget {
                       child: Row(
                         children: [
                           SizedBox(
-                            width: 90,
+                            width: 120,
                             child: Text(
-                              '${work.start.day < 10 ? "0${work.start.day}" : work.start.day}.${work.start.month < 10 ? "0${work.start.month}" : work.start.month}.${work.start.year}',
+                              '${work.start.day < 10 ? "0${work.start.day}" : work.start.day}.${work.start.month < 10 ? "0${work.start.month}" : work.start.month}-${work.end.day < 10 ? "0${work.end.day}" : work.end.day}.${work.end.month < 10 ? "0${work.end.month}" : work.end.month}.${work.end.year}',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
@@ -146,7 +145,7 @@ class CostumerOverviewBody extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 140,
+                            width: 120,
                             child: Text(
                               work.serviceName ?? 'kein Service ausgewählt',
                               overflow: TextOverflow.ellipsis,
@@ -178,96 +177,6 @@ class CostumerOverviewBody extends StatelessWidget {
   }
 }
 
-class LargeHingedWidget extends StatefulWidget {
-  final Widget header;
-  final Column content;
-  final int contentLength;
-
-  const LargeHingedWidget({
-    super.key,
-    required this.header,
-    required this.content,
-    required this.contentLength,
-  });
-
-  @override
-  State<LargeHingedWidget> createState() => _LargeHingedState();
-}
-
-class _LargeHingedState extends State<LargeHingedWidget> {
-  bool _isOpen = false;
-  bool _openContent = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      width: MediaQuery.of(context).size.width - 20,
-      duration: const Duration(milliseconds: 100),
-      // curve: Curves.linear,
-      height: _isOpen ? (250 + (widget.contentLength * 25)) : 60,
-      onEnd: () => setState(() {
-        if (_isOpen) {
-          if (!_openContent) {
-            _openContent = true;
-          }
-        }
-      }),
-      child: GestureDetector(
-        onTap: () => setState(() {
-          if (_isOpen) {
-            _openContent = false;
-          }
-          _isOpen = !_isOpen;
-        }),
-        child: Card(
-          elevation: 5,
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColor.kWhite,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 90,
-                      child: widget.header,
-                    ),
-                    Icon(
-                      _isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                      size: 40,
-                    ),
-                  ],
-                ),
-                _openContent
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        width: MediaQuery.of(context).size.width - 30,
-                        child: widget.content)
-                    : const SizedBox.shrink(),
-                // AnimatedCrossFade(
-                //   sizeCurve: Curves.easeIn,
-                //   secondCurve: Curves.ease,
-                //   firstCurve: Curves.easeIn,
-                //   duration: const Duration(milliseconds: 1000),
-                //   firstChild: const SizedBox(),
-                //   secondChild: Container(
-                //       padding: const EdgeInsets.symmetric(horizontal: 12),
-                //       width: MediaQuery.of(context).size.width - 30,
-                //       child: widget.content),
-                //   crossFadeState: _isOpen ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                // ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class ProjectDetails extends ConsumerStatefulWidget {
   final ProjectOverview project;
   const ProjectDetails(this.project, {super.key});
@@ -287,7 +196,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      height: 216,
+      height: 150,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,10 +287,5 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                 ),
               )),
     );
-  }
-
-  //  TODO: get image source from Documentation and convert it to a file for Image.file
-  File _writeFile() {
-    return File('');
   }
 }
