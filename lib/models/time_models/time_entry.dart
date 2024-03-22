@@ -18,6 +18,7 @@ class TimeEntry with _$TimeEntry {
     required DateTime startTime,
     @Default('f7e8b09a-ac4f-4a30-a7c5-b6f829cff9aa') String userID,
   }) = _TimeEntry;
+
   const TimeEntry._();
   String getDurationInHours() {
     if (duration == null) return '';

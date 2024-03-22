@@ -53,19 +53,22 @@ class NavBarHistoryVWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: 'Projekt',
+              title: 'Kunde',
               isCurrent: viewProvider == HistoryViews.project,
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () => viewNotifier.state = HistoryViews.consumables,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-            child: NavigationIcon(
-              title: 'Material',
-              isCurrent: viewProvider == HistoryViews.consumables,
-            ),
+        // TODO: activate the Navigation uncommented GesturDetector and delete isActiv
+        // GestureDetector(
+        // onTap: () => viewNotifier.state = HistoryViews.consumables,
+        // child:
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+          child: NavigationIcon(
+            title: 'Material',
+            isCurrent: viewProvider == HistoryViews.consumables,
+            isActiv: false,
+            // ),
           ),
         ),
       ],

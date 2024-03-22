@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/provider/language_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
-import 'package:handwerker_app/view/documentation_view/project_entry/project_body.dart';
+import 'package:handwerker_app/view/documentation_view/project_entry/documentation_body.dart';
 import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
 import 'package:handwerker_app/view/documentation_view/time_entry/time_entry_body.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
@@ -21,7 +21,7 @@ class DokuNavigationView extends ConsumerWidget {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: switch (dokuViewRef) {
-            DokuViews.project => const ProjectBody(),
+            DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
             _ => const TimeEntryBody(),
           },
@@ -59,7 +59,7 @@ class NavAppBarWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: NavigationIcon(
-              title: language.project,
+              title: language.documentationLabel,
               isCurrent: viewProvider == DokuViews.project,
             ),
           ),

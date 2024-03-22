@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'service.dart';
+part of 'service_list.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -25,7 +25,11 @@ mixin _$ServiceVM {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
+<<<<<<< HEAD:lib/models/service_models/service_vm/service.freezed.dart
   $ServiceVMCopyWith<User> get copyWith => throw _privateConstructorUsedError;
+=======
+  $ServiceVMCopyWith<ServiceVM> get copyWith => throw _privateConstructorUsedError;
+>>>>>>> b365f79c372420a7493560179eaf32b1d646986a:lib/models/service_models/service_list_vm/service.freezed.dart
 }
 
 /// @nodoc
@@ -37,8 +41,12 @@ abstract class $ServiceVMCopyWith<$Res> {
 }
 
 /// @nodoc
+<<<<<<< HEAD:lib/models/service_models/service_vm/service.freezed.dart
 class _$ServiceVMCopyWithImpl<$Res, $Val extends User>
     implements $ServiceVMCopyWith<$Res> {
+=======
+class _$ServiceVMCopyWithImpl<$Res, $Val extends ServiceVM> implements $ServiceVMCopyWith<$Res> {
+>>>>>>> b365f79c372420a7493560179eaf32b1d646986a:lib/models/service_models/service_list_vm/service.freezed.dart
   _$ServiceVMCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -66,10 +74,8 @@ class _$ServiceVMCopyWithImpl<$Res, $Val extends User>
 }
 
 /// @nodoc
-abstract class _$$ServiceImplCopyWith<$Res>
-    implements $ServiceVMCopyWith<$Res> {
-  factory _$$ServiceImplCopyWith(
-          _$ServiceImpl value, $Res Function(_$ServiceImpl) then) =
+abstract class _$$ServiceImplCopyWith<$Res> implements $ServiceVMCopyWith<$Res> {
+  factory _$$ServiceImplCopyWith(_$ServiceImpl value, $Res Function(_$ServiceImpl) then) =
       __$$ServiceImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -77,11 +83,9 @@ abstract class _$$ServiceImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ServiceImplCopyWithImpl<$Res>
-    extends _$ServiceVMCopyWithImpl<$Res, _$ServiceImpl>
+class __$$ServiceImplCopyWithImpl<$Res> extends _$ServiceVMCopyWithImpl<$Res, _$ServiceImpl>
     implements _$$ServiceImplCopyWith<$Res> {
-  __$$ServiceImplCopyWithImpl(
-      _$ServiceImpl _value, $Res Function(_$ServiceImpl) _then)
+  __$$ServiceImplCopyWithImpl(_$ServiceImpl _value, $Res Function(_$ServiceImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -108,8 +112,7 @@ class __$$ServiceImplCopyWithImpl<$Res>
 class _$ServiceImpl implements _Service {
   const _$ServiceImpl({required this.name, required this.id});
 
-  factory _$ServiceImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ServiceImplFromJson(json);
+  factory _$ServiceImpl.fromJson(Map<String, dynamic> json) => _$$ServiceImplFromJson(json);
 
   @override
   final String name;
@@ -148,9 +151,14 @@ class _$ServiceImpl implements _Service {
   }
 }
 
+<<<<<<< HEAD:lib/models/service_models/service_vm/service.freezed.dart
 abstract class _Service implements User {
   const factory _Service({required final String name, required final int id}) =
       _$ServiceImpl;
+=======
+abstract class _Service implements ServiceVM {
+  const factory _Service({required final String name, required final int id}) = _$ServiceImpl;
+>>>>>>> b365f79c372420a7493560179eaf32b1d646986a:lib/models/service_models/service_list_vm/service.freezed.dart
 
   factory _Service.fromJson(Map<String, dynamic> json) = _$ServiceImpl.fromJson;
 
@@ -160,6 +168,5 @@ abstract class _Service implements User {
   int get id;
   @override
   @JsonKey(ignore: true)
-  _$$ServiceImplCopyWith<_$ServiceImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ServiceImplCopyWith<_$ServiceImpl> get copyWith => throw _privateConstructorUsedError;
 }

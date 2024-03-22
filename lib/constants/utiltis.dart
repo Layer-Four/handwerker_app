@@ -127,13 +127,13 @@ class Utilits {
           vertical: 5,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
             color: AppColor.kTextfieldBorder,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
         ),
       );

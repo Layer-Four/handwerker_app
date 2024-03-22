@@ -17,7 +17,7 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
 
   // TODO: write request provider for encaplusalted logic
   void uploadTimeEntry(TimeEntry entry) async {
-    final uri = const DbAdress().postTimeEnty;
+    final uri = const DbAdresses().postTimeEnty;
     final Dio dio = Dio();
 
     try {
@@ -40,10 +40,10 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   }
 
   void loadEntrys() async {
-    final uri = const DbAdress().getAllTimeEntrys;
+    final String url = const DbAdresses().getAllTimeEntrys;
     final Dio dio = Dio();
     try {
-      final response = await dio.get(uri);
+      final response = await dio.get(url);
       if (response.statusCode == 200) {
         final List data = response.data.map((e) => e).toList();
         data.map((e) => e.asMap());
