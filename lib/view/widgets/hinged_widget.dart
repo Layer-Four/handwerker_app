@@ -31,9 +31,7 @@ class _LargeHingedState extends State<HingedWidget> {
       width: widget.width ?? MediaQuery.of(context).size.width - 20,
       duration: const Duration(milliseconds: 100),
       // curve: Curves.linear,
-      height: _isOpen
-          ? ((widget.basicHeigth == null ? 200 : widget.basicHeigth)! + (widget.contentLength * 22))
-          : 60,
+      height: _isOpen ? ((widget.basicHeigth ?? 200) + (widget.contentLength * 22)) : 60,
       onEnd: () => setState(() {
         if (_isOpen) {
           if (!_openContent) {
