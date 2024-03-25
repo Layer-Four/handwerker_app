@@ -74,10 +74,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           _chooseCustomerProjectField(),
           _chooseMaterialField(),
           _buildAmountPriceFields(),
-          _buildChooseMedai(),
+          // _buildChooseMedai(),
+          const SizedBox(height: 184),
           _submitInput(),
           SizedBox(
-            height: 50,
+            height: 70,
             child: Center(
               child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
@@ -197,41 +198,41 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: SizedBox(
-              width: 390,
-              height: 41,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                    child: Text(ref.watch(languangeProvider).estimatedDuration),
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: DropdownButton(
-                        menuMaxHeight: 340,
-                        isExpanded: true,
-                        value: _duration,
-                        items: _durationSteps
-                            .map((e) => DropdownMenuItem(
-                                  alignment: Alignment.center,
-                                  value: e,
-                                  child: Text(
-                                    e,
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ))
-                            .toList(),
-                        onChanged: (e) {
-                          setState(() => _duration = e!);
-                        }),
-                  ),
-                ],
-              ),
-            ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 4.0),
+          //   child: SizedBox(
+          //     width: 390,
+          //     height: 41,
+          //     child: Row(
+          //       children: [
+          //         Padding(
+          //           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          //           child: Text(ref.watch(languangeProvider).estimatedDuration),
+          //         ),
+          //         SizedBox(
+          //           width: 150,
+          //           child: DropdownButton(
+          //               menuMaxHeight: 340,
+          //               isExpanded: true,
+          //               value: _duration,
+          //               items: _durationSteps
+          //                   .map((e) => DropdownMenuItem(
+          //                         alignment: Alignment.center,
+          //                         value: e,
+          //                         child: Text(
+          //                           e,
+          //                           style: Theme.of(context).textTheme.bodyMedium,
+          //                         ),
+          //                       ))
+          //                   .toList(),
+          //               onChanged: (e) {
+          //                 setState(() => _duration = e!);
+          //               }),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // )
         ],
       );
 

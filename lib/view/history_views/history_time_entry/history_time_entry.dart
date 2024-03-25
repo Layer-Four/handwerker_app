@@ -32,6 +32,7 @@ class HistoryTimeBody extends ConsumerWidget {
             ),
             for (var work in workdays)
               HingedWidget(
+                basicHeigth: 50,
                 contentLength: work!.timeEntries.length,
                 header: Padding(
                   padding: const EdgeInsets.only(left: 18.0),

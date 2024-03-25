@@ -6,9 +6,8 @@ part 'project_entry.g.dart';
 @freezed
 class ProjectEntry with _$ProjectEntry {
   const factory ProjectEntry({
+    int? id,
     int? projectID,
-    int? customerID,
-    required String customerName,
     String? projectName,
     required DateTime createDate,
     @Default(<String>[]) List<String> imageUrl,

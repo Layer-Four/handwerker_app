@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -17,10 +16,10 @@ class DocumentationBody extends ConsumerStatefulWidget {
   const DocumentationBody({super.key});
 
   @override
-  ConsumerState<DocumentationBody> createState() => _ProjectBodyState();
+  ConsumerState<DocumentationBody> createState() => _DocumentationBodyState();
 }
 
-class _ProjectBodyState extends ConsumerState<DocumentationBody> {
+class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   late ProjectEntry _entry;
@@ -34,7 +33,9 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
     final now = DateTime.now();
     setState(() {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      _entry = ProjectEntry(createDate: now, customerName: '');
+      _entry = ProjectEntry(
+        createDate: now,
+      );
     });
   }
 
@@ -82,19 +83,21 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log('image was successfully convert to Base64');
+                          log(image);
+                          // log('image was successfully convert to Base64');
                           //TODO: Maybe show image in popUp?
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                ref.watch(languangeProvider).pictureSucces,
-                              ),
-                              backgroundColor: AppColor.kPrimaryButtonColor,
-                            ),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text(
+                          //       ref.watch(languangeProvider).pictureSucces,
+                          //     ),
+                          //     backgroundColor: AppColor.kPrimaryButtonColor,
+                          //   ),
+                          // );
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Image.file(
-                              File(image),
+                            backgroundColor: Colors.transparent,
+                            content: Image.memory(
+                              base64Decode(image),
                               height: 100,
                               width: 100,
                             ),
@@ -173,8 +176,6 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
                 _entry = _entry.copyWith(
                   projectID: projects.first.id,
                   projectName: projects.first.title,
-                  customerID: projects.first.id,
-                  customerName: projects.first.title,
                 );
                 isProjectSet = true;
               });
@@ -217,9 +218,7 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
                           _project = e!;
                           _entry = _entry.copyWith(
                             projectID: e.id,
-                            customerID: e.id,
                             projectName: e.title,
-                            customerName: e.title,
                           );
                         });
                       },
@@ -282,6 +281,7 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
               );
             }
             if (_dayPickerController.text.isNotEmpty) {
+              // log(json.encode(_entry.toJson()));
               ref.read(projectProvider.notifier).uploadProjectEntry(_entry);
               final now = DateTime.now();
               setState(() {
@@ -289,8 +289,6 @@ class _ProjectBodyState extends ConsumerState<DocumentationBody> {
                 _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
                 _entry = ProjectEntry(
                     projectID: _project!.id,
-                    customerID: _project!.id,
-                    customerName: _project!.title,
                     projectName: null,
                     imageUrl: [],
                     description: null,
