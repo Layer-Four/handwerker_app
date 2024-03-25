@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
@@ -15,8 +17,8 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   bool isOTP = false;
-  TextEditingController emailCon = TextEditingController();
-  TextEditingController passCon = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   Form(
                     key: formstate,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +66,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 3,
                         ),
                         UserAndPasswordField(
-                          controller: emailCon,
+                          controller: _userNameController,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter your email';
@@ -87,7 +90,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 3,
                         ),
                         UserAndPasswordField(
-                          controller: passCon,
+                          controller: _passwordController,
                           isPass: true,
                         ),
                         const SizedBox(
@@ -129,38 +132,63 @@ class _LoginViewState extends State<LoginView> {
                           child: SizedBox(
                             width: 235,
                             height: 35,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (formstate.currentState!.validate()) {
-                                  if (kDebugMode) {
-                                    print("valid");
+                            child: Consumer(builder: (context, ref, child) {
+                              final user = ref.watch(userProvider);
+                              return ElevatedButton(
+                                onPressed: () {
+                                  if (formstate.currentState!.validate()) {
+                                    ref.read(userProvider.notifier).loginUser(
+                                          passwort: _passwordController.text,
+                                          userName: _userNameController.text,
+                                        );
+                                    user.when(
+                                      data: (data) {
+                                        if (data.userToken.isNotEmpty) {
+                                          // _userNameController.clear();
+                                          // _passwordController.clear();
+                                          Navigator.of(context)
+                                              .pushReplacementNamed(
+                                                  AppRoutes.viewScreen);
+                                        }
+                                      },
+                                      loading: () =>
+                                          const CircularProgressIndicator(),
+                                      error: (error, stackTrace) {
+                                        SizedBox.expand(
+                                          child: Center(
+                                            child: Text(
+                                                'something went wrong -> $error'),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    if (kDebugMode) {
+                                      print("Not Valid");
+                                    }
                                   }
-                                } else {
-                                  if (kDebugMode) {
-                                    print("Not Valid");
+                                  if (isOTP) {
+                                    Navigator.of(context)
+                                        .pushNamed(AppRoutes.setPasswordScreen);
+                                    // } else {
+                                    //   Navigator.of(context).pushReplacementNamed(
+                                    //       AppRoutes.viewScreen);
                                   }
-                                }
-                                if (isOTP) {
-                                  Navigator.of(context)
-                                      .pushNamed(AppRoutes.setPasswordScreen);
-                                } else {
-                                  Navigator.of(context).pushReplacementNamed(
-                                      AppRoutes.viewScreen);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  backgroundColor: AppColor.kPrimaryButtonColor,
                                 ),
-                                backgroundColor: AppColor.kPrimaryButtonColor,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "Anmelden",
-                                  style: TextStyle(color: Colors.white),
+                                child: const Center(
+                                  child: Text(
+                                    "Anmelden",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            }),
                           ),
                         ),
                       ],
