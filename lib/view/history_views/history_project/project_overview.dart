@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
@@ -8,6 +9,7 @@ import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
@@ -245,6 +247,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
   }
 
   Widget _showProjectDocumentation(BuildContext context) {
+    final project = widget.project;
     return InkWell(
       child: Container(
         height: 20,
@@ -253,31 +256,110 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
         ),
         child: Text('Dokumentation', style: Theme.of(context).textTheme.bodyMedium),
       ),
-      onTap: () => showDialog(
-          context: context,
-          builder: (context) => Container(
+      onTap: () {
+        final documentationList = ref
+            .read(projectVMProvider.notifier)
+            .loadDocumentationForProject(project.projectID)
+            .then(
+          (value) {
+            if (value == null) {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('keine Dokumentationen gefunden'),
+                ),
+              );
+            }
+            return showDialog(
+              context: context,
+              builder: (context) => Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
-                child: const Material(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Center(
-                          child: Text('Dokumentations details'),
-                        ),
-                      ),
-                      SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Center(
-                            child: Text('Hier könnte ihr Bild sein'),
-                          ))
-                      // TODO: by multiple file's maybe open in CaruselSlider
-                      // Image.file(_writeFile()),
-                    ],
+                child: Material(
+                  child: Expanded(
+                    child: ListView.builder(
+                        itemCount: value.length,
+                        itemBuilder: (context, index) {
+                          if (value[index]['images'] != null || value[index]['images'].isNotEmpty) {
+                            // final file = XFile.fromData();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text('${value[index]["description"]}'),
+                                value[index]["images"] == null || value[index]["images"].isEmpty
+                                    ? const Text('kein bild')
+                                    // : Text(value[index]["images"].first.runtimeType.toString()),
+
+                                    : Image.network(value[index]["images"].first),
+                              ],
+                            ),
+                          );
+                        }),
                   ),
                 ),
-              )),
+              ),
+            );
+          },
+        );
+
+        // showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       return FutureBuilder(
+        //         future: documentationList,
+        //         builder: (context, snapshot) {
+        //           if (snapshot.connectionState == ConnectionState.waiting) {
+        //             ref
+        //                 .read(projectVMProvider.notifier)
+        //                 .loadDocumentationForProject(project.projectID);
+        //             return const CircularProgressIndicator();
+        //           }
+        //           if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
+        //             final dokus = snapshot.data;
+        //             return Container(
+        //               margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
+        //               child: Material(
+        //                 child: ListView.builder(
+        //                   itemCount: dokus!.length,
+        //                   itemBuilder: (context, index) => Column(
+        //                     children: [
+        //                       Padding(
+        //                         padding: EdgeInsets.all(12.0),
+        //                         child: Center(
+        //                           child: Text(dokus[index]['description'] ?? ''),
+        //                         ),
+        //                       ),
+        //                       SizedBox(
+        //                           width: 200,
+        //                           height: 200,
+        //                           child: Center(
+        //                             child: dokus[index]['images'] != null
+        //                                 ? Image.file(
+        //                                     dokus[index]['images'],
+        //                                     height: 100,
+        //                                     width: 100,
+        //                                   )
+        //                                 : Center(
+        //                                     child: Text('kein bild'),
+        //                                   ),
+        //                           ))
+        //                       // TODO: by multiple file's maybe open in CaruselSlider
+        //                       // Image.file(_writeFile()),
+        //                     ],
+        //                   ),
+        //                 ),
+        //               ),
+        //             );
+        //           }
+        //           return const SizedBox.expand(
+        //             child: Center(
+        //               child: Text('Keine Dokumente gefunden'),
+        //             ),
+        //           );
+        //         },
+        //       );
+        //     });
+      },
     );
   }
 }

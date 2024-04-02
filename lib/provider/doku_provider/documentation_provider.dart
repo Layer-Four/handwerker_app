@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
-import 'package:handwerker_app/models/project_models/dokumentation_models/documentation_entry.dart';
+import 'package:handwerker_app/models/dokumentation_models/documentation_entry/documentation_entry.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 

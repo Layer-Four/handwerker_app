@@ -55,4 +55,29 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       throw Exception(e);
     }
   }
+
+  Future<List<dynamic>?> loadDocumentationForProject(int projectID) async {
+    final Dio dio = Dio();
+    final url = DbAdresses().getDokuforProjectURL(projectID);
+    log(url);
+    List result = [];
+    try {
+      final response = await dio.get(url);
+      if (response.statusCode != 200) {
+        log('something went wrong-> ${response.data}');
+        return null;
+      }
+      final List data = response.data.map((e) => e).toList();
+      for (var e in data) {
+        final object = {
+          'description': e['description'] as String?,
+          'images': e['images'],
+        };
+        result.add(object);
+      }
+      return result;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
