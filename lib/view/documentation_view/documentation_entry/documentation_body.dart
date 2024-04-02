@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -83,7 +83,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log(image);
+                          log(image.name);
                           // log('image was successfully convert to Base64');
                           //TODO: Maybe show image in popUp?
                           // ScaffoldMessenger.of(context).showSnackBar(
@@ -96,15 +96,15 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                           // );
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
-                            content: Image.memory(
-                              base64Decode(image),
+                            content: Image.file(
+                              File(image.path),
                               height: 100,
                               width: 100,
                             ),
                           ));
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [image],
+                              imageUrl: [image.path],
                             );
                           });
                         }

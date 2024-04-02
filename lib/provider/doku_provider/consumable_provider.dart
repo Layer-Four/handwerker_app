@@ -13,23 +13,6 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
   void addConsumable(Consumable consumable) => state = [...state, consumable];
 
   void uploadConsumableEntry(Consumable entry) async {
-    // * var request = new http.MultipartRequest("POST", url);
-    // * request.fields['user'] = 'someone@somewhere.com';
-    // * request.files.add(http.MultipartFile.fromPath(
-    // *     'package',
-    // *     'build/package.tar.gz',
-    // *     contentType: new MediaType('application', 'x-tar'),
-    // * ));
-    // * request.send().then((response) {
-    // *   if (response.statusCode == 200) print("Uploaded!");
-    // * });
-    // * FormData formData = new FormData.from({
-    // *   "name": "wendux",
-    // *   "file1": new UploadFileInfo(new File("./upload.jpg"), "upload1.jpg")
-    // * });
-    // * response = await dio.post("/info", data: formData)
-
-    //TODO: change List of File paths to list of FormData
     final json = entry.toJson();
     final Dio http = Dio();
 

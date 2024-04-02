@@ -7,7 +7,9 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
+import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
+import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
@@ -27,6 +29,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   late ConsumeEntry _entry;
   String _unit = _units.first;
   bool _isProjectSet = false;
+  bool _isMaterialsLoaded = false;
   static final _durationSteps = List.generate(25, (i) {
     if (i == 0) return ' in Stunden';
     if (i == 1) return '0,5';
@@ -43,16 +46,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ' Meter',
   ];
 
-  static const _materials = [
-    ' Wählen',
-    ' Tür',
-    ' Fliesen',
-    ' PU-Schaum',
-    ' Schrauben',
-    ' Latte',
-  ];
+  List<MaterialVM> _materials = [];
   ProjectListVM? _project;
-  String _selectedMaterial = _materials.first;
+  MaterialVM? _selectedMaterial;
 
   @override
   void initState() {
@@ -236,7 +232,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ],
       );
 
-  Container _buildChooseMedai() => Container(
+  // ignore: unused_element
+  Widget _buildChooseMedai() => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         height: 145,
         decoration: BoxDecoration(
@@ -269,7 +266,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                             ),
                           );
                           setState(() {
-                            _entry = _entry.copyWith(dokusPath: [image]);
+                            _entry = _entry.copyWith(dokusPath: [image.path]);
                           });
                         }
                       },
@@ -386,47 +383,74 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         );
   }
 
-  Padding _chooseMaterialField() => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: Text(ref.watch(languangeProvider).material,
-                  style: Theme.of(context).textTheme.labelMedium),
-            ),
-            Container(
-              height: 40,
-              padding: const EdgeInsets.only(left: 20, right: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColor.kTextfieldBorder),
+  Widget _chooseMaterialField() {
+    return ref.read(materialVMProvider).when(
+          error: (err, stackTrace) {
+            log('a error apeared $err');
+            return const SizedBox.expand(
+              child: Center(
+                child:
+                    Text('Leider ist ein Fehler aufgetretten bitte versuchen sie es später erneut'),
               ),
-              child: DropdownButton(
-                menuMaxHeight: 350,
-                underline: const SizedBox(),
-                isExpanded: true,
-                value: _selectedMaterial,
-                items: _materials
-                    .map(
-                      (e) => DropdownMenuItem(
-                        alignment: Alignment.center,
-                        value: e,
-                        child: Text(e),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (e) {
-                  setState(() {
-                    _selectedMaterial = e!;
-                  });
-                },
+            );
+          },
+          loading: () => const CircularProgressIndicator(),
+          data: (materials) {
+            if (materials.isEmpty) {
+              ref.read(materialVMProvider.notifier).loadMaterials();
+            }
+            if (materials.isNotEmpty && !_isMaterialsLoaded) {
+              setState(() {
+                _selectedMaterial = materials.first;
+                _materials = materials;
+                _isMaterialsLoaded = true;
+              });
+            }
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(ref.watch(languangeProvider).material,
+                        style: Theme.of(context).textTheme.labelMedium),
+                  ),
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 20, right: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColor.kTextfieldBorder),
+                    ),
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox.shrink(),
+                      isExpanded: true,
+                      value: _selectedMaterial,
+                      items: _materials
+                          .map(
+                            (e) => DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: e,
+                              child: Text(e.name),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) {
+                        setState(() {
+                          _selectedMaterial = e!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      );
+            );
+          },
+        );
+  }
 
   Widget _dayInputWidget() => LabeldTextfield(
         label: ref.watch(languangeProvider).date,
@@ -455,9 +479,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             log(_entry.toJson().toString());
           }
           log(_entry.toJson().toString());
-          if (_project?.title != ' Wählen' && _selectedMaterial != ' Wählen') {
+          if (_project?.title != ' Wählen') {
+            if (_selectedMaterial == null) {
+              return;
+            }
             final material = Consumable(
-              name: _selectedMaterial,
+              name: _selectedMaterial!.name,
               amount: int.tryParse(_amountController.text) ?? 1,
             );
             _entry = _entry.copyWith(
