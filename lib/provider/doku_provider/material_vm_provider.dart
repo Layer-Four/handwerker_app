@@ -23,11 +23,10 @@ class MaterialNotifier extends AsyncNotifier<List<MaterialVM>> {
       }
       final List data = response.data.map((e) => e as Map).toList();
       final materials = data.map((e) => MaterialVM.fromJson(e)).toList();
-      log("$materials");
       state = AsyncValue.data(materials);
       return;
     } catch (e) {
-      log('request was incompleted this was the error: $e');
+      log('request was incompleted this was the error-> $e');
     }
   }
 }

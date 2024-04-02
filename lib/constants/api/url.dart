@@ -34,4 +34,6 @@ class DbAdresses {
   String get postTimeEnty => _baseUrl + _postTimeEntryAdress;
   String get updateProjectConsumableEntry => _baseUrl + _putProjectMaterial;
   String get updateDocumentationEntry => _baseUrl + _putDocumentationDay;
+
+  String getDokuforProjectURL(int projectID) => '$_baseUrl/project/$projectID/documentations';
 }

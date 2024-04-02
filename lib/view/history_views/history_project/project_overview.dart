@@ -4,9 +4,10 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
-import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
+import 'package:handwerker_app/view/widgets/logo_widget.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
@@ -21,14 +22,14 @@ class CostumerOverviewBody extends StatelessWidget {
             // TODO: delete headline "Kunde Übersicht"???
             _buildCustomerOverviewHeadLin(context),
             _buildAsyncProjectOverview(),
-            _buildLogo()
+            const LogoWidget(assetString: 'assets/images/img_techtool.png'),
           ],
         ),
       );
 
   Widget _buildAsyncProjectOverview() => Consumer(builder: (context, ref, child) {
         Future<List<ProjectCustomer>> futureProjects;
-        futureProjects = ref.read(projectProvider.notifier).getAllProjectEntries();
+        futureProjects = ref.read(projectVMProvider.notifier).getAllProjectEntries();
         return FutureBuilder<List<ProjectCustomer?>>(
             future: futureProjects,
             builder: (context, snapshot) {
@@ -103,19 +104,6 @@ class CostumerOverviewBody extends StatelessWidget {
     );
   }
 
-  Padding _buildLogo() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: Image.asset(
-          'assets/images/img_techtool.png',
-          height: 20,
-        ),
-      ),
-    );
-  }
-
   ListView _buildProjectDetails(ProjectCustomer? customer) {
     return ListView.builder(
         itemCount: customer?.projects.length,
@@ -187,9 +175,12 @@ class ProjectDetails extends ConsumerStatefulWidget {
 
 class _ProjectCardState extends ConsumerState<ProjectDetails> {
   final consumables = [
-    const Consumable(name: 'Bottle of Beer', amount: 99, unitTypeName: 'Stück'),
-    const Consumable(name: 'Bottle of Wine', amount: 98, unitTypeName: 'Meter'),
-    const Consumable(name: 'Bottle if Rum', amount: 97, unitTypeName: 'Kilo'),
+    const Consumable(),
+    // const Consumable(name: 'Bottle of Beer', amount: 99, unitTypeName: 'Stück'),
+    const Consumable(),
+    // const Consumable(name: 'Bottle of Wine', amount: 98, unitTypeName: 'Meter'),
+    const Consumable(),
+    // const Consumable(name: 'Bottle if Rum', amount: 97, unitTypeName: 'Kilo'),
   ];
 
   @override
@@ -222,7 +213,8 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                       SizedBox(
                         width: 220,
                         child: Text(
-                          consumables[index].name,
+                          'name des Consumables',
+                          // consumables[index].name,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -232,7 +224,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Text(
-                          '${consumables[index].amount} ${consumables[index].unitTypeName}',
+                          '${consumables[index].amount} ', //${consumables[index].unitTypeName}
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium

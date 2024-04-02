@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'project_entry.dart';
+part of 'documentation_entry.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProjecEntrytImpl _$$ProjecEntrytImplFromJson(Map<String, dynamic> json) =>
-    _$ProjecEntrytImpl(
+_$DocumentationEntryImpl _$$DocumentationEntryImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DocumentationEntryImpl(
       id: json['id'] as int?,
       projectID: json['projectID'] as int?,
       projectName: json['projectName'] as String?,
@@ -19,7 +20,8 @@ _$ProjecEntrytImpl _$$ProjecEntrytImplFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
     );
 
-Map<String, dynamic> _$$ProjecEntrytImplToJson(_$ProjecEntrytImpl instance) =>
+Map<String, dynamic> _$$DocumentationEntryImplToJson(
+        _$DocumentationEntryImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'projectID': instance.projectID,

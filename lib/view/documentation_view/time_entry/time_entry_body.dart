@@ -6,7 +6,7 @@ import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 import 'package:handwerker_app/models/time_models/time_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
@@ -73,7 +73,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   }
 
   Widget _buildCustomerProjectField() {
-    return ref.watch(projectProvider).when(
+    return ref.watch(projectVMProvider).when(
           error: (error, stackTrace) {
             log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
             return const SizedBox(child: Text('Etwas lief schief'));
@@ -81,7 +81,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
             if (data == null) {
-              ref.read(projectProvider.notifier).loadpProject();
+              ref.read(projectVMProvider.notifier).loadpProject();
             }
             final projects = data;
             if (projects != null && !_isProjectSet) {
