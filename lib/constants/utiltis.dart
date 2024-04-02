@@ -20,7 +20,7 @@ class Utilits {
         locale: const Locale('de'));
   }
 
-  static Future<String?> pickImageFromCamera(BuildContext context, String projectName) async {
+  static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
     // final dir = await getApplicationDocumentsDirectory();
     // const Permission storagePermission = Permission.storage;
     // if (await storagePermission.isDenied) {
@@ -41,9 +41,9 @@ class Utilits {
         maxWidth: 1024,
       );
       if (file != null) {
-        final fileAsByte = File(file.path).readAsBytesSync();
-
-        return base64Encode(fileAsByte);
+        return file;
+        // final fileAsByte = File(file.path).readAsBytesSync();
+        // return base64Encode(fileAsByte);
       }
     } catch (e) {
       final status = await Permission.camera.status;

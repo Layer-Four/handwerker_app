@@ -97,7 +97,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     child: Text(ref.watch(languangeProvider).customerProject,
                         style: Theme.of(context).textTheme.labelMedium),
                   ),

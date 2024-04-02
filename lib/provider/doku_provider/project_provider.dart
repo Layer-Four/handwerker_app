@@ -35,14 +35,44 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   }
 
   void uploadProjectEntry(ProjectEntry entry) async {
-    final uri = const DbAdresses().postProjectEntry;
+    final createUri = const DbAdresses().postDocumentationEntry;
+    final updateUri = const DbAdresses().updateDocumentationEntry;
+
     final Dio http = Dio();
+    final formDataList = <FormData>[];
+    for (var path in entry.imageUrl) {
+      // final byteList = XFile(path);
+      final FormData formData = FormData.fromMap({
+        'file': MultipartFile.fromFile(
+          path,
+          filename:
+              '${entry.projectName}/${entry.createDate.day}:${entry.createDate.month}:${entry.createDate.year}.jpg',
+        ),
+      });
+      formDataList.add(formData);
+    }
+    // await entry.imageUrl.map((e) async => FormData.fromMap({
+    //       'file': MultipartFile.fromBytes(
+    //         await XFile(e).readAsBytes(),
+    //         filename:
+    //             '${entry.projectName}/${entry.createDate.day}:${entry.createDate.month}:${entry.createDate.year}',
+    //       )
+    //     }));
+    log('is created file not empty? -> ${formDataList.isNotEmpty}');
+    final json = {
+      'projectID': entry.projectID,
+      'createDate': entry.createDate.toIso8601String(),
+      'imageUrl': formDataList,
+      'description': entry.description,
+    };
     try {
-      final response = await http.post(uri, data: entry.toJson());
+      final response = await http.post(createUri, data: json);
       if (response.statusCode == 200) {
         // TODO: when is possible catch response and load it on State or update some values
         // final data = json.decode(response.data);
-        log('request was successful');
+        //TODO: send images to API
+        http.put(updateUri, data: formDataList);
+        log('request was successful-> ${response.data}');
       } else {
         log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
       }

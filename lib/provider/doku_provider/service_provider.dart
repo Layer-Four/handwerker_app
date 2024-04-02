@@ -22,7 +22,6 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
       if (response.statusCode == 200) {
         final data = response.data;
         final services = data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
-
         state = AsyncValue.data(services);
       } else {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
