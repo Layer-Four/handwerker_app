@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'material_vm.freezed.dart';
 part 'material_vm.g.dart';
 
+// TODO: refactor to consumable
 @freezed
 class MaterialVM with _$MaterialVM {
   const factory MaterialVM({

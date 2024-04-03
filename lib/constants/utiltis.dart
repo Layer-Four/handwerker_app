@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Utilits {
   static Future<DateTime?> selecetDate(context) async {
@@ -19,6 +19,18 @@ class Utilits {
         lastDate: DateTime(2100),
         locale: const Locale('de'));
   }
+
+  static Widget buildIndicator({required int selectedIndex, required int length}) =>
+      AnimatedSmoothIndicator(
+        activeIndex: selectedIndex,
+        count: length,
+        effect: const SlideEffect(
+          dotColor: Colors.grey,
+          activeDotColor: Colors.black,
+          dotHeight: 8,
+          dotWidth: 8,
+        ),
+      );
 
   static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
     // final dir = await getApplicationDocumentsDirectory();

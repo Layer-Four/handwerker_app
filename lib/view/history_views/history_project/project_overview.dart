@@ -1,7 +1,8 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
@@ -9,7 +10,6 @@ import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CostumerOverviewBody extends StatelessWidget {
   const CostumerOverviewBody({super.key});
@@ -19,7 +19,6 @@ class CostumerOverviewBody extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.min,
           children: [
             // TODO: delete headline "Kunde Übersicht"???
             _buildCustomerOverviewHeadLin(context),
@@ -159,7 +158,7 @@ class CostumerOverviewBody extends StatelessWidget {
                     ),
                   ),
                 // TODO: ask for, project, all entries need own update card
-                ProjectDetails(project),
+                ProjectDetails(project: project),
               ],
             ),
           );
@@ -169,7 +168,7 @@ class CostumerOverviewBody extends StatelessWidget {
 
 class ProjectDetails extends ConsumerStatefulWidget {
   final ProjectOverview project;
-  const ProjectDetails(this.project, {super.key});
+  const ProjectDetails({super.key, required this.project});
 
   @override
   ConsumerState<ProjectDetails> createState() => _ProjectCardState();
@@ -257,108 +256,81 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
         child: Text('Dokumentation', style: Theme.of(context).textTheme.bodyMedium),
       ),
       onTap: () {
-        final documentationList = ref
+        ref
             .read(projectVMProvider.notifier)
-            .loadDocumentationForProject(project.projectID)
+            .loadDocumentationForProject(
+              project.projectID,
+            )
             .then(
           (value) {
-            if (value == null) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('keine Dokumentationen gefunden'),
-                ),
-              );
-            }
             return showDialog(
               context: context,
-              builder: (context) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
-                child: Material(
-                  child: Expanded(
-                    child: ListView.builder(
-                        itemCount: value.length,
-                        itemBuilder: (context, index) {
-                          if (value[index]['images'] != null || value[index]['images'].isNotEmpty) {
-                            // final file = XFile.fromData();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Text('${value[index]["description"]}'),
-                                value[index]["images"] == null || value[index]["images"].isEmpty
-                                    ? const Text('kein bild')
-                                    // : Text(value[index]["images"].first.runtimeType.toString()),
-
-                                    : Image.network(value[index]["images"].first),
-                              ],
+              builder: (context) {
+                int currentIndex = 0;
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 100),
+                  child: Material(
+                    child: value == null || value.isEmpty
+                        ? const SizedBox.expand(
+                            child: Center(
+                              child: Text('keine Dokumentationen gefunden'),
                             ),
-                          );
-                        }),
+                          )
+                        : Expanded(
+                            child: ListView.builder(
+                                itemCount: value.length,
+                                itemBuilder: (context, index) {
+                                  List<Image> image = value[index]
+                                      .imagesUrl
+                                      .map((e) => Image.network(
+                                            e,
+                                            height: 130,
+                                            width: 130,
+                                          ))
+                                      .toList();
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      // !
+                                      height: image.isEmpty ? 60 : 210,
+                                      child: Column(
+                                        children: [
+                                          Text(value[index].description ?? 'Keine Beschreibung'),
+                                          image.isEmpty
+                                              ? const SizedBox.shrink()
+                                              : Padding(
+                                                  padding: const EdgeInsets.all(4.0),
+                                                  child: CarouselSlider.builder(
+                                                    itemCount: image.length,
+                                                    itemBuilder: (context, i, _) => image[i],
+                                                    options: CarouselOptions(
+                                                      viewportFraction: 1,
+                                                      height: 150,
+                                                      enableInfiniteScroll: false,
+                                                      // enlargeCenterPage: true,
+                                                      onPageChanged: (index, _) =>
+                                                          setState(() => currentIndex = index),
+                                                    ),
+                                                  ),
+                                                ),
+                                          image.length > 1
+                                              ? Utilits.buildIndicator(
+                                                  selectedIndex: currentIndex,
+                                                  length: image.length,
+                                                )
+                                              : const SizedBox.shrink(),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         );
-
-        // showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       return FutureBuilder(
-        //         future: documentationList,
-        //         builder: (context, snapshot) {
-        //           if (snapshot.connectionState == ConnectionState.waiting) {
-        //             ref
-        //                 .read(projectVMProvider.notifier)
-        //                 .loadDocumentationForProject(project.projectID);
-        //             return const CircularProgressIndicator();
-        //           }
-        //           if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-        //             final dokus = snapshot.data;
-        //             return Container(
-        //               margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 150),
-        //               child: Material(
-        //                 child: ListView.builder(
-        //                   itemCount: dokus!.length,
-        //                   itemBuilder: (context, index) => Column(
-        //                     children: [
-        //                       Padding(
-        //                         padding: EdgeInsets.all(12.0),
-        //                         child: Center(
-        //                           child: Text(dokus[index]['description'] ?? ''),
-        //                         ),
-        //                       ),
-        //                       SizedBox(
-        //                           width: 200,
-        //                           height: 200,
-        //                           child: Center(
-        //                             child: dokus[index]['images'] != null
-        //                                 ? Image.file(
-        //                                     dokus[index]['images'],
-        //                                     height: 100,
-        //                                     width: 100,
-        //                                   )
-        //                                 : Center(
-        //                                     child: Text('kein bild'),
-        //                                   ),
-        //                           ))
-        //                       // TODO: by multiple file's maybe open in CaruselSlider
-        //                       // Image.file(_writeFile()),
-        //                     ],
-        //                   ),
-        //                 ),
-        //               ),
-        //             );
-        //           }
-        //           return const SizedBox.expand(
-        //             child: Center(
-        //               child: Text('Keine Dokumente gefunden'),
-        //             ),
-        //           );
-        //         },
-        //       );
-        //     });
       },
     );
   }

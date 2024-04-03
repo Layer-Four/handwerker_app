@@ -17,10 +17,13 @@ class DbAdresses {
   final String _putProjectMaterial = '/userProjectMaterial/update';
   final String _getCustomerProject = '/customer/project/read/all';
   final String _getMaterialsList = '/material/list';
+  final String _getAllUnitsList = '/material/unit/list';
   const DbAdresses();
 // Getter
+  String get baseUrl => _baseUrl;
   String get getAllProjects => _baseUrl + _getAllProjects;
   String get getAllTimeEntrys => _baseUrl + _getAllTimeTacks;
+  String get getAllUnits => _baseUrl + _getAllUnitsList;
   String get getProjectsDM => _baseUrl + _getProjectsAdress;
   String get getCustomerProjects => _baseUrl + _getCustomerProject;
   String get getExecuteableServices => _baseUrl + _getServiceAdress;

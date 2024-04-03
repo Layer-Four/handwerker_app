@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 
@@ -56,11 +57,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
     }
   }
 
-  Future<List<dynamic>?> loadDocumentationForProject(int projectID) async {
+  Future<List<DocumentationDM>?> loadDocumentationForProject(int projectID) async {
     final Dio dio = Dio();
-    final url = DbAdresses().getDokuforProjectURL(projectID);
-    log(url);
-    List result = [];
+    final url = const DbAdresses().getDokuforProjectURL(projectID);
+    List<DocumentationDM> result = [];
     try {
       final response = await dio.get(url);
       if (response.statusCode != 200) {
@@ -69,15 +69,27 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       }
       final List data = response.data.map((e) => e).toList();
       for (var e in data) {
-        final object = {
-          'description': e['description'] as String?,
-          'images': e['images'],
-        };
-        result.add(object);
+        final imageUrls = <String>[];
+        final String? description = e['description'];
+        final List something = e['images'];
+        if (something.isNotEmpty) {
+          for (var j in something) {
+            if (j != null || j!.isNotEmpty) {
+              final url = 'https://rsahapp.blob.core.windows.net/$j';
+              imageUrls.add(url);
+            }
+          }
+        }
+        final documentation = DocumentationDM(
+          description: description,
+          imagesUrl: imageUrls,
+        );
+
+        result.add(documentation);
       }
       return result;
-    } catch (e) {
-      throw Exception(e);
+    } catch (error) {
+      throw Exception(error);
     }
   }
 }

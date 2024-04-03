@@ -1,13 +1,13 @@
-// ignore_for_file: use_build_context_synchronously
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
+import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
@@ -29,29 +29,25 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _summeryController = TextEditingController();
   late ConsumealbeEntry _entry;
-  String _unit = _units.first;
+  UnitDM? _unit;
   bool _isProjectSet = false;
   bool _isMaterialsLoaded = false;
-  static const _units = [
-    ' Stk',
-    ' CM',
-    ' KG',
-    ' Liter',
-    ' Meter',
-  ];
+  List<UnitDM>? _units;
 
   List<MaterialVM> _materials = [];
   ProjectListVM? _project;
   MaterialVM? _selectedMaterial;
-
   @override
   void initState() {
+    super.initState();
     final now = DateTime.now();
     setState(() {
       _entry = ConsumealbeEntry(createDate: now);
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
     });
-    super.initState();
+    _refreshUnits();
+    ref.read(materialVMProvider.notifier).loadMaterials();
+    ref.read(projectVMProvider.notifier).loadpProject();
   }
 
   @override
@@ -80,123 +76,128 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _buildAmountPriceFields() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Column _buildAmointElement() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 160,
+          child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 2,
-                          ),
-                          child: Text(
-                            ref.watch(languangeProvider).amount,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25.0),
-                          child: SizedBox(
-                            width: 60,
-                            height: 30,
-                            child: DropdownButton(
-                              menuMaxHeight: 350,
-                              underline: const SizedBox(),
-                              isExpanded: true,
-                              value: _unit,
-                              items: _units
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      alignment: Alignment.center,
-                                      value: e,
-                                      child: Text(
-                                        e,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .copyWith(color: AppColor.kPrimary),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (e) => setState(() => _unit = e!),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 35,
-                    width: 150,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      autofocus: false,
-                      cursorHeight: 20,
-                      textInputAction: TextInputAction.done,
-                      controller: _amountController,
-                      decoration: Utilits.textFieldDecorator(
-                        context,
-                        hintText: ref.watch(languangeProvider).amount,
-                      ),
-                      onChanged: (value) {
-                        setState(() => _amountController.text = value);
-                      },
-                    ),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: Text(
+                  ref.watch(languangeProvider).amount,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
-                    child: Text(
-                      ref.watch(languangeProvider).sum,
-                      style: Theme.of(context).textTheme.labelMedium,
+              GestureDetector(
+                onTap: () {
+                  if (_units == null) _refreshUnits();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: SizedBox(
+                    width: 100,
+                    height: 30,
+                    child: DropdownButton(
+                      menuMaxHeight: 350,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      value: _unit,
+                      items: (_units ?? List.empty())
+                          .map(
+                            (e) => DropdownMenuItem(
+                              alignment: Alignment.center,
+                              value: e,
+                              child: Text(
+                                e.name,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .copyWith(color: AppColor.kPrimary),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) => setState(() => _unit = e),
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                    width: 150,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      autofocus: false,
-                      cursorHeight: 20,
-                      textInputAction: TextInputAction.done,
-                      controller: _summeryController,
-                      decoration: Utilits.textFieldDecorator(
-                        context,
-                        hintText: '${ref.watch(languangeProvider).sum} €',
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          // _entry = _entry.copyWith(cost: int.tryParse(value));
-                          _summeryController.text = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
+        ),
+        SizedBox(
+          height: 35,
+          width: 150,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            autofocus: false,
+            cursorHeight: 20,
+            textInputAction: TextInputAction.done,
+            controller: _amountController,
+            decoration: Utilits.textFieldDecorator(
+              context,
+              hintText: ref.watch(languangeProvider).amount,
+            ),
+            onChanged: (value) {
+              setState(() => _amountController.text = value);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAmountPriceFields() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildAmointElement(),
+          _buildSumElement(),
         ],
       );
+
+  Column _buildSumElement() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
+          child: Text(
+            ref.watch(languangeProvider).sum,
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+        ),
+        SizedBox(
+          height: 35,
+          width: 150,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            autofocus: false,
+            cursorHeight: 20,
+            textInputAction: TextInputAction.done,
+            controller: _summeryController,
+            decoration: Utilits.textFieldDecorator(
+              context,
+              hintText: '${ref.watch(languangeProvider).sum} €',
+            ),
+            onChanged: (value) {
+              setState(() {
+                // _entry = _entry.copyWith(cost: int.tryParse(value));
+                _summeryController.text = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _chooseCustomerProjectField() {
     return ref.read(projectVMProvider).when(
           error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
             return const SizedBox(child: Text('Etwas lief schief'));
           },
           loading: () => const CircularProgressIndicator.adaptive(),
@@ -263,12 +264,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   Widget _chooseMaterialField() {
     return ref.read(materialVMProvider).when(
           error: (err, stackTrace) {
-            log('a error apeared $err');
+            log('error occurent in buildServieDropdown in MaterialEntryBody-> $err \n\n this was the stack $stackTrace');
             return const SizedBox.expand(
-              child: Center(
-                child:
-                    Text('Leider ist ein Fehler aufgetretten bitte versuchen sie es später erneut'),
-              ),
+              child: Center(child: Text('Etwas lief schief')),
             );
           },
           loading: () => const CircularProgressIndicator(),
@@ -316,9 +314,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                           )
                           .toList(),
                       onChanged: (e) {
-                        setState(() {
-                          _selectedMaterial = e!;
-                        });
+                        setState(() => _selectedMaterial = e!);
                       },
                     ),
                   ),
@@ -344,6 +340,15 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         },
       );
 
+  void _refreshUnits() {
+    ref.read(consumableProvider.notifier).getUnits().then(
+          (value) => setState(() {
+            _units = value;
+            _unit = _units!.first;
+          }),
+        );
+  }
+
   Padding _submitInput() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -353,15 +358,17 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           final material = Consumable(
-            // name: _selectedMaterial!.name,
             amount: int.tryParse(_amountController.text) ?? 1,
+            materialUnitID: _unit!.id,
+            // name: _selectedMaterial!.name,
             price: int.tryParse(_summeryController.text) ?? 0,
+            materialID: _selectedMaterial!.id.toString(),
           );
           _entry = _entry.copyWith(
-            consumables: [..._entry.consumables, material],
+            consumables: [material],
             // cost: int.tryParse(_summeryController.text) ?? 0,
-            // estimatedDuration: double.tryParse(_duration),
           );
+          log(json.encode(_entry.toJson()));
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(ref.watch(languangeProvider).succes),

@@ -37,6 +37,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   @override
   void initState() {
     super.initState();
+    ref.read(projectVMProvider.notifier).loadpProject();
     _entry = TimeEntry(date: DateTime.now(), startTime: DateTime.now());
     final minute =
         _entry.startTime.minute < 10 ? '0${_entry.startTime.minute}' : '${_entry.startTime.minute}';
@@ -76,7 +77,9 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
     return ref.watch(projectVMProvider).when(
           error: (error, stackTrace) {
             log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
+            return const SizedBox.expand(
+              child: Center(child: Text('Etwas lief schief')),
+            );
           },
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
@@ -207,7 +210,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                         log(_choosenService!.name);
                         _choosenService = e;
                         log(_choosenService!.name);
-                        _entry = _entry.copyWith(serviceID: e!.id);
+                        _entry = _entry.copyWith(serviceID: e!.id, serviceTitle: e.name);
                       }),
                     ),
                   ),
@@ -300,6 +303,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
               final data = _entry.toJson();
               log(data.toString());
               ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
+              log(_entry.toJson().toString());
               final now = DateTime.now();
               setState(() {
                 _startController.clear();
