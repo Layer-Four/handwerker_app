@@ -207,9 +207,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                         },
                       ).toList(),
                       onChanged: (e) => setState(() {
-                        log(_choosenService!.name);
                         _choosenService = e;
-                        log(_choosenService!.name);
                         _entry = _entry.copyWith(serviceID: e!.id, serviceTitle: e.name);
                       }),
                     ),
@@ -263,7 +261,6 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
             onTap: () async {
               final date = await Utilits.selecetDate(context);
               if (date != null) {
-                log(date.toString());
                 setState(() {
                   _entry = _entry.copyWith(date: date);
                   _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
@@ -300,10 +297,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
               );
               // TODO: change wählen to an editable object
             } else {
-              final data = _entry.toJson();
-              log(data.toString());
               ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
-              log(_entry.toJson().toString());
               final now = DateTime.now();
               setState(() {
                 _startController.clear();

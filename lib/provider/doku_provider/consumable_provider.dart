@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,18 +36,18 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
   }
 
   void uploadConsumableEntry(ConsumealbeEntry entry) async {
-    final json3 = entry.toJson();
-    log(json.encode(json3.toString()));
+    final json = entry.toJson();
     try {
       final response = await http.post(
         adressBook.postProjectConsumable,
-        data: json3,
+        data: json,
       );
-      if (response.statusCode == 200) {
-        log('request success -> ${response.data}');
-      } else {
+      if (response.statusCode != 200) {
         log('Request not completed: ${response.statusCode} Backend returned : \n${response.data} ');
+        return;
       }
+      log('request success-> ${response.data}');
+      return;
     } catch (e) {
       log('request was incompleted this was the error-> $e');
     }

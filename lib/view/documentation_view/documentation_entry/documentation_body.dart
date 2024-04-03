@@ -84,13 +84,12 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                         final image =
                             await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
-                          log(image.name);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
                             content: Image.file(
                               File(image.path),
                               height: 100,
-                              width: 100,
+                              width: 150,
                             ),
                           ));
                           setState(() {
@@ -113,21 +112,17 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                         final image =
                             await Utilits.pickImageFromGalery(context, _project?.title ?? '');
                         if (image != null) {
-                          log('image are successfully translate to Base64');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                ref.watch(languangeProvider).pictureSucces,
-                                style: TextStyle(
-                                  color: AppColor.kPrimaryButtonColor,
-                                ),
-                              ),
-                              backgroundColor: AppColor.kPrimaryButtonColor,
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: Colors.transparent,
+                            content: Image.file(
+                              File(image.path),
+                              height: 100,
+                              width: 150,
                             ),
-                          );
+                          ));
                           setState(() {
                             _entry = _entry.copyWith(
-                              imageUrl: [image],
+                              imageUrl: [..._entry.imageUrl, image.path],
                             );
                           });
                         }
@@ -261,9 +256,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
-            if (_entry.imageUrl.isEmpty) {
-              log((_entry.toJson().toString()));
-            }
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -272,6 +264,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               );
             }
             if (_dayPickerController.text.isNotEmpty) {
+              // ? for debug API
               // log(json.encode(_entry.toJson()));
               ref.read(documentationProvider.notifier).createDocumentationEntry(_entry);
               final now = DateTime.now();

@@ -19,21 +19,18 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   void uploadTimeEntry(TimeEntry entry) async {
     final uri = const DbAdresses().postTimeEnty;
     final Dio dio = Dio();
-
     try {
       final response = await dio.post(uri, data: entry.toJson());
-      if (response.statusCode == 200) {
-        final jsonResponse = response.data;
-        final entry = TimeEntry.fromJson(jsonResponse);
-        final list = <TimeEntry>[...state, entry];
-
-        state = list;
-        log('länge Zeiteinträge: ${state.length}');
-        log('request success, this was the response: $jsonResponse');
-        return;
-      } else {
+      if (response.statusCode != 200) {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
+        return;
       }
+      final jsonResponse = response.data;
+      final eentry = TimeEntry.fromJson(jsonResponse);
+      final list = <TimeEntry>[...state, eentry];
+      state = list;
+      log('request success-> $jsonResponse');
+      return;
     } catch (e) {
       log('request was incompleted this was the error: $e');
     }

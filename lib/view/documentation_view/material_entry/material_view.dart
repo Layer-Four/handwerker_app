@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -368,7 +367,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             consumables: [material],
             // cost: int.tryParse(_summeryController.text) ?? 0,
           );
-          log(json.encode(_entry.toJson()));
+          // log(json.encode(_entry.toJson()));
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(ref.watch(languangeProvider).succes),
