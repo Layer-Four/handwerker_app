@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final timeEntryProvider =
     NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(() => TimeEntryNotifier());
@@ -23,6 +24,10 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
       // final response = await dio.post(uri, data: entry.toJson());
       final response = await api.postTimeEnty(entry.toJson());
       if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).state = '';
+          return;
+        }
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
         return;
       }
@@ -43,15 +48,19 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
     try {
       // final response = await dio.get(url);
       final response = await api.getAllTimeEntrys;
-      if (response.statusCode == 200) {
-        final List data = response.data.map((e) => e).toList();
-        data.map((e) => e.asMap());
-        final entry = data.map((e) => TimeEntry.fromJson(e)).toSet().toList();
-        state = entry;
-        return;
-      } else {
+      if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).state = '';
+          return;
+        }
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
+        return;
       }
+      final List data = response.data.map((e) => e).toList();
+      data.map((e) => e.asMap());
+      final entry = data.map((e) => TimeEntry.fromJson(e)).toSet().toList();
+      state = entry;
+      return;
     } catch (e) {
       log('request was incompleted this was the error: $e');
     }

@@ -4,6 +4,7 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final projectVMProvider =
     AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
@@ -25,6 +26,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
         state = AsyncValue.data(projects);
       }
       if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).userLogOut();
+          return;
+        }
         log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
         return;
       }
@@ -44,6 +49,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       // final response = await dio.get(url);
       final response = await api.getCustomerProjects;
       if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).userLogOut();
+          return result;
+        }
         return result;
       }
       final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
@@ -62,6 +71,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
     try {
       final response = await api.getDokuforProjectURL(projectID);
       if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).userLogOut();
+          return result;
+        }
         log('something went wrong-> ${response.data}');
         return null;
       }

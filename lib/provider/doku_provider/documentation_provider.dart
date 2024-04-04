@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/documentation_entry/documentation_entry.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -50,7 +51,12 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
       // final response = await http.post(createUri, data: formData);
       final response = await api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          ref.read(userProvider.notifier).userLogOut();
+          return;
+        }
         // TODO: when is possible catch response and load it on State or update some values
+
         log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
         return;
       }

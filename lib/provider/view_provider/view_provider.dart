@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-enum MainViews { timeEntry, doku, history, user }
+enum MainViews { timeEntry, doku, history, user, logOut }
 
-final viewProvider = StateProvider<MainViews>((ref) => MainViews.doku);
+final viewProvider = StateProvider<MainViews>((ref) {
+  if (ref.watch(userProvider) == null) return MainViews.logOut;
+
+  return MainViews.doku;
+});
 
 extension MainViewsExention on MainViews {
   int get index => switch (this) {
@@ -10,6 +15,7 @@ extension MainViewsExention on MainViews {
         MainViews.doku => 1,
         MainViews.history => 2,
         MainViews.user => 3,
+        MainViews.logOut => 4
       };
   MainViews views(int index) => switch (index) {
         0 => MainViews.timeEntry,
