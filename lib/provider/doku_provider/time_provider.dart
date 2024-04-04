@@ -1,8 +1,7 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 
@@ -10,6 +9,7 @@ final timeEntryProvider =
     NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(() => TimeEntryNotifier());
 
 class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
+  final Api api = Api();
   @override
   build() => [];
 
@@ -17,10 +17,11 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
 
   // TODO: write request provider for encaplusalted logic
   void uploadTimeEntry(TimeEntry entry) async {
-    final uri = const DbAdresses().postTimeEnty;
-    final Dio dio = Dio();
+    // final uri = DbAdresses().postTimeEnty;
+    // final Dio dio = Dio();
     try {
-      final response = await dio.post(uri, data: entry.toJson());
+      // final response = await dio.post(uri, data: entry.toJson());
+      final response = await api.postTimeEnty(entry.toJson());
       if (response.statusCode != 200) {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
         return;
@@ -37,18 +38,16 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   }
 
   void loadEntrys() async {
-    final String url = const DbAdresses().getAllTimeEntrys;
-    final Dio dio = Dio();
+    // final String url = DbAdresses().getAllTimeEntrys;
+    // final Dio dio = Dio();
     try {
-      final response = await dio.get(url);
+      // final response = await dio.get(url);
+      final response = await api.getAllTimeEntrys;
       if (response.statusCode == 200) {
         final List data = response.data.map((e) => e).toList();
         data.map((e) => e.asMap());
         final entry = data.map((e) => TimeEntry.fromJson(e)).toSet().toList();
         state = entry;
-
-        log('länge Zeiteinträge: ${state.length}');
-        log('request success, this was the response: $entry');
         return;
       } else {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');

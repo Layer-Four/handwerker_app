@@ -1,7 +1,6 @@
 import 'dart:developer';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_entry/consumable_entry.dart';
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
@@ -10,15 +9,17 @@ final consumableProvider =
     NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
 
 class ConsumableNotifier extends Notifier<List<Consumable>> {
-  final Dio http = Dio();
-  final adressBook = const DbAdresses();
+  // final Dio http = Dio();
+  final api = Api();
+  // final adressBook = DbAdresses();
   @override
   List<Consumable> build() => [];
   void addConsumable(Consumable consumable) => state = [...state, consumable];
   Future<List<UnitDM>> getUnits() async {
     final List<UnitDM> result = [];
     try {
-      final response = await http.get(adressBook.getAllUnits);
+      final response = await api.getAllUnits;
+      // final response = await http.get(adressBook.getAllUnits);
       if (response.statusCode != 200) {
         log('Request not completed: ${response.statusCode} -> \n${response.data} ');
         return result;
@@ -38,10 +39,8 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
   void uploadConsumableEntry(ConsumealbeEntry entry) async {
     final json = entry.toJson();
     try {
-      final response = await http.post(
-        adressBook.postProjectConsumable,
-        data: json,
-      );
+      final response = await api.postProjectConsumable(json);
+      // final response= await http.post( adressBook.postProjectConsumable, data: json,);
       if (response.statusCode != 200) {
         log('Request not completed: ${response.statusCode} Backend returned : \n${response.data} ');
         return;

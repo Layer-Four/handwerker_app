@@ -1,22 +1,23 @@
 import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 
 final materialVMProvider =
     AsyncNotifierProvider<MaterialNotifier, List<MaterialVM>>(() => MaterialNotifier());
 
 class MaterialNotifier extends AsyncNotifier<List<MaterialVM>> {
+  final Api api = Api();
+
   @override
   List<MaterialVM> build() => [];
 
   void loadMaterials() async {
-    final materialUri = const DbAdresses().getMaterialsList;
-    final Dio dio = Dio();
+    // final materialUri = DbAdresses().getMaterialsList;
+    // final Dio dio = Dio();
     try {
-      final response = await dio.get(materialUri);
+      // final response = await dio.get(materialUri);
+      final response = await api.getMaterialsList;
       if (response.statusCode != 200) {
         log('request is not successed -> ${response.data}');
         return;

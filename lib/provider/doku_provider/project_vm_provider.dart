@@ -1,8 +1,6 @@
 import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
@@ -11,14 +9,16 @@ final projectVMProvider =
     AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
 
 class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
+  final Api api = Api();
   @override
   List<ProjectListVM>? build() => null;
 
   void loadpProject() async {
-    final uri = const DbAdresses().getProjectsDM;
-    final Dio http = Dio();
+    // final uri = DbAdresses().getProjectsDM;
+    // final Dio http = Dio();
     try {
-      final response = await http.get(uri);
+      // final response = await http.get(uri);
+      final response = await api.getProjectsDM;
       if (response.statusCode == 200) {
         final data = response.data;
         final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
@@ -35,13 +35,14 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   }
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
-    final Dio dio = Dio();
-    final url = const DbAdresses().getCustomerProjects;
+    // final Dio dio = Dio();
+    // final url = DbAdresses().getCustomerProjects;
     final result = <ProjectCustomer>[];
     // int count = 0;
 
     try {
-      final response = await dio.get(url);
+      // final response = await dio.get(url);
+      final response = await api.getCustomerProjects;
       if (response.statusCode != 200) {
         return result;
       }
@@ -56,11 +57,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   }
 
   Future<List<DocumentationDM>?> loadDocumentationForProject(int projectID) async {
-    final Dio dio = Dio();
-    final url = const DbAdresses().getDokuforProjectURL(projectID);
+    final api = Api();
     List<DocumentationDM> result = [];
     try {
-      final response = await dio.get(url);
+      final response = await api.getDokuforProjectURL(projectID);
       if (response.statusCode != 200) {
         log('something went wrong-> ${response.data}');
         return null;

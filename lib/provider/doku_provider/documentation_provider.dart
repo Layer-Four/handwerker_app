@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/documentation_entry/documentation_entry.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
@@ -10,13 +10,14 @@ final documentationProvider =
     AsyncNotifierProvider<ProjectNotifer, List<DocumentationEntry>?>(() => ProjectNotifer());
 
 class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
+  final Api api = Api();
   @override
   List<DocumentationEntry>? build() => null;
 
   void createDocumentationEntry(DocumentationEntry entry) async {
-    final createUri = const DbAdresses().postDocumentationEntry;
+    // final createUri = DbAdresses().postDocumentationEntry;
 
-    final Dio http = Dio();
+    // final Dio http = Dio();
     final xFileList = [];
 
     for (var path in entry.imageUrl) {
@@ -46,7 +47,8 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
     }
 
     try {
-      final response = await http.post(createUri, data: formData);
+      // final response = await http.post(createUri, data: formData);
+      final response = await api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
         // TODO: when is possible catch response and load it on State or update some values
         log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
