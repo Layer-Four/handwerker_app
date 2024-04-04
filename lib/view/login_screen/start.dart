@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
-class StartView extends StatefulWidget {
+class StartView extends ConsumerStatefulWidget {
   const StartView({super.key});
 
   @override
-  State<StartView> createState() => _StartViewState();
+  ConsumerState<StartView> createState() => _StartViewState();
 }
 
-class _StartViewState extends State<StartView> {
+class _StartViewState extends ConsumerState<StartView> {
+  @override
+  void initState() {
+    askForToken();
+    super.initState();
+  }
+
+  String? token;
+  void askForToken() {
+    ref.read(userProvider.notifier).getUserToken().then((value) {
+      setState(() => token = value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -54,10 +69,15 @@ class _StartViewState extends State<StartView> {
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              AppRoutes.anmeldeScreen,
-                            );
+                            token != null
+                                ? Navigator.pushReplacementNamed(
+                                    context,
+                                    AppRoutes.viewScreen,
+                                  )
+                                : Navigator.pushReplacementNamed(
+                                    context,
+                                    AppRoutes.anmeldeScreen,
+                                  );
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
