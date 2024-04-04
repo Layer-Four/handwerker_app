@@ -61,7 +61,7 @@ class Api {
 
   final Dio api = Dio();
 
-  final _storage = SharedPreferences.getInstance();
+  // final _storage = SharedPreferences.getInstance();
   String? accessToken;
   // TODO: wait for information what choose, shared prefences or secure storage
   // final _storage = const FlutterSecureStorage();
@@ -77,45 +77,47 @@ class Api {
         options.headers['Authorization'] = 'Bearer $accessToken';
         return handler.next(options);
       },
+      // TODO: when its a way to centralise the logout logic than use it in the 401 statemend.
       onError: (DioException error, handler) async {
-        final storage = await _storage;
-        if (error.response?.statusCode == 401
-            // && error.response?.data['message'] == 'Invalid JWT'
-            ) {
-          if (storage.containsKey('bearerToken')) {
-            await refreshToken();
-          }
-          // error.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-          // return handler.resolve(await api.fetch(error.requestOptions));
-          return handler.resolve(await _retry(error.requestOptions));
-        }
+        // final storage = await _storage;
+        // if (error.response?.statusCode == 401
+        // && error.response?.data['message'] == 'Invalid JWT'
+        // ) {
+        // return;
+        // if (storage.containsKey('bearerToken')) {
+        // await refreshToken();
+        // }
+        // error.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
+        // return handler.resolve(await api.fetch(error.requestOptions));
+        // return handler.resolve(await _retry(error.requestOptions));
+        // }
         return handler.next(error);
       },
     ));
   }
-  Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-    );
-    return api.request<dynamic>(
-      requestOptions.path,
-      data: requestOptions.data,
-      queryParameters: requestOptions.queryParameters,
-      options: options,
-    );
-  }
+  // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
+  //   final options = Options(
+  //     method: requestOptions.method,
+  //     headers: requestOptions.headers,
+  //   );
+  //   return api.request<dynamic>(
+  //     requestOptions.path,
+  //     data: requestOptions.data,
+  //     queryParameters: requestOptions.queryParameters,
+  //     options: options,
+  //   );
+  // }
 
-// TODO: when need login data than maybe hash the value in Storage?
-  Future<void> refreshToken() async {
-    final pref = await SharedPreferences.getInstance();
-    final token = pref.getString('bearerToken');
-    final response = await api.post(_baseUrl + _loginUserAdress, data: token);
-    if (response.statusCode == 201) {
-      pref.setString('bearerToken', response.data);
-      accessToken = response.data;
-    } else {
-      pref.clear();
-    }
-  }
+// // TODO: when need login data than maybe hash the value in Storage?
+//   Future<void> refreshToken() async {
+//     final pref = await SharedPreferences.getInstance();
+//     final token = pref.getString('bearerToken');
+//     final response = await api.post(_baseUrl + _loginUserAdress, data: token);
+//     if (response.statusCode == 201) {
+//       pref.setString('bearerToken', response.data);
+//       accessToken = response.data;
+//     } else {
+//       pref.clear();
+//     }
+//   }
 }
