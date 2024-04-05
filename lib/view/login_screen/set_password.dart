@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 // import 'package:handwerker_app/constants/apptheme/app_theme.dart';
@@ -147,7 +146,6 @@ class _PasswordViewState extends State<PasswordView> {
                     setState(() {
                       newpasswordController.text = password;
                     });
-                    log(newpasswordController.text);
                     onPasswordChanged(password);
                   },
                   validator: (value) {

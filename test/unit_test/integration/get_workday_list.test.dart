@@ -1,16 +1,17 @@
 import 'dart:developer';
 
-import 'package:handwerker_app/constants/api/url.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:dio/dio.dart';
 
 void main() async {
+  final Api api = Api();
   // Lad einträge vom Web.
-  final dio = Dio();
+  // final dio = Dio();
   List<TimeEntry>? entries;
-  final response = await dio.get(const DbAdresses().getAllTimeEntrys);
+  // final response = await dio.get(DbAdresses().getAllTimeEntrys);
+  final response = await api.getAllTimeEntrys;
   if (response.statusCode == 200) {
     final List data = response.data.map((e) => e).toList();
     data.map((e) => e.asMap());

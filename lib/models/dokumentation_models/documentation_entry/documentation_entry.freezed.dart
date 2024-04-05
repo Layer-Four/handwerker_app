@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'project_entry.dart';
+part of 'documentation_entry.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ProjectEntry _$ProjectEntryFromJson(Map<String, dynamic> json) {
-  return _ProjecEntryt.fromJson(json);
+DocumentationEntry _$DocumentationEntryFromJson(Map<String, dynamic> json) {
+  return _DocumentationEntry.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ProjectEntry {
+mixin _$DocumentationEntry {
   int? get id => throw _privateConstructorUsedError;
   int? get projectID => throw _privateConstructorUsedError;
   String? get projectName => throw _privateConstructorUsedError;
@@ -29,15 +29,15 @@ mixin _$ProjectEntry {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ProjectEntryCopyWith<ProjectEntry> get copyWith =>
+  $DocumentationEntryCopyWith<DocumentationEntry> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProjectEntryCopyWith<$Res> {
-  factory $ProjectEntryCopyWith(
-          ProjectEntry value, $Res Function(ProjectEntry) then) =
-      _$ProjectEntryCopyWithImpl<$Res, ProjectEntry>;
+abstract class $DocumentationEntryCopyWith<$Res> {
+  factory $DocumentationEntryCopyWith(
+          DocumentationEntry value, $Res Function(DocumentationEntry) then) =
+      _$DocumentationEntryCopyWithImpl<$Res, DocumentationEntry>;
   @useResult
   $Res call(
       {int? id,
@@ -49,9 +49,9 @@ abstract class $ProjectEntryCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ProjectEntryCopyWithImpl<$Res, $Val extends ProjectEntry>
-    implements $ProjectEntryCopyWith<$Res> {
-  _$ProjectEntryCopyWithImpl(this._value, this._then);
+class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
+    implements $DocumentationEntryCopyWith<$Res> {
+  _$DocumentationEntryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -98,11 +98,11 @@ class _$ProjectEntryCopyWithImpl<$Res, $Val extends ProjectEntry>
 }
 
 /// @nodoc
-abstract class _$$ProjecEntrytImplCopyWith<$Res>
-    implements $ProjectEntryCopyWith<$Res> {
-  factory _$$ProjecEntrytImplCopyWith(
-          _$ProjecEntrytImpl value, $Res Function(_$ProjecEntrytImpl) then) =
-      __$$ProjecEntrytImplCopyWithImpl<$Res>;
+abstract class _$$DocumentationEntryImplCopyWith<$Res>
+    implements $DocumentationEntryCopyWith<$Res> {
+  factory _$$DocumentationEntryImplCopyWith(_$DocumentationEntryImpl value,
+          $Res Function(_$DocumentationEntryImpl) then) =
+      __$$DocumentationEntryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +115,11 @@ abstract class _$$ProjecEntrytImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ProjecEntrytImplCopyWithImpl<$Res>
-    extends _$ProjectEntryCopyWithImpl<$Res, _$ProjecEntrytImpl>
-    implements _$$ProjecEntrytImplCopyWith<$Res> {
-  __$$ProjecEntrytImplCopyWithImpl(
-      _$ProjecEntrytImpl _value, $Res Function(_$ProjecEntrytImpl) _then)
+class __$$DocumentationEntryImplCopyWithImpl<$Res>
+    extends _$DocumentationEntryCopyWithImpl<$Res, _$DocumentationEntryImpl>
+    implements _$$DocumentationEntryImplCopyWith<$Res> {
+  __$$DocumentationEntryImplCopyWithImpl(_$DocumentationEntryImpl _value,
+      $Res Function(_$DocumentationEntryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -132,7 +132,7 @@ class __$$ProjecEntrytImplCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
-    return _then(_$ProjecEntrytImpl(
+    return _then(_$DocumentationEntryImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -163,8 +163,8 @@ class __$$ProjecEntrytImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProjecEntrytImpl implements _ProjecEntryt {
-  const _$ProjecEntrytImpl(
+class _$DocumentationEntryImpl implements _DocumentationEntry {
+  const _$DocumentationEntryImpl(
       {this.id,
       this.projectID,
       this.projectName,
@@ -173,8 +173,8 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
       this.description})
       : _imageUrl = imageUrl;
 
-  factory _$ProjecEntrytImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ProjecEntrytImplFromJson(json);
+  factory _$DocumentationEntryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DocumentationEntryImplFromJson(json);
 
   @override
   final int? id;
@@ -198,14 +198,14 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
 
   @override
   String toString() {
-    return 'ProjectEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjecEntrytImpl &&
+            other is _$DocumentationEntryImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.projectID, projectID) ||
                 other.projectID == projectID) &&
@@ -226,28 +226,29 @@ class _$ProjecEntrytImpl implements _ProjecEntryt {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjecEntrytImplCopyWith<_$ProjecEntrytImpl> get copyWith =>
-      __$$ProjecEntrytImplCopyWithImpl<_$ProjecEntrytImpl>(this, _$identity);
+  _$$DocumentationEntryImplCopyWith<_$DocumentationEntryImpl> get copyWith =>
+      __$$DocumentationEntryImplCopyWithImpl<_$DocumentationEntryImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjecEntrytImplToJson(
+    return _$$DocumentationEntryImplToJson(
       this,
     );
   }
 }
 
-abstract class _ProjecEntryt implements ProjectEntry {
-  const factory _ProjecEntryt(
+abstract class _DocumentationEntry implements DocumentationEntry {
+  const factory _DocumentationEntry(
       {final int? id,
       final int? projectID,
       final String? projectName,
       required final DateTime createDate,
       final List<String> imageUrl,
-      final String? description}) = _$ProjecEntrytImpl;
+      final String? description}) = _$DocumentationEntryImpl;
 
-  factory _ProjecEntryt.fromJson(Map<String, dynamic> json) =
-      _$ProjecEntrytImpl.fromJson;
+  factory _DocumentationEntry.fromJson(Map<String, dynamic> json) =
+      _$DocumentationEntryImpl.fromJson;
 
   @override
   int? get id;
@@ -263,6 +264,6 @@ abstract class _ProjecEntryt implements ProjectEntry {
   String? get description;
   @override
   @JsonKey(ignore: true)
-  _$$ProjecEntrytImplCopyWith<_$ProjecEntrytImpl> get copyWith =>
+  _$$DocumentationEntryImplCopyWith<_$DocumentationEntryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

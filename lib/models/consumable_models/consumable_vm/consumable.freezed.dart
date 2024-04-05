@@ -20,12 +20,11 @@ Consumable _$ConsumableFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consumable {
-  String? get materialID => throw _privateConstructorUsedError;
-  int? get price => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
   int get amount => throw _privateConstructorUsedError;
-  String? get unitTypeName => throw _privateConstructorUsedError;
   int? get materialUnitID => throw _privateConstructorUsedError;
+  String? get materialID => throw _privateConstructorUsedError; // String? name,
+  int? get price => throw _privateConstructorUsedError;
+  String? get unitTypeName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,12 +39,11 @@ abstract class $ConsumableCopyWith<$Res> {
       _$ConsumableCopyWithImpl<$Res, Consumable>;
   @useResult
   $Res call(
-      {String? materialID,
+      {int amount,
+      int? materialUnitID,
+      String? materialID,
       int? price,
-      String name,
-      int amount,
-      String? unitTypeName,
-      int? materialUnitID});
+      String? unitTypeName});
 }
 
 /// @nodoc
@@ -61,14 +59,21 @@ class _$ConsumableCopyWithImpl<$Res, $Val extends Consumable>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? amount = null,
+    Object? materialUnitID = freezed,
     Object? materialID = freezed,
     Object? price = freezed,
-    Object? name = null,
-    Object? amount = null,
     Object? unitTypeName = freezed,
-    Object? materialUnitID = freezed,
   }) {
     return _then(_value.copyWith(
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      materialUnitID: freezed == materialUnitID
+          ? _value.materialUnitID
+          : materialUnitID // ignore: cast_nullable_to_non_nullable
+              as int?,
       materialID: freezed == materialID
           ? _value.materialID
           : materialID // ignore: cast_nullable_to_non_nullable
@@ -77,22 +82,10 @@ class _$ConsumableCopyWithImpl<$Res, $Val extends Consumable>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
       unitTypeName: freezed == unitTypeName
           ? _value.unitTypeName
           : unitTypeName // ignore: cast_nullable_to_non_nullable
               as String?,
-      materialUnitID: freezed == materialUnitID
-          ? _value.materialUnitID
-          : materialUnitID // ignore: cast_nullable_to_non_nullable
-              as int?,
     ) as $Val);
   }
 }
@@ -106,12 +99,11 @@ abstract class _$$ConsumableImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? materialID,
+      {int amount,
+      int? materialUnitID,
+      String? materialID,
       int? price,
-      String name,
-      int amount,
-      String? unitTypeName,
-      int? materialUnitID});
+      String? unitTypeName});
 }
 
 /// @nodoc
@@ -125,14 +117,21 @@ class __$$ConsumableImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? amount = null,
+    Object? materialUnitID = freezed,
     Object? materialID = freezed,
     Object? price = freezed,
-    Object? name = null,
-    Object? amount = null,
     Object? unitTypeName = freezed,
-    Object? materialUnitID = freezed,
   }) {
     return _then(_$ConsumableImpl(
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      materialUnitID: freezed == materialUnitID
+          ? _value.materialUnitID
+          : materialUnitID // ignore: cast_nullable_to_non_nullable
+              as int?,
       materialID: freezed == materialID
           ? _value.materialID
           : materialID // ignore: cast_nullable_to_non_nullable
@@ -141,22 +140,10 @@ class __$$ConsumableImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      amount: null == amount
-          ? _value.amount
-          : amount // ignore: cast_nullable_to_non_nullable
-              as int,
       unitTypeName: freezed == unitTypeName
           ? _value.unitTypeName
           : unitTypeName // ignore: cast_nullable_to_non_nullable
               as String?,
-      materialUnitID: freezed == materialUnitID
-          ? _value.materialUnitID
-          : materialUnitID // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
@@ -165,33 +152,31 @@ class __$$ConsumableImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsumableImpl implements _Consumable {
   const _$ConsumableImpl(
-      {this.materialID,
+      {this.amount = 1,
+      this.materialUnitID,
+      this.materialID,
       this.price,
-      required this.name,
-      this.amount = 1,
-      this.unitTypeName,
-      this.materialUnitID});
+      this.unitTypeName});
 
   factory _$ConsumableImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumableImplFromJson(json);
 
   @override
-  final String? materialID;
-  @override
-  final int? price;
-  @override
-  final String name;
-  @override
   @JsonKey()
   final int amount;
   @override
-  final String? unitTypeName;
-  @override
   final int? materialUnitID;
+  @override
+  final String? materialID;
+// String? name,
+  @override
+  final int? price;
+  @override
+  final String? unitTypeName;
 
   @override
   String toString() {
-    return 'Consumable(materialID: $materialID, price: $price, name: $name, amount: $amount, unitTypeName: $unitTypeName, materialUnitID: $materialUnitID)';
+    return 'Consumable(amount: $amount, materialUnitID: $materialUnitID, materialID: $materialID, price: $price, unitTypeName: $unitTypeName)';
   }
 
   @override
@@ -199,21 +184,20 @@ class _$ConsumableImpl implements _Consumable {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsumableImpl &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.materialUnitID, materialUnitID) ||
+                other.materialUnitID == materialUnitID) &&
             (identical(other.materialID, materialID) ||
                 other.materialID == materialID) &&
             (identical(other.price, price) || other.price == price) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.unitTypeName, unitTypeName) ||
-                other.unitTypeName == unitTypeName) &&
-            (identical(other.materialUnitID, materialUnitID) ||
-                other.materialUnitID == materialUnitID));
+                other.unitTypeName == unitTypeName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, materialID, price, name, amount,
-      unitTypeName, materialUnitID);
+  int get hashCode => Object.hash(
+      runtimeType, amount, materialUnitID, materialID, price, unitTypeName);
 
   @JsonKey(ignore: true)
   @override
@@ -231,28 +215,25 @@ class _$ConsumableImpl implements _Consumable {
 
 abstract class _Consumable implements Consumable {
   const factory _Consumable(
-      {final String? materialID,
+      {final int amount,
+      final int? materialUnitID,
+      final String? materialID,
       final int? price,
-      required final String name,
-      final int amount,
-      final String? unitTypeName,
-      final int? materialUnitID}) = _$ConsumableImpl;
+      final String? unitTypeName}) = _$ConsumableImpl;
 
   factory _Consumable.fromJson(Map<String, dynamic> json) =
       _$ConsumableImpl.fromJson;
 
   @override
-  String? get materialID;
-  @override
-  int? get price;
-  @override
-  String get name;
-  @override
   int get amount;
   @override
-  String? get unitTypeName;
-  @override
   int? get materialUnitID;
+  @override
+  String? get materialID;
+  @override // String? name,
+  int? get price;
+  @override
+  String? get unitTypeName;
   @override
   @JsonKey(ignore: true)
   _$$ConsumableImplCopyWith<_$ConsumableImpl> get copyWith =>
