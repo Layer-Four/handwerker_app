@@ -75,7 +75,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                       );
                     }),
                   )
-                : Text('Keine Materialien ausgewählt',
+                : Text('Keine Materialien gefunden',
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
