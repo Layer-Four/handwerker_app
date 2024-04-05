@@ -19,15 +19,8 @@ class ProjectDetails extends ConsumerStatefulWidget {
 
 class _ProjectCardState extends ConsumerState<ProjectDetails> {
   int currentIndex = 0;
-  // TODO: overthinking API for consumables
-  final consumables = [
-    const Consumable(),
-    // const Consumable(name: 'Bottle of Beer', amount: 99, unitTypeName: 'Stück'),
-    const Consumable(),
-    // const Consumable(name: 'Bottle of Wine', amount: 98, unitTypeName: 'Meter'),
-    const Consumable(),
-    // const Consumable(name: 'Bottle if Rum', amount: 97, unitTypeName: 'Kilo'),
-  ];
+  // TODO: refactor ProjectCustomer -> consumables
+  List<Consumable>? consumables;
 
   @override
   Widget build(BuildContext context) {
@@ -50,37 +43,43 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: consumables.length,
-              itemBuilder: ((context, index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 220,
-                      child: Text(
-                        'name des Consumables',
-                        // consumables[index].name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColor.kTextfieldBorder),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Text(
-                        '${consumables[index].amount} ', //${consumables[index].unitTypeName}
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: AppColor.kTextfieldBorder),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
+            child: consumables != null
+                ? ListView.builder(
+                    itemCount: consumables!.length,
+                    itemBuilder: ((context, j) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 220,
+                            child: Text(
+                              'name des Consumables',
+                              // consumables[index].name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Text(
+                              '${consumables![j].amount} ', //${consumables[index].unitTypeName}
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  )
+                : Text('Keine Materialien ausgewählt',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: AppColor.kTextfieldBorder)),
           )
         ],
       ),
