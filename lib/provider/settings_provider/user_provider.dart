@@ -19,10 +19,11 @@ class UserProvider extends Notifier<String?> {
     deleteToken();
   }
 
-  void userLogIn({required String username, required String password}) async {
+  void userLogIn(mandant, {required String username, required String password}) async {
     final loginData = {
-      'username': username,
-      'password': password,
+      "username": username,
+      "password": password,
+      "mandant": mandant,
     };
     try {
       final respone = await api.postloginUser(loginData);
