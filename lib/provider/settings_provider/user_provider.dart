@@ -1,9 +1,7 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/constants/api/url.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
