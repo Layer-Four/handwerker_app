@@ -5,26 +5,24 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final userProvider =
-    AsyncNotifierProvider<UserNotifier, User?>(() => UserNotifier());
+final userProvider = AsyncNotifierProvider<UserNotifier, UserVM?>(() => UserNotifier());
 
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
-class UserNotifier extends AsyncNotifier<User?> {
+class UserNotifier extends AsyncNotifier<UserVM?> {
   final Api api = Api();
   final _storage = SharedPreferences.getInstance();
   @override
 
   // ignore: prefer_const_constructors
-  User? build() => null;
+  UserVM? build() => null;
 
   void userLogOut() {
     state = AsyncValue.data(null);
     deleteToken();
   }
 
-  Future<String?> getUserToken() async =>
-      _storage.then((value) => value.getString('TOKEN'));
+  Future<String?> getUserToken() async => _storage.then((value) => value.getString('TOKEN'));
 
 // TODO: delete default option for mandant
   void loginUser({
