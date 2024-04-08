@@ -23,6 +23,9 @@ class UserNotifier extends AsyncNotifier<User?> {
     deleteToken();
   }
 
+  Future<String?> getUserToken() async =>
+      _storage.then((value) => value.getString('TOKEN'));
+
 // TODO: delete default option for mandant
   void loginUser({
     required String passwort,
@@ -37,11 +40,14 @@ class UserNotifier extends AsyncNotifier<User?> {
 
     try {
       final response = await api.postloginUser(json);
+      if (response.statusCode == 401) {
+        log('user not authorized');
+      }
       if (response.statusCode == 200) {
         log(response.data.toString());
-
         final data = (response.data as Map);
         final userToken = data.values.first as String;
+        // TODO: when token Exist load user with Token
         final newUser = state.value?.copyWith(userToken: userToken);
         setToken(token: userToken);
         // final userDate = http.get('www.abc/getUerdata', data: userToken);
@@ -60,10 +66,10 @@ class UserNotifier extends AsyncNotifier<User?> {
   }
 
   void setToken({required String token}) async =>
-      await _storage.then((value) => value.setString('token', token));
+      await _storage.then((value) => value.setString('TOKEN', token));
   void deleteToken() async {
     final storage = await _storage;
-    if (storage.containsKey('token')) storage.clear();
+    if (storage.containsKey('TOKEN')) storage.clear();
     return;
   }
 }

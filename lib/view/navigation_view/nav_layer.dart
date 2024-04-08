@@ -12,7 +12,10 @@ class MainViewNavigator extends ConsumerWidget {
   const MainViewNavigator({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final token = ref.watch(userProvider);
+    final token = ref.watch(userProvider).when(
+        data: (data) => data?.userToken,
+        error: (error, stacktrace) {/* do something in error case*/},
+        loading: () {});
     if (token != null) {
       ref.read(userProvider.notifier).setToken(token: token);
     }
@@ -30,7 +33,8 @@ class MainViewNavigator extends ConsumerWidget {
               autofocus: true,
               child: const SizedBox(),
               onFocusChange: (value) {
-                Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
+                Navigator.of(context)
+                    .pushReplacementNamed(AppRoutes.initialRoute);
               },
             ),
         },

@@ -7,7 +7,8 @@ import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final consumableProvider =
-    NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
+    NotifierProvider<ConsumableNotifier, List<Consumable>>(
+        () => ConsumableNotifier());
 
 class ConsumableNotifier extends Notifier<List<Consumable>> {
   // final Dio http = Dio();
@@ -23,7 +24,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
       // final response = await http.get(adressBook.getAllUnits);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).state = '';
+          ref.read(userProvider.notifier).state = AsyncValue.data(null);
           return result;
         }
         log('Request not completed: ${response.statusCode} -> \n${response.data} ');
@@ -48,7 +49,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
       // final response= await http.post( adressBook.postProjectConsumable, data: json,);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).state = '';
+          ref.read(userProvider.notifier).state = AsyncValue.data(null);
           return;
         }
         log('Request not completed: ${response.statusCode} Backend returned : \n${response.data} ');

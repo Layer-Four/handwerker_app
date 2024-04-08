@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,7 +135,6 @@ class _LoginViewState extends State<LoginView> {
                             width: 235,
                             height: 35,
                             child: Consumer(builder: (context, ref, child) {
-                              final user = ref.watch(userProvider);
                               return ElevatedButton(
                                 onPressed: () {
                                   if (formstate.currentState!.validate()) {
@@ -141,27 +142,31 @@ class _LoginViewState extends State<LoginView> {
                                           passwort: _passwordController.text,
                                           userName: _userNameController.text,
                                         );
-                                    user.when(
-                                      data: (data) {
-                                        if (data.userToken.isNotEmpty) {
-                                          // _userNameController.clear();
-                                          // _passwordController.clear();
-                                          Navigator.of(context)
-                                              .pushReplacementNamed(
-                                                  AppRoutes.viewScreen);
-                                        }
-                                      },
-                                      loading: () =>
-                                          const CircularProgressIndicator(),
-                                      error: (error, stackTrace) {
-                                        SizedBox.expand(
-                                          child: Center(
-                                            child: Text(
-                                                'something went wrong -> $error'),
-                                          ),
+                                    ref.watch(userProvider).when(
+                                          data: (data) {
+                                            if (data == null) {
+                                              log('data is null by pressing accept button in login screen');
+                                              return;
+                                            }
+                                            if (data.userToken.isNotEmpty) {
+                                              // _userNameController.clear();
+                                              // _passwordController.clear();
+                                              Navigator.of(context)
+                                                  .pushReplacementNamed(
+                                                      AppRoutes.viewScreen);
+                                            }
+                                          },
+                                          loading: () =>
+                                              const CircularProgressIndicator(),
+                                          error: (error, stackTrace) {
+                                            SizedBox.expand(
+                                              child: Center(
+                                                child: Text(
+                                                    'something went wrong -> $error'),
+                                              ),
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
                                   } else {
                                     if (kDebugMode) {
                                       print("Not Valid");
