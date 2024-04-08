@@ -1,38 +1,63 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
+import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: change Type String with custom Userclass
-final userProvider = NotifierProvider<UserProvider, String?>(() {
-  return UserProvider();
-});
+final userProvider =
+    AsyncNotifierProvider<UserNotifier, User?>(() => UserNotifier());
 
-// TODO: change Type String with custom Userclass
-class UserProvider extends Notifier<String?> {
+// final authProvider = ChangeNotifierProvider<User>((ref) => User());
+
+class UserNotifier extends AsyncNotifier<User?> {
   final Api api = Api();
   final _storage = SharedPreferences.getInstance();
   @override
-// TODO: change Type String with custom Userclass
-  String? build() => 'f7e8b09a-ac4f-4a30-a7c5-b6f829cff9aa';
+
+  // ignore: prefer_const_constructors
+  User? build() => null;
+
   void userLogOut() {
-    state = null;
+    state = AsyncValue.data(null);
     deleteToken();
   }
 
-  void userLogIn(mandant, {required String username, required String password}) async {
-    final loginData = {
-      "username": username,
-      "password": password,
-      "mandant": mandant,
+  Future<String?> getUserToken() async =>
+      _storage.then((value) => value.getString('TOKEN'));
+
+// TODO: delete default option for mandant
+  void loginUser({
+    required String passwort,
+    required String userName,
+    String? mandatID,
+  }) async {
+    final Map<String, dynamic> json = {
+      "username": userName,
+      "password": passwort,
+      "mandant": mandatID ?? '1',
     };
+
     try {
-      final respone = await api.postloginUser(loginData);
-      if (respone.statusCode == 200) {
-        final token = respone.data;
-        setToken(token: token);
-        // TODO: implement a User and create this User
-        // ignore: prefer_const_declarations, unused_local_variable
-        final newUser = 'a new User must be initalized';
+      final response = await api.postloginUser(json);
+      if (response.statusCode == 401) {
+        log('user not authorized');
+      }
+      if (response.statusCode == 200) {
+        log(response.data.toString());
+        final data = (response.data as Map);
+        final userToken = data.values.first as String;
+        // TODO: when token Exist load user with Token
+        final newUser = state.value?.copyWith(userToken: userToken);
+        setToken(token: userToken);
+        // final userDate = http.get('www.abc/getUerdata', data: userToken);
+
+        if (newUser != null) {
+          state = AsyncValue.data(newUser);
+          return;
+        }
+      } else {
+        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
         return;
       }
     } catch (e) {
@@ -40,20 +65,11 @@ class UserProvider extends Notifier<String?> {
     }
   }
 
+  void setToken({required String token}) async =>
+      await _storage.then((value) => value.setString('TOKEN', token));
   void deleteToken() async {
     final storage = await _storage;
-    if (storage.containsKey('token')) storage.clear();
+    if (storage.containsKey('TOKEN')) storage.clear();
     return;
   }
-
-  Future<String?> getUserToken() async {
-    final storage = await _storage;
-    if (storage.containsKey('token')) {
-      return storage.getString('token');
-    }
-    return null;
-  }
-
-  void setToken({required String token}) async =>
-      await _storage.then((value) => value.setString('token', token));
 }

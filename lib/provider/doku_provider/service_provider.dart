@@ -6,7 +6,8 @@ import 'package:handwerker_app/models/service_models/service_list_vm/service_lis
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final serviceProvider =
-    AsyncNotifierProvider<ServiceNotifer, List<ServiceListVM>?>(() => ServiceNotifer());
+    AsyncNotifierProvider<ServiceNotifer, List<ServiceListVM>?>(
+        () => ServiceNotifer());
 
 class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
   final Api api = Api();
@@ -30,7 +31,8 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
         return;
       }
       final data = response.data;
-      final services = data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
+      final services =
+          data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
       state = AsyncValue.data(services);
     } catch (e) {
       throw Exception(e);

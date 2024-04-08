@@ -4,6 +4,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 // import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/login_view.dart';
 import 'package:handwerker_app/view/login_screen/shared/constants.dart';
+// import 'package:handwerker_app/view/login_screen/shared/custom_text_field.dart';
 import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
@@ -102,8 +103,10 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Passwort ändern",
-                    style:
-                        Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(color: AppColor.kBlack),
                   ),
                 ),
                 const SizedBox(
@@ -213,7 +216,9 @@ class _PasswordViewState extends State<PasswordView> {
                     onPasswordChanged(password);
                   },
                   validator: (value) {
-                    return value!.length < 6 ? "Enter at least 6 characters" : null;
+                    return value!.length < 6
+                        ? "Enter at least 6 characters"
+                        : null;
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: passwordController,
@@ -262,8 +267,12 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isPassword6Char ? Colors.green : Colors.white,
-                                border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                color: isPassword6Char
+                                    ? Colors.green
+                                    : Colors.white,
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 189, 189, 189)),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -287,9 +296,12 @@ class _PasswordViewState extends State<PasswordView> {
                                   width: 20,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isPasswordHas1Number ? Colors.green : Colors.white,
-                                    border:
-                                        Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                    color: isPasswordHas1Number
+                                        ? Colors.green
+                                        : Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 189, 189, 189)),
                                   ),
                                   child: const Icon(
                                     Icons.check,
@@ -315,8 +327,11 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasUppercase ? Colors.green : Colors.white,
-                                border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                color:
+                                    hasUppercase ? Colors.green : Colors.white,
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 189, 189, 189)),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -340,8 +355,11 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasLowercase ? Colors.green : Colors.white,
-                                border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                color:
+                                    hasLowercase ? Colors.green : Colors.white,
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 189, 189, 189)),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -365,8 +383,12 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasSpecialCharacters ? Colors.green : Colors.white,
-                                border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                color: hasSpecialCharacters
+                                    ? Colors.green
+                                    : Colors.white,
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 189, 189, 189)),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -395,7 +417,8 @@ class _PasswordViewState extends State<PasswordView> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           // Check if the new password matches the confirmation password
-                          if (passwordController.text == newpasswordController.text) {
+                          if (passwordController.text ==
+                              newpasswordController.text) {
                             // Proceed with updating the password
                             // Replace this line with the appropriate logic to update the password
                             // For example, you might call an API to update the password

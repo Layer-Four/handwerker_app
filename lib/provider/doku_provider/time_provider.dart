@@ -6,8 +6,8 @@ import 'package:handwerker_app/models/time_models/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final timeEntryProvider =
-    NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(() => TimeEntryNotifier());
+final timeEntryProvider = NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(
+    () => TimeEntryNotifier());
 
 class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   final Api api = Api();
@@ -25,7 +25,7 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
       final response = await api.postTimeEnty(entry.toJson());
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).state = '';
+          ref.read(userProvider.notifier).state = AsyncValue.data(null);
           return;
         }
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
@@ -50,7 +50,7 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
       final response = await api.getAllTimeEntrys;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).state = '';
+          ref.read(userProvider.notifier).state = AsyncValue.data(null);
           return;
         }
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
