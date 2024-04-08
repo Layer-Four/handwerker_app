@@ -6,7 +6,7 @@ import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 import 'package:handwerker_app/models/time_models/time_entry.dart';
-import 'package:handwerker_app/provider/doku_provider/project_provider.dart';
+import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
@@ -37,6 +37,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   @override
   void initState() {
     super.initState();
+    ref.read(projectVMProvider.notifier).loadpProject();
     _entry = TimeEntry(date: DateTime.now(), startTime: DateTime.now());
     final minute = _entry.startTime.minute < 10
         ? '0${_entry.startTime.minute}'
@@ -75,15 +76,17 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   }
 
   Widget _buildCustomerProjectField() {
-    return ref.watch(projectProvider).when(
+    return ref.watch(projectVMProvider).when(
           error: (error, stackTrace) {
             log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
+            return const SizedBox.expand(
+              child: Center(child: Text('Etwas lief schief')),
+            );
           },
           loading: () => const CircularProgressIndicator.adaptive(),
           data: (data) {
             if (data == null) {
-              ref.read(projectProvider.notifier).loadpProject();
+              ref.read(projectVMProvider.notifier).loadpProject();
             }
             final projects = data;
             if (projects != null && !_isProjectSet) {
@@ -99,7 +102,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     child: Text(ref.watch(languangeProvider).customerProject,
                         style: Theme.of(context).textTheme.labelMedium),
                   ),
@@ -206,10 +209,8 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                         },
                       ).toList(),
                       onChanged: (e) => setState(() {
-                        log(_choosenService!.name);
                         _choosenService = e;
-                        log(_choosenService!.name);
-                        _entry = _entry.copyWith(serviceID: e!.id);
+                        _entry = _entry.copyWith(serviceID: e!.id, serviceTitle: e.name);
                       }),
                     ),
                   ),
@@ -266,7 +267,6 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
             onTap: () async {
               final date = await Utilits.selecetDate(context);
               if (date != null) {
-                log(date.toString());
                 setState(() {
                   _entry = _entry.copyWith(date: date);
                   _dayPickerController.text =
@@ -304,8 +304,6 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
               );
               // TODO: change wählen to an editable object
             } else {
-              final data = _entry.toJson();
-              log(data.toString());
               ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
               final now = DateTime.now();
               setState(() {

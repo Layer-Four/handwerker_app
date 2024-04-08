@@ -33,6 +33,7 @@ abstract class Dictionary {
   String get sum;
   String get takePicture;
   String get documentationLabel;
+  String get overView;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -124,6 +125,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get documentationLabel => 'Documentation';
+
+  @override
+  String get overView => 'OVERVIEW';
 }
 
 class GermanLanguage extends Dictionary {
@@ -213,4 +217,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get documentationLabel => 'Dokumentation';
+
+  @override
+  String get overView => 'ÜBERSICHT';
 }

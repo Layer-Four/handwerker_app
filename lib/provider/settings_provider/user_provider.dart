@@ -2,19 +2,30 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/constants/api/url.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final userProvider =
-    AsyncNotifierProvider<UserNotifier, User>(() => UserNotifier());
+    AsyncNotifierProvider<UserNotifier, User?>(() => UserNotifier());
 
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
-class UserNotifier extends AsyncNotifier<User> {
+class UserNotifier extends AsyncNotifier<User?> {
+  final Api api = Api();
+  final _storage = SharedPreferences.getInstance();
   @override
-  // ignore: prefer_const_constructors
-  User build() => User();
 
+  // ignore: prefer_const_constructors
+  User? build() => null;
+
+  void userLogOut() {
+    state = AsyncValue.data(null);
+    deleteToken();
+  }
+
+// TODO: delete default option for mandant
   void loginUser({
     required String passwort,
     required String userName,
@@ -25,16 +36,16 @@ class UserNotifier extends AsyncNotifier<User> {
       "password": passwort,
       "mandant": mandatID ?? '1',
     };
-    final path = const DbAdresses().postloginUser;
 
-    final Dio http = Dio();
     try {
-      final response = await http.post(path, data: json);
+      final response = await api.postloginUser(json);
       if (response.statusCode == 200) {
         log(response.data.toString());
+
         final data = (response.data as Map);
         final userToken = data.values.first as String;
         final newUser = state.value?.copyWith(userToken: userToken);
+        setToken(token: userToken);
         // final userDate = http.get('www.abc/getUerdata', data: userToken);
 
         if (newUser != null) {
@@ -48,5 +59,13 @@ class UserNotifier extends AsyncNotifier<User> {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  void setToken({required String token}) async =>
+      await _storage.then((value) => value.setString('token', token));
+  void deleteToken() async {
+    final storage = await _storage;
+    if (storage.containsKey('token')) storage.clear();
+    return;
   }
 }
