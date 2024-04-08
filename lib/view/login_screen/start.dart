@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -14,17 +16,24 @@ class StartView extends ConsumerStatefulWidget {
 }
 
 class _StartViewState extends ConsumerState<StartView> {
+  bool _firstTime = true;
+  String? _token;
+
   @override
   void initState() {
-    askForToken();
     super.initState();
+    askForToken();
   }
 
-  String? token;
   void askForToken() {
-    ref.read(userProvider.notifier).getUserToken().then((value) {
-      setState(() => token = value);
-    });
+    if (_firstTime) {
+      ref.read(userProvider.notifier).getUserToken().then(
+            (value) => setState(() {
+              _token = value;
+              _firstTime = false;
+            }),
+          );
+    }
   }
 
   @override
@@ -69,14 +78,15 @@ class _StartViewState extends ConsumerState<StartView> {
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () {
-                            token != null
+                            log('token after press start > $_token');
+                            _token == null
                                 ? Navigator.pushReplacementNamed(
                                     context,
-                                    AppRoutes.viewScreen,
+                                    AppRoutes.anmeldeScreen,
                                   )
                                 : Navigator.pushReplacementNamed(
                                     context,
-                                    AppRoutes.anmeldeScreen,
+                                    AppRoutes.viewScreen,
                                   );
                           },
                           style: ElevatedButton.styleFrom(

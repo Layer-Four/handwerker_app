@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -9,6 +8,7 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -22,6 +22,18 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey();
+
+  void reactionOfLogin(bool isSuccess) async {
+    if (isSuccess) {
+      _userNameController.clear();
+      _passwordController.clear();
+      Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +69,8 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "Nutzername",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -81,12 +89,8 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -116,13 +120,11 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style: TextStyle(
-                                    color: AppColor.kWhite,
-                                    fontWeight: FontWeight.w500),
+                                style:
+                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.forgotPassword);
+                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -136,48 +138,22 @@ class _LoginViewState extends State<LoginView> {
                             height: 35,
                             child: Consumer(builder: (context, ref, child) {
                               return ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (formstate.currentState!.validate()) {
-                                    ref.read(userProvider.notifier).loginUser(
+                                    ref
+                                        .read(userProvider.notifier)
+                                        .loginUser(
                                           passwort: _passwordController.text,
                                           userName: _userNameController.text,
-                                        );
-                                    ref.watch(userProvider).when(
-                                          data: (data) {
-                                            if (data == null) {
-                                              log('data is null by pressing accept button in login screen');
-                                              return;
-                                            }
-                                            if (data.userToken.isNotEmpty) {
-                                              // _userNameController.clear();
-                                              // _passwordController.clear();
-                                              Navigator.of(context)
-                                                  .pushReplacementNamed(
-                                                      AppRoutes.viewScreen);
-                                            }
-                                          },
-                                          loading: () =>
-                                              const CircularProgressIndicator(),
-                                          error: (error, stackTrace) {
-                                            SizedBox.expand(
-                                              child: Center(
-                                                child: Text(
-                                                    'something went wrong -> $error'),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                  } else {
-                                    if (kDebugMode) {
-                                      print("Not Valid");
-                                    }
+                                        )
+                                        .then((value) => reactionOfLogin(value));
+                                    SharedPreferences.getInstance().then((value) {
+                                      final token = value.getString('TOKEN');
+                                      log(token.toString());
+                                    });
                                   }
                                   if (isOTP) {
-                                    Navigator.of(context)
-                                        .pushNamed(AppRoutes.setPasswordScreen);
-                                    // } else {
-                                    //   Navigator.of(context).pushReplacementNamed(
-                                    //       AppRoutes.viewScreen);
+                                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -205,24 +181,5 @@ class _LoginViewState extends State<LoginView> {
           ),
           imageName: 'img_anmelden.png'),
     );
-    // Opacity(
-    //   opacity: 0.8,
-    //   child: SingleChildScrollView(
-    //     child: Column(
-    //       children: [
-    //         Container(
-    //           height: screenHeight,
-    //           decoration: const BoxDecoration(
-    //             image: DecorationImage(
-    //               image: AssetImage("assets/images/img_anmelden.png"),
-    //               fit: BoxFit.cover,
-    //             ),
-    //           ),
-    //           child:
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // ),
   }
 }
