@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
@@ -8,16 +10,22 @@ import 'package:handwerker_app/view/history_views/history_nav_view.dart';
 import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
 import 'package:handwerker_app/view/user_view/user_view.dart';
 
-class MainViewNavigator extends ConsumerWidget {
+class MainViewNavigator extends ConsumerStatefulWidget {
   const MainViewNavigator({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final token = ref.watch(userProvider).when(
-        data: (data) => data?.userToken,
-        error: (error, stacktrace) {/* do something in error case*/},
-        loading: () {});
-    if (token != null) {
-      ref.read(userProvider.notifier).setToken(token: token);
+  ConsumerState<MainViewNavigator> createState() => _MainViewNavigatorState();
+}
+
+class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
+  bool _firstLoad = true;
+  @override
+  Widget build(BuildContext context) {
+    if (_firstLoad) {
+      setState(() {
+        _firstLoad = false;
+        log('change first load on main nav');
+      });
     }
     final provider = ref.watch(viewProvider);
     final notifier = ref.read(viewProvider.notifier);
@@ -29,12 +37,15 @@ class MainViewNavigator extends ConsumerWidget {
           MainViews.doku => const DokuNavigationView(),
           MainViews.history => const HistoryNavigationView(),
           MainViews.user => const UserView(),
-          _ => Focus(
+          MainViews.logOut => Focus(
               autofocus: true,
-              child: const SizedBox(),
-              onFocusChange: (value) {
-                Navigator.of(context)
-                    .pushReplacementNamed(AppRoutes.initialRoute);
+              child: const SizedBox(
+                child: Center(child: Text('welcome to the matrix')),
+              ),
+              onFocusChange: (value) async {
+                if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
+                  Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
+                }
               },
             ),
         },

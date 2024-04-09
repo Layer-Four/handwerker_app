@@ -4,8 +4,8 @@ part 'user.freezed.dart';
 part 'user.g.dart';
 
 @freezed
-class User with _$User {
-  const factory User({
+class UserVM with _$UserVM {
+  const factory UserVM({
     @Default('') String userID,
     @Default('') String userToken,
     @Default('') String username,
@@ -18,7 +18,7 @@ class User with _$User {
     DateTime? dateOfBirth,
     String? address,
     String? phoneNumber,
-  }) = _User;
+  }) = _UserVM;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory UserVM.fromJson(Map<String, dynamic> json) => _$UserVMFromJson(json);
 }

@@ -56,7 +56,11 @@ class Api {
   Future<Response> updateDocumentationEntry(data) => api.post(_putDocumentationDay, data: data);
   void storeToken(String token) async {
     final pref = await SharedPreferences.getInstance();
-    await pref.setString('bearerToken', token);
+    await pref.setString('TOKEN', token);
+  }
+
+  Future<String?> getStorenToken() {
+    return SharedPreferences.getInstance().then((value) => value.getString('TOKEN'));
   }
 
   final Dio api = Dio();

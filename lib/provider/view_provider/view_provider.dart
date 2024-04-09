@@ -4,7 +4,7 @@ import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 enum MainViews { timeEntry, doku, history, user, logOut }
 
 final viewProvider = StateProvider<MainViews>((ref) {
-  if (ref.watch(userProvider) == null) return MainViews.logOut;
+  if (ref.watch(userProvider).userToken.isEmpty) return MainViews.logOut;
 
   return MainViews.doku;
 });
