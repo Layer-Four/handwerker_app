@@ -5,8 +5,7 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final userProvider =
-    NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
+final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
 
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
@@ -53,6 +52,7 @@ class UserNotifier extends Notifier<UserVM> {
       final response = await api.postloginUser(json);
       if (response.statusCode == 401) {
         log('user not authorized');
+        return false;
       }
       if (response.statusCode == 200) {
         log(response.data.toString());
