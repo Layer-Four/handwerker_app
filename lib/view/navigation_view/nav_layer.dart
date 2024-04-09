@@ -43,6 +43,7 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
                 child: Center(child: Text('welcome to the matrix')),
               ),
               onFocusChange: (value) async {
+                // TODO: can throw error after false login
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
                   Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
                 }

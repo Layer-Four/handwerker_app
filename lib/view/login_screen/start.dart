@@ -30,6 +30,7 @@ class _StartViewState extends ConsumerState<StartView> {
       ref.read(userProvider.notifier).getUserToken().then(
             (value) => setState(() {
               _token = value;
+              //TODO: DO I need this?
               _firstTime = false;
             }),
           );
