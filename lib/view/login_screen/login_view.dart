@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -8,7 +6,6 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
