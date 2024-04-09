@@ -5,7 +5,8 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
+final userProvider =
+    NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
 
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
@@ -18,7 +19,7 @@ class UserNotifier extends Notifier<UserVM> {
     _storage.then((value) {
       final token = value.getString('TOKEN') ?? '';
       if (token.isNotEmpty) {
-        state = state.copyWith(username: token);
+        state = state.copyWith(userToken: token);
       }
     });
     return UserVM(userToken: token);
