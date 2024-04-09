@@ -23,7 +23,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey();
 
-  void reactionOfLogin(bool isSuccess) async {
+  void reactionOfLogin(bool isSuccess) {
     if (isSuccess) {
       _userNameController.clear();
       _passwordController.clear();
@@ -147,10 +147,6 @@ class _LoginViewState extends State<LoginView> {
                                           userName: _userNameController.text,
                                         )
                                         .then((value) => reactionOfLogin(value));
-                                    SharedPreferences.getInstance().then((value) {
-                                      final token = value.getString('TOKEN');
-                                      log(token.toString());
-                                    });
                                   }
                                   if (isOTP) {
                                     Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
