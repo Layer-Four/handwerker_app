@@ -33,9 +33,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
-  List<MaterialVM> _materials = [];
+  List<ConsumeableVM> _materials = [];
   ProjectListVM? _project;
-  MaterialVM? _selectedMaterial;
+  ConsumeableVM? _selectedMaterial;
   @override
   void initState() {
     super.initState();
@@ -141,7 +141,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               hintText: ref.watch(languangeProvider).amount,
             ),
             onChanged: (value) {
-              setState(() => _amountController.text = value);
+              if (_amountController.text.length > 20) {
+                return;
+              }
+              if (_amountController.text.length <= 20) {
+                setState(() => _amountController.text = value);
+              }
             },
           ),
         ),
@@ -183,8 +188,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             ),
             onChanged: (value) {
               setState(() {
+                if (value.length < 20) {
+                  _summeryController.text = value;
+                }
                 // _entry = _entry.copyWith(cost: int.tryParse(value));
-                _summeryController.text = value;
               });
             },
           ),

@@ -5,11 +5,11 @@ part 'time_entry.g.dart';
 @freezed
 class TimeEntry with _$TimeEntry {
   const factory TimeEntry({
-    int? id,
     required DateTime date,
     int? duration,
     String? description,
     DateTime? endTime,
+    int? id,
     DateTime? pauseEnd,
     DateTime? pauseStart,
     int? projectID,

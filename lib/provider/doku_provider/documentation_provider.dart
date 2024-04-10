@@ -55,9 +55,8 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
           ref.read(userProvider.notifier).userLogOut();
           return;
         }
-        // TODO: when is possible catch response and load it on State or update some values
 
-        log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
+        log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
         return;
       }
       log('request was successful-> ${response.data}');

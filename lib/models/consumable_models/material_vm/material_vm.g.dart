@@ -6,13 +6,13 @@ part of 'material_vm.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MaterialVMImpl _$$MaterialVMImplFromJson(Map<String, dynamic> json) =>
-    _$MaterialVMImpl(
+_$ConsumeableVMImpl _$$ConsumeableVMImplFromJson(Map<String, dynamic> json) =>
+    _$ConsumeableVMImpl(
       name: json['name'] as String,
       id: json['id'] as int,
     );
 
-Map<String, dynamic> _$$MaterialVMImplToJson(_$MaterialVMImpl instance) =>
+Map<String, dynamic> _$$ConsumeableVMImplToJson(_$ConsumeableVMImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'id': instance.id,

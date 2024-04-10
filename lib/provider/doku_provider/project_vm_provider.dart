@@ -10,21 +10,13 @@ final projectVMProvider =
     AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
 
 class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
-  final Api api = Api();
+  final Api _api = Api();
   @override
   List<ProjectListVM>? build() => null;
 
   void loadpProject() async {
-    // final uri = DbAdresses().getProjectsDM;
-    // final Dio http = Dio();
     try {
-      // final response = await http.get(uri);
-      final response = await api.getProjectsDM;
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
-        state = AsyncValue.data(projects);
-      }
+      final response = await _api.getProjectsDM;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -33,21 +25,20 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
         log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
         return;
       }
+      final data = response.data;
+      final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
+      state = AsyncValue.data(projects);
+      return;
     } catch (e) {
       throw Exception(e);
     }
-    return;
   }
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
-    // final Dio dio = Dio();
-    // final url = DbAdresses().getCustomerProjects;
     final result = <ProjectCustomer>[];
-    // int count = 0;
 
     try {
-      // final response = await dio.get(url);
-      final response = await api.getCustomerProjects;
+      final response = await _api.getCustomerProjects;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();

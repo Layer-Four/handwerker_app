@@ -42,7 +42,6 @@ class NavAppBarWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // TODO: InkWell or GesturDetector???
         GestureDetector(
           onTap: () => viewNotifier.state = DokuViews.timeEntry,
           child: Padding(

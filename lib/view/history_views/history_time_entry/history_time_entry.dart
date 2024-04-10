@@ -14,6 +14,7 @@ class HistoryTimeBody extends ConsumerWidget {
       ref.read(timeEntryProvider.notifier).loadEntrys();
     }
     final workdays = ref.read(timeEntryProvider.notifier).getListOfWorkdays();
+
     if (workdays.isEmpty) return const ShowEmptyMessage();
     return Padding(
       padding: const EdgeInsets.all(10),

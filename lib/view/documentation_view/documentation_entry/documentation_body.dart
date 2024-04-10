@@ -54,8 +54,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
             SizedBox(
               height: 70,
               child: Center(
-                child:
-                    Image.asset('assets/images/img_techtool.png', height: 20),
+                child: Image.asset('assets/images/img_techtool.png', height: 20),
               ),
             ),
           ],
@@ -82,8 +81,8 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromCamera(
-                            context, _project?.title ?? '');
+                        final image =
+                            await Utilits.pickImageFromCamera(context, _project?.title ?? '');
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
@@ -110,8 +109,8 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImageFromGalery(
-                            context, _project?.title ?? '');
+                        final image =
+                            await Utilits.pickImageFromGalery(context, _project?.title ?? '');
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
@@ -230,7 +229,9 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
+            TextSelection previousSelection = _descriptionController.selection;
             _descriptionController.text = value;
+            _descriptionController.selection = previousSelection;
             _entry = _entry.copyWith(description: _descriptionController.text);
           });
         },
@@ -244,8 +245,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
           if (date != null) {
             setState(() {
               _entry = _entry.copyWith(createDate: date);
-              _dayPickerController.text =
-                  '${date.day}.${date.month}.${date.year}';
+              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
             });
           }
         },
@@ -268,14 +268,11 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
             if (_dayPickerController.text.isNotEmpty) {
               // ? for debug API
               // log(json.encode(_entry.toJson()));
-              ref
-                  .read(documentationProvider.notifier)
-                  .createDocumentationEntry(_entry);
+              ref.read(documentationProvider.notifier).createDocumentationEntry(_entry);
               final now = DateTime.now();
               setState(() {
                 _descriptionController.clear();
-                _dayPickerController.text =
-                    '${now.day}.${now.month}.${now.year}';
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
                 _entry = DocumentationEntry(
                     projectID: _project!.id,
                     projectName: null,

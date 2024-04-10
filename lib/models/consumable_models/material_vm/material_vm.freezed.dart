@@ -14,34 +14,34 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-MaterialVM _$MaterialVMFromJson(Map<String, dynamic> json) {
-  return _MaterialVM.fromJson(json);
+ConsumeableVM _$ConsumeableVMFromJson(Map<String, dynamic> json) {
+  return _ConsumeableVM.fromJson(json);
 }
 
 /// @nodoc
-mixin _$MaterialVM {
+mixin _$ConsumeableVM {
   String get name => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $MaterialVMCopyWith<MaterialVM> get copyWith =>
+  $ConsumeableVMCopyWith<ConsumeableVM> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MaterialVMCopyWith<$Res> {
-  factory $MaterialVMCopyWith(
-          MaterialVM value, $Res Function(MaterialVM) then) =
-      _$MaterialVMCopyWithImpl<$Res, MaterialVM>;
+abstract class $ConsumeableVMCopyWith<$Res> {
+  factory $ConsumeableVMCopyWith(
+          ConsumeableVM value, $Res Function(ConsumeableVM) then) =
+      _$ConsumeableVMCopyWithImpl<$Res, ConsumeableVM>;
   @useResult
   $Res call({String name, int id});
 }
 
 /// @nodoc
-class _$MaterialVMCopyWithImpl<$Res, $Val extends MaterialVM>
-    implements $MaterialVMCopyWith<$Res> {
-  _$MaterialVMCopyWithImpl(this._value, this._then);
+class _$ConsumeableVMCopyWithImpl<$Res, $Val extends ConsumeableVM>
+    implements $ConsumeableVMCopyWith<$Res> {
+  _$ConsumeableVMCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -68,22 +68,22 @@ class _$MaterialVMCopyWithImpl<$Res, $Val extends MaterialVM>
 }
 
 /// @nodoc
-abstract class _$$MaterialVMImplCopyWith<$Res>
-    implements $MaterialVMCopyWith<$Res> {
-  factory _$$MaterialVMImplCopyWith(
-          _$MaterialVMImpl value, $Res Function(_$MaterialVMImpl) then) =
-      __$$MaterialVMImplCopyWithImpl<$Res>;
+abstract class _$$ConsumeableVMImplCopyWith<$Res>
+    implements $ConsumeableVMCopyWith<$Res> {
+  factory _$$ConsumeableVMImplCopyWith(
+          _$ConsumeableVMImpl value, $Res Function(_$ConsumeableVMImpl) then) =
+      __$$ConsumeableVMImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, int id});
 }
 
 /// @nodoc
-class __$$MaterialVMImplCopyWithImpl<$Res>
-    extends _$MaterialVMCopyWithImpl<$Res, _$MaterialVMImpl>
-    implements _$$MaterialVMImplCopyWith<$Res> {
-  __$$MaterialVMImplCopyWithImpl(
-      _$MaterialVMImpl _value, $Res Function(_$MaterialVMImpl) _then)
+class __$$ConsumeableVMImplCopyWithImpl<$Res>
+    extends _$ConsumeableVMCopyWithImpl<$Res, _$ConsumeableVMImpl>
+    implements _$$ConsumeableVMImplCopyWith<$Res> {
+  __$$ConsumeableVMImplCopyWithImpl(
+      _$ConsumeableVMImpl _value, $Res Function(_$ConsumeableVMImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$MaterialVMImplCopyWithImpl<$Res>
     Object? name = null,
     Object? id = null,
   }) {
-    return _then(_$MaterialVMImpl(
+    return _then(_$ConsumeableVMImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,11 @@ class __$$MaterialVMImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$MaterialVMImpl implements _MaterialVM {
-  const _$MaterialVMImpl({required this.name, required this.id});
+class _$ConsumeableVMImpl implements _ConsumeableVM {
+  const _$ConsumeableVMImpl({required this.name, required this.id});
 
-  factory _$MaterialVMImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MaterialVMImplFromJson(json);
+  factory _$ConsumeableVMImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ConsumeableVMImplFromJson(json);
 
   @override
   final String name;
@@ -120,14 +120,14 @@ class _$MaterialVMImpl implements _MaterialVM {
 
   @override
   String toString() {
-    return 'MaterialVM(name: $name, id: $id)';
+    return 'ConsumeableVM(name: $name, id: $id)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MaterialVMImpl &&
+            other is _$ConsumeableVMImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.id, id) || other.id == id));
   }
@@ -139,23 +139,24 @@ class _$MaterialVMImpl implements _MaterialVM {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$MaterialVMImplCopyWith<_$MaterialVMImpl> get copyWith =>
-      __$$MaterialVMImplCopyWithImpl<_$MaterialVMImpl>(this, _$identity);
+  _$$ConsumeableVMImplCopyWith<_$ConsumeableVMImpl> get copyWith =>
+      __$$ConsumeableVMImplCopyWithImpl<_$ConsumeableVMImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MaterialVMImplToJson(
+    return _$$ConsumeableVMImplToJson(
       this,
     );
   }
 }
 
-abstract class _MaterialVM implements MaterialVM {
-  const factory _MaterialVM(
-      {required final String name, required final int id}) = _$MaterialVMImpl;
+abstract class _ConsumeableVM implements ConsumeableVM {
+  const factory _ConsumeableVM(
+      {required final String name,
+      required final int id}) = _$ConsumeableVMImpl;
 
-  factory _MaterialVM.fromJson(Map<String, dynamic> json) =
-      _$MaterialVMImpl.fromJson;
+  factory _ConsumeableVM.fromJson(Map<String, dynamic> json) =
+      _$ConsumeableVMImpl.fromJson;
 
   @override
   String get name;
@@ -163,6 +164,6 @@ abstract class _MaterialVM implements MaterialVM {
   int get id;
   @override
   @JsonKey(ignore: true)
-  _$$MaterialVMImplCopyWith<_$MaterialVMImpl> get copyWith =>
+  _$$ConsumeableVMImplCopyWith<_$ConsumeableVMImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

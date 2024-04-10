@@ -40,6 +40,7 @@ class LabeldTextfield extends StatelessWidget {
             height: heigt,
             width: width,
             child: TextField(
+              // enableInteractiveSelection: true,
               controller: controller,
               textAlignVertical: TextAlignVertical.top,
               expands: textInputType == TextInputType.multiline ? true : false,

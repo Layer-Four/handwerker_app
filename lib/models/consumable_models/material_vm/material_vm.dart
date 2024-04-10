@@ -2,13 +2,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'material_vm.freezed.dart';
 part 'material_vm.g.dart';
 
-// TODO: refactor to consumable
 @freezed
-class MaterialVM with _$MaterialVM {
-  const factory MaterialVM({
+class ConsumeableVM with _$ConsumeableVM {
+  const factory ConsumeableVM({
     required String name,
     required int id,
-  }) = _MaterialVM;
+  }) = _ConsumeableVM;
 
-  factory MaterialVM.fromJson(Map<String, dynamic> json) => _$MaterialVMFromJson(json);
+  factory ConsumeableVM.fromJson(Map<String, dynamic> json) => _$ConsumeableVMFromJson(json);
 }

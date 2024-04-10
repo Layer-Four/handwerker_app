@@ -43,6 +43,9 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
   Widget _buildAsyncProjectOverview() => FutureBuilder<List<ProjectCustomer?>>(
       future: loadProjects(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (snapshot.data != null) {
           if (snapshot.data!.isEmpty) return const ShowEmptyMessage();
           final customerProjectList = snapshot.data;
@@ -69,11 +72,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
             ),
           );
         }
-        // TODO: Look add TimeEntryOverview for default screen
-        return const SizedBox(
-          height: 400,
-          child: Center(child: CircularProgressIndicator()),
-        );
+        return const ShowEmptyMessage();
       });
 
   Widget _buildCustomerOverviewHeadLine() {

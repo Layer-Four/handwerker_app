@@ -10,19 +10,13 @@ final timeEntryProvider =
     NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(() => TimeEntryNotifier());
 
 class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
-  final Api api = Api();
+  final Api _api = Api();
   @override
   build() => [];
 
-  void addTimeEntry(TimeEntry entry) => state = [...state, entry];
-
-  // TODO: write request provider for encaplusalted logic
   void uploadTimeEntry(TimeEntry entry) async {
-    // final uri = DbAdresses().postTimeEnty;
-    // final Dio dio = Dio();
     try {
-      // final response = await dio.post(uri, data: entry.toJson());
-      final response = await api.postTimeEnty(entry.toJson());
+      final response = await _api.postTimeEnty(entry.toJson());
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -43,11 +37,8 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   }
 
   void loadEntrys() async {
-    // final String url = DbAdresses().getAllTimeEntrys;
-    // final Dio dio = Dio();
     try {
-      // final response = await dio.get(url);
-      final response = await api.getAllTimeEntrys;
+      final response = await _api.getAllTimeEntrys;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();

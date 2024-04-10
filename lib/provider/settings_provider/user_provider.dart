@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
@@ -37,16 +38,15 @@ class UserNotifier extends Notifier<UserVM> {
     return token;
   }
 
-// TODO: delete default option for mandant
   Future<bool> loginUser({
     required String passwort,
     required String userName,
-    String? mandatID,
+    String? mandantID,
   }) async {
     final Map<String, dynamic> json = {
       "username": userName,
       "password": passwort,
-      "mandant": mandatID ?? '1',
+      "mandant": mandantID,
     };
     try {
       final response = await api.postloginUser(json);
@@ -58,7 +58,6 @@ class UserNotifier extends Notifier<UserVM> {
         log(response.data.toString());
         final data = (response.data as Map);
         final userToken = data.values.first as String;
-        // TODO: when token Exist load user with Token
         final newUser = state.copyWith(userToken: userToken);
         setToken(token: userToken);
         // final userDate = http.get('www.abc/getUerdata', data: userToken);
@@ -69,6 +68,11 @@ class UserNotifier extends Notifier<UserVM> {
         }
       } else {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.message!.contains('401')) {
+        log('user Input is not correct');
         return false;
       }
     } catch (e) {

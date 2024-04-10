@@ -8,13 +8,13 @@ part of 'time_entry.dart';
 
 _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntryImpl(
-      id: json['id'] as int?,
       date: DateTime.parse(json['date'] as String),
       duration: json['duration'] as int?,
       description: json['description'] as String?,
       endTime: json['endTime'] == null
           ? null
           : DateTime.parse(json['endTime'] as String),
+      id: json['id'] as int?,
       pauseEnd: json['pauseEnd'] == null
           ? null
           : DateTime.parse(json['pauseEnd'] as String),
@@ -31,11 +31,11 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'date': instance.date.toIso8601String(),
       'duration': instance.duration,
       'description': instance.description,
       'endTime': instance.endTime?.toIso8601String(),
+      'id': instance.id,
       'pauseEnd': instance.pauseEnd?.toIso8601String(),
       'pauseStart': instance.pauseStart?.toIso8601String(),
       'projectID': instance.projectID,

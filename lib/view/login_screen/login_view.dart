@@ -142,6 +142,8 @@ class _LoginViewState extends State<LoginView> {
                                         .loginUser(
                                           passwort: _passwordController.text,
                                           userName: _userNameController.text,
+                                          // TODO: save on first load in shared Preferences?
+                                          mandantID: '1',
                                         )
                                         .then((value) => reactionOfLogin(value));
                                   }
