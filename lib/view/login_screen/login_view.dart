@@ -30,8 +30,8 @@ class _LoginViewState extends State<LoginView> {
       Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
       return;
     }
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('leider hats nicht geklappt')));
   }
 
   @override
@@ -69,8 +69,12 @@ class _LoginViewState extends State<LoginView> {
                       children: [
                         Text(
                           "Nutzername",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color: AppColor.kWhiteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -89,8 +93,12 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         Text(
                           "Passwort",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: AppColor.kWhiteWOpacity,
+                                  fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -120,11 +128,13 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style:
-                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
+                                style: TextStyle(
+                                    color: AppColor.kWhite,
+                                    fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
+                                Navigator.of(context)
+                                    .pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -146,14 +156,17 @@ class _LoginViewState extends State<LoginView> {
                                           passwort: _passwordController.text,
                                           userName: _userNameController.text,
                                         )
-                                        .then((value) => reactionOfLogin(value));
-                                    SharedPreferences.getInstance().then((value) {
+                                        .then(
+                                            (value) => reactionOfLogin(value));
+                                    SharedPreferences.getInstance()
+                                        .then((value) {
                                       final token = value.getString('TOKEN');
                                       log(token.toString());
                                     });
                                   }
                                   if (isOTP) {
-                                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
+                                    Navigator.of(context)
+                                        .pushNamed(AppRoutes.setPasswordScreen);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

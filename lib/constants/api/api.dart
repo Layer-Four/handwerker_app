@@ -45,22 +45,31 @@ class Api {
   Future<Response> get getExecuteableServices => api.get(_getServiceAdress);
   Future<Response> get getMaterialsList => api.get(_getMaterialsList);
   Future<Response> get getProjectsDM => api.get(_getProjectsAdress);
-  Future<Response> get getProjectConsumableEntry => api.get(_getProjectsConsumable);
+  Future<Response> get getProjectConsumableEntry =>
+      api.get(_getProjectsConsumable);
   Future<Response> get getProjectsTimeEntrys => api.get(_getTimeTacks);
-  Future<Response> get getUserDocumentationEntry => api.get(_getUserProjectDocumentation);
-  Future<Response> postloginUser(loginData) => api.post(_loginUserAdress, data: loginData);
-  Future<Response> postProjectConsumable(data) => api.post(_postProjectConsumabele, data: data);
-  Future<Response> postDocumentationEntry(data) => api.post(_postDocumentationDay, data: data);
-  Future<Response> postTimeEnty(data) => api.post(_postTimeEntryAdress, data: data);
-  Future<Response> updateProjectConsumableEntry(data) => api.post(_putProjectMaterial, data: data);
-  Future<Response> updateDocumentationEntry(data) => api.post(_putDocumentationDay, data: data);
+  Future<Response> get getUserDocumentationEntry =>
+      api.get(_getUserProjectDocumentation);
+  Future<Response> postloginUser(loginData) =>
+      api.post(_loginUserAdress, data: loginData);
+  Future<Response> postProjectConsumable(data) =>
+      api.post(_postProjectConsumabele, data: data);
+  Future<Response> postDocumentationEntry(data) =>
+      api.post(_postDocumentationDay, data: data);
+  Future<Response> postTimeEnty(data) =>
+      api.post(_postTimeEntryAdress, data: data);
+  Future<Response> updateProjectConsumableEntry(data) =>
+      api.post(_putProjectMaterial, data: data);
+  Future<Response> updateDocumentationEntry(data) =>
+      api.post(_putDocumentationDay, data: data);
   void storeToken(String token) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString('TOKEN', token);
   }
 
   Future<String?> getStorenToken() {
-    return SharedPreferences.getInstance().then((value) => value.getString('TOKEN'));
+    return SharedPreferences.getInstance()
+        .then((value) => value.getString('TOKEN'));
   }
 
   final Dio api = Dio();
@@ -69,7 +78,8 @@ class Api {
   String? accessToken;
   // TODO: wait for information what choose, shared prefences or secure storage
   // final _storage = const FlutterSecureStorage();
-  final baseOption = BaseOptions(baseUrl: 'https://r-wa-happ-be.azurewebsites.net/api');
+  final baseOption =
+      BaseOptions(baseUrl: 'https://r-wa-happ-be.azurewebsites.net/api');
   Api() {
     // TODO: Talk with Dennis about a base route for options path
     api.options = baseOption;
@@ -82,46 +92,58 @@ class Api {
         return handler.next(options);
       },
       // TODO: when its a way to centralise the logout logic than use it in the 401 statemend.
+      //     onError: (DioException error, handler) async {
+      //       final storage = await _storage;
+      //       if (error.response?.statusCode == 401 &&
+      //           error.response?.data['message'] == 'Invalid JWT') {
+      //         return;
+      //         if (storage.containsKey('bearerToken')) {
+      //           await refreshToken();
+      //         }
+      //         error.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
+      //         return handler.resolve(await api.fetch(error.requestOptions));
+      //         return handler.resolve(await _retry(error.requestOptions));
+      //       }
+      //       return handler.next(error);
+      //     },
+      //   ));
+      // }
+
       onError: (DioException error, handler) async {
-        // final storage = await _storage;
-        // if (error.response?.statusCode == 401
-        // && error.response?.data['message'] == 'Invalid JWT'
-        // ) {
-        // return;
-        // if (storage.containsKey('bearerToken')) {
-        // await refreshToken();
-        // }
-        // error.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-        // return handler.resolve(await api.fetch(error.requestOptions));
-        // return handler.resolve(await _retry(error.requestOptions));
-        // }
-        return handler.next(error);
+        if (error.response?.statusCode == 401 &&
+            error.response?.data['message'] == 'Invalid JWT') {
+          // Optional: Refresh token logic here
+          handler.next(error);
+        } else {
+          handler.next(error);
+        }
       },
     ));
   }
-  // Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
-  //   final options = Options(
-  //     method: requestOptions.method,
-  //     headers: requestOptions.headers,
-  //   );
-  //   return api.request<dynamic>(
-  //     requestOptions.path,
-  //     data: requestOptions.data,
-  //     queryParameters: requestOptions.queryParameters,
-  //     options: options,
-  //   );
-  // }
+
+  Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
+    final options = Options(
+      method: requestOptions.method,
+      headers: requestOptions.headers,
+    );
+    return api.request<dynamic>(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
+    );
+  }
 
 // // TODO: when need login data than maybe hash the value in Storage?
-//   Future<void> refreshToken() async {
-//     final pref = await SharedPreferences.getInstance();
-//     final token = pref.getString('bearerToken');
-//     final response = await api.post(_baseUrl + _loginUserAdress, data: token);
-//     if (response.statusCode == 201) {
-//       pref.setString('bearerToken', response.data);
-//       accessToken = response.data;
-//     } else {
-//       pref.clear();
-//     }
-//   }
+  Future<void> refreshToken() async {
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('bearerToken');
+    final response = await api.post(_baseUrl + _loginUserAdress, data: token);
+    if (response.statusCode == 201) {
+      pref.setString('bearerToken', response.data);
+      accessToken = response.data;
+    } else {
+      pref.clear();
+    }
+  }
 }
