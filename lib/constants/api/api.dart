@@ -83,7 +83,7 @@ class Api {
     // 'Authorization': 'Bearer $accessToken',
     //   },
     // );
-    _api.interceptors.add(DioInterceptor());
+    // _api.interceptors.add(DioInterceptor());
     // api.interceptors.add(InterceptorsWrapper(
     //   onRequest: (options, handler) async {
     //     if (!options.path.contains('http')) {
