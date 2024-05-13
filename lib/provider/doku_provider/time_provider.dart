@@ -30,7 +30,7 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
       final eentry = TimeEntry.fromJson(jsonResponse);
       final list = <TimeEntry>[...state, eentry];
       state = list;
-      log('request success-> $jsonResponse');
+      log(' \nrequest success\n ');
       return;
     } catch (e) {
       log('request was incompleted this was the error: $e');
@@ -49,7 +49,6 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
         return [];
       }
       final List data = response.data.map((e) => e).toList();
-      log(data.toString());
       data.map((e) => e.asMap());
       return data.map((e) => TimeTrack.fromJson(e)).toSet().toList();
     } catch (e) {

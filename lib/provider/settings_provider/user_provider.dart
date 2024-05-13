@@ -50,25 +50,23 @@ class UserNotifier extends Notifier<UserVM> {
     };
     try {
       final response = await api.postloginUser(json);
-      if (response.statusCode == 401) {
-        log('user not authorized');
+      if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          log('user not authorized');
+          return false;
+        }
+        log('something went wrong status -> ${response.statusCode} : ${response.data}');
         return false;
       }
-      if (response.statusCode == 200) {
-        log(response.data.toString());
-        final data = (response.data as Map);
-        final userToken = data.values.first as String;
-        final newUser = state.copyWith(userToken: userToken);
-        setToken(token: userToken);
-        // final userDate = http.get('www.abc/getUerdata', data: userToken);
-
-        if (newUser != state) {
-          state = newUser;
-          return true;
-        }
-      } else {
-        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
-        return false;
+      log(response.data.toString());
+      final data = (response.data as Map);
+      final userToken = data.values.first as String;
+      final newUser = state.copyWith(userToken: userToken);
+      setToken(token: userToken);
+      // final userDate = http.get('www.abc/getUerdata', data: userToken);
+      if (newUser != state) {
+        state = newUser;
+        return true;
       }
     } on DioException catch (e) {
       if (e.message!.contains('401')) {

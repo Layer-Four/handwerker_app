@@ -46,11 +46,8 @@ class Api {
   }
 
   get headers => _api.options.headers;
-  Future<String?> getStorenToken() {
-    return SharedPreferences.getInstance().then((value) => value.getString('TOKEN'));
-  }
 
-  Future<String?> get getToken async => await _storage.then((value) => value.getString('TOKEN'));
+  Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
 
   final Dio _api = Dio();
 

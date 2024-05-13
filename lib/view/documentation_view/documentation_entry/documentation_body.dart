@@ -266,8 +266,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               );
             }
             if (_dayPickerController.text.isNotEmpty) {
-              // ? for debug API
-              // log(json.encode(_entry.toJson()));
               ref.read(documentationProvider.notifier).createDocumentationEntry(_entry);
               final now = DateTime.now();
               setState(() {

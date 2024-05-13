@@ -366,15 +366,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           final material = Consumable(
             amount: int.tryParse(_amountController.text) ?? 1,
             materialUnitID: _unit!.id,
-            // name: _selectedMaterial!.name,
             price: int.tryParse(_summeryController.text) ?? 0,
             materialID: _selectedMaterial!.id.toString(),
           );
           _entry = _entry.copyWith(
             consumables: [material],
-            // cost: int.tryParse(_summeryController.text) ?? 0,
           );
-          // log(json.encode(_entry.toJson()));
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(ref.watch(languangeProvider).succes),
@@ -384,7 +381,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             _selectedMaterial = _materials.first;
             _amountController.clear();
             _summeryController.clear();
-            // _duration = _durationSteps.first;
             _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
           });
         },
