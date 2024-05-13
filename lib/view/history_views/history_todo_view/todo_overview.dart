@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
+
+import '../../../provider/settings_provider/language_provider.dart';
 
 class TodoViewBody extends ConsumerStatefulWidget {
   const TodoViewBody({super.key});
@@ -18,55 +19,60 @@ class _CostumerOverviewBodyState extends ConsumerState<TodoViewBody> {
   final List<TimeEntry> todos = List.generate(
     5,
     (index) => TimeEntry(
-        date: DateTime(2024, 06, index + 1),
-        startTime: DateTime(2024, 06, index, 8),
-        endTime: DateTime(2024, 06, index, 16, 30),
-        serviceID: 5,
-        serviceTitle: 'serviceTitle',
-        projectID: 15),
+      date: DateTime(2024, 06, index + 1),
+      startTime: DateTime(2024, 06, index, 8),
+      endTime: DateTime(2024, 06, index, 16, 30),
+      serviceID: 5,
+      serviceTitle: 'serviceTitle',
+      projectID: 15,
+      // Take on SharedPreferences
+      userID: 'Hallo123Welt456',
+    ),
   );
 
   @override
-  Widget build(context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Aufträge'),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: dates.length,
-                itemBuilder: (BuildContext context, i) {
-                  final date = dates[i];
-                  final dateString = '${date.day}.${date.month}.${date.year}';
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        child: Text(dateString),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height -
-                            (MediaQuery.of(context).size.height / 10 * 7),
-                        child: _todoCardBuilder(todos),
-                      ),
-                    ],
-                  );
-                },
-              ),
+  Widget build(context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Aufträge'),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: dates.length,
+              itemBuilder: (BuildContext context, i) {
+                final date = dates[i];
+                final dateString = '${date.day}.${date.month}.${date.year}';
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      child: Text(dateString),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height -
+                          (MediaQuery.of(context).size.height / 10 * 7),
+                      child: _todoCardBuilder(todos),
+                    ),
+                  ],
+                );
+              },
             ),
-            // _buildCustomerOverviewHeadLine(),
-            // _buildAsyncProjectOverview(),
-            const Padding(
-              padding: EdgeInsets.all(24.0),
-              child: LogoWidget(assetString: 'assets/images/img_techtool.png'),
-            ),
-          ],
-        ),
-      );
+          ),
+          // _buildCustomerOverviewHeadLine(),
+          // _buildAsyncProjectOverview(),
+          const Padding(
+            padding: EdgeInsets.all(24.0),
+            child: LogoWidget(assetString: 'assets/images/img_techtool.png'),
+          ),
+        ],
+      ),
+    );
+  }
 
   // Widget _buildAsyncProjectOverview() => FutureBuilder<List<ProjectCustomer?>>(
   //     future: loadProjects(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/documentation_view/documentation_entry/documentation_body.dart';
 import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
@@ -13,6 +14,7 @@ class DokuNavigationView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dokuViewRef = ref.watch(dokuViewProvider);
+    final user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
         title: const NavAppBarWidget(),
@@ -23,7 +25,7 @@ class DokuNavigationView extends ConsumerWidget {
           child: switch (dokuViewRef) {
             DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
-            _ => const TimeEntryBody(),
+            _ => TimeEntryBody(user.userToken),
           },
         ),
       ),

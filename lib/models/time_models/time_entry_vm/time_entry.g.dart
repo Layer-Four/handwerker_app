@@ -30,7 +30,7 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       startTime: json['startTime'] == null
           ? null
           : DateTime.parse(json['startTime'] as String),
-      userID: json['userID'] as String? ?? '',
+      userID: json['userID'] as String?,
     );
 
 Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>

@@ -14,7 +14,8 @@ import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
 class TimeEntryBody extends ConsumerStatefulWidget {
-  const TimeEntryBody({super.key});
+  final String id;
+  const TimeEntryBody(this.id, {super.key});
   @override
   ConsumerState<TimeEntryBody> createState() => _TimeEntryState();
 }
@@ -38,11 +39,12 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   void initState() {
     super.initState();
     ref.read(projectVMProvider.notifier).loadpProject();
-    _entry = TimeEntry(date: DateTime.now(), startTime: DateTime.now());
-    final minute = _entry.date.minute < 10 ? '0${_entry.date.minute}' : '${_entry.date.minute}';
+    final now = DateTime.now();
+    _entry = TimeEntry(date: now, startTime: now, userID: widget.id);
+    final minute = now.minute < 10 ? '0${now.minute}' : '${now.minute}';
     if (selectedTime == null || _dayPickerController.text.isEmpty) {
-      _dayPickerController.text = '${_entry.date.day}.${_entry.date.month}.${_entry.date.year}';
-      selectedTime = TimeOfDay(hour: _entry.date.hour, minute: _entry.date.minute);
+      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+      selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
     }
     _startController.text = '${selectedTime!.hour}:$minute';
   }

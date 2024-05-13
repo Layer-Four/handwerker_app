@@ -33,9 +33,8 @@ mixin _$TimeEntry {
   String? get projektTitle => throw _privateConstructorUsedError;
   int? get serviceID => throw _privateConstructorUsedError;
   String? get serviceTitle => throw _privateConstructorUsedError;
-  DateTime? get startTime =>
-      throw _privateConstructorUsedError; // TODO:update with own id
-  String get userID => throw _privateConstructorUsedError;
+  DateTime? get startTime => throw _privateConstructorUsedError;
+  String? get userID => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -63,7 +62,7 @@ abstract class $TimeEntryCopyWith<$Res> {
       int? serviceID,
       String? serviceTitle,
       DateTime? startTime,
-      String userID});
+      String? userID});
 }
 
 /// @nodoc
@@ -93,7 +92,7 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
     Object? startTime = freezed,
-    Object? userID = null,
+    Object? userID = freezed,
   }) {
     return _then(_value.copyWith(
       date: null == date
@@ -152,10 +151,10 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      userID: null == userID
+      userID: freezed == userID
           ? _value.userID
           : userID // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -183,7 +182,7 @@ abstract class _$$TimeEntryImplCopyWith<$Res>
       int? serviceID,
       String? serviceTitle,
       DateTime? startTime,
-      String userID});
+      String? userID});
 }
 
 /// @nodoc
@@ -211,7 +210,7 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
     Object? startTime = freezed,
-    Object? userID = null,
+    Object? userID = freezed,
   }) {
     return _then(_$TimeEntryImpl(
       date: null == date
@@ -270,10 +269,10 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      userID: null == userID
+      userID: freezed == userID
           ? _value.userID
           : userID // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -296,7 +295,7 @@ class _$TimeEntryImpl extends _TimeEntry {
       this.serviceID,
       this.serviceTitle,
       this.startTime,
-      this.userID = ''})
+      this.userID})
       : super._();
 
   factory _$TimeEntryImpl.fromJson(Map<String, dynamic> json) =>
@@ -330,10 +329,8 @@ class _$TimeEntryImpl extends _TimeEntry {
   final String? serviceTitle;
   @override
   final DateTime? startTime;
-// TODO:update with own id
   @override
-  @JsonKey()
-  final String userID;
+  final String? userID;
 
   @override
   String toString() {
@@ -422,7 +419,7 @@ abstract class _TimeEntry extends TimeEntry {
       final int? serviceID,
       final String? serviceTitle,
       final DateTime? startTime,
-      final String userID}) = _$TimeEntryImpl;
+      final String? userID}) = _$TimeEntryImpl;
   const _TimeEntry._() : super._();
 
   factory _TimeEntry.fromJson(Map<String, dynamic> json) =
@@ -456,8 +453,8 @@ abstract class _TimeEntry extends TimeEntry {
   String? get serviceTitle;
   @override
   DateTime? get startTime;
-  @override // TODO:update with own id
-  String get userID;
+  @override
+  String? get userID;
   @override
   @JsonKey(ignore: true)
   _$$TimeEntryImplCopyWith<_$TimeEntryImpl> get copyWith =>

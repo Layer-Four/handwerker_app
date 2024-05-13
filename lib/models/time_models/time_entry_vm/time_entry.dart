@@ -19,8 +19,7 @@ class TimeEntry with _$TimeEntry {
     int? serviceID,
     String? serviceTitle,
     DateTime? startTime,
-    // TODO:update with own id
-    @Default('') String userID,
+    String? userID,
   }) = _TimeEntry;
 
   const TimeEntry._();
@@ -34,5 +33,21 @@ class TimeEntry with _$TimeEntry {
 
   factory TimeEntry.fromJson(Map<String, dynamic> json) => _$TimeEntryFromJson(json);
 }
-// 0= zeiterfassung
-// 1= auftrag
+
+/// this enum represent the different status of an TimeEntry.
+///
+enum TimeEntryType {
+  timeEntry,
+  assignment,
+  onHold,
+  waiting,
+}
+
+extension TimeEntryTypeExtention on TimeEntryType {
+  int get index => switch (this) {
+        TimeEntryType.timeEntry => 0,
+        TimeEntryType.assignment => 1,
+        TimeEntryType.onHold => 2,
+        TimeEntryType.waiting => 3,
+      };
+}

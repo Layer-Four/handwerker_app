@@ -22,7 +22,7 @@ void main() {
     );
     test('valiaded Data', () {
       expect(testEntry.date, date);
-      expect(testEntry.startTime.isBefore(testEntry.endTime!), true);
+      expect(testEntry.startTime!.isBefore(testEntry.endTime!), true);
       expect(testEntry.description, description);
       expect(testEntry.serviceTitle, service.name);
       expect(testEntry.endTime != null, true);
