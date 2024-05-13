@@ -1,7 +1,8 @@
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
 
 class Workday {
   final DateTime date;
+  // TODO: change with TimeTrack when Api json will be the same
   final List<TimeEntry> timeEntries;
   const Workday({required this.date, required this.timeEntries});
 

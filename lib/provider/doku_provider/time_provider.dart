@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_track_dm/time_track.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
@@ -36,24 +37,24 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
     }
   }
 
-  void loadEntrys() async {
+  Future<List<TimeTrack>> loadtimeTracks() async {
     try {
-      final response = await _api.getAllTimeEntrys;
+      final response = await _api.getAllTimeTracks;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
-          return;
+          return <TimeTrack>[];
         }
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
-        return;
+        return [];
       }
       final List data = response.data.map((e) => e).toList();
+      log(data.toString());
       data.map((e) => e.asMap());
-      final entry = data.map((e) => TimeEntry.fromJson(e)).toSet().toList();
-      state = entry;
-      return;
+      return data.map((e) => TimeTrack.fromJson(e)).toSet().toList();
     } catch (e) {
       log('request was incompleted this was the error: $e');
+      return [];
     }
   }
 

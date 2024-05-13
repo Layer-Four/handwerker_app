@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,7 +11,7 @@ void main() async {
   // final dio = Dio();
   List<TimeEntry>? entries;
   // final response = await dio.get(DbAdresses().getAllTimeEntrys);
-  final response = await api.getAllTimeEntrys;
+  final response = await api.getAllTimeTracks;
   if (response.statusCode == 200) {
     final List data = response.data.map((e) => e).toList();
     data.map((e) => e.asMap());

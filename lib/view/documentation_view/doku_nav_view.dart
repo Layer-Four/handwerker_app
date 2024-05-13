@@ -68,7 +68,7 @@ class NavAppBarWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: NavigationIcon(
-              title: 'Material',
+              title: language.consumables,
               isCurrent: viewProvider == DokuViews.consumables,
             ),
           ),

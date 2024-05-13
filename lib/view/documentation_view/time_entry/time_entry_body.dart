@@ -5,7 +5,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';

@@ -11,7 +11,7 @@ class HistoryTimeBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timeEntries = ref.watch(timeEntryProvider);
     if (timeEntries.isEmpty) {
-      ref.read(timeEntryProvider.notifier).loadEntrys();
+      ref.read(timeEntryProvider.notifier).loadtimeTracks();
     }
     final workdays = ref.read(timeEntryProvider.notifier).getListOfWorkdays();
 

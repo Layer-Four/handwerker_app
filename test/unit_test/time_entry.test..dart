@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:test/test.dart';
 

@@ -5,6 +5,7 @@ part 'time_entry.g.dart';
 @freezed
 class TimeEntry with _$TimeEntry {
   const factory TimeEntry({
+    String? customerName,
     required DateTime date,
     int? duration,
     String? description,

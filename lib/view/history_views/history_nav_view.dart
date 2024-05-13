@@ -41,12 +41,12 @@ class NavBarHistoryVWidget extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () => viewNotifier.state = HistoryViews.project,
+          onTap: () => viewNotifier.state = HistoryViews.jobs,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
               title: ref.watch(languangeProvider).taskOverview,
-              isCurrent: viewProvider == HistoryViews.project,
+              isCurrent: viewProvider == HistoryViews.jobs,
             ),
           ),
         ),
