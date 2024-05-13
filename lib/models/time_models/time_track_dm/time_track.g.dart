@@ -8,10 +8,9 @@ part of 'time_track.dart';
 
 _$TimeTrackImpl _$$TimeTrackImplFromJson(Map<String, dynamic> json) =>
     _$TimeTrackImpl(
-      userId: json['userId'] as String?,
-      id: json['id'] as int?,
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      userId: json['userId'] as String,
+      id: json['id'] as int,
+      date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
       duration: json['duration'] as int?,
       projectId: json['projectId'] as int?,
@@ -24,7 +23,7 @@ Map<String, dynamic> _$$TimeTrackImplToJson(_$TimeTrackImpl instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'id': instance.id,
-      'date': instance.date?.toIso8601String(),
+      'date': instance.date.toIso8601String(),
       'description': instance.description,
       'duration': instance.duration,
       'projectId': instance.projectId,

@@ -20,9 +20,9 @@ TimeTrack _$TimeTrackFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TimeTrack {
-  String? get userId => throw _privateConstructorUsedError;
-  int? get id => throw _privateConstructorUsedError;
-  DateTime? get date => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   int? get projectId => throw _privateConstructorUsedError;
@@ -42,9 +42,9 @@ abstract class $TimeTrackCopyWith<$Res> {
       _$TimeTrackCopyWithImpl<$Res, TimeTrack>;
   @useResult
   $Res call(
-      {String? userId,
-      int? id,
-      DateTime? date,
+      {String userId,
+      int id,
+      DateTime date,
       String? description,
       int? duration,
       int? projectId,
@@ -66,9 +66,9 @@ class _$TimeTrackCopyWithImpl<$Res, $Val extends TimeTrack>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? id = freezed,
-    Object? date = freezed,
+    Object? userId = null,
+    Object? id = null,
+    Object? date = null,
     Object? description = freezed,
     Object? duration = freezed,
     Object? projectId = freezed,
@@ -77,18 +77,18 @@ class _$TimeTrackCopyWithImpl<$Res, $Val extends TimeTrack>
     Object? customerName = freezed,
   }) {
     return _then(_value.copyWith(
-      userId: freezed == userId
+      userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: freezed == id
+              as String,
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      date: freezed == date
+              as int,
+      date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -126,9 +126,9 @@ abstract class _$$TimeTrackImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? userId,
-      int? id,
-      DateTime? date,
+      {String userId,
+      int id,
+      DateTime date,
       String? description,
       int? duration,
       int? projectId,
@@ -148,9 +148,9 @@ class __$$TimeTrackImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? id = freezed,
-    Object? date = freezed,
+    Object? userId = null,
+    Object? id = null,
+    Object? date = null,
     Object? description = freezed,
     Object? duration = freezed,
     Object? projectId = freezed,
@@ -159,18 +159,18 @@ class __$$TimeTrackImplCopyWithImpl<$Res>
     Object? customerName = freezed,
   }) {
     return _then(_$TimeTrackImpl(
-      userId: freezed == userId
+      userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: freezed == id
+              as String,
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      date: freezed == date
+              as int,
+      date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -201,27 +201,28 @@ class __$$TimeTrackImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TimeTrackImpl implements _TimeTrack {
+class _$TimeTrackImpl extends _TimeTrack {
   const _$TimeTrackImpl(
-      {this.userId,
-      this.id,
-      this.date,
+      {required this.userId,
+      required this.id,
+      required this.date,
       this.description,
       this.duration,
       this.projectId,
       this.serviceId,
       this.serviceTitle,
-      this.customerName});
+      this.customerName})
+      : super._();
 
   factory _$TimeTrackImpl.fromJson(Map<String, dynamic> json) =>
       _$$TimeTrackImplFromJson(json);
 
   @override
-  final String? userId;
+  final String userId;
   @override
-  final int? id;
+  final int id;
   @override
-  final DateTime? date;
+  final DateTime date;
   @override
   final String? description;
   @override
@@ -281,27 +282,28 @@ class _$TimeTrackImpl implements _TimeTrack {
   }
 }
 
-abstract class _TimeTrack implements TimeTrack {
+abstract class _TimeTrack extends TimeTrack {
   const factory _TimeTrack(
-      {final String? userId,
-      final int? id,
-      final DateTime? date,
+      {required final String userId,
+      required final int id,
+      required final DateTime date,
       final String? description,
       final int? duration,
       final int? projectId,
       final int? serviceId,
       final String? serviceTitle,
       final String? customerName}) = _$TimeTrackImpl;
+  const _TimeTrack._() : super._();
 
   factory _TimeTrack.fromJson(Map<String, dynamic> json) =
       _$TimeTrackImpl.fromJson;
 
   @override
-  String? get userId;
+  String get userId;
   @override
-  int? get id;
+  int get id;
   @override
-  DateTime? get date;
+  DateTime get date;
   @override
   String? get description;
   @override

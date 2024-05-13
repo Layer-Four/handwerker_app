@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/history_views/history_consumable/history_consumable_view.dart';
+import 'package:handwerker_app/view/history_views/history_todo_view/todo_overview.dart';
 import 'package:handwerker_app/view/history_views/history_project/project_overview.dart';
 import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
@@ -23,7 +24,8 @@ class HistoryNavigationView extends ConsumerWidget {
         child: switch (historyViewRef) {
           HistoryViews.timeEntry => const HistoryTimeBody(),
           HistoryViews.consumables => const HistoryMaterialBody(),
-          _ => const CostumerOverviewBody(),
+          HistoryViews.projects => const CostumerOverviewBody(),
+          HistoryViews.jobs => const TodoViewBody(),
         },
       ),
     );
@@ -60,6 +62,16 @@ class NavBarHistoryVWidget extends ConsumerWidget {
             ),
           ),
         ),
+        // GestureDetector(
+        //   onTap: () => viewNotifier.state = HistoryViews.projects,
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+        //     child: NavigationIcon(
+        //       title: ref.watch(languangeProvider).project,
+        //       isCurrent: viewProvider == HistoryViews.projects,
+        //     ),
+        //   ),
+        // ),
         GestureDetector(
           onTap: () {},
           // onTap: () => viewNotifier.state = HistoryViews.consumables,

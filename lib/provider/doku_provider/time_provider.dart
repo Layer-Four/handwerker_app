@@ -59,23 +59,24 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
   }
 
   // sortiere einträge in workdays
-  List<Workday?> getListOfWorkdays() {
+  Future<List<Workday?>> getListOfWorkdays() async {
     List<Workday> listOfWorkdays = [];
-    for (var e in state) {
+    final values = await loadtimeTracks();
+    for (var e in values) {
       if (listOfWorkdays.any((element) =>
-          element.date.day == e.startTime.day &&
-          element.date.month == e.startTime.month &&
-          element.date.year == e.startTime.year)) {
+          element.date.day == e.date.day &&
+          element.date.month == e.date.month &&
+          element.date.year == e.date.year)) {
         final date = listOfWorkdays.firstWhere((element) =>
-            element.date.day == e.startTime.day &&
-            element.date.month == e.startTime.month &&
-            element.date.year == e.startTime.year);
+            element.date.day == e.date.day &&
+            element.date.month == e.date.month &&
+            element.date.year == e.date.year);
         date.timeEntries.add(e);
       } else if (!listOfWorkdays.any((element) =>
-          element.date.day == e.startTime.day &&
-          element.date.month == e.startTime.month &&
-          element.date.year == e.startTime.year)) {
-        listOfWorkdays.add(Workday(date: e.startTime, timeEntries: [e]));
+          element.date.day == e.date.day &&
+          element.date.month == e.date.month &&
+          element.date.year == e.date.year)) {
+        listOfWorkdays.add(Workday(date: e.date, timeEntries: [e]));
       } else {
         log('no matches');
       }
