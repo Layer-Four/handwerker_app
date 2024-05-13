@@ -8,8 +8,9 @@ part of 'time_entry.dart';
 
 _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntryImpl(
-      customerName: json['customerName'] as String?,
       date: DateTime.parse(json['date'] as String),
+      customerName: json['customerName'] as String?,
+      type: json['type'] as int?,
       duration: json['duration'] as int?,
       description: json['description'] as String?,
       endTime: json['endTime'] == null
@@ -23,17 +24,20 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['pauseStart'] as String),
       projectID: json['projectID'] as int?,
+      projektTitle: json['projektTitle'] as String?,
       serviceID: json['serviceID'] as int?,
       serviceTitle: json['serviceTitle'] as String?,
-      startTime: DateTime.parse(json['startTime'] as String),
-      userID:
-          json['userID'] as String? ?? 'f7e8b09a-ac4f-4a30-a7c5-b6f829cff9aa',
+      startTime: json['startTime'] == null
+          ? null
+          : DateTime.parse(json['startTime'] as String),
+      userID: json['userID'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
     <String, dynamic>{
-      'customerName': instance.customerName,
       'date': instance.date.toIso8601String(),
+      'customerName': instance.customerName,
+      'type': instance.type,
       'duration': instance.duration,
       'description': instance.description,
       'endTime': instance.endTime?.toIso8601String(),
@@ -41,8 +45,9 @@ Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
       'pauseEnd': instance.pauseEnd?.toIso8601String(),
       'pauseStart': instance.pauseStart?.toIso8601String(),
       'projectID': instance.projectID,
+      'projektTitle': instance.projektTitle,
       'serviceID': instance.serviceID,
       'serviceTitle': instance.serviceTitle,
-      'startTime': instance.startTime.toIso8601String(),
+      'startTime': instance.startTime?.toIso8601String(),
       'userID': instance.userID,
     };

@@ -39,12 +39,10 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
     super.initState();
     ref.read(projectVMProvider.notifier).loadpProject();
     _entry = TimeEntry(date: DateTime.now(), startTime: DateTime.now());
-    final minute =
-        _entry.startTime.minute < 10 ? '0${_entry.startTime.minute}' : '${_entry.startTime.minute}';
+    final minute = _entry.date.minute < 10 ? '0${_entry.date.minute}' : '${_entry.date.minute}';
     if (selectedTime == null || _dayPickerController.text.isEmpty) {
-      _dayPickerController.text =
-          '${_entry.startTime.day}.${_entry.startTime.month}.${_entry.startTime.year}';
-      selectedTime = TimeOfDay(hour: _entry.startTime.hour, minute: _entry.startTime.minute);
+      _dayPickerController.text = '${_entry.date.day}.${_entry.date.month}.${_entry.date.year}';
+      selectedTime = TimeOfDay(hour: _entry.date.hour, minute: _entry.date.minute);
     }
     _startController.text = '${selectedTime!.hour}:$minute';
   }
