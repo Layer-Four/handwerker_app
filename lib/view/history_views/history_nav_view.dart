@@ -6,6 +6,8 @@ import 'package:handwerker_app/view/history_views/history_project/project_overvi
 import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
 
+import '../../provider/settings_provider/language_provider.dart';
+
 class HistoryNavigationView extends ConsumerWidget {
   const HistoryNavigationView({super.key});
 
@@ -39,22 +41,22 @@ class NavBarHistoryVWidget extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () => viewNotifier.state = HistoryViews.timeEntry,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-            child: NavigationIcon(
-              title: 'Zeiteintrag',
-              isCurrent: viewProvider == HistoryViews.timeEntry,
-            ),
-          ),
-        ),
-        GestureDetector(
           onTap: () => viewNotifier.state = HistoryViews.project,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: 'Kunde',
+              title: ref.watch(languangeProvider).taskOverview,
               isCurrent: viewProvider == HistoryViews.project,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () => viewNotifier.state = HistoryViews.timeEntry,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+            child: NavigationIcon(
+              title: ref.watch(languangeProvider).timeoverview,
+              isCurrent: viewProvider == HistoryViews.timeEntry,
             ),
           ),
         ),
@@ -64,7 +66,7 @@ class NavBarHistoryVWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: 'Material',
+              title: ref.watch(languangeProvider).consumables,
               isCurrent: viewProvider == HistoryViews.consumables,
               isActiv: false,
             ),

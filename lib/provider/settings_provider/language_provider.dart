@@ -34,6 +34,10 @@ abstract class Dictionary {
   String get takePicture;
   String get documentationLabel;
   String get overView;
+  String get timeoverview;
+  String get taskOverview;
+
+  String get consumables;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -128,6 +132,15 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get overView => 'OVERVIEW';
+
+  @override
+  String get timeoverview => 'Timeoverview';
+
+  @override
+  String get taskOverview => 'Jobs';
+
+  @override
+  String get consumables => 'Consumbales';
 }
 
 class GermanLanguage extends Dictionary {
@@ -220,4 +233,13 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get overView => 'ÜBERSICHT';
+
+  @override
+  String get timeoverview => 'Zeitübersicht';
+
+  @override
+  String get taskOverview => 'Aufträge';
+
+  @override
+  String get consumables => 'Material';
 }
