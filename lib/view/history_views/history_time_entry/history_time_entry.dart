@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
@@ -8,9 +6,7 @@ import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 
 class HistoryTimeBody extends ConsumerWidget {
-  bool _isInit = false;
-  int _count = 0;
-  HistoryTimeBody({super.key});
+  const HistoryTimeBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,12 +16,7 @@ class HistoryTimeBody extends ConsumerWidget {
     final List<Workday> workdays = ref.read(timeEntriesProvider.notifier).getListOfWorkdays();
 
     if (workdays.isEmpty) {
-      _count++;
-      if (!_isInit) {
-        ref.read(timeEntriesProvider.notifier).loadtimeTracks();
-        _isInit = true;
-      }
-      log(_count.toString());
+      ref.read(timeEntriesProvider.notifier).loadtimeTracks();
       return const ShowEmptyMessage();
     }
     return Padding(
