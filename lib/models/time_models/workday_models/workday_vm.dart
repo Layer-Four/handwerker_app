@@ -1,9 +1,9 @@
-import 'package:handwerker_app/models/time_models/time_track_dm/time_track.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 
 class Workday {
   final DateTime date;
   // TODO: change with TimeTrack when Api json will be the same
-  final List<TimeTrack> timeEntries;
+  final List<TimeEntriesVM> timeEntries;
   const Workday({required this.date, required this.timeEntries});
 
   String getSumOfToday() {

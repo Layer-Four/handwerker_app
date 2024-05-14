@@ -22,7 +22,7 @@ class HistoryNavigationView extends ConsumerWidget {
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: switch (historyViewRef) {
-          HistoryViews.timeEntry => const HistoryTimeBody(),
+          HistoryViews.timeEntry => HistoryTimeBody(),
           HistoryViews.consumables => const HistoryMaterialBody(),
           HistoryViews.projects => const CostumerOverviewBody(),
           HistoryViews.jobs => const TodoViewBody(),

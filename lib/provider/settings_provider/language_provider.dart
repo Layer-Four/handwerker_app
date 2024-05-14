@@ -38,6 +38,8 @@ abstract class Dictionary {
   String get taskOverview;
 
   String get consumables;
+
+  String get plsChooseCustomerService;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -141,6 +143,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get consumables => 'Consumbales';
+
+  @override
+  String get plsChooseCustomerService => 'please choose CUSTOMER/PROJECT and SERVICE';
 }
 
 class GermanLanguage extends Dictionary {
@@ -242,4 +247,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get consumables => 'Material';
+
+  @override
+  String get plsChooseCustomerService => 'Bitte wähle ein KUNDE/PROJEKT und LEISTUNG aus';
 }

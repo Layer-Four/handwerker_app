@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
+import 'package:handwerker_app/models/time_models/time_entry_dm/time_entry.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 
@@ -16,12 +17,15 @@ class TodoViewBody extends ConsumerStatefulWidget {
 
 class _CostumerOverviewBodyState extends ConsumerState<TodoViewBody> {
   final List<DateTime> dates = List.generate(5, (index) => DateTime(2024, 06, index + 1));
-  final List<TimeEntry> todos = List.generate(
+  late List<TimeEntriesVM> todos = List.generate(
     5,
-    (index) => TimeEntry(
+    (index) => TimeEntriesVM(
       date: DateTime(2024, 06, index + 1),
       startTime: DateTime(2024, 06, index, 8),
       endTime: DateTime(2024, 06, index, 16, 30),
+      duration: (DateTime(2024, 06, index, 16, 30).millisecondsSinceEpoch -
+              DateTime(2024, 06, index, 8).millisecondsSinceEpoch) ~/
+          60000,
       serviceID: 5,
       serviceTitle: 'serviceTitle',
       projectID: 15,
@@ -146,7 +150,7 @@ class _CostumerOverviewBodyState extends ConsumerState<TodoViewBody> {
     );
   }
 
-  ListView _todoCardBuilder(List<TimeEntry> entry) {
+  ListView _todoCardBuilder(List<TimeEntriesVM> entry) {
     return ListView.builder(
         itemCount: entry.length,
         itemBuilder: (context, int j) {

@@ -25,7 +25,7 @@ class DokuNavigationView extends ConsumerWidget {
           child: switch (dokuViewRef) {
             DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
-            _ => TimeEntryBody(user.userToken),
+            _ => TimeEntriesBody(user.userToken),
           },
         ),
       ),

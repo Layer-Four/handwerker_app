@@ -1,18 +1,17 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'time_entry.dart';
+part of 'time_entries_vm.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
-    _$TimeEntryImpl(
-      date: DateTime.parse(json['date'] as String),
+_$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
+    _$TimeEntriesVMImpl(
       customerName: json['customerName'] as String?,
-      type: json['type'] as int?,
-      duration: json['duration'] as int?,
+      date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
+      duration: json['duration'] as int?,
       endTime: json['endTime'] == null
           ? null
           : DateTime.parse(json['endTime'] as String),
@@ -30,16 +29,17 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       startTime: json['startTime'] == null
           ? null
           : DateTime.parse(json['startTime'] as String),
+      type: $enumDecodeNullable(_$TimeEntryTypeEnumMap, json['type']) ??
+          TimeEntryType.timeEntry,
       userID: json['userID'] as String?,
     );
 
-Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
+Map<String, dynamic> _$$TimeEntriesVMImplToJson(_$TimeEntriesVMImpl instance) =>
     <String, dynamic>{
-      'date': instance.date.toIso8601String(),
       'customerName': instance.customerName,
-      'type': instance.type,
-      'duration': instance.duration,
+      'date': instance.date.toIso8601String(),
       'description': instance.description,
+      'duration': instance.duration,
       'endTime': instance.endTime?.toIso8601String(),
       'id': instance.id,
       'pauseEnd': instance.pauseEnd?.toIso8601String(),
@@ -49,5 +49,11 @@ Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
       'serviceID': instance.serviceID,
       'serviceTitle': instance.serviceTitle,
       'startTime': instance.startTime?.toIso8601String(),
+      'type': _$TimeEntryTypeEnumMap[instance.type]!,
       'userID': instance.userID,
     };
+
+const _$TimeEntryTypeEnumMap = {
+  TimeEntryType.timeEntry: 'timeEntry',
+  TimeEntryType.assignment: 'assignment',
+};

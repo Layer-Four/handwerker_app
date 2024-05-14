@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
-import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 
 void main() {
   final DateTime date = DateTime(2024, 03, 05);
@@ -11,7 +11,7 @@ void main() {
   const ServiceListVM service = ServiceListVM(name: 'Bad verfliesen', id: 7);
   const String description = '';
   group('create entry', () {
-    final TimeEntry testEntry = TimeEntry(
+    final TimeEntriesVM testEntry = TimeEntriesVM(
       date: date,
       startTime: start,
       endTime: end,

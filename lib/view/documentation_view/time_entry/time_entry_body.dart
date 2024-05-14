@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
-import 'package:handwerker_app/models/time_models/time_entry_vm/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
@@ -13,14 +14,14 @@ import 'package:handwerker_app/provider/settings_provider/language_provider.dart
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
-class TimeEntryBody extends ConsumerStatefulWidget {
+class TimeEntriesBody extends ConsumerStatefulWidget {
   final String id;
-  const TimeEntryBody(this.id, {super.key});
+  const TimeEntriesBody(this.id, {super.key});
   @override
-  ConsumerState<TimeEntryBody> createState() => _TimeEntryState();
+  ConsumerState<TimeEntriesBody> createState() => _TimeEntriesState();
 }
 
-class _TimeEntryState extends ConsumerState<TimeEntryBody> {
+class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   final TextEditingController _dayPickerController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
@@ -31,21 +32,21 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   TimeOfDay? selectedTime;
 
   ServiceListVM? _choosenService;
-
-  ProjectListVM? _project;
-  late TimeEntry _entry;
+  ProjectListVM? _choosenProject;
+  late TimeEntriesVM _entry;
 
   @override
   void initState() {
     super.initState();
     ref.read(projectVMProvider.notifier).loadpProject();
     final now = DateTime.now();
-    _entry = TimeEntry(date: now, startTime: now, userID: widget.id);
+    _entry = TimeEntriesVM(date: now, startTime: now, userID: widget.id);
     final minute = now.minute < 10 ? '0${now.minute}' : '${now.minute}';
     if (selectedTime == null || _dayPickerController.text.isEmpty) {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
       selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
     }
+
     _startController.text = '${selectedTime!.hour}:$minute';
   }
 
@@ -57,6 +58,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
         children: [
           _dayInputRow(),
           _timeInputRow(),
+          // TODO: create a standart for saving projekt Customer with seperate with "/"
           _buildCustomerProjectField(),
           _buildServiceDropdown(),
           _buildDescription(),
@@ -76,7 +78,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   Widget _buildCustomerProjectField() {
     return ref.watch(projectVMProvider).when(
           error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
             return const SizedBox.expand(
               child: Center(child: Text('Etwas lief schief')),
             );
@@ -89,8 +91,11 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
             final projects = data;
             if (projects != null && !_isProjectSet) {
               setState(() {
-                _project = projects.first;
-                _entry = _entry.copyWith(projectID: projects.first.id);
+                _choosenProject = projects.first;
+                _entry = _entry.copyWith(
+                  projectID: projects.first.id,
+                  projektTitle: projects.first.title,
+                );
                 _isProjectSet = true;
               });
             }
@@ -115,7 +120,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                       menuMaxHeight: 350,
                       underline: const SizedBox(),
                       isExpanded: true,
-                      value: _project,
+                      value: _choosenProject,
                       items: projects
                           ?.map(
                             (e) => DropdownMenuItem(
@@ -127,8 +132,11 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                           .toList(),
                       onChanged: (e) {
                         setState(() {
-                          _project = e!;
-                          _entry = _entry.copyWith(projectID: e.id);
+                          _choosenProject = e!;
+                          _entry = _entry.copyWith(
+                            projectID: e.id,
+                            projektTitle: e.title,
+                          );
                         });
                       },
                     ),
@@ -159,7 +167,7 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   Widget _buildServiceDropdown() {
     return ref.watch(serviceProvider).when(
           error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
+            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
             return const SizedBox(child: Text('Etwas lief schief'));
           },
           loading: () => const CircularProgressIndicator.adaptive(),
@@ -209,8 +217,8 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                         },
                       ).toList(),
                       onChanged: (e) => setState(() {
-                        _choosenService = e;
-                        _entry = _entry.copyWith(serviceID: e!.id, serviceTitle: e.name);
+                        _choosenService = e!;
+                        _entry = _entry.copyWith(serviceID: e.id, serviceTitle: e.name);
                       }),
                     ),
                   ),
@@ -227,6 +235,10 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
   /// than do  the same translation with _dayPickerController and _endController
   /// and return the different between this [DateTime] object in minutes.
   void _calculateDuration() {
+    if (_startController.text.isEmpty) {
+      final nowTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
+      _startController.text = '${nowTime.hour}:${nowTime.minute}';
+    }
     final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
     final start = DateTime(
       dateAsList[2],
@@ -291,6 +303,13 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
+            if (_choosenProject == null || _choosenService == null) {
+              return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(ref.watch(languangeProvider).plsChooseCustomerService),
+                ),
+              );
+            }
             if (_startController.text.isEmpty || _endController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -299,15 +318,18 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
               );
               // TODO: change wählen to an editable object
             } else {
-              ref.read(timeEntryProvider.notifier).uploadTimeEntry(_entry);
+              ref.read(timeEntriesProvider.notifier).uploadTimeEntriesVM(_entry);
               final now = DateTime.now();
               setState(() {
-                _startController.clear();
+                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+                _startController.text = '${now.hour}:${now.minute}';
                 _descriptionController.clear();
                 _endController.clear();
                 _durationController.clear();
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+                _choosenProject = null;
+                _choosenService = null;
               });
+              log(_startController.text);
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(ref.watch(languangeProvider).succes),
@@ -361,15 +383,33 @@ class _TimeEntryState extends ConsumerState<TimeEntryBody> {
                 ),
               );
               if (time != null) {
+                log(time.toString());
+                final endWithDate = DateTime(
+                  int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
+                  int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
+                  int.tryParse(_dayPickerController.text.split('.')[0]) ?? DateTime.now().day,
+                  time.hour,
+                  time.minute,
+                );
+                log(endWithDate.toIso8601String());
+                DateTime timeFromStart = DateTime(
+                  int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
+                  int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
+                  int.tryParse(_dayPickerController.text.split('.')[0]) ?? DateTime.now().day,
+                  int.tryParse(_startController.text.split(':').first) ?? time.hour,
+                  int.tryParse(_startController.text.split(':').first) ?? time.minute,
+                );
+                log(timeFromStart.toIso8601String());
+                if (endWithDate.millisecondsSinceEpoch < timeFromStart.millisecondsSinceEpoch) {
+                  timeFromStart = endWithDate.add(const Duration(minutes: -1));
+                  setState(() {
+                    _startController.text =
+                        '${timeFromStart.hour}:${timeFromStart.minute < 10 ? '0${timeFromStart.minute}' : '${timeFromStart.minute}'}';
+                  });
+                  log(_startController.text);
+                }
                 setState(() {
-                  _entry = _entry.copyWith(
-                      endTime: DateTime(
-                    _entry.date.year,
-                    _entry.date.month,
-                    _entry.date.day,
-                    time.hour,
-                    time.minute,
-                  ));
+                  _entry = _entry.copyWith(endTime: endWithDate);
                   final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
                   _endController.text = '${time.hour}:$minute';
                 });
