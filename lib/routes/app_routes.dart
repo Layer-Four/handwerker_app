@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:handwerker_app/view/login_screen/forget_screen.dart';
 import 'package:handwerker_app/view/login_screen/login_view.dart';
 import 'package:handwerker_app/view/login_screen/set_password.dart';
@@ -32,7 +31,7 @@ class OutloggedView extends StatelessWidget {
           child: Center(
             child: ElevatedButton(
               onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute),
-              child: Text('Zurück auf los'),
+              child: const Text('Zurück auf los'),
             ),
           ),
         ),

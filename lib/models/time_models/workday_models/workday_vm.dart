@@ -2,7 +2,6 @@ import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_v
 
 class Workday {
   final DateTime date;
-  // TODO: change with TimeTrack when Api json will be the same
   final List<TimeEntriesVM> timeEntries;
   const Workday({required this.date, required this.timeEntries});
 
