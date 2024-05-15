@@ -91,6 +91,11 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       }
       return result;
     } catch (error) {
+      if (error.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+        log('message');
+        return [];
+      }
       throw Exception(error);
     }
   }

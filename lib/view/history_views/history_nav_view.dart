@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/history_views/history_consumable/history_consumable_view.dart';
-import 'package:handwerker_app/view/history_views/history_todo_view/assignment.dart';
+import 'package:handwerker_app/view/history_views/assignment_view/assignment_view.dart';
 import 'package:handwerker_app/view/history_views/history_project/project_overview.dart';
 import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
@@ -22,7 +22,7 @@ class HistoryNavigationView extends ConsumerWidget {
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: switch (historyViewRef) {
-          HistoryViews.timeEntry => HistoryTimeBody(),
+          HistoryViews.timeEntry => const HistoryTimeBody(),
           HistoryViews.consumables => const HistoryMaterialBody(),
           HistoryViews.projects => const CostumerOverviewBody(),
           HistoryViews.jobs => const AssignmentViewBody(),

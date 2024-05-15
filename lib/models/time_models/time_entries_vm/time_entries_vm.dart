@@ -7,7 +7,7 @@ part 'time_entries_vm.g.dart';
 @freezed
 class TimeEntriesVM with _$TimeEntriesVM {
   const factory TimeEntriesVM({
-    String? customerName,
+    @Default('') String customerName,
     required DateTime date,
     String? description,
     int? duration,
@@ -20,7 +20,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
     int? serviceID,
     String? serviceTitle,
     DateTime? startTime,
-    @Default(TimeEntryType.timeEntry) TimeEntryType type,
+    @Default(TimeEntryType.assignment) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
@@ -42,6 +42,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
         type: TimeEntryTypeExtention.getType(e.type),
         userID: e.userID,
       );
+
   String getDurationInHours() {
     if (duration == null) return '';
     final hours = duration! ~/ 60;

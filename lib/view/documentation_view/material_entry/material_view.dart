@@ -50,6 +50,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),

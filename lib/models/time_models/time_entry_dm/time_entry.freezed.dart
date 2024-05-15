@@ -20,7 +20,7 @@ TimeEntry _$TimeEntryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TimeEntry {
-  String? get customerName => throw _privateConstructorUsedError;
+  String get customerName => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $TimeEntryCopyWith<$Res> {
       _$TimeEntryCopyWithImpl<$Res, TimeEntry>;
   @useResult
   $Res call(
-      {String? customerName,
+      {String customerName,
       DateTime date,
       String? description,
       int? duration,
@@ -78,7 +78,7 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? customerName = freezed,
+    Object? customerName = null,
     Object? date = null,
     Object? description = freezed,
     Object? duration = freezed,
@@ -95,10 +95,10 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
     Object? userID = freezed,
   }) {
     return _then(_value.copyWith(
-      customerName: freezed == customerName
+      customerName: null == customerName
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -168,7 +168,7 @@ abstract class _$$TimeEntryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? customerName,
+      {String customerName,
       DateTime date,
       String? description,
       int? duration,
@@ -196,7 +196,7 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? customerName = freezed,
+    Object? customerName = null,
     Object? date = null,
     Object? description = freezed,
     Object? duration = freezed,
@@ -213,10 +213,10 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
     Object? userID = freezed,
   }) {
     return _then(_$TimeEntryImpl(
-      customerName: freezed == customerName
+      customerName: null == customerName
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -281,7 +281,7 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TimeEntryImpl extends _TimeEntry {
   const _$TimeEntryImpl(
-      {this.customerName,
+      {this.customerName = '',
       required this.date,
       this.description,
       this.duration,
@@ -302,7 +302,8 @@ class _$TimeEntryImpl extends _TimeEntry {
       _$$TimeEntryImplFromJson(json);
 
   @override
-  final String? customerName;
+  @JsonKey()
+  final String customerName;
   @override
   final DateTime date;
   @override
@@ -406,7 +407,7 @@ class _$TimeEntryImpl extends _TimeEntry {
 
 abstract class _TimeEntry extends TimeEntry {
   const factory _TimeEntry(
-      {final String? customerName,
+      {final String customerName,
       required final DateTime date,
       final String? description,
       final int? duration,
@@ -427,7 +428,7 @@ abstract class _TimeEntry extends TimeEntry {
       _$TimeEntryImpl.fromJson;
 
   @override
-  String? get customerName;
+  String get customerName;
   @override
   DateTime get date;
   @override

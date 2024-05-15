@@ -20,4 +20,6 @@ class Workday {
     if (minutes < 10) return '$hours:0$minutes Stunden';
     return '$hours:$minutes Stunden';
   }
+
+  List<TimeEntriesVM> get entries => timeEntries;
 }

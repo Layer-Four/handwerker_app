@@ -137,7 +137,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           SizedBox(
@@ -148,7 +148,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           SizedBox(
@@ -157,7 +157,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],

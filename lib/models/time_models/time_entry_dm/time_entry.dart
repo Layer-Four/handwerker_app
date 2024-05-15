@@ -6,7 +6,7 @@ part 'time_entry.g.dart';
 @freezed
 class TimeEntry with _$TimeEntry {
   const factory TimeEntry({
-    String? customerName,
+    @Default('') String customerName,
     required DateTime date,
     String? description,
     int? duration,
@@ -45,7 +45,3 @@ class TimeEntry with _$TimeEntry {
 
   factory TimeEntry.fromJson(Map<String, dynamic> json) => _$TimeEntryFromJson(json);
 }
-
-/// this enum represent the different status of an TimeEntry.
-///
-

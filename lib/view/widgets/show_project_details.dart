@@ -56,7 +56,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                                  ?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           Padding(
@@ -66,7 +66,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                                  ?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],
@@ -77,7 +77,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
-                        ?.copyWith(color: AppColor.kTextfieldBorder)),
+                        ?.copyWith(color: AppColor.kLightLabelColor)),
           )
         ],
       ),

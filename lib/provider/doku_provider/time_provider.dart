@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +17,12 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
   build() => [];
 
   void uploadTimeEntriesVM(TimeEntriesVM entry) async {
-    final data = TimeEntry.fromTimeEntriesVM(entry);
+    final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
+    data.removeWhere((key, value) => key == 'userID');
+    log(json.encode(data));
+
     try {
-      final response = await _api.postTimeEnty(data.toJson());
+      final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -27,18 +31,25 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
         return;
       }
-      final jsonResponse = response.data;
-      final entry = TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(jsonResponse));
-      final list = <TimeEntriesVM>[...state, entry];
-      state = list;
+      loadTimeTracks();
+      // final newData = await _api.getAllTimeTracks;
+      // final jsonResponse = response.data;
+      // final entry = TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(jsonResponse));
+      // final list = <TimeEntriesVM>[...state, entry];
+      // state = list;
       log(' \nrequest success\n ');
       return;
     } catch (e) {
+      if (e.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+        log('message');
+        return;
+      }
       log('request was incompleted this was the error: $e');
     }
   }
 
-  void loadtimeTracks() async {
+  void loadTimeTracks() async {
     try {
       final response = await _api.getAllTimeTracks;
       if (response.statusCode != 200) {

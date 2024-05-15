@@ -14,8 +14,7 @@ import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
 class TimeEntriesBody extends ConsumerStatefulWidget {
-  final String id;
-  const TimeEntriesBody(this.id, {super.key});
+  const TimeEntriesBody({super.key});
   @override
   ConsumerState<TimeEntriesBody> createState() => _TimeEntriesState();
 }
@@ -39,7 +38,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
     super.initState();
     ref.read(projectVMProvider.notifier).loadpProject();
     final now = DateTime.now();
-    _entry = TimeEntriesVM(date: now, startTime: now, userID: widget.id);
+    _entry = TimeEntriesVM(date: now, startTime: now);
     final minute = now.minute < 10 ? '0${now.minute}' : '${now.minute}';
     if (selectedTime == null || _dayPickerController.text.isEmpty) {
       _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
@@ -328,7 +327,6 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                 _choosenProject = null;
                 _choosenService = null;
               });
-              log(_startController.text);
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(ref.watch(languangeProvider).succes),
@@ -382,7 +380,6 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                 ),
               );
               if (time != null) {
-                log(time.toString());
                 final endWithDate = DateTime(
                   int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
                   int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
@@ -390,7 +387,6 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                   time.hour,
                   time.minute,
                 );
-                log(endWithDate.toIso8601String());
                 DateTime timeFromStart = DateTime(
                   int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
                   int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
@@ -398,14 +394,12 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                   int.tryParse(_startController.text.split(':').first) ?? time.hour,
                   int.tryParse(_startController.text.split(':').first) ?? time.minute,
                 );
-                log(timeFromStart.toIso8601String());
                 if (endWithDate.millisecondsSinceEpoch < timeFromStart.millisecondsSinceEpoch) {
                   timeFromStart = endWithDate.add(const Duration(minutes: -1));
                   setState(() {
                     _startController.text =
                         '${timeFromStart.hour}:${timeFromStart.minute < 10 ? '0${timeFromStart.minute}' : '${timeFromStart.minute}'}';
                   });
-                  log(_startController.text);
                 }
                 setState(() {
                   _entry = _entry.copyWith(endTime: endWithDate);

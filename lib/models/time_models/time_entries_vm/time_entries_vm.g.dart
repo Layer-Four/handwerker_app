@@ -8,7 +8,7 @@ part of 'time_entries_vm.dart';
 
 _$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntriesVMImpl(
-      customerName: json['customerName'] as String?,
+      customerName: json['customerName'] as String? ?? '',
       date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
       duration: json['duration'] as int?,
@@ -30,7 +30,7 @@ _$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['startTime'] as String),
       type: $enumDecodeNullable(_$TimeEntryTypeEnumMap, json['type']) ??
-          TimeEntryType.timeEntry,
+          TimeEntryType.assignment,
       userID: json['userID'] as String?,
     );
 

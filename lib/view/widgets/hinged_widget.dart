@@ -4,7 +4,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 class HingedWidget extends StatefulWidget {
   final Widget header;
   final Widget? alterHeader;
-  final Column content;
+  final Widget content;
   final int contentLength;
   final double? width;
   final double? basicHeigth;
@@ -61,7 +61,7 @@ class _LargeHingedState extends State<HingedWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 90,
+                      width: MediaQuery.of(context).size.width - 60,
                       child: widget.alterHeader != null
                           ? _isOpen
                               ? widget.alterHeader

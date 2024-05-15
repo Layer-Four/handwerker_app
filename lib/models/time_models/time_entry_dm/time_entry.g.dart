@@ -8,7 +8,7 @@ part of 'time_entry.dart';
 
 _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntryImpl(
-      customerName: json['customerName'] as String?,
+      customerName: json['customerName'] as String? ?? '',
       date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
       duration: json['duration'] as int?,
