@@ -42,6 +42,8 @@ abstract class Dictionary {
   String get plsChooseCustomerService;
 
   String get projectName;
+
+  String get sessionHasEnded;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -151,6 +153,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get projectName => 'Projectname';
+
+  @override
+  String get sessionHasEnded => 'Your session has ended.\nPlease login again';
 }
 
 class GermanLanguage extends Dictionary {
@@ -258,4 +263,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get projectName => 'Projektname';
+
+  @override
+  String get sessionHasEnded => 'Ihre Sitzung wurde Beendet.\nBitte melden sie sich erneut an';
 }

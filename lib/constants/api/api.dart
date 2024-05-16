@@ -95,11 +95,12 @@ class Api {
       onError: (DioException error, handler) async {
         if (error.response?.statusCode == 500 ||
             (error.message != null && error.message!.contains('500'))) {
-          _storage.then((value) {
-            return value.clear();
-          });
+          _storage.then((value) => value.clear());
           // SharedPreferences.getInstance().then((value) => value.clear());
           log('message');
+        }
+        if (error.response?.statusCode == 400) {
+          return;
         }
         //       final storage = await _storage;
         //       accessToken = storage.getString('TOKEN');

@@ -86,11 +86,10 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
                 itemBuilder: (context, int j) {
                   final selected = _choosenList[j];
                   return Padding(
-                    // * Aussenabstand
                     padding: const EdgeInsets.only(bottom: 18.0),
                     child: HingedWidget(
                       alterHeader: _buildAlterCardHeadLine(selected),
-                      contentLength: 2,
+                      contentLength: 3,
                       header: _buildHeadLine(selected),
                       content: AssigmentInfoCard(entry: selected),
                     ),
@@ -114,11 +113,16 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
         borderRadius: BorderRadius.circular(8),
         elevation: 2,
         child: InkWell(
-            child: Padding(
+            child: Container(
+              width: 180,
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+              alignment: Alignment.center,
               child: Text(
-                _isFilteredForTimeEntries == false ? 'Vergangene Aufträge' : 'Aufträge',
-                style: Theme.of(context).textTheme.labelLarge,
+                _isFilteredForTimeEntries ? 'Aufträge' : 'Vergangene Aufträge',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge
+                    ?.copyWith(color: AppColor.kLightLabelColor),
               ),
             ),
             onTap: () {
@@ -216,9 +220,27 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(
-            e.customerName,
-            style: Theme.of(context).textTheme.labelLarge,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${e.customerName} ',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              InkWell(
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Ich werde durch ein Popup ersetzt das Kundendaten oder Auftragsdaten anzeigt'),
+                        ),
+                      ),
+                  child: const Icon(
+                    Icons.info_outline,
+                    size: 16,
+                  ))
+            ],
           ),
         ),
       ],
@@ -232,9 +254,27 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(
-            e.customerName,
-            style: Theme.of(context).textTheme.labelLarge,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${e.customerName} ',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+              InkWell(
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Ich werde durch ein Popup ersetzt das Kundendaten oder Auftragsdaten anzeigt'),
+                        ),
+                      ),
+                  child: const Icon(
+                    Icons.info_outline,
+                    size: 16,
+                  ))
+            ],
           ),
         ),
         Padding(
@@ -351,27 +391,7 @@ class AssigmentInfoCard extends ConsumerWidget {
               ),
               _labeledInput(context, ref.watch(languangeProvider).service,
                   entry.serviceTitle ?? 'Kein Titel'),
-              Text(
-                ref.watch(languangeProvider).description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColor.kLightLabelColor,
-                    ),
-              ),
-              // TODO: Make inhalt scroll again
-              Container(
-                padding: const EdgeInsets.all(6),
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: AppColor.kTextfieldBorder,
-                  ),
-                ),
-                child: Text(
-                  entry.description ?? '',
-                  softWrap: true,
-                ),
-              ),
+              _labeldDescripction(ref, context),
             ],
           ),
         ),
@@ -379,25 +399,64 @@ class AssigmentInfoCard extends ConsumerWidget {
     );
   }
 
-  Widget _labeledInput(
-    BuildContext context,
-    String label,
-    String text,
-  ) =>
-      Column(
+  Padding _labeldDescripction(WidgetRef ref, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            label,
+            ref.watch(languangeProvider).description,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColor.kLightLabelColor,
                 ),
           ),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.labelLarge,
+          Container(
+            padding: const EdgeInsets.all(6),
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppColor.kTextfieldBorder,
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Text(
+                entry.description ?? '',
+                softWrap: true,
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _labeledInput(
+    BuildContext context,
+    String label,
+    String text, {
+    double? paddingV,
+    double? paddingH,
+  }) =>
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: paddingH ?? 0, vertical: paddingV ?? 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColor.kLightLabelColor,
+                  ),
+            ),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+          ],
+        ),
       );
 }

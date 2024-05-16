@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
@@ -39,6 +40,8 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
               child: const SizedBox.shrink(),
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(ref.watch(languangeProvider).sessionHasEnded)));
                   Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
 
                   // TODO: can throw error after false login

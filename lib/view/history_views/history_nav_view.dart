@@ -40,28 +40,38 @@ class NavBarHistoryVWidget extends ConsumerWidget {
     final viewProvider = ref.watch(historyViewProvider);
     final viewNotifier = ref.read(historyViewProvider.notifier);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // GestureDetector(
+        //   onTap: () => viewNotifier.state = HistoryViews.jobs,
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+        //     child: NavigationIcon(
+        //       title: ref.watch(languangeProvider).taskOverview,
+        //       isCurrent: viewProvider == HistoryViews.jobs,
+        //     ),
+        //   ),
+        // ),
         GestureDetector(
           onTap: () => viewNotifier.state = HistoryViews.jobs,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: ref.watch(languangeProvider).taskOverview,
+              title: ref.watch(languangeProvider).timeoverview,
               isCurrent: viewProvider == HistoryViews.jobs,
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () => viewNotifier.state = HistoryViews.timeEntry,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-            child: NavigationIcon(
-              title: ref.watch(languangeProvider).timeoverview,
-              isCurrent: viewProvider == HistoryViews.timeEntry,
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () => viewNotifier.state = HistoryViews.timeEntry,
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+        //     child: NavigationIcon(
+        //       title: ref.watch(languangeProvider).timeoverview,
+        //       isCurrent: viewProvider == HistoryViews.timeEntry,
+        //     ),
+        //   ),
+        // ),
         // GestureDetector(
         //   onTap: () => viewNotifier.state = HistoryViews.projects,
         //   child: Padding(
@@ -72,18 +82,18 @@ class NavBarHistoryVWidget extends ConsumerWidget {
         //     ),
         //   ),
         // ),
-        GestureDetector(
-          onTap: () {},
-          // onTap: () => viewNotifier.state = HistoryViews.consumables,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-            child: NavigationIcon(
-              title: ref.watch(languangeProvider).consumables,
-              isCurrent: viewProvider == HistoryViews.consumables,
-              isActiv: false,
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () {},
+        //   // onTap: () => viewNotifier.state = HistoryViews.consumables,
+        //   child: Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+        //     child: NavigationIcon(
+        //       title: ref.watch(languangeProvider).consumables,
+        //       isCurrent: viewProvider == HistoryViews.consumables,
+        //       isActiv: false,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
