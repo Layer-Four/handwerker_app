@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as develop;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,67 +19,50 @@ class AssignmentViewBody extends ConsumerStatefulWidget {
 
 class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
   bool _isFilteredForTimeEntries = false;
-  final List<DateTime> dates = List.generate(2, (index) => DateTime(2024, 06, index + 1));
-  // final List<TimeEntriesVM> entries = List.generate(
-  //   10,
-  //   (index) {
-  //     if (index < 5) {
-  //       return TimeEntriesVM(
-  //           customerName: 'Kundenname',
-  //           date: DateTime(2024, 06, index + 1),
-  //           startTime: DateTime(2024, 06, index, 8),
-  //           endTime: DateTime(2024, 06, index, 16, 30),
-  //           duration: (DateTime(2024, 06, index, 16, 30).millisecondsSinceEpoch -
-  //                   DateTime(2024, 06, index, 8).millisecondsSinceEpoch) ~/
-  //               60000,
-  //           serviceID: 5,
-  //           type: TimeEntryType.assignment,
-  //           serviceTitle: 'serviceTitle',
-  //           projectID: 15,
-  //           description:
-  //               'dies ist eine klasssische beschreibung eines Auftrags \n dies ist eine klasssische beschreibung eines Auftrags\n dies ist eine klasssische beschreibung eines Auftrags');
-  //     } else {
-  //       return TimeEntriesVM(
-  //         customerName: 'berichte',
-  //         date: DateTime(2024, 06, index + 1),
-  //         description: 'dies ist eine klasssische beschreibung eines Berichts',
-  //         startTime: DateTime(2024, 06, index, 8),
-  //         endTime: DateTime(2024, 06, index, 16, 30),
-  //         duration: (DateTime(2024, 06, index, 16, 30).millisecondsSinceEpoch -
-  //                 DateTime(2024, 06, index, 8).millisecondsSinceEpoch) ~/
-  //             60000,
-  //         serviceID: 5,
-  //         type: TimeEntryType.timeEntry,
-  //         serviceTitle: 'serviceTitle',
-  //         projectID: 15,
-  //       );
-  //     }
-  //   },
-  // );
+  final List<TimeEntriesVM> entries = List.generate(5, (_) {
+    final ranMonth = Random().nextInt(13);
+    final ranDay = Random().nextInt(31);
+    return TimeEntriesVM(
+        customerName: 'Kundenname',
+        date: DateTime(2024, ranMonth, ranDay),
+        startTime: DateTime(2024, ranMonth, ranDay, 8),
+        endTime: DateTime(2024, ranMonth, ranDay, 16, 30),
+        duration: (DateTime(2024, ranMonth, ranDay, 16, 30).millisecondsSinceEpoch -
+                DateTime(2024, ranMonth, ranDay, 8).millisecondsSinceEpoch) ~/
+            60000,
+        serviceID: 5,
+        type: TimeEntryType.assignment,
+        serviceTitle: 'serviceTitle',
+        projectID: 15,
+        description:
+            'dies ist eine klasssische beschreibung eines Auftrags \n dies ist eine klasssische beschreibung eines Auftrags\n dies ist eine klasssische beschreibung eines Auftrags');
+  });
+
   List<TimeEntriesVM> _choosenList = [];
+  List<TimeEntriesVM> _allEntries = [];
+
   int counter = 0;
   @override
   void initState() {
     super.initState();
     ref.read(timeEntriesProvider.notifier).loadTimeEntriesVM();
+    entries.sort((a, b) => a.date.compareTo(b.date));
   }
 
   void getTimeEntries() {
     counter++;
-    log('calls amout if getTimeEntries -> $counter');
+    develop.log('calls amout if getTimeEntries -> $counter');
     if (ref.watch(timeEntriesProvider).isEmpty) {
       Future.delayed(const Duration(milliseconds: 400)).then(
         (value) => setState(() {
-          _choosenList = ref
-              .watch(timeEntriesProvider)
-              .where((e) => e.type == TimeEntryType.timeEntry)
-              .toList();
+          _allEntries = ref.watch(timeEntriesProvider);
+          _choosenList.where((e) => e.type == TimeEntryType.assignment).toList();
         }),
       );
     } else {
       setState(() {
-        _choosenList =
-            ref.watch(timeEntriesProvider).where((e) => e.type == TimeEntryType.timeEntry).toList();
+        _allEntries = ref.watch(timeEntriesProvider);
+        _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
       });
     }
     return;
@@ -88,12 +72,12 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
   Widget build(context) {
     if (ref.watch(timeEntriesProvider).isEmpty) {
       // TODO: Talk about performence? Run this code until have resilt or set a inital delay to get a better performence!
-      Future.delayed(Duration(milliseconds: 200))
+      Future.delayed(const Duration(milliseconds: 200))
           .then((value) => WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
                 getTimeEntries();
                 setState(() {
                   _choosenList =
-                      _choosenList.where((el) => el.type == TimeEntryType.timeEntry).toList();
+                      _allEntries.where((el) => el.type == TimeEntryType.assignment).toList();
                 });
               }));
     }
@@ -109,9 +93,14 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  _isFilteredForTimeEntries ? 'Vergangene Aufträge' : 'Aufträge',
-                  style: Theme.of(context).textTheme.labelLarge,
+                child: InkWell(
+                  onTap: () => setState(() {
+                    _allEntries.addAll(entries);
+                  }),
+                  child: Text(
+                    _isFilteredForTimeEntries ? 'Vergangene Aufträge' : 'Aufträge',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
               ),
               _buildChangeEntriesOrderButton(),
@@ -169,17 +158,23 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
                 _isFilteredForTimeEntries = !_isFilteredForTimeEntries;
                 if (_isFilteredForTimeEntries) {
                   setState(() {
-                    _choosenList = ref
-                        .watch(timeEntriesProvider)
+                    _choosenList = _allEntries
                         .where((element) => element.type == TimeEntryType.timeEntry)
                         .toList();
+                    // _choosenList = ref
+                    //     .watch(timeEntriesProvider)
+                    //     .where((element) => element.type == TimeEntryType.timeEntry)
+                    //     .toList();
                   });
                 } else {
                   setState(() {
-                    _choosenList = ref
-                        .watch(timeEntriesProvider)
+                    _choosenList = _allEntries
                         .where((element) => element.type == TimeEntryType.assignment)
                         .toList();
+                    // _choosenList = ref
+                    //     .watch(timeEntriesProvider)
+                    //     .where((element) => element.type == TimeEntryType.assignment)
+                    //     .toList();
                   });
                 }
               });
