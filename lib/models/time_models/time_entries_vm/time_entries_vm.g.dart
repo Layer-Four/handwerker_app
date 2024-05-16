@@ -26,9 +26,7 @@ _$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
       projektTitle: json['projektTitle'] as String?,
       serviceID: json['serviceID'] as int?,
       serviceTitle: json['serviceTitle'] as String?,
-      startTime: json['startTime'] == null
-          ? null
-          : DateTime.parse(json['startTime'] as String),
+      startTime: DateTime.parse(json['startTime'] as String),
       type: $enumDecodeNullable(_$TimeEntryTypeEnumMap, json['type']) ??
           TimeEntryType.assignment,
       userID: json['userID'] as String?,
@@ -48,7 +46,7 @@ Map<String, dynamic> _$$TimeEntriesVMImplToJson(_$TimeEntriesVMImpl instance) =>
       'projektTitle': instance.projektTitle,
       'serviceID': instance.serviceID,
       'serviceTitle': instance.serviceTitle,
-      'startTime': instance.startTime?.toIso8601String(),
+      'startTime': instance.startTime.toIso8601String(),
       'type': _$TimeEntryTypeEnumMap[instance.type]!,
       'userID': instance.userID,
     };

@@ -19,7 +19,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
     String? projektTitle,
     int? serviceID,
     String? serviceTitle,
-    DateTime? startTime,
+    required DateTime startTime,
     @Default(TimeEntryType.assignment) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;

@@ -11,12 +11,12 @@ class HistoryTimeBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(timeEntriesProvider).isEmpty) {
-      ref.read(timeEntriesProvider.notifier).loadTimeTracks();
+      ref.read(timeEntriesProvider.notifier).loadTimeEntriesVM();
     }
     final List<Workday> workdays = ref.read(timeEntriesProvider.notifier).getListOfWorkdays();
 
     if (workdays.isEmpty) {
-      ref.read(timeEntriesProvider.notifier).loadTimeTracks();
+      ref.read(timeEntriesProvider.notifier).loadTimeEntriesVM();
       return const ShowEmptyMessage();
     }
     return Padding(

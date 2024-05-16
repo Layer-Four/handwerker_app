@@ -31,12 +31,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
         log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
         return;
       }
-      loadTimeTracks();
-      // final newData = await _api.getAllTimeTracks;
-      // final jsonResponse = response.data;
-      // final entry = TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(jsonResponse));
-      // final list = <TimeEntriesVM>[...state, entry];
-      // state = list;
+      loadTimeEntriesVM();
       log(' \nrequest success\n ');
       return;
     } catch (e) {
@@ -49,9 +44,12 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     }
   }
 
-  void loadTimeTracks() async {
+  static int loadEntriesCounter = 0;
+  void loadTimeEntriesVM() async {
+    loadEntriesCounter++;
+    log('laodTimeEntries counter-> $loadEntriesCounter');
     try {
-      final response = await _api.getAllTimeTracks;
+      final response = await _api.getAllTimeentriesDM;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -64,6 +62,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
       data.map((e) => e.asMap());
       final newstate =
           data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
+      newstate.sort((a, b) => a.date.compareTo(b.date));
       state = newstate;
       return;
     } catch (e) {

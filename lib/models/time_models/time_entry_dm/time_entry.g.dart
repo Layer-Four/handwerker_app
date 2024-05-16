@@ -26,9 +26,7 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       projektTitle: json['projektTitle'] as String?,
       serviceID: json['serviceID'] as int?,
       serviceTitle: json['serviceTitle'] as String?,
-      startTime: json['startTime'] == null
-          ? null
-          : DateTime.parse(json['startTime'] as String),
+      startTime: DateTime.parse(json['startTime'] as String),
       type: json['type'] as int? ?? 0,
       userID: json['userID'] as String?,
     );
@@ -47,7 +45,7 @@ Map<String, dynamic> _$$TimeEntryImplToJson(_$TimeEntryImpl instance) =>
       'projektTitle': instance.projektTitle,
       'serviceID': instance.serviceID,
       'serviceTitle': instance.serviceTitle,
-      'startTime': instance.startTime?.toIso8601String(),
+      'startTime': instance.startTime.toIso8601String(),
       'type': instance.type,
       'userID': instance.userID,
     };

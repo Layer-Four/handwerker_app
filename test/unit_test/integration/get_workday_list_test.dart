@@ -12,7 +12,7 @@ void main() async {
   final Api api = Api();
   List<TimeEntriesVM>? entries;
   try {
-    final response = await api.getAllTimeTracks;
+    final response = await api.getAllTimeentriesDM;
     if (response.statusCode == 200) {
       final List data = response.data.map((e) => e).toList();
       data.map((e) => e.asMap());

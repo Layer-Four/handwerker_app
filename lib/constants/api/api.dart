@@ -26,7 +26,7 @@ class Api {
 // Getter
 
   Future<Response> get getAllProjects => _api.get(_getAllProjects);
-  Future<Response> get getAllTimeTracks => _api.get(_getAllTimeTacks);
+  Future<Response> get getAllTimeentriesDM => _api.get(_getAllTimeTacks);
   Future<Response> get getAllUnits => _api.get(_getAllUnitsList);
   Future<Response> get getCustomerProjects => _api.get(_getCustomerProject);
   Future<Response> getDokuforProjectURL(int projectID) =>

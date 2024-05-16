@@ -32,7 +32,7 @@ mixin _$TimeEntry {
   String? get projektTitle => throw _privateConstructorUsedError;
   int? get serviceID => throw _privateConstructorUsedError;
   String? get serviceTitle => throw _privateConstructorUsedError;
-  DateTime? get startTime => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
   int get type => throw _privateConstructorUsedError;
   String? get userID => throw _privateConstructorUsedError;
 
@@ -60,7 +60,7 @@ abstract class $TimeEntryCopyWith<$Res> {
       String? projektTitle,
       int? serviceID,
       String? serviceTitle,
-      DateTime? startTime,
+      DateTime startTime,
       int type,
       String? userID});
 }
@@ -90,7 +90,7 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
     Object? projektTitle = freezed,
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? type = null,
     Object? userID = freezed,
   }) {
@@ -143,10 +143,10 @@ class _$TimeEntryCopyWithImpl<$Res, $Val extends TimeEntry>
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      startTime: freezed == startTime
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -180,7 +180,7 @@ abstract class _$$TimeEntryImplCopyWith<$Res>
       String? projektTitle,
       int? serviceID,
       String? serviceTitle,
-      DateTime? startTime,
+      DateTime startTime,
       int type,
       String? userID});
 }
@@ -208,7 +208,7 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
     Object? projektTitle = freezed,
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? type = null,
     Object? userID = freezed,
   }) {
@@ -261,10 +261,10 @@ class __$$TimeEntryImplCopyWithImpl<$Res>
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      startTime: freezed == startTime
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -293,7 +293,7 @@ class _$TimeEntryImpl extends _TimeEntry {
       this.projektTitle,
       this.serviceID,
       this.serviceTitle,
-      this.startTime,
+      required this.startTime,
       this.type = 0,
       this.userID})
       : super._();
@@ -327,7 +327,7 @@ class _$TimeEntryImpl extends _TimeEntry {
   @override
   final String? serviceTitle;
   @override
-  final DateTime? startTime;
+  final DateTime startTime;
   @override
   @JsonKey()
   final int type;
@@ -419,7 +419,7 @@ abstract class _TimeEntry extends TimeEntry {
       final String? projektTitle,
       final int? serviceID,
       final String? serviceTitle,
-      final DateTime? startTime,
+      required final DateTime startTime,
       final int type,
       final String? userID}) = _$TimeEntryImpl;
   const _TimeEntry._() : super._();
@@ -452,7 +452,7 @@ abstract class _TimeEntry extends TimeEntry {
   @override
   String? get serviceTitle;
   @override
-  DateTime? get startTime;
+  DateTime get startTime;
   @override
   int get type;
   @override

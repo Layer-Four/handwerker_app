@@ -18,7 +18,7 @@ class TimeEntry with _$TimeEntry {
     String? projektTitle,
     int? serviceID,
     String? serviceTitle,
-    DateTime? startTime,
+    required DateTime startTime,
     @Default(0) int type,
     String? userID,
   }) = _TimeEntry;
