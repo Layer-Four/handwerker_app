@@ -56,7 +56,7 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
       Future.delayed(const Duration(milliseconds: 400)).then(
         (value) => setState(() {
           _allEntries = ref.watch(timeEntriesProvider);
-          _choosenList.where((e) => e.type == TimeEntryType.assignment).toList();
+          _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
         }),
       );
     } else {
@@ -107,7 +107,11 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
             ],
           ),
           _choosenList.isEmpty
-              ? const Center(child: Text('Keine Einträge gefunden'))
+              ? Center(
+                  child: Text(
+                  '       Lade Daten oder\nkeine Einträge gefunden',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ))
               : Expanded(
                   child: ListView.builder(
                       itemCount: _choosenList.length,
