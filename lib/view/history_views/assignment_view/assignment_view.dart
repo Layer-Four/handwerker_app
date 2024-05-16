@@ -53,12 +53,10 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
     counter++;
     develop.log('calls amout if getTimeEntries -> $counter');
     if (ref.watch(timeEntriesProvider).isEmpty) {
-      Future.delayed(const Duration(milliseconds: 400)).then(
-        (value) => setState(() {
-          _allEntries = ref.watch(timeEntriesProvider);
-          _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
-        }),
-      );
+      (value) => setState(() {
+            _allEntries = ref.watch(timeEntriesProvider);
+            _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
+          });
     } else {
       setState(() {
         _allEntries = ref.watch(timeEntriesProvider);
@@ -95,7 +93,7 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: InkWell(
                   onTap: () => setState(() {
-                    _allEntries.addAll(entries);
+                    _allEntries = [..._allEntries, ...entries];
                   }),
                   child: Text(
                     _isFilteredForTimeEntries ? 'Vergangene Aufträge' : 'Aufträge',
