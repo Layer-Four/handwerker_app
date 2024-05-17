@@ -16,18 +16,13 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
   List<DocumentationEntry>? build() => null;
 
   void createDocumentationEntry(DocumentationEntry entry) async {
-    // final createUri = DbAdresses().postDocumentationEntry;
-
-    // final Dio http = Dio();
     final xFileList = [];
-
     for (var path in entry.imageUrl) {
       final xfile = XFile(path,
           name:
               '${entry.projectName}/${entry.createDate.day}:${entry.createDate.month}:${entry.createDate.year}');
       xFileList.add(xfile);
     }
-
     FormData formData = FormData.fromMap({
       'projectID': entry.projectID,
       'createDate': entry.createDate.toIso8601String(),
@@ -55,14 +50,18 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
           ref.read(userProvider.notifier).userLogOut();
           return;
         }
-        // TODO: when is possible catch response and load it on State or update some values
 
-        log('statuscode: ${response.statusCode}  backend returned: ${response.data}');
+        log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
         return;
       }
       log('request was successful-> ${response.data}');
       return;
     } catch (e) {
+      if (e.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+        log('message');
+        return;
+      }
       log('request was incompleted this was the error: $e');
     }
   }

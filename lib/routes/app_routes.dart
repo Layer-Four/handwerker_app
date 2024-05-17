@@ -10,6 +10,7 @@ class AppRoutes {
   static const anmeldeScreen = '/login_view';
   static const setPasswordScreen = '/set_password_view';
   static const viewScreen = '/view_view';
+  static const outloggedView = '/view_loggedOut';
   static const forgotPassword = '/forgot_password';
 
   static Map<String, WidgetBuilder> routes = {
@@ -18,5 +19,21 @@ class AppRoutes {
     initialRoute: (context) => const StartView(),
     setPasswordScreen: (context) => const PasswordView(),
     viewScreen: (context) => const MainViewNavigator(),
+    outloggedView: (context) => const OutloggedView(),
   };
+}
+
+class OutloggedView extends StatelessWidget {
+  const OutloggedView({super.key});
+  @override
+  Widget build(context) => Material(
+        child: SizedBox(
+          child: Center(
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute),
+              child: const Text('Zurück auf los'),
+            ),
+          ),
+        ),
+      );
 }

@@ -16,7 +16,6 @@ class StartView extends ConsumerStatefulWidget {
 }
 
 class _StartViewState extends ConsumerState<StartView> {
-  bool _firstTime = true;
   String? _token;
 
   @override
@@ -26,14 +25,11 @@ class _StartViewState extends ConsumerState<StartView> {
   }
 
   void askForToken() {
-    if (_firstTime) {
-      ref.read(userProvider.notifier).getUserToken().then(
-            (value) => setState(() {
-              _token = value;
-              _firstTime = false;
-            }),
-          );
-    }
+    ref.read(userProvider.notifier).getUserToken().then(
+          (value) => setState(() {
+            _token = value;
+          }),
+        );
   }
 
   @override

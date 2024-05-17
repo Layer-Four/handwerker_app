@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
@@ -24,7 +23,6 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
     if (_firstLoad) {
       setState(() {
         _firstLoad = false;
-        log('change first load on main nav');
       });
     }
     final provider = ref.watch(viewProvider);
@@ -39,12 +37,14 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
           MainViews.user => const UserView(),
           MainViews.logOut => Focus(
               autofocus: true,
-              child: const SizedBox(
-                child: Center(child: Text('welcome to the matrix')),
-              ),
+              child: const SizedBox.shrink(),
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
-                  Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(ref.watch(languangeProvider).sessionHasEnded)));
+                  Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
+
+                  // TODO: can throw error after false login
                 }
               },
             ),

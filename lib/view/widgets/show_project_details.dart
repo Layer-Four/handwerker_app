@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -19,7 +18,6 @@ class ProjectDetails extends ConsumerStatefulWidget {
 
 class _ProjectCardState extends ConsumerState<ProjectDetails> {
   int currentIndex = 0;
-  // TODO: refactor ProjectCustomer -> consumables
   List<Consumable>? consumables;
 
   @override
@@ -58,7 +56,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                                  ?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           Padding(
@@ -68,7 +66,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(color: AppColor.kTextfieldBorder),
+                                  ?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],
@@ -79,7 +77,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
-                        ?.copyWith(color: AppColor.kTextfieldBorder)),
+                        ?.copyWith(color: AppColor.kLightLabelColor)),
           )
         ],
       ),

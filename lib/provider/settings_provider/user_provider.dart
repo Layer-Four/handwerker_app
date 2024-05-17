@@ -1,12 +1,12 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/user.dart/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final userProvider =
-    NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
+final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier());
 
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
@@ -38,37 +38,39 @@ class UserNotifier extends Notifier<UserVM> {
     return token;
   }
 
-// TODO: delete default option for mandant
   Future<bool> loginUser({
     required String passwort,
     required String userName,
-    String? mandatID,
+    String? mandantID,
   }) async {
     final Map<String, dynamic> json = {
       "username": userName,
       "password": passwort,
-      "mandant": mandatID ?? '1',
+      "mandant": mandantID,
     };
     try {
       final response = await api.postloginUser(json);
-      if (response.statusCode == 401) {
-        log('user not authorized');
-      }
-      if (response.statusCode == 200) {
-        log(response.data.toString());
-        final data = (response.data as Map);
-        final userToken = data.values.first as String;
-        // TODO: when token Exist load user with Token
-        final newUser = state.copyWith(userToken: userToken);
-        setToken(token: userToken);
-        // final userDate = http.get('www.abc/getUerdata', data: userToken);
-
-        if (newUser != state) {
-          state = newUser;
-          return true;
+      if (response.statusCode != 200) {
+        if (response.statusCode == 401) {
+          log('user not authorized');
+          return false;
         }
-      } else {
-        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
+        log('something went wrong status -> ${response.statusCode} : ${response.data}');
+        return false;
+      }
+      log(response.data.toString());
+      final data = (response.data as Map);
+      final userToken = data.values.first as String;
+      final newUser = state.copyWith(userToken: userToken);
+      setToken(token: userToken);
+      // final userDate = http.get('www.abc/getUerdata', data: userToken);
+      if (newUser != state) {
+        state = newUser;
+        return true;
+      }
+    } on DioException catch (e) {
+      if (e.message!.contains('401')) {
+        log('user Input is not correct');
         return false;
       }
     } catch (e) {

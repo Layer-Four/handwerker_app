@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -8,7 +6,6 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -23,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey();
 
-  void reactionOfLogin(bool isSuccess) async {
+  void reactionOfLogin(bool isSuccess) {
     if (isSuccess) {
       _userNameController.clear();
       _passwordController.clear();
@@ -145,12 +142,10 @@ class _LoginViewState extends State<LoginView> {
                                         .loginUser(
                                           passwort: _passwordController.text,
                                           userName: _userNameController.text,
+                                          // TODO: save on first load in shared Preferences?
+                                          mandantID: '1',
                                         )
                                         .then((value) => reactionOfLogin(value));
-                                    SharedPreferences.getInstance().then((value) {
-                                      final token = value.getString('TOKEN');
-                                      log(token.toString());
-                                    });
                                   }
                                   if (isOTP) {
                                     Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);

@@ -20,6 +20,12 @@ class CostumerOverviewBody extends ConsumerStatefulWidget {
 class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
   List<ProjectCustomer>? futureProjects;
 
+  Future<List<ProjectCustomer>> loadProjects() async {
+    final value = await ref.read(projectVMProvider.notifier).getAllProjectEntries();
+    setState(() => futureProjects = value);
+    return value;
+  }
+
   @override
   Widget build(context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -34,16 +40,12 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
         ),
       );
 
-  Future<List<ProjectCustomer>> loadProjects() async {
-    final value = await ref.read(projectVMProvider.notifier).getAllProjectEntries();
-    setState(() => futureProjects = value);
-    return value;
-  }
-
-  // futureProjects = ref.read(projectVMProvider.notifier).getAllProjectEntries();
   Widget _buildAsyncProjectOverview() => FutureBuilder<List<ProjectCustomer?>>(
       future: loadProjects(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
         if (snapshot.data != null) {
           if (snapshot.data!.isEmpty) return const ShowEmptyMessage();
           final customerProjectList = snapshot.data;
@@ -70,10 +72,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
             ),
           );
         }
-        return const SizedBox(
-          height: 400,
-          child: Center(child: CircularProgressIndicator()),
-        );
+        return const ShowEmptyMessage();
       });
 
   Widget _buildCustomerOverviewHeadLine() {
@@ -138,7 +137,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           SizedBox(
@@ -149,7 +148,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           SizedBox(
@@ -158,7 +157,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
-                                  .copyWith(color: AppColor.kTextfieldBorder),
+                                  .copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
 
 class LabeldTextfield extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Function(String)? onChanged;
   final String label;
   final double? heigt;
@@ -14,7 +14,7 @@ class LabeldTextfield extends StatelessWidget {
   const LabeldTextfield(
       {super.key,
       required this.label,
-      required this.controller,
+      this.controller,
       this.heigt = 35,
       this.width,
       this.onChanged,
@@ -40,6 +40,8 @@ class LabeldTextfield extends StatelessWidget {
             height: heigt,
             width: width,
             child: TextField(
+              readOnly: controller == null,
+              // enableInteractiveSelection: true,
               controller: controller,
               textAlignVertical: TextAlignVertical.top,
               expands: textInputType == TextInputType.multiline ? true : false,
