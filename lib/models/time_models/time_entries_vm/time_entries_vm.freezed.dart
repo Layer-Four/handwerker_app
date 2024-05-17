@@ -38,14 +38,12 @@ mixin _$TimeEntriesVM {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TimeEntriesVMCopyWith<TimeEntriesVM> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TimeEntriesVMCopyWith<TimeEntriesVM> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $TimeEntriesVMCopyWith<$Res> {
-  factory $TimeEntriesVMCopyWith(
-          TimeEntriesVM value, $Res Function(TimeEntriesVM) then) =
+  factory $TimeEntriesVMCopyWith(TimeEntriesVM value, $Res Function(TimeEntriesVM) then) =
       _$TimeEntriesVMCopyWithImpl<$Res, TimeEntriesVM>;
   @useResult
   $Res call(
@@ -161,8 +159,7 @@ class _$TimeEntriesVMCopyWithImpl<$Res, $Val extends TimeEntriesVM>
 }
 
 /// @nodoc
-abstract class _$$TimeEntriesVMImplCopyWith<$Res>
-    implements $TimeEntriesVMCopyWith<$Res> {
+abstract class _$$TimeEntriesVMImplCopyWith<$Res> implements $TimeEntriesVMCopyWith<$Res> {
   factory _$$TimeEntriesVMImplCopyWith(
           _$TimeEntriesVMImpl value, $Res Function(_$TimeEntriesVMImpl) then) =
       __$$TimeEntriesVMImplCopyWithImpl<$Res>;
@@ -295,7 +292,7 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
       this.serviceID,
       this.serviceTitle,
       required this.startTime,
-      this.type = TimeEntryType.assignment,
+      this.type = TimeEntryType.workOrder,
       this.userID})
       : super._();
 
@@ -345,29 +342,19 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TimeEntriesVMImpl &&
-            (identical(other.customerName, customerName) ||
-                other.customerName == customerName) &&
+            (identical(other.customerName, customerName) || other.customerName == customerName) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
+            (identical(other.description, description) || other.description == description) &&
+            (identical(other.duration, duration) || other.duration == duration) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.pauseEnd, pauseEnd) ||
-                other.pauseEnd == pauseEnd) &&
-            (identical(other.pauseStart, pauseStart) ||
-                other.pauseStart == pauseStart) &&
-            (identical(other.projectID, projectID) ||
-                other.projectID == projectID) &&
-            (identical(other.projektTitle, projektTitle) ||
-                other.projektTitle == projektTitle) &&
-            (identical(other.serviceID, serviceID) ||
-                other.serviceID == serviceID) &&
-            (identical(other.serviceTitle, serviceTitle) ||
-                other.serviceTitle == serviceTitle) &&
-            (identical(other.startTime, startTime) ||
-                other.startTime == startTime) &&
+            (identical(other.pauseEnd, pauseEnd) || other.pauseEnd == pauseEnd) &&
+            (identical(other.pauseStart, pauseStart) || other.pauseStart == pauseStart) &&
+            (identical(other.projectID, projectID) || other.projectID == projectID) &&
+            (identical(other.projektTitle, projektTitle) || other.projektTitle == projektTitle) &&
+            (identical(other.serviceID, serviceID) || other.serviceID == serviceID) &&
+            (identical(other.serviceTitle, serviceTitle) || other.serviceTitle == serviceTitle) &&
+            (identical(other.startTime, startTime) || other.startTime == startTime) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.userID, userID) || other.userID == userID));
   }
@@ -425,8 +412,7 @@ abstract class _TimeEntriesVM extends TimeEntriesVM {
       final String? userID}) = _$TimeEntriesVMImpl;
   const _TimeEntriesVM._() : super._();
 
-  factory _TimeEntriesVM.fromJson(Map<String, dynamic> json) =
-      _$TimeEntriesVMImpl.fromJson;
+  factory _TimeEntriesVM.fromJson(Map<String, dynamic> json) = _$TimeEntriesVMImpl.fromJson;
 
   @override
   String get customerName;

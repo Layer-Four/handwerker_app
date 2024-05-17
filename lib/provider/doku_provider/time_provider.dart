@@ -71,6 +71,25 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     }
   }
 
+  List<TimeEntriesVM> loadWorkOrder() {
+    final allEntries = state;
+    if (state.isEmpty) {
+      // loadTimeEntriesVM();
+      log('state s empty load list');
+      return [];
+    }
+    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
+      log(e.toJson().toString());
+    }
+    allEntries.sort(
+      (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
+    );
+    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
+      print(e.toJson().toString());
+    }
+    return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
+  }
+
   // sortiere einträge in workdays
   List<Workday> getListOfWorkdays() {
     List<Workday> listOfWorkdays = [];

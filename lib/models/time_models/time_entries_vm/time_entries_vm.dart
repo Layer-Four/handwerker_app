@@ -20,7 +20,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
     int? serviceID,
     String? serviceTitle,
     required DateTime startTime,
-    @Default(TimeEntryType.assignment) TimeEntryType type,
+    @Default(TimeEntryType.workOrder) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
@@ -54,16 +54,16 @@ class TimeEntriesVM with _$TimeEntriesVM {
 
 enum TimeEntryType {
   timeEntry,
-  assignment,
+  workOrder,
 }
 
 extension TimeEntryTypeExtention on TimeEntryType {
   int get index => switch (this) {
         TimeEntryType.timeEntry => 0,
-        TimeEntryType.assignment => 1,
+        TimeEntryType.workOrder => 1,
       };
   static TimeEntryType getType(int index) => switch (index) {
-        1 => TimeEntryType.assignment,
+        1 => TimeEntryType.workOrder,
         _ => TimeEntryType.timeEntry,
       };
 }

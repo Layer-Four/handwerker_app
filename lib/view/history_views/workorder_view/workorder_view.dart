@@ -1,6 +1,3 @@
-import 'dart:developer' as develop;
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -10,76 +7,58 @@ import 'package:handwerker_app/provider/settings_provider/language_provider.dart
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 
-class AssignmentViewBody extends ConsumerStatefulWidget {
-  const AssignmentViewBody({super.key});
+class WorkOrderViewBody extends ConsumerStatefulWidget {
+  const WorkOrderViewBody({super.key});
 
   @override
-  ConsumerState<AssignmentViewBody> createState() => _AssignmentViewBodyState();
+  ConsumerState<WorkOrderViewBody> createState() => _WorkOrderViewBodyState();
 }
 
-class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
-  bool _isFilteredForTimeEntries = false;
-  final List<TimeEntriesVM> entries = List.generate(5, (_) {
-    final ranMonth = Random().nextInt(13);
-    final ranDay = Random().nextInt(31);
-    return TimeEntriesVM(
-        customerName: 'Kundenname',
-        date: DateTime(2024, ranMonth, ranDay),
-        startTime: DateTime(2024, ranMonth, ranDay, 8),
-        endTime: DateTime(2024, ranMonth, ranDay, 16, 30),
-        duration: (DateTime(2024, ranMonth, ranDay, 16, 30).millisecondsSinceEpoch -
-                DateTime(2024, ranMonth, ranDay, 8).millisecondsSinceEpoch) ~/
-            60000,
-        serviceID: 5,
-        type: TimeEntryType.assignment,
-        serviceTitle: 'serviceTitle',
-        projectID: 15,
-        description:
-            'dies ist eine klasssische beschreibung eines Auftrags \n dies ist eine klasssische beschreibung eines Auftrags\n dies ist eine klasssische beschreibung eines Auftrags');
-  });
-
+class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
   List<TimeEntriesVM> _choosenList = [];
-  List<TimeEntriesVM> _allEntries = [];
+  List<TimeEntriesVM> _allAssignemts = [];
 
-  int counter = 0;
   @override
   void initState() {
     super.initState();
     ref.read(timeEntriesProvider.notifier).loadTimeEntriesVM();
-    entries.sort((a, b) => a.date.compareTo(b.date));
   }
 
-  void getTimeEntries() {
-    counter++;
-    develop.log('calls amout if getTimeEntries -> $counter');
-    if (ref.watch(timeEntriesProvider).isEmpty) {
-      (value) => setState(() {
-            _allEntries = ref.watch(timeEntriesProvider);
-            _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
-          });
-    } else {
-      setState(() {
-        _allEntries = ref.watch(timeEntriesProvider);
-        _choosenList = _allEntries.where((e) => e.type == TimeEntryType.assignment).toList();
-      });
+  void getWorkOrder() {
+    if (_allAssignemts.isEmpty) {
+      setState(
+        () => _allAssignemts = ref.read(timeEntriesProvider.notifier).loadWorkOrder(),
+      );
+      return;
     }
+    setState(() {
+      _choosenList = _allAssignemts
+          .where((e) => e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+          .toList();
+      _choosenList.sort((a, b) =>
+          b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch));
+    });
     return;
   }
 
   @override
   Widget build(context) {
-    if (ref.watch(timeEntriesProvider).isEmpty) {
+    if (_allAssignemts.isEmpty) {
+      getWorkOrder();
       // TODO: Talk about performence? Run this code until have resilt or set a inital delay to get a better performence!
-      Future.delayed(const Duration(milliseconds: 200))
-          .then((value) => WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
-                getTimeEntries();
-                setState(() {
-                  _choosenList =
-                      _allEntries.where((el) => el.type == TimeEntryType.assignment).toList();
-                });
-              }));
+      WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
+        (_) {
+          setState(
+            () {
+              _choosenList = _allAssignemts
+                  .where(
+                      (e) => e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+                  .toList();
+            },
+          );
+        },
+      );
     }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
@@ -91,13 +70,23 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: InkWell(
-                  onTap: () => setState(() {
-                    _allEntries = [..._allEntries, ...entries];
-                  }),
-                  child: Text(
-                    _isFilteredForTimeEntries ? 'Vergangene Aufträge' : 'Aufträge',
-                    style: Theme.of(context).textTheme.labelLarge,
+                child: Material(
+                  borderRadius: BorderRadius.circular(8),
+                  elevation: 2,
+                  child: InkWell(
+                    onTap: () => setState(() {
+                      _choosenList = _allAssignemts
+                          .where((e) =>
+                              e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+                          .toList();
+                    }),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 4),
+                      child: Text(
+                        ref.watch(languangeProvider).workOrder,
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -107,9 +96,10 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
           _choosenList.isEmpty
               ? Center(
                   child: Text(
-                  '       Lade Daten oder\nkeine Einträge gefunden',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ))
+                    '       Lade Daten oder\nkeine Einträge gefunden',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                )
               : Expanded(
                   child: ListView.builder(
                       itemCount: _choosenList.length,
@@ -139,16 +129,13 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
       child: Material(
-        clipBehavior: Clip.antiAlias,
         borderRadius: BorderRadius.circular(8),
         elevation: 2,
         child: InkWell(
-            child: Container(
-              width: 180,
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-              alignment: Alignment.center,
               child: Text(
-                _isFilteredForTimeEntries ? 'Aufträge' : 'Vergangene Aufträge',
+                'Vergangene Aufträge',
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge
@@ -157,28 +144,11 @@ class _AssignmentViewBodyState extends ConsumerState<AssignmentViewBody> {
             ),
             onTap: () {
               setState(() {
-                _isFilteredForTimeEntries = !_isFilteredForTimeEntries;
-                if (_isFilteredForTimeEntries) {
-                  setState(() {
-                    _choosenList = _allEntries
-                        .where((element) => element.type == TimeEntryType.timeEntry)
-                        .toList();
-                    // _choosenList = ref
-                    //     .watch(timeEntriesProvider)
-                    //     .where((element) => element.type == TimeEntryType.timeEntry)
-                    //     .toList();
-                  });
-                } else {
-                  setState(() {
-                    _choosenList = _allEntries
-                        .where((element) => element.type == TimeEntryType.assignment)
-                        .toList();
-                    // _choosenList = ref
-                    //     .watch(timeEntriesProvider)
-                    //     .where((element) => element.type == TimeEntryType.assignment)
-                    //     .toList();
-                  });
-                }
+                _choosenList = _allAssignemts
+                    .where(
+                      (e) => e.date.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch,
+                    )
+                    .toList();
               });
             }),
       ),
@@ -343,7 +313,9 @@ class AssigmentInfoCard extends ConsumerWidget {
           ),
           Container(
             padding: const EdgeInsets.all(6),
-            height: 80,
+            height: 90,
+            // height: MediaQuery.of(context).size.width / 10 * 2.5,
+            width: MediaQuery.of(context).size.width / 10 * 9,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(

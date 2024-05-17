@@ -6,34 +6,25 @@ part of 'time_entries_vm.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
-    _$TimeEntriesVMImpl(
+_$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) => _$TimeEntriesVMImpl(
       customerName: json['customerName'] as String? ?? '',
       date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
       duration: json['duration'] as int?,
-      endTime: json['endTime'] == null
-          ? null
-          : DateTime.parse(json['endTime'] as String),
+      endTime: json['endTime'] == null ? null : DateTime.parse(json['endTime'] as String),
       id: json['id'] as int?,
-      pauseEnd: json['pauseEnd'] == null
-          ? null
-          : DateTime.parse(json['pauseEnd'] as String),
-      pauseStart: json['pauseStart'] == null
-          ? null
-          : DateTime.parse(json['pauseStart'] as String),
+      pauseEnd: json['pauseEnd'] == null ? null : DateTime.parse(json['pauseEnd'] as String),
+      pauseStart: json['pauseStart'] == null ? null : DateTime.parse(json['pauseStart'] as String),
       projectID: json['projectID'] as int?,
       projektTitle: json['projektTitle'] as String?,
       serviceID: json['serviceID'] as int?,
       serviceTitle: json['serviceTitle'] as String?,
       startTime: DateTime.parse(json['startTime'] as String),
-      type: $enumDecodeNullable(_$TimeEntryTypeEnumMap, json['type']) ??
-          TimeEntryType.assignment,
+      type: $enumDecodeNullable(_$TimeEntryTypeEnumMap, json['type']) ?? TimeEntryType.workOrder,
       userID: json['userID'] as String?,
     );
 
-Map<String, dynamic> _$$TimeEntriesVMImplToJson(_$TimeEntriesVMImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$TimeEntriesVMImplToJson(_$TimeEntriesVMImpl instance) => <String, dynamic>{
       'customerName': instance.customerName,
       'date': instance.date.toIso8601String(),
       'description': instance.description,
@@ -53,5 +44,5 @@ Map<String, dynamic> _$$TimeEntriesVMImplToJson(_$TimeEntriesVMImpl instance) =>
 
 const _$TimeEntryTypeEnumMap = {
   TimeEntryType.timeEntry: 'timeEntry',
-  TimeEntryType.assignment: 'assignment',
+  TimeEntryType.workOrder: 'assignment',
 };

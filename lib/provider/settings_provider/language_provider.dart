@@ -36,14 +36,11 @@ abstract class Dictionary {
   String get overView;
   String get timeoverview;
   String get taskOverview;
-
   String get consumables;
-
   String get plsChooseCustomerService;
-
   String get projectName;
-
   String get sessionHasEnded;
+  String get workOrder;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -156,6 +153,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get sessionHasEnded => 'Your session has ended.\nPlease login again';
+
+  @override
+  String get workOrder => 'Work order';
 }
 
 class GermanLanguage extends Dictionary {
@@ -266,4 +266,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get sessionHasEnded => 'Ihre Sitzung wurde Beendet.\nBitte melden sie sich erneut an';
+
+  @override
+  String get workOrder => 'Aufträge';
 }
