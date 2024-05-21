@@ -20,7 +20,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
     int? serviceID,
     String? serviceTitle,
     required DateTime startTime,
-    @Default(TimeEntryType.workOrder) TimeEntryType type,
+    @Default(TimeEntryType.timeEntry) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
