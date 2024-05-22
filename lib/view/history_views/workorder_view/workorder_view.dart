@@ -33,7 +33,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
     }
     setState(() {
       _choosenList = _allAssignemts
-          .where((e) => e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+          .where((e) => e.date.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
           .toList();
       _choosenList.sort((a, b) =>
           b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch));
@@ -52,7 +52,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
             () {
               _choosenList = _allAssignemts
                   .where(
-                      (e) => e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+                      (e) => e.date.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
                   .toList();
             },
           );
@@ -77,7 +77,8 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
                     onTap: () => setState(() {
                       _choosenList = _allAssignemts
                           .where((e) =>
-                              e.date.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch)
+                              e.date.millisecondsSinceEpoch >=
+                              DateTime.now().millisecondsSinceEpoch)
                           .toList();
                     }),
                     child: Padding(
