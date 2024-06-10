@@ -58,6 +58,7 @@ class UserNotifier extends Notifier<UserVM> {
         log('something went wrong status -> ${response.statusCode} : ${response.data}');
         return false;
       }
+
       log(response.data.toString());
       final data = (response.data as Map);
       final userToken = data.values.first as String;

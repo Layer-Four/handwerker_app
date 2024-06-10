@@ -37,7 +37,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     } catch (e) {
       if (e.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
+        log(e.toString());
         return;
       }
       log('request was incompleted this was the error: $e');

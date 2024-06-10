@@ -31,7 +31,7 @@ class OutloggedView extends StatelessWidget {
           child: Center(
             child: ElevatedButton(
               onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute),
-              child: const Text('Zurück auf los'),
+              child: const Text('Zurück zur Anmeldeseite'),
             ),
           ),
         ),

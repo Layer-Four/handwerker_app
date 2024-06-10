@@ -62,14 +62,7 @@ class Api {
 
   final _storage = SharedPreferences.getInstance();
   Api() {
-    _api.options = BaseOptions(baseUrl: _baseUrl
-        // , headers: {
-        //   'Access-Control-Allow-Origin': '*',
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json',
-        //   'Authorization': 'Bearer $value',
-        // }
-        );
+    _api.options = BaseOptions(baseUrl: _baseUrl);
 
     // _api.interceptors.add(DioInterceptor());
     _api.interceptors.add(InterceptorsWrapper(
