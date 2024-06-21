@@ -300,42 +300,47 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           color: AppColor.kPrimaryButtonColor,
           text: ref.watch(languangeProvider).createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-          onPressed: () {
-            if (_choosenProject == null || _choosenService == null) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseCustomerService),
-                ),
-              );
-            }
-            if (_startController.text.isEmpty || _endController.text.isEmpty) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseBeginEnd),
-                ),
-              );
-              // TODO: change wählen to an editable object
-            } else {
-              ref.read(timeEntriesProvider.notifier).uploadTimeEntriesVM(_entry);
-              final now = DateTime.now();
-              setState(() {
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-                _startController.text = '${now.hour}:${now.minute}';
-                _descriptionController.clear();
-                _endController.clear();
-                _durationController.clear();
-                _choosenProject = null;
-                _choosenService = null;
-              });
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(ref.watch(languangeProvider).succes),
-                ),
-              );
-            }
-          },
+          onPressed: () => _checkAndSendEntry(context),
         ),
       );
+  _checkAndSendEntry(BuildContext context) {
+    if (_choosenProject == null || _choosenService == null) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(child: Text(ref.watch(languangeProvider).plsChooseCustomerService)),
+        ),
+      );
+    }
+    if (_startController.text.isEmpty || _endController.text.isEmpty) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(child: Text(ref.watch(languangeProvider).plsChooseBeginEnd)),
+        ),
+      );
+      // TODO: change wählen to an editable object
+    } else {
+      ref.read(timeEntriesProvider.notifier).createTimeEntriesVM(_entry).then((e) {
+        if (e) {
+          setState(() {
+            final now = DateTime.now();
+            _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+            _startController.text = '${now.hour}:${now.minute}';
+            _descriptionController.clear();
+            _endController.clear();
+            _durationController.clear();
+            _choosenProject = null;
+            _choosenService = null;
+          });
+        }
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text(e ? ref.watch(languangeProvider).succes : ref.watch(languangeProvider).failed),
+          ),
+        );
+      });
+    }
+  }
 
   Widget _timeInputRow() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

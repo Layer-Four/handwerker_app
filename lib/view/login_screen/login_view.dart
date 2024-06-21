@@ -22,13 +22,19 @@ class _LoginViewState extends State<LoginView> {
 
   void reactionOfLogin(bool isSuccess) {
     if (isSuccess) {
-      _userNameController.clear();
-      _passwordController.clear();
       Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
       return;
     }
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
+    return;
+  }
+
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,13 +42,13 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: BackgroundWidget(
           body: Padding(
-            padding: const EdgeInsets.only(top: 60, left: 40, right: 40),
+            padding: const EdgeInsets.only(top: 50, left: 40, right: 40),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const AppLogo(),
-                  const SizedBox(
-                    height: 9,
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: AppLogo(),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -140,10 +146,8 @@ class _LoginViewState extends State<LoginView> {
                                     ref
                                         .read(userProvider.notifier)
                                         .loginUser(
-                                          passwort: _passwordController.text,
-                                          userName: _userNameController.text,
-                                          // TODO: save on first load in shared Preferences?
-                                          mandantID: '1',
+                                          _passwordController.text,
+                                          _userNameController.text,
                                         )
                                         .then((value) => reactionOfLogin(value));
                                   }
