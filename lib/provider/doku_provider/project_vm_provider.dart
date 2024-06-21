@@ -57,10 +57,9 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   }
 
   Future<List<DocumentationDM>?> loadDocumentationForProject(int projectID) async {
-    final api = Api();
     List<DocumentationDM> result = [];
     try {
-      final response = await api.getDokuforProjectURL(projectID);
+      final response = await _api.getDokuforProjectURL(projectID);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -78,6 +77,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
           for (var j in something) {
             if (j != null || j!.isNotEmpty) {
               final url = 'https://rsahapp.blob.core.windows.net/$j';
+              log(url);
               imageUrls.add(url);
             }
           }

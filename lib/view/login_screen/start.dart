@@ -8,32 +8,13 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 
-class StartView extends ConsumerStatefulWidget {
+class StartView extends ConsumerWidget {
   const StartView({super.key});
 
   @override
-  ConsumerState<StartView> createState() => _StartViewState();
-}
-
-class _StartViewState extends ConsumerState<StartView> {
-  String? _token;
-
   @override
-  void initState() {
-    super.initState();
-    askForToken();
-  }
-
-  void askForToken() {
-    ref.read(userProvider.notifier).getUserToken().then(
-          (value) => setState(() {
-            _token = value;
-          }),
-        );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) => ref.watch(userProvider));
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -57,15 +38,15 @@ class _StartViewState extends ConsumerState<StartView> {
                       Text(
                         "Alles, was Sie brauchen, in einer App!",
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: AppColor.kPrimaryButtonColor,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15),
+                              color: AppColor.kPrimaryButtonColor,
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Flexible(
-                  flex: 1, // Adjust flex value as needed
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -74,16 +55,10 @@ class _StartViewState extends ConsumerState<StartView> {
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () {
-                            log('token after press start > $_token');
-                            _token == null
-                                ? Navigator.pushReplacementNamed(
-                                    context,
-                                    AppRoutes.anmeldeScreen,
-                                  )
-                                : Navigator.pushReplacementNamed(
-                                    context,
-                                    AppRoutes.viewScreen,
-                                  );
+                            log('token after press start > ${ref.watch(userProvider).userToken}');
+                            ref.watch(userProvider).userToken.isEmpty
+                                ? Navigator.pushReplacementNamed(context, AppRoutes.anmeldeScreen)
+                                : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -99,10 +74,10 @@ class _StartViewState extends ConsumerState<StartView> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 40,
+                      const Padding(
+                        padding: EdgeInsets.only(top: 40.0),
+                        child: AppLogo(),
                       ),
-                      const AppLogo(),
                     ],
                   ),
                 ),

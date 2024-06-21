@@ -21,14 +21,11 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
-          // color: AppColor.kPrimary,
-          // notchMargin: 16,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               buildTabItem(0, const Icon(Icons.alarm)),
               buildTabItem(1, const Icon(Icons.note_alt_outlined)),
-              // Container(width: 40),
               buildTabItem(2, const Icon(Icons.storage)),
               buildTabItem(3, const Icon(Icons.account_box_outlined)),
             ],

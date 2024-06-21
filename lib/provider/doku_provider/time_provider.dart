@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
@@ -16,38 +17,31 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
   @override
   build() => [];
 
-  void uploadTimeEntriesVM(TimeEntriesVM entry) async {
+  Future<bool> createTimeEntriesVM(TimeEntriesVM entry) async {
     final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
     data.removeWhere((key, value) => key == 'userID');
     log(json.encode(data));
-
     try {
       final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
-        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
-        return;
+        throw Exception(
+            'Error occuren on createTimeEntriesVM: ${response.statusCode}\n${response.data}');
       }
-      loadTimeEntriesVM();
-      log(' \nrequest success\n ');
-      return;
-    } catch (e) {
-      if (e.toString().contains('500')) {
+      return true;
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 401) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
-        return;
+        log('UserToken is outdated ${e.response!.statusMessage}');
+        return false;
       }
-      log('request was incompleted this was the error: $e');
+      throw Exception('DioException: ${e.message}');
+    } catch (e) {
+      log(e.toString());
+      return false;
     }
   }
 
-  static int loadEntriesCounter = 0;
   void loadTimeEntriesVM() async {
-    loadEntriesCounter++;
-    log('laodTimeEntries counter-> $loadEntriesCounter');
     try {
       final response = await _api.getAllTimeentriesDM;
       if (response.statusCode != 200) {

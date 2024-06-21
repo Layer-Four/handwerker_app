@@ -41,6 +41,8 @@ abstract class Dictionary {
   String get projectName;
   String get sessionHasEnded;
   String get workOrder;
+
+  String get failed;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -156,6 +158,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Work order';
+
+  @override
+  String get failed => 'Failed';
 }
 
 class GermanLanguage extends Dictionary {
@@ -269,4 +274,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Aufträge';
+
+  @override
+  String get failed => 'Fehlgeschlagen';
 }

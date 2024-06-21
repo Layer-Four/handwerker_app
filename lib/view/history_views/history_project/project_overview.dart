@@ -43,9 +43,9 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
   Widget _buildAsyncProjectOverview() => FutureBuilder<List<ProjectCustomer?>>(
       future: loadProjects(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        // if (snapshot.connectionState == ConnectionState.waiting) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
         if (snapshot.data != null) {
           if (snapshot.data!.isEmpty) return const ShowEmptyMessage();
           final customerProjectList = snapshot.data;
