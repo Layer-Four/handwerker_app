@@ -3,13 +3,15 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 class HingedWidget extends StatefulWidget {
   final Widget header;
-  final Column content;
+  final Widget? alterHeader;
+  final Widget content;
   final int contentLength;
   final double? width;
   final double? basicHeigth;
 
   const HingedWidget({
     super.key,
+    this.alterHeader,
     required this.header,
     required this.content,
     required this.contentLength,
@@ -59,8 +61,12 @@ class _LargeHingedState extends State<HingedWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width - 90,
-                      child: widget.header,
+                      width: MediaQuery.of(context).size.width - 60,
+                      child: widget.alterHeader != null
+                          ? _isOpen
+                              ? widget.alterHeader
+                              : widget.header
+                          : widget.header,
                     ),
                     Icon(
                       _isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,

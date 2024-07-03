@@ -102,7 +102,7 @@ class Utilits {
       InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: AppColor.kTextfieldBorder,
+              color: AppColor.kLightLabelColor,
             ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 15,

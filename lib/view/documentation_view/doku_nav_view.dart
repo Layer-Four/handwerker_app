@@ -23,7 +23,7 @@ class DokuNavigationView extends ConsumerWidget {
           child: switch (dokuViewRef) {
             DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
-            _ => const TimeEntryBody(),
+            _ => const TimeEntriesBody(),
           },
         ),
       ),
@@ -42,7 +42,6 @@ class NavAppBarWidget extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // TODO: InkWell or GesturDetector???
         GestureDetector(
           onTap: () => viewNotifier.state = DokuViews.timeEntry,
           child: Padding(
@@ -69,7 +68,7 @@ class NavAppBarWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: NavigationIcon(
-              title: 'Material',
+              title: language.consumables,
               isCurrent: viewProvider == DokuViews.consumables,
             ),
           ),

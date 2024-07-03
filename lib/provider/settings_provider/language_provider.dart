@@ -34,6 +34,15 @@ abstract class Dictionary {
   String get takePicture;
   String get documentationLabel;
   String get overView;
+  String get timeoverview;
+  String get taskOverview;
+  String get consumables;
+  String get plsChooseCustomerService;
+  String get projectName;
+  String get sessionHasEnded;
+  String get workOrder;
+
+  String get failed;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -128,6 +137,30 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get overView => 'OVERVIEW';
+
+  @override
+  String get timeoverview => 'Timeoverview';
+
+  @override
+  String get taskOverview => 'Jobs';
+
+  @override
+  String get consumables => 'Consumbales';
+
+  @override
+  String get plsChooseCustomerService => 'please choose CUSTOMER/PROJECT and SERVICE';
+
+  @override
+  String get projectName => 'Projectname';
+
+  @override
+  String get sessionHasEnded => 'Your session has ended.\nPlease login again';
+
+  @override
+  String get workOrder => 'Work order';
+
+  @override
+  String get failed => 'Failed';
 }
 
 class GermanLanguage extends Dictionary {
@@ -220,4 +253,28 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get overView => 'ÜBERSICHT';
+
+  @override
+  String get timeoverview => 'Zeitübersicht';
+
+  @override
+  String get taskOverview => 'Aufträge';
+
+  @override
+  String get consumables => 'Material';
+
+  @override
+  String get plsChooseCustomerService => 'Bitte wähle ein KUNDE/PROJEKT und LEISTUNG aus';
+
+  @override
+  String get projectName => 'Projektname';
+
+  @override
+  String get sessionHasEnded => 'Ihre Sitzung wurde Beendet.\nBitte melden sie sich erneut an';
+
+  @override
+  String get workOrder => 'Aufträge';
+
+  @override
+  String get failed => 'Fehlgeschlagen';
 }

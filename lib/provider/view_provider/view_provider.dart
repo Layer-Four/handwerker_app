@@ -29,6 +29,6 @@ enum DokuViews { timeEntry, project, consumables }
 
 final dokuViewProvider = StateProvider<DokuViews>((ref) => DokuViews.timeEntry);
 
-enum HistoryViews { timeEntry, project, consumables }
+enum HistoryViews { timeEntry, jobs, consumables, projects }
 
-final historyViewProvider = StateProvider((ref) => HistoryViews.project);
+final historyViewProvider = StateProvider((ref) => HistoryViews.jobs);

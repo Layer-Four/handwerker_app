@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -8,7 +6,6 @@ import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -23,15 +20,12 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey();
 
-  void reactionOfLogin(bool isSuccess) async {
+  void reactionOfLogin(bool isSuccess) {
     if (isSuccess) {
-      _userNameController.clear();
-      _passwordController.clear();
       Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('leider hats nicht geklappt')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
   }
 
   @override
@@ -39,22 +33,19 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: BackgroundWidget(
           body: Padding(
-            padding: const EdgeInsets.only(top: 60, left: 40, right: 40),
+            padding: const EdgeInsets.only(top: 50, left: 40, right: 40),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const AppLogo(),
-                  const SizedBox(
-                    height: 9,
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: AppLogo(),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Anmelden",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: AppColor.kWhiteWOpacity),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kWhiteWOpacity),
                     ),
                   ),
                   const SizedBox(
@@ -72,9 +63,7 @@ class _LoginViewState extends State<LoginView> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                              ?.copyWith(color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -96,9 +85,7 @@ class _LoginViewState extends State<LoginView> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
-                              ?.copyWith(
-                                  color: AppColor.kWhiteWOpacity,
-                                  fontWeight: FontWeight.bold),
+                              ?.copyWith(color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 3,
@@ -128,13 +115,10 @@ class _LoginViewState extends State<LoginView> {
                             child: GestureDetector(
                               child: Text(
                                 "Passwort vergessen?",
-                                style: TextStyle(
-                                    color: AppColor.kWhite,
-                                    fontWeight: FontWeight.w500),
+                                style: TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
                               ),
                               onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(AppRoutes.forgotPassword);
+                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
                               },
                             ),
                           ),
@@ -153,20 +137,17 @@ class _LoginViewState extends State<LoginView> {
                                     ref
                                         .read(userProvider.notifier)
                                         .loginUser(
-                                          passwort: _passwordController.text,
-                                          userName: _userNameController.text,
+                                          _passwordController.text,
+                                          _userNameController.text,
                                         )
-                                        .then(
-                                            (value) => reactionOfLogin(value));
-                                    SharedPreferences.getInstance()
-                                        .then((value) {
+                                        .then((value) => reactionOfLogin(value));
+                                    SharedPreferences.getInstance().then((value) {
                                       final token = value.getString('TOKEN');
                                       log(token.toString());
                                     });
                                   }
                                   if (isOTP) {
-                                    Navigator.of(context)
-                                        .pushNamed(AppRoutes.setPasswordScreen);
+                                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
