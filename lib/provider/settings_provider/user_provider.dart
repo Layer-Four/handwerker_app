@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -10,64 +11,44 @@ final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier()
 // final authProvider = ChangeNotifierProvider<User>((ref) => User());
 
 class UserNotifier extends Notifier<UserVM> {
-  final Api api = Api();
-  final _storage = SharedPreferences.getInstance();
+  final Api _api = Api();
   @override
   UserVM build() {
-    String token = '';
-    _storage.then((value) {
-      final token = value.getString('TOKEN') ?? '';
-      if (token.isNotEmpty) {
-        state = state.copyWith(userToken: token);
+    _api.getToken.then((value) {
+      if (value != null) {
+        state = state.copyWith(userToken: value);
       }
     });
-    return UserVM(userToken: token);
+    return const UserVM(userToken: '');
   }
 
   void userLogOut() {
     state = state.copyWith(userToken: '');
-    deleteToken();
+    return _api.deleteToken();
   }
 
-  Future<String?> getUserToken() async {
-    final token = await _storage.then((value) => value.getString('TOKEN'));
-    if (token != null && token.isNotEmpty) {
-      state = state.copyWith(userToken: token);
-    }
-    return token;
-  }
+  Future<String?> getToken() async => await _api.getToken;
+  Future<bool> loginUser({required password, required String userName, String? mandantID = '1'}) async {
+    final json = {"username": userName, "password": password, "mandant": mandantID};
 
-// TODO: delete default option for mandant
-  Future<bool> loginUser({
-    required String passwort,
-    required String userName,
-    String? mandatID,
-  }) async {
-    final Map<String, dynamic> json = {
-      "username": userName,
-      "password": passwort,
-      "mandant": mandatID ?? '1',
-    };
     try {
-      final response = await api.postloginUser(json);
-      if (response.statusCode == 401) {
-        log('user not authorized');
+      final response = await _api.postloginUser(json);
+      if (response.statusCode != 200) {
+        throw Exception('something went wrong status -> ${response.statusCode} : ${response.data}');
       }
-      if (response.statusCode == 200) {
-        log(response.data.toString());
-        final data = (response.data as Map);
-        final userToken = data.values.first as String;
-        // TODO: when token Exist load user with Token
-        final newUser = state.copyWith(userToken: userToken);
-        setToken(token: userToken);
-        // final userDate = http.get('www.abc/getUerdata', data: userToken);
-
-        if (newUser != state) {
-          state = newUser;
-          return true;
-        }
-      } else {
-        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
+      log(response.data.toString());
+      final data = (response.data as Map);
+      final userToken = data.values.first as String;
+      final newUser = state.copyWith(
+        username: userName,
+        userToken: userToken,
+      );
+      _api.storeToken(userToken);
+      if (newUser != state) state = newUser;
+      return true;
+    } on DioException catch (e) {
+      if (e.message!.contains('401')) {
+        log('user Input is not correct');
         return false;
       }
       throw Exception('DioExcption ${e.message}');
@@ -111,19 +92,6 @@ class UserNotifier extends Notifier<UserVM> {
     } catch (e) {
       log('Error on resetPasswordRequest:\n$e');
       return false;
-    }
-      log('Error logging in: $e');
-      return false;
-    }
-  }
-
-  Future<void> setToken({required String token}) async {
-    await _storage?.setString('TOKEN', token);
-  }
-
-  Future<void> deleteToken() async {
-    if (_storage!.containsKey('TOKEN')) {
-      await _storage?.clear();
     }
   }
 }

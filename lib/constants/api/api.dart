@@ -26,25 +26,11 @@ class Api {
 
   static const String _getAllUnitsList = '/material/unit/list';
 // Getter
-  // String get getAllProjects => _baseUrl + _getAllProjects;
-  // String get getAllTimeEntrys => _baseUrl + _getAllTimeTacks;
-  // String get getProjectsDM => _baseUrl + _getProjectsAdress;
-  // String get getCustomerProjects => _baseUrl + _getCustomerProject;
-  // String get getExecuteableServices => _baseUrl + _getServiceAdress;
-  // String get getProjectConsumableEntry => _baseUrl + _getProjectsConsumable;
-  // String get getProjectsTimeEntrys => _baseUrl+getProjectsTimeEntrys;
-  // String get getUserDocumentationEntry => _baseUrl + _getUserProjectDocumentation;
-  // String get postloginUser => _baseUrl + _loginUserAdress;
-  // String get postProjectConsumable(data) => _baseUrl + _postProjectConsumabele;
-  // String get postDocumentationEntry => _baseUrl + _postDocumentationDay;
-  // String get postTimeEnty => _baseUrl + _postTimeEntryAdress;
-  // String get updateDocumentationEntry => _baseUrl + _putDocumentationDay;
-  // String get updateProjectConsumableEntry => _baseUrl + _putProjectMaterial;
-  // String getDokuforProjectURL(int projectID) => '$_baseUrl/project/$projectID/documentations';
-  Future<Response> get getAllProjects => api.get(_getAllProjects);
-  Future<Response> get getAllTimeEntrys => api.get(_getAllTimeTacks);
-  Future<Response> get getAllUnits => api.get(_getAllUnitsList);
-  Future<Response> get getCustomerProjects => api.get(_getCustomerProject);
+
+  Future<Response> get getAllProjects => _api.get(_getAllProjects);
+  Future<Response> get getAllTimeentriesDM => _api.get(_getAllTimeTacks);
+  Future<Response> get getAllUnits => _api.get(_getAllUnitsList);
+  Future<Response> get getCustomerProjects => _api.get(_getCustomerProject);
   Future<Response> getDokuforProjectURL(int projectID) => _api.get('/project/$projectID/documentations');
 
   Future<Response> get getExecuteableServices => _api.get(_getServiceAdress);

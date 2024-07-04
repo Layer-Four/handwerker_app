@@ -3,177 +3,205 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
+import 'package:handwerker_app/view/login_screen/shared/custom_textfield.dart';
+import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
-import 'package:handwerker_app/view/widgets/logo.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  bool isOTP = false;
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> formstate = GlobalKey();
+class _LoginViewState extends ConsumerState<LoginView> {
+  bool isFocused = false;
+  bool _isPasswordVisible = false;
+  bool _isLoaded = false;
 
-  void reactionOfLogin(bool isSuccess) {
-    if (isSuccess) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
+  final TextEditingController _emailCon = TextEditingController();
+  final TextEditingController _passCon = TextEditingController();
+  final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailCon.dispose();
+    _passCon.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BackgroundWidget(
-          body: Padding(
-            padding: const EdgeInsets.only(top: 50, left: 40, right: 40),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: AppLogo(),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Anmelden",
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kWhiteWOpacity),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Form(
-                    key: formstate,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Nutzername",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        UserAndPasswordField(
-                          controller: _userNameController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Passwort",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        UserAndPasswordField(
-                          controller: _passwordController,
-                          isPass: true,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Switch(
-                            value: isOTP,
-                            onChanged: (value) {
-                              setState(() {
-                                isOTP = value;
-                              });
-                            },
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: GestureDetector(
-                              child: Text(
-                                "Passwort vergessen?",
-                                style: TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
+      body: Stack(
+        children: [
+          BackgroundWidget(
+            imageName: 'img_anmelden.png',
+            body: Padding(
+              padding: const EdgeInsets.only(top: 60),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 46,
+                        child: Image.asset('assets/images/img_techtool.png'),
+                      ),
+                      const SizedBox(height: 75),
+                      Form(
+                        key: _formstate,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 350,
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text('Nutzername',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
                               ),
-                              onTap: () {
-                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
+                            ),
+                            CustomTextField(
+                              controller: _emailCon,
+                              inputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return null;
+                                } else if (value.isNotEmpty && value.length < 3) {
+                                  return 'Bitte eine gültige Mandatenname eingeben';
+                                }
+                                return null;
                               },
                             ),
-                          ),
+                            const SizedBox(height: 20),
+                            const SizedBox(
+                              width: 350,
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text('Passwort',
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                              ),
+                            ),
+                            CustomTextField(
+                              controller: _passCon,
+                              isPassword: true,
+                              inputAction: TextInputAction.done,
+                              obscureText: !_isPasswordVisible,
+                              togglePasswordVisibility: () {
+                                setState(() => _isPasswordVisible = !_isPasswordVisible);
+                              },
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return null;
+                                } else if (value.length < 7) {
+                                  return 'Bitte mehr als 6 Buchstaben eingeben';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            _buildForgotPassword(),
+                            const SizedBox(height: 20),
+                            _buildLoginButton(),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: 235,
-                            height: 35,
-                            child: Consumer(builder: (context, ref, child) {
-                              return ElevatedButton(
-                                onPressed: () async {
-                                  if (formstate.currentState!.validate()) {
-                                    ref
-                                        .read(userProvider.notifier)
-                                        .loginUser(
-                                          _passwordController.text,
-                                          _userNameController.text,
-                                        )
-                                        .then((value) => reactionOfLogin(value));
-                                    SharedPreferences.getInstance().then((value) {
-                                      final token = value.getString('TOKEN');
-                                      log(token.toString());
-                                    });
-                                  }
-                                  if (isOTP) {
-                                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  backgroundColor: AppColor.kPrimaryButtonColor,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    "Anmelden",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-          imageName: 'img_anmelden.png'),
+        ],
+      ),
     );
+  }
+
+  void reactionOfLogin(bool isSuccess) {
+    setState(() => _isLoaded = false);
+    if (isSuccess) {
+      Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+      return;
+    }
+    _passCon.clear();
+    return showSnackBar(
+      context,
+      'leider hat es nicht geklappt.\nKontrolliere deine Zugangsdaten und versuche es erneut',
+    );
+  }
+
+  Future<void> _submitLogin() async {
+    if (_formstate.currentState!.validate()) {
+      setState(() => _isLoaded = true);
+      bool isSuccess = await ref.read(userProvider.notifier).loginUser(
+            password: _passCon.text,
+            userName: _emailCon.text,
+          );
+      reactionOfLogin(isSuccess);
+    }
+  }
+
+  Widget _buildForgotPassword() => SizedBox(
+        width: 350,
+        child: Align(
+          alignment: Alignment.topRight,
+          child: GestureDetector(
+            child: Text(
+              'Passwort vergessen?',
+              style: TextStyle(
+                color: AppColor.kWhite,
+                fontWeight: FontWeight.w700,
+                decorationColor: AppColor.kPrimaryButtonColor,
+                decorationThickness: 2.0,
+              ),
+            ),
+            onTap: () => Navigator.of(context).pushReplacementNamed(AppRoutes.forgotPassword),
+          ),
+        ),
+      );
+
+  Widget _buildLoginButton() => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: _isLoaded
+              ? const SizedBox(
+                  child: CircularProgressIndicator(),
+                )
+              : SizedBox(
+                  width: 340,
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () => _submitLogin(),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      backgroundColor: AppColor.kPrimaryButtonColor,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Anmelden',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+      );
+
+  bool validateFields() {
+    if (_formstate.currentState == null) {
+      return false;
+    }
+
+    bool isValid = _formstate.currentState!.validate() && _emailCon.text.isNotEmpty && _passCon.text.isNotEmpty;
+    if (!isValid) {
+      showSnackBar(context, 'Bitte füllen Sie alle Felder korrekt aus.');
+    }
+    return isValid;
   }
 }
