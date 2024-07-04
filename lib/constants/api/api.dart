@@ -31,8 +31,7 @@ class Api {
   Future<Response> get getAllTimeentriesDM => _api.get(_getAllTimeTacks);
   Future<Response> get getAllUnits => _api.get(_getAllUnitsList);
   Future<Response> get getCustomerProjects => _api.get(_getCustomerProject);
-  Future<Response> getDokuforProjectURL(int projectID) =>
-      _api.get('/project/$projectID/documentations');
+  Future<Response> getDokuforProjectURL(int projectID) => _api.get('/project/$projectID/documentations');
 
   Future<Response> get getExecuteableServices => _api.get(_getServiceAdress);
   Future<Response> get getMaterialsList => _api.get(_getMaterialsList);
@@ -45,10 +44,8 @@ class Api {
   Future<Response> postProjectConsumable(data) => _api.post(_postProjectConsumabele, data: data);
   Future<Response> postDocumentationEntry(data) => _api.post(_postDocumentationDay, data: data);
   Future<Response> postTimeEnty(data) => _api.post(_postTimeEntryAdress, data: data);
-  Future<Response> setNewPassword(Map<String, dynamic> json) =>
-      _api.put(_putChangePassword, data: json);
-  Future<Response> putUpdateProjectConsumableEntry(data) =>
-      _api.post(_putProjectMaterial, data: data);
+  Future<Response> setNewPassword(Map<String, dynamic> json) => _api.put(_putChangePassword, data: json);
+  Future<Response> putUpdateProjectConsumableEntry(data) => _api.post(_putProjectMaterial, data: data);
   Future<Response> puUpdateDocumentationEntry(data) => _api.post(_putDocumentationDay, data: data);
   Future<Response> postResetPasswordRequest(Map<String, dynamic> json, String email) =>
       _api.post(_postResetPasswordRequest + email, data: json);
@@ -77,8 +74,7 @@ class Api {
         return handler.next(response);
       },
       onError: (DioException error, handler) async {
-        if (error.response?.statusCode == 500 ||
-            (error.message != null && error.message!.contains('500'))) {
+        if (error.response?.statusCode == 500 || (error.message != null && error.message!.contains('500'))) {
           _storage.then((value) => value.clear());
           log('message');
         }

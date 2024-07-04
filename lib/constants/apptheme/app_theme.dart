@@ -12,6 +12,7 @@ class AppTheme {
         primarySwatch: AppColor.materialColorPrimary,
         scaffoldBackgroundColor: AppColor.kWhite,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        shadowColor: const Color.fromARGB(20, 0, 0, 0),
         appBarTheme: AppBarTheme(
           elevation: 0,
           backgroundColor: AppColor.kWhite,

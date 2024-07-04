@@ -28,9 +28,10 @@ class UserNotifier extends Notifier<UserVM> {
   }
 
   Future<String?> getToken() async => await _api.getToken;
-  Future<bool> loginUser(String passwort, String userName, {String? mandantID = '1'}) async {
+  Future<bool> loginUser({required password, required String userName, String? mandantID = '1'}) async {
+    final json = {"username": userName, "password": password, "mandant": mandantID};
+
     try {
-      final json = {"username": userName, "password": passwort, "mandant": mandantID};
       final response = await _api.postloginUser(json);
       if (response.statusCode != 200) {
         throw Exception('something went wrong status -> ${response.statusCode} : ${response.data}');
