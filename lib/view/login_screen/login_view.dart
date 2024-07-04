@@ -68,9 +68,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             CustomTextField(
                               controller: _emailCon,
                               inputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) => _submitLogin(),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return null;
+                                  return 'Bitte eine gültige Mandatenname eingeben';
                                 } else if (value.isNotEmpty && value.length < 3) {
                                   return 'Bitte eine gültige Mandatenname eingeben';
                                 }
@@ -90,13 +91,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               controller: _passCon,
                               isPassword: true,
                               inputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => _submitLogin(),
                               obscureText: !_isPasswordVisible,
                               togglePasswordVisibility: () {
                                 setState(() => _isPasswordVisible = !_isPasswordVisible);
                               },
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return null;
+                                  return 'Bitte mehr als 6 Buchstaben eingeben';
                                 } else if (value.length < 7) {
                                   return 'Bitte mehr als 6 Buchstaben eingeben';
                                 }
@@ -128,6 +130,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       return;
     }
     _passCon.clear();
+    // ignore: void_checks
     return showSnackBar(
       context,
       'leider hat es nicht geklappt.\nKontrolliere deine Zugangsdaten und versuche es erneut',
@@ -135,6 +138,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
   }
 
   Future<void> _submitLogin() async {
+    if (_emailCon.text.isEmpty || _passCon.text.isEmpty) {
+      showSnackBar(context, 'Bitte alle Textfelder ausfüllen.');
+      return;
+    }
+
     if (_formstate.currentState!.validate()) {
       setState(() => _isLoaded = true);
       bool isSuccess = await ref.read(userProvider.notifier).loginUser(
@@ -192,16 +200,4 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 ),
         ),
       );
-
-  bool validateFields() {
-    if (_formstate.currentState == null) {
-      return false;
-    }
-
-    bool isValid = _formstate.currentState!.validate() && _emailCon.text.isNotEmpty && _passCon.text.isNotEmpty;
-    if (!isValid) {
-      showSnackBar(context, 'Bitte füllen Sie alle Felder korrekt aus.');
-    }
-    return isValid;
-  }
 }
