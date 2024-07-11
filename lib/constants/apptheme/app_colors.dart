@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static Color kPrimaryButtonColor = const Color.fromARGB(255, 224, 142, 60);
+  static const kPrimaryButtonColor = Color.fromARGB(255, 224, 142, 60);
   static Color kPrimary = const Color.fromARGB(255, 98, 98, 98);
-  static Color kWhite = Colors.white;
+  static const kWhite = Colors.white;
   static Color kBlack = Colors.black;
   static Color kTextfieldBorder = const Color.fromARGB(255, 220, 217, 217);
   static Color kLightLabelColor = const Color.fromARGB(255, 105, 105, 105);
@@ -26,8 +26,7 @@ class AppColor {
   });
   static const int _materialprimary = 0xFF626262;
 
-  static const MaterialColor materialprimaryAccent =
-      MaterialColor(_materialprimaryAccentValue, <int, Color>{
+  static const MaterialColor materialprimaryAccent = MaterialColor(_materialprimaryAccentValue, <int, Color>{
     100: Color(0xFFF39797),
     200: Color(_materialprimaryAccentValue),
     400: Color(0xFFFF2525),

@@ -61,7 +61,7 @@ class UserNotifier extends Notifier<UserVM> {
   void resetPasswordRequest(String username) async {
     final json = {"mandantID": 1, "userName": username};
     try {
-      final response = await _api.postResetPasswordRequest(json, 'marten.meissner@layer-four.de');
+      final response = await _api.postResetPasswordRequest(json);
       if (response.statusCode != 200) {
         throw Exception('Error on  resetPasswordRequest: ${response.statusCode}\n${response.data}');
       }

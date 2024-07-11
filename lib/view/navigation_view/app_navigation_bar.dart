@@ -18,7 +18,6 @@ class AppNavigationBar extends StatefulWidget {
 class _AppNavigationBarState extends State<AppNavigationBar> {
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           child: Row(

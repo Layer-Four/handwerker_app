@@ -47,8 +47,8 @@ class Api {
   Future<Response> setNewPassword(Map<String, dynamic> json) => _api.put(_putChangePassword, data: json);
   Future<Response> putUpdateProjectConsumableEntry(data) => _api.post(_putProjectMaterial, data: data);
   Future<Response> puUpdateDocumentationEntry(data) => _api.post(_putDocumentationDay, data: data);
-  Future<Response> postResetPasswordRequest(Map<String, dynamic> json, String email) =>
-      _api.post(_postResetPasswordRequest + email, data: json);
+  Future<Response> postResetPasswordRequest(Map<String, dynamic> json) =>
+      _api.post(_postResetPasswordRequest, data: json);
   void storeToken(String token) => _storage.then((e) => e.setString('TOKEN', token));
   void deleteToken() => _storage.then((e) => e.remove('TOKEN'));
   Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
