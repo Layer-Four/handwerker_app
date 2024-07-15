@@ -15,7 +15,6 @@ class LoginView extends ConsumerStatefulWidget {
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-  bool isFocused = false;
   bool _isPasswordVisible = false;
   bool _isLoaded = false;
 
@@ -33,92 +32,84 @@ class _LoginViewState extends ConsumerState<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          BackgroundWidget(
-            imageName: 'img_anmelden.png',
-            body: Padding(
-              padding: const EdgeInsets.only(top: 60),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 46,
-                        child: Image.asset('assets/images/img_techtool.png'),
-                      ),
-                      const SizedBox(height: 75),
-                      Form(
-                        key: _formstate,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              width: 350,
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Text('Nutzername',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    )),
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: BackgroundWidget(
+          imageName: 'img_anmelden.png',
+          body: Padding(
+            padding: const EdgeInsets.only(top: 60),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 46,
+                      child: Image.asset('assets/images/img_techtool.png'),
+                    ),
+                    const SizedBox(height: 75),
+                    Form(
+                      key: _formstate,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: 350,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                'Nutzername',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            CustomTextField(
-                              controller: _emailCon,
-                              inputAction: TextInputAction.next,
-                              onFieldSubmitted: (_) => _submitLogin(),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Bitte eine gültige Mandatenname eingeben';
-                                } else if (value.isNotEmpty && value.length < 3) {
-                                  return 'Bitte eine gültige Mandatenname eingeben';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            const SizedBox(
-                              width: 350,
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Text('Passwort',
-                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                          ),
+                          CustomTextField(
+                            controller: _emailCon,
+                            inputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => _submitLogin(),
+                          ),
+                          const SizedBox(height: 20),
+                          const SizedBox(
+                            width: 350,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                'Passwort',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            CustomTextField(
-                              controller: _passCon,
-                              isPassword: true,
-                              inputAction: TextInputAction.done,
-                              onFieldSubmitted: (_) => _submitLogin(),
-                              obscureText: !_isPasswordVisible,
-                              togglePasswordVisibility: () {
-                                setState(() => _isPasswordVisible = !_isPasswordVisible);
-                              },
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Bitte mehr als 6 Buchstaben eingeben';
-                                } else if (value.length < 7) {
-                                  return 'Bitte mehr als 6 Buchstaben eingeben';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            _buildForgotPassword(),
-                            const SizedBox(height: 20),
-                            _buildLoginButton(),
-                          ],
-                        ),
+                          ),
+                          CustomTextField(
+                            controller: _passCon,
+                            isPassword: true,
+                            inputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) => _submitLogin(),
+                            obscureText: !_isPasswordVisible,
+                            togglePasswordVisibility: () {
+                              setState(() => _isPasswordVisible = !_isPasswordVisible);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          _buildForgotPassword(),
+                          const SizedBox(height: 20),
+                          _buildLoginButton(),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -133,7 +124,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     // ignore: void_checks
     return showSnackBar(
       context,
-      'leider hat es nicht geklappt.\nKontrolliere deine Zugangsdaten und versuche es erneut',
+      'Leider hat es nicht geklappt.\nKontrolliere deine Zugangsdaten und versuche es erneut.',
     );
   }
 
@@ -143,14 +134,21 @@ class _LoginViewState extends ConsumerState<LoginView> {
       return;
     }
 
-    if (_formstate.currentState!.validate()) {
-      setState(() => _isLoaded = true);
-      bool isSuccess = await ref.read(userProvider.notifier).loginUser(
-            password: _passCon.text,
-            userName: _emailCon.text,
-          );
-      reactionOfLogin(isSuccess);
+    if (_passCon.text.length < 7) {
+      showSnackBar(context, 'Bitte mehr als 6 Zeichen eingeben.');
+      return;
     }
+
+    setState(() {
+      // _showError = true;
+      _isLoaded = true;
+    });
+
+    bool isSuccess = await ref.read(userProvider.notifier).loginUser(
+          password: _passCon.text,
+          userName: _emailCon.text,
+        );
+    reactionOfLogin(isSuccess);
   }
 
   Widget _buildForgotPassword() => SizedBox(
@@ -158,7 +156,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Align(
           alignment: Alignment.topRight,
           child: GestureDetector(
-            child: Text(
+            child: const Text(
               'Passwort vergessen?',
               style: TextStyle(
                 color: AppColor.kWhite,
@@ -177,7 +175,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Center(
           child: _isLoaded
               ? const SizedBox(
-                  child: CircularProgressIndicator(),
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.kPrimaryButtonColor),
+                  ),
                 )
               : SizedBox(
                   width: 340,
@@ -193,7 +195,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     child: const Center(
                       child: Text(
                         'Anmelden',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColor.kWhite),
                       ),
                     ),
                   ),

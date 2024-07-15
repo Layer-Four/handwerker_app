@@ -18,32 +18,41 @@ class UserView extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Nutze abmelden'),
+                // const Text('Nutze abmelden'),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SymmetricButton(
-                    color: AppColor.kPrimaryButtonColor,
-                    text: 'Logout',
-                    onPressed: () {
-                      ref.read(userProvider.notifier).userLogOut();
-                    },
+                  child: SizedBox(
+                    width: 180,
+                    child: SymmetricButton(
+                      color: AppColor.kPrimaryButtonColor,
+                      text: 'Logout',
+                      onPressed: () {
+                        ref.read(userProvider.notifier).userLogOut();
+                      },
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Password ändern'),
-              SymmetricButton(
-                color: AppColor.kPrimaryButtonColor,
-                text: 'Password ändern',
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
-                },
+              // const Text('Passwort ändern'),
+              SizedBox(
+                width: 180,
+                child: SymmetricButton(
+                  color: AppColor.kPrimaryButtonColor,
+                  text: 'Passwort ändern',
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
+                  },
+                ),
               ),
             ],
           ),

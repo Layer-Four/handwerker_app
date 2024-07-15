@@ -97,8 +97,7 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Passwort ändern",
-                    style:
-                        Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack),
                   ),
                 ),
                 const SizedBox(
@@ -108,10 +107,7 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Altes Passwort",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 TextFormField(
@@ -129,10 +125,7 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Neues Passwort",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 TextFormField(
@@ -146,7 +139,7 @@ class _PasswordViewState extends State<PasswordView> {
                     if (value!.isEmpty) {
                       return null;
                     } else if (value.length < 6) {
-                      return "Enter at least 6 Zeichen";
+                      return "Bitte mindestens 6 Zeichen eingeben";
                     }
 
                     return null;
@@ -164,9 +157,7 @@ class _PasswordViewState extends State<PasswordView> {
                           isVisable = !isVisable;
                         });
                       },
-                      icon: isVisable
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
+                      icon: isVisable ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -188,10 +179,7 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Passwort widerholen",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 const SizedBox(
@@ -202,7 +190,7 @@ class _PasswordViewState extends State<PasswordView> {
                     onPasswordChanged(password);
                   },
                   validator: (value) {
-                    return value!.length < 6 ? "Enter at least 6 characters" : null;
+                    return value!.length < 6 ? "Bitte mindestens 6 Zeichen eingeben" : null;
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: _passwordController,
@@ -217,9 +205,7 @@ class _PasswordViewState extends State<PasswordView> {
                           isVisable = !isVisable;
                         });
                       },
-                      icon: isVisable
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off),
+                      icon: isVisable ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -275,8 +261,7 @@ class _PasswordViewState extends State<PasswordView> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isPasswordHas1Number ? Colors.green : Colors.white,
-                                    border:
-                                        Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                    border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                                   ),
                                   child: const Icon(
                                     Icons.check,
@@ -392,7 +377,7 @@ class _PasswordViewState extends State<PasswordView> {
                                     context,
                                     e
                                         ? 'Passwort erfolgreich geändert'
-                                        : 'Leider hat es nicht geklappt');
+                                        : 'Leider hat es nicht geklappt. \nKontrolliere deine Zugangsdaten und versuche es erneut.');
                               });
                             } else {
                               showSnackBar(
