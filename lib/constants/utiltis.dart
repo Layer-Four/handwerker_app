@@ -18,8 +18,7 @@ class Utilits {
         locale: const Locale('de'));
   }
 
-  static Widget buildIndicator({required int selectedIndex, required int length}) =>
-      AnimatedSmoothIndicator(
+  static Widget buildIndicator({required int selectedIndex, required int length}) => AnimatedSmoothIndicator(
         activeIndex: selectedIndex,
         count: length,
         effect: const SlideEffect(
@@ -98,8 +97,7 @@ class Utilits {
     );
   }
 
-  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
-      InputDecoration(
+  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) => InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
               color: AppColor.kLightLabelColor,
@@ -116,7 +114,7 @@ class Utilits {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
+          borderSide: const BorderSide(color: AppColor.kPrimaryButtonColor),
         ),
       );
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 final passwordVisibilityProvider = StateProvider((ref) => false);
 
@@ -12,6 +13,7 @@ class CustomTextField extends ConsumerWidget {
   final Function()? togglePasswordVisibility;
   final String? Function(String?)? validator;
   final Function(bool)? onFocusChange;
+  final Iterable<String>? autofillHints;
 
   const CustomTextField({
     super.key,
@@ -23,6 +25,7 @@ class CustomTextField extends ConsumerWidget {
     this.togglePasswordVisibility,
     this.validator,
     this.onFocusChange,
+    this.autofillHints,
   });
 
   @override
@@ -37,67 +40,65 @@ class CustomTextField extends ConsumerWidget {
         color: const Color.fromARGB(255, 231, 226, 226),
       ),
       child: Focus(
-        onFocusChange: onFocusChange != null ? (hasFocus) => onFocusChange!(hasFocus) : null,
+        onFocusChange: onFocusChange,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 44,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: controller,
-                  obscureText: obscureText && !isPasswordVisible,
-                  textInputAction: inputAction,
-                  onFieldSubmitted: onFieldSubmitted,
-                  validator: validator,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.all(10),
-                    suffixIcon: isPassword
-                        ? IconButton(
-                            onPressed: togglePasswordVisibility,
-                            icon: Icon(
-                              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                            ),
-                            color: Theme.of(context).iconTheme.color,
-                          )
-                        : null,
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                        width: 0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                        width: 0,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                        width: 0,
-                      ),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                        width: 0,
-                      ),
-                    ),
-                    hoverColor: Theme.of(context).primaryColor.withOpacity(0.2),
-                  ),
+          height: 44, // Adjust this to your needs
+          width: 355,
+          child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autofocus: true,
+            keyboardType: isPassword ? TextInputType.text : TextInputType.emailAddress,
+            textInputAction: inputAction,
+            validator: validator,
+            onFieldSubmitted: onFieldSubmitted,
+            controller: controller,
+            obscureText: isPassword && !isPasswordVisible,
+            autofillHints: autofillHints,
+            decoration: InputDecoration(
+              errorStyle: const TextStyle(fontSize: 0.01),
+              filled: true,
+              fillColor: Colors.transparent,
+              contentPadding: const EdgeInsets.all(10),
+              suffixIcon: isPassword
+                  ? IconButton(
+                      onPressed: togglePasswordVisibility,
+                      icon: Icon(isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                      color: Theme.of(context).iconTheme.color,
+                    )
+                  : null,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.kPrimaryButtonColor,
+                  width: 2,
                 ),
               ),
-            ],
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.kPrimaryButtonColor,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+            ),
           ),
         ),
       ),
