@@ -31,6 +31,9 @@ class CustomTextField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isPasswordVisible = ref.watch(passwordVisibilityProvider);
+    void togglePasswordVisibility() {
+      ref.read(passwordVisibilityProvider.notifier).state = !ref.watch(passwordVisibilityProvider);
+    }
 
     return Container(
       margin: const EdgeInsets.only(top: 3, bottom: 20),
