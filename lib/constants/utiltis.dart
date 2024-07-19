@@ -98,25 +98,26 @@ class Utilits {
     );
   }
 
-  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+  static InputDecoration textFieldDecorator([String? hintText, Icon? suffixIcon]) =>
       InputDecoration(
         hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: AppColor.kLightLabelColor,
-            ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 5,
-        ),
+        filled: true,
+        fillColor: AppColor.kTextfieldColor,
+        suffixIcon: suffixIcon,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
           borderSide: BorderSide(
             color: AppColor.kTextfieldBorder,
           ),
         ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: BorderSide.none,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
+          borderSide: const BorderSide(color: Colors.grey, width: 0),
         ),
       );
 

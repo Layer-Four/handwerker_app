@@ -6,7 +6,8 @@ import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/documentation_view/doku_nav_view.dart';
 import 'package:handwerker_app/view/history_views/history_nav_view.dart';
-import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
+import 'package:handwerker_app/view/navigation_view/widgets/app_navigation_bar.dart';
+import 'package:handwerker_app/view/time_track_view/time_tracker_view.dart';
 import 'package:handwerker_app/view/user_view/user_view.dart';
 
 class MainViewNavigator extends ConsumerStatefulWidget {
@@ -56,16 +57,6 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
           notifier.state = provider.views(index);
         },
       ),
-    );
-  }
-}
-
-class TimeTrackView extends StatelessWidget {
-  const TimeTrackView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Time tracker')),
     );
   }
 }

@@ -137,8 +137,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             textInputAction: TextInputAction.done,
             controller: _amountController,
             decoration: Utilits.textFieldDecorator(
-              context,
-              hintText: ref.watch(languangeProvider).amount,
+              ref.watch(languangeProvider).amount,
             ),
             onChanged: (value) {
               if (_amountController.text.length > 20) {
@@ -183,8 +182,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             textInputAction: TextInputAction.done,
             controller: _summeryController,
             decoration: Utilits.textFieldDecorator(
-              context,
-              hintText: '${ref.watch(languangeProvider).sum} €',
+              '${ref.watch(languangeProvider).sum} €',
             ),
             onChanged: (value) {
               setState(() {

@@ -144,7 +144,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
       );
 
   Widget _buildCustomerProjectField() {
-    return ref.read(projectVMProvider).when(
+    return ref.watch(projectVMProvider).when(
           error: (error, stackTrace) {
             log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
             return const SizedBox(child: Text('Etwas lief schief'));

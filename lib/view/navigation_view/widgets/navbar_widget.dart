@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// This is the Original NavbarIcon from DeHyves
 class NavBarIconWidget extends StatelessWidget {
   final void Function()? onPressed;
   final IconData icon;
   final String name;
   final bool isCurrentView;
-  const NavBarIconWidget(
-      {super.key,
-      required this.icon,
-      required this.name,
-      this.onPressed,
-      this.isCurrentView = false});
+  const NavBarIconWidget({
+    super.key,
+    required this.icon,
+    required this.name,
+    this.onPressed,
+    this.isCurrentView = false,
+  });
 
   @override
   Widget build(BuildContext context) => InkWell(
