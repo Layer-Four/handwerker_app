@@ -1,62 +1,62 @@
 abstract class Dictionary {
   const Dictionary();
   String get amount;
+  String get changeLanguage;
   String get changePassword;
   String get checkInput;
   String get choosedImage;
+  String get consumables;
   String get createEntry;
   String get createPassword;
   String get customerProject;
+  get darkMode;
   String get date;
   String get description;
+  String get documentationLabel;
   String get dokumentation;
   String get duration;
   String get end;
+  String get english;
   String get enterPassword;
   String get enterUserName;
   String get estimatedDuration;
+  String get failed;
   String get forgetPassword;
+  String get german;
+  get lightTheme;
   String get login;
   String get logout;
+  String get logUserOut;
   String get makePicture;
   String get material;
+  String get overView;
+  String get ownLanguage;
   String get pictureSucces;
   String get plsChooseBeginEnd;
+  String get plsChooseCustomerService;
   String get plsChooseDay;
   String get plsChooseProject;
-  String get project;
-  String get service;
-  String get start;
-  String get succes;
-  String get sum;
-  String get takePicture;
-  String get documentationLabel;
-  String get overView;
-  String get logUserOut;
-  String get timeoverview;
-  String get taskOverview;
-  String get consumables;
-  String get plsChooseCustomerService;
-  String get projectName;
-  String get sessionHasEnded;
-  String get workOrder;
-  String get ownLanguage;
-
-  String get failed;
-
   String get plsEnterUserName;
+  String get project;
+  String get projectName;
+  String get service;
+  String get sessionHasEnded;
 
-  String get changeLanguage;
+  String get start;
 
-  String get english;
+  String get succes;
 
-  String get german;
+  String get sum;
 
-  get lightTheme;
+  String get takePicture;
+
+  String get taskOverview;
 
   get themeModeSystem;
 
-  get darkMode;
+  String get timeoverview;
+
+  String get workOrder;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -65,13 +65,22 @@ class EnglishLanguage extends Dictionary {
   String get amount => 'AMOUNT';
 
   @override
-  String get checkInput => 'Please check your input';
+  String get changeLanguage => 'Languages';
 
+  @override
+  String get changePassword => 'Change Passowrd';
+
+  @override
+  String get checkInput => 'Please check your input';
   @override
   String get choosedImage => 'choosed image';
 
   @override
+  String get consumables => 'Consumbales';
+
+  @override
   String get createEntry => 'New entry';
+
   @override
   String get createPassword => 'Create new password';
 
@@ -79,10 +88,16 @@ class EnglishLanguage extends Dictionary {
   String get customerProject => 'COSTUMER/PROJECT';
 
   @override
+  get darkMode => 'Darkmode';
+
+  @override
   String get date => 'DATE';
 
   @override
   String get description => 'DESCRIPTION';
+
+  @override
+  String get documentationLabel => 'Documentation';
 
   @override
   String get dokumentation => 'DOCUMENTATION';
@@ -94,6 +109,9 @@ class EnglishLanguage extends Dictionary {
   String get end => 'END';
 
   @override
+  String get english => 'English';
+
+  @override
   String get enterPassword => 'Password';
 
   @override
@@ -103,7 +121,16 @@ class EnglishLanguage extends Dictionary {
   String get estimatedDuration => 'estimated duration';
 
   @override
+  String get failed => 'Failed';
+
+  @override
   String get forgetPassword => 'Forgot password';
+
+  @override
+  String get german => 'German';
+
+  @override
+  get lightTheme => 'Lightmode';
 
   @override
   String get login => 'LOGIN';
@@ -112,10 +139,19 @@ class EnglishLanguage extends Dictionary {
   String get logout => 'LOGOUT';
 
   @override
+  String get logUserOut => 'Log out user';
+
+  @override
   String get makePicture => 'make a pciture';
 
   @override
   String get material => 'MATERIAL';
+
+  @override
+  String get overView => 'OVERVIEW';
+
+  @override
+  String get ownLanguage => 'English';
 
   @override
   String get pictureSucces => ' picked picture';
@@ -124,16 +160,28 @@ class EnglishLanguage extends Dictionary {
   String get plsChooseBeginEnd => 'Please select a begin and end time';
 
   @override
+  String get plsChooseCustomerService => 'please choose CUSTOMER/PROJECT and SERVICE';
+
+  @override
   String get plsChooseDay => 'Please choose a Date';
 
   @override
   String get plsChooseProject => 'Please choose a project';
 
   @override
+  String get plsEnterUserName => 'Please enter your email';
+
+  @override
   String get project => 'Project';
 
   @override
+  String get projectName => 'Projectname';
+
+  @override
   String get service => 'SERVICE';
+
+  @override
+  String get sessionHasEnded => 'Your session has ended.\nPlease login again';
 
   @override
   String get start => 'BEGIN';
@@ -148,64 +196,16 @@ class EnglishLanguage extends Dictionary {
   String get takePicture => 'take a pciture';
 
   @override
-  String get documentationLabel => 'Documentation';
-
-  @override
-  String get overView => 'OVERVIEW';
-
-  @override
-  String get timeoverview => 'Timeoverview';
-
-  @override
   String get taskOverview => 'Jobs';
-
-  @override
-  String get consumables => 'Consumbales';
-
-  @override
-  String get plsChooseCustomerService => 'please choose CUSTOMER/PROJECT and SERVICE';
-
-  @override
-  String get projectName => 'Projectname';
-
-  @override
-  String get sessionHasEnded => 'Your session has ended.\nPlease login again';
-
-  @override
-  String get workOrder => 'Work order';
-
-  @override
-  String get failed => 'Failed';
-
-  @override
-  String get plsEnterUserName => 'Please enter your email';
-
-  @override
-  String get changePassword => 'Change Passowrd';
-
-  @override
-  String get logUserOut => 'Log out user';
-
-  @override
-  String get changeLanguage => 'Languages';
-
-  @override
-  String get english => 'English';
-
-  @override
-  String get german => 'German';
-
-  @override
-  get darkMode => 'Darkmode';
-
-  @override
-  get lightTheme => 'Lightmode';
 
   @override
   get themeModeSystem => 'Systemmode';
 
   @override
-  String get ownLanguage => 'English';
+  String get timeoverview => 'Timeoverview';
+
+  @override
+  String get workOrder => 'Work order';
 }
 
 class GermanLanguage extends Dictionary {
@@ -213,10 +213,19 @@ class GermanLanguage extends Dictionary {
   @override
   String get amount => 'MENGE';
   @override
+  String get changeLanguage => 'Sprachen';
+
+  @override
+  String get changePassword => 'Password ändern';
+
+  @override
   String get checkInput => 'Bitte Kontrolliere deine Eingaben';
 
   @override
   String get choosedImage => 'Bild ausgewählt';
+
+  @override
+  String get consumables => 'Material';
 
   @override
   String get createEntry => 'Eintrag erstellen';
@@ -228,10 +237,16 @@ class GermanLanguage extends Dictionary {
   String get customerProject => 'KUNDE/PROJEKT';
 
   @override
+  get darkMode => 'Dunkel';
+
+  @override
   String get date => 'TAG';
 
   @override
   String get description => 'BESCHREIBUNG';
+
+  @override
+  String get documentationLabel => 'Dokumentation';
 
   @override
   String get dokumentation => 'DOKUMENTATION';
@@ -243,16 +258,26 @@ class GermanLanguage extends Dictionary {
   String get end => 'BIS';
 
   @override
-  String get enterPassword => 'Password';
+  String get english => 'Englisch';
 
+  @override
+  String get enterPassword => 'Password';
   @override
   String get enterUserName => 'Bitte gib dein Nutzternamen ein';
 
   @override
   String get estimatedDuration => 'Geschätze Dauer';
+  @override
+  String get failed => 'Fehlgeschlagen';
 
   @override
   String get forgetPassword => 'Passwort vergessen';
+
+  @override
+  String get german => 'Deutsch';
+
+  @override
+  get lightTheme => 'Hell';
 
   @override
   String get login => 'Anmelden';
@@ -261,14 +286,28 @@ class GermanLanguage extends Dictionary {
   String get logout => 'Ausloggen';
 
   @override
+  String get logUserOut => 'Nutzer abmelden';
+
+  @override
   String get makePicture => 'Foto machen';
+
   @override
   String get material => 'MATERIAL';
 
   @override
+  String get overView => 'ÜBERSICHT';
+
+  @override
+  String get ownLanguage => 'Deutsch';
+
+  @override
   String get pictureSucces => ' Bild ausgewählt';
+
   @override
   String get plsChooseBeginEnd => 'Bitte gib Start und eine Endzeit an';
+
+  @override
+  String get plsChooseCustomerService => 'Bitte wähle ein KUNDE/PROJEKT und LEISTUNG aus';
 
   @override
   String get plsChooseDay => 'Bitte wähle ein anderes Datum';
@@ -277,10 +316,19 @@ class GermanLanguage extends Dictionary {
   String get plsChooseProject => 'Bitte wähle einen Kunde und Projekt';
 
   @override
+  String get plsEnterUserName => 'Bitte geb dein Nutzernamen ein ';
+
+  @override
   String get project => 'Projekt';
 
   @override
+  String get projectName => 'Projektname';
+
+  @override
   String get service => 'LEISTUNG';
+
+  @override
+  String get sessionHasEnded => 'Ihre Sitzung wurde Beendet.\nBitte melden sie sich erneut an';
 
   @override
   String get start => 'VON';
@@ -295,62 +343,14 @@ class GermanLanguage extends Dictionary {
   String get takePicture => 'Bild wählen';
 
   @override
-  String get documentationLabel => 'Dokumentation';
-
-  @override
-  String get overView => 'ÜBERSICHT';
-
-  @override
-  String get timeoverview => 'Zeitübersicht';
-
-  @override
   String get taskOverview => 'Aufträge';
-
-  @override
-  String get consumables => 'Material';
-
-  @override
-  String get plsChooseCustomerService => 'Bitte wähle ein KUNDE/PROJEKT und LEISTUNG aus';
-
-  @override
-  String get projectName => 'Projektname';
-
-  @override
-  String get sessionHasEnded => 'Ihre Sitzung wurde Beendet.\nBitte melden sie sich erneut an';
-
-  @override
-  String get workOrder => 'Aufträge';
-
-  @override
-  String get failed => 'Fehlgeschlagen';
-
-  @override
-  String get plsEnterUserName => 'Bitte geb dein Nutzernamen ein ';
-
-  @override
-  String get changePassword => 'Password ändern';
-
-  @override
-  String get logUserOut => 'Nutzer abmelden';
-
-  @override
-  String get changeLanguage => 'Sprachen';
-
-  @override
-  String get english => 'Englisch';
-
-  @override
-  String get german => 'Deutsch';
-
-  @override
-  get darkMode => 'Dunkel';
-
-  @override
-  get lightTheme => 'Hell';
 
   @override
   get themeModeSystem => 'System';
 
   @override
-  String get ownLanguage => 'Deutsch';
+  String get timeoverview => 'Zeitübersicht';
+
+  @override
+  String get workOrder => 'Aufträge';
 }
