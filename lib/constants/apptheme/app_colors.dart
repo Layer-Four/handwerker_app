@@ -15,7 +15,7 @@ class AppColor {
   static const Color kGrey = Color.fromARGB(255, 158, 158, 158);
   static const Color kGreen = Color.fromARGB(255, 76, 175, 80);
   static const Color kYellow = Color.fromARGB(255, 255, 235, 59);
-  static const appbarGreen = Color.fromARGB(255, 76, 141, 95);
+  static const Color appbarGreen = Color.fromARGB(255, 76, 141, 95);
 
   static const MaterialColor materialColorPrimary = MaterialColor(_materialprimary, <int, Color>{
     50: Color(0xFFECECEC),

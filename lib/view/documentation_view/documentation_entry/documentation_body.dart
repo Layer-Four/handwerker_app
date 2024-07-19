@@ -11,6 +11,7 @@ import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DocumentationBody extends ConsumerStatefulWidget {
   const DocumentationBody({super.key});
@@ -80,8 +81,8 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image =
-                            await Utilits.pickImageFromCamera(context, _project?.title ?? '');
+                        final image = await Utilits.pickImage(context, _project?.title ?? '',
+                            permission: Permission.camera);
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
@@ -108,8 +109,11 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image =
-                            await Utilits.pickImageFromGalery(context, _project?.title ?? '');
+                        final image = await Utilits.pickImage(
+                          context,
+                          _project?.title ?? '',
+                          permission: Permission.storage,
+                        );
                         if (image != null) {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.transparent,
