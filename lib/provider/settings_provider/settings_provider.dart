@@ -16,9 +16,13 @@ class SettingsNotifer extends Notifier<SettingsState> {
     return;
   }
 
-  void changeThememode(ThemeMode? mode) {
-    if (mode == null) return;
-    final newState = state.copyWith(nextMode: mode);
+  void changeThememode() {
+    ThemeMode nextMode = switch (state.themeMode) {
+      ThemeMode.system => ThemeMode.light,
+      ThemeMode.light => ThemeMode.dark,
+      ThemeMode.dark => ThemeMode.system
+    };
+    final newState = state.copyWith(nextMode: nextMode);
     state = newState;
     return;
   }

@@ -40,6 +40,7 @@ abstract class Dictionary {
   String get projectName;
   String get sessionHasEnded;
   String get workOrder;
+  String get ownLanguage;
 
   String get failed;
 
@@ -202,6 +203,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   get themeModeSystem => 'Systemmode';
+
+  @override
+  String get ownLanguage => 'English';
 }
 
 class GermanLanguage extends Dictionary {
@@ -346,4 +350,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   get themeModeSystem => 'System';
+
+  @override
+  String get ownLanguage => 'Deutsch';
 }

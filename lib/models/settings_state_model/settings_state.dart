@@ -4,12 +4,18 @@ import 'package:handwerker_app/provider/settings_provider/language_provider.dart
 
 class SettingsState {
   final Dictionary _language;
+  final List<Dictionary> _allLanguages;
   final AppTheme _theme;
   final ThemeMode _themeMode;
   final Locale _currentLocal;
-  const SettingsState(
-      {Dictionary? language, AppTheme? theme, ThemeMode? currentMode, Locale? local})
-      : _currentLocal = local ?? const Locale('de'),
+  const SettingsState({
+    Dictionary? language,
+    AppTheme? theme,
+    ThemeMode? currentMode,
+    Locale? local,
+    List<Dictionary>? allLanguages,
+  })  : _allLanguages = allLanguages ?? const [GermanLanguage(), EnglishLanguage()],
+        _currentLocal = local ?? const Locale('de'),
         _language = language ?? const GermanLanguage(),
         _themeMode = currentMode ?? ThemeMode.system,
         _theme = theme ?? const AppTheme();
@@ -20,6 +26,8 @@ class SettingsState {
   ThemeData get darkTheme => AppTheme.darkTheme;
   ThemeMode get themeMode => _themeMode;
   Locale get local => _currentLocal;
+  List<Dictionary> get allLanguages => _allLanguages;
+  int get languageAmount => _allLanguages.length;
 
   SettingsState copyWith({
     Dictionary? newLanguage,
