@@ -59,7 +59,6 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
     } catch (e) {
       if (e.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
         return;
       }
       log('request was incompleted this was the error: $e');

@@ -93,7 +93,6 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
     } catch (error) {
       if (error.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
         return [];
       }
       throw Exception(error);

@@ -107,7 +107,7 @@ class Utilits {
         contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColor.kTextfieldBorder,
           ),
         ),

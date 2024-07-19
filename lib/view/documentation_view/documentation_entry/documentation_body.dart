@@ -8,7 +8,7 @@ import 'package:handwerker_app/models/dokumentation_models/documentation_entry/d
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/documentation_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
@@ -76,7 +76,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(ref.watch(languangeProvider).makePicture),
+                    Text(ref.watch(settingsProv).dictionary.makePicture),
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
@@ -104,7 +104,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(ref.watch(languangeProvider).takePicture),
+                    Text(ref.watch(settingsProv).dictionary.takePicture),
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
@@ -134,7 +134,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
             Text(
               _entry.imageUrl.isEmpty
                   ? ''
-                  : '${_entry.imageUrl.length} ${ref.watch(languangeProvider).choosedImage}',
+                  : '${_entry.imageUrl.length} ${ref.watch(settingsProv).dictionary.choosedImage}',
               style: _entry.imageUrl.isEmpty
                   ? const TextStyle(fontSize: 0)
                   : Theme.of(context).textTheme.labelSmall,
@@ -173,7 +173,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: Text(
-                      ref.watch(languangeProvider).customerProject,
+                      ref.watch(settingsProv).dictionary.customerProject,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ),
@@ -224,7 +224,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         heigt: 80,
         textInputAction: TextInputAction.newline,
         textInputType: TextInputType.multiline,
-        label: ref.watch(languangeProvider).description,
+        label: ref.watch(settingsProv).dictionary.description,
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
@@ -236,7 +236,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         },
       );
   Widget _dayInputWidget() => LabeldTextfield(
-        label: ref.watch(languangeProvider).date,
+        label: ref.watch(settingsProv).dictionary.date,
         textInputType: TextInputType.datetime,
         controller: _dayPickerController,
         onTap: () async {
@@ -254,13 +254,13 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         padding: const EdgeInsets.all(16.0),
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
-          text: ref.watch(languangeProvider).createEntry,
+          text: ref.watch(settingsProv).dictionary.createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(ref.watch(languangeProvider).plsChooseDay),
+                  content: Text(ref.watch(settingsProv).dictionary.plsChooseDay),
                 ),
               );
             }
@@ -279,7 +279,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(ref.watch(languangeProvider).succes),
+                  content: Text(ref.watch(settingsProv).dictionary.succes),
                 ),
               );
             }

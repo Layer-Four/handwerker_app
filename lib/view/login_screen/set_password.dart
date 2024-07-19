@@ -17,11 +17,17 @@ class _PasswordViewState extends State<PasswordView> {
   bool isVisable = true;
   bool isPasswordVisible = false;
 
-  final _formKey = GlobalKey<FormState>();
+  late final GlobalKey<FormState> _formKey;
   bool isLoading = false;
-  final TextEditingController _oldPWController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _newpasswordController = TextEditingController();
+  late final TextEditingController _oldPWController, _passwordController, _newpasswordController;
+  @override
+  void initState() {
+    _oldPWController = TextEditingController();
+    _passwordController = TextEditingController();
+    _newpasswordController = TextEditingController();
+    _formKey = GlobalKey();
+    super.initState();
+  }
 
   bool isPassword6Char = false;
   bool isPasswordHas1Number = false;
@@ -136,12 +142,7 @@ class _PasswordViewState extends State<PasswordView> {
                   ),
                 ),
                 TextFormField(
-                  onChanged: (password) {
-                    setState(() {
-                      _newpasswordController.text = password;
-                    });
-                    onPasswordChanged(password);
-                  },
+                  onChanged: (password) => onPasswordChanged(password),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return null;
@@ -170,11 +171,11 @@ class _PasswordViewState extends State<PasswordView> {
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                   ),
                 ),
@@ -212,30 +213,23 @@ class _PasswordViewState extends State<PasswordView> {
                     contentPadding: const EdgeInsets.all(8),
                     isDense: true,
                     suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isVisable = !isVisable;
-                        });
-                      },
+                      onPressed: () => setState(() => isVisable = !isVisable),
                       icon: isVisable
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 7,
-                ),
-                const SizedBox(
-                  height: 15,
+                  height: 22,
                 ),
                 Row(
                   children: [
@@ -249,7 +243,7 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isPassword6Char ? Colors.green : Colors.white,
+                                color: isPassword6Char ? AppColor.kGreen : AppColor.kWhite,
                                 border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                               ),
                               child: const Icon(
@@ -274,7 +268,7 @@ class _PasswordViewState extends State<PasswordView> {
                                   width: 20,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isPasswordHas1Number ? Colors.green : Colors.white,
+                                    color: isPasswordHas1Number ? AppColor.kGreen : AppColor.kWhite,
                                     border:
                                         Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                                   ),
@@ -302,7 +296,7 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasUppercase ? Colors.green : Colors.white,
+                                color: hasUppercase ? AppColor.kGreen : AppColor.kWhite,
                                 border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                               ),
                               child: const Icon(
@@ -327,7 +321,7 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasLowercase ? Colors.green : Colors.white,
+                                color: hasLowercase ? AppColor.kGreen : AppColor.kWhite,
                                 border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                               ),
                               child: const Icon(
@@ -352,7 +346,7 @@ class _PasswordViewState extends State<PasswordView> {
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: hasSpecialCharacters ? Colors.green : Colors.white,
+                                color: hasSpecialCharacters ? AppColor.kGreen : AppColor.kWhite,
                                 border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                               ),
                               child: const Icon(
@@ -416,7 +410,7 @@ class _PasswordViewState extends State<PasswordView> {
                         child: const Center(
                           child: Text(
                             "Speichern",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: AppColor.kWhite),
                           ),
                         ),
                       ),

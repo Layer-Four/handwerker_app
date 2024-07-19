@@ -7,22 +7,34 @@ import 'package:handwerker_app/view/widgets/background_widget.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
-class LoginView extends StatefulWidget {
+import '../../provider/settings_provider/settings_provider.dart';
+
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  ConsumerState<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  bool isOTP = false;
-  final TextEditingController _userNameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> formstate = GlobalKey();
+class _LoginViewState extends ConsumerState<LoginView> {
+  late final TextEditingController _userNameController, _passwordController;
+  late final GlobalKey<FormState> formstate;
+
+  @override
+  void initState() {
+    _userNameController = TextEditingController();
+    _passwordController = TextEditingController();
+    formstate = GlobalKey();
+    super.initState();
+  }
 
   void reactionOfLogin(bool isSuccess) {
     if (isSuccess) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+      if (ref.watch(userProvider.notifier).isOneTimePassword == false) {
+        Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+        return;
+      }
+      Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
       return;
     }
     ScaffoldMessenger.of(context)
@@ -82,7 +94,7 @@ class _LoginViewState extends State<LoginView> {
                           controller: _userNameController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter your email';
+                              return ref.watch(settingsProv).dictionary.plsEnterUserName;
                             }
                             return null;
                           },
@@ -91,7 +103,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 20,
                         ),
                         Text(
-                          "Passwort",
+                          ref.watch(settingsProv).dictionary.enterPassword,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
                         ),
@@ -105,26 +117,14 @@ class _LoginViewState extends State<LoginView> {
                         const SizedBox(
                           height: 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Switch(
-                            value: isOTP,
-                            onChanged: (value) {
-                              setState(() {
-                                isOTP = value;
-                              });
-                            },
-                          ),
-                        ),
                         Align(
                           alignment: Alignment.topRight,
                           child: Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: GestureDetector(
                               child: Text(
-                                "Passwort vergessen?",
-                                style:
-                                    TextStyle(color: AppColor.kWhite, fontWeight: FontWeight.w500),
+                                ref.watch(settingsProv).dictionary.forgetPassword,
+                                style: Theme.of(context).textTheme.labelMedium,
                               ),
                               onTap: () {
                                 Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
@@ -139,36 +139,31 @@ class _LoginViewState extends State<LoginView> {
                           child: SizedBox(
                             width: 235,
                             height: 35,
-                            child: Consumer(builder: (context, ref, child) {
-                              return ElevatedButton(
-                                onPressed: () async {
-                                  if (formstate.currentState!.validate()) {
-                                    ref
-                                        .read(userProvider.notifier)
-                                        .loginUser(
-                                          _passwordController.text,
-                                          _userNameController.text,
-                                        )
-                                        .then((value) => reactionOfLogin(value));
-                                  }
-                                  if (isOTP) {
-                                    Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  backgroundColor: AppColor.kPrimaryButtonColor,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (formstate.currentState!.validate()) {
+                                  ref
+                                      .read(userProvider.notifier)
+                                      .loginUser(
+                                        _passwordController.text,
+                                        _userNameController.text,
+                                      )
+                                      .then((value) => reactionOfLogin(value));
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Center(
-                                  child: Text(
-                                    "Anmelden",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                backgroundColor: AppColor.kPrimaryButtonColor,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Anmelden",
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
                           ),
                         ),
                       ],

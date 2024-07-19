@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -20,7 +19,6 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
   Future<bool> createTimeEntriesVM(TimeEntriesVM entry) async {
     final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
     data.removeWhere((key, value) => key == 'userID');
-    log(json.encode(data));
     try {
       final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
@@ -72,15 +70,9 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
       log('state s empty load list');
       return [];
     }
-    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
-      log(e.toJson().toString());
-    }
     allEntries.sort(
       (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
     );
-    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
-      print(e.toJson().toString());
-    }
     return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
   }
 

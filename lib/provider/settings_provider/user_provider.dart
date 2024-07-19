@@ -12,6 +12,9 @@ final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier()
 
 class UserNotifier extends Notifier<UserVM> {
   final Api _api = Api();
+  bool _isOTP = false;
+
+  bool get isOneTimePassword => _isOTP;
   @override
   UserVM build() {
     _api.getToken.then((value) {
@@ -38,10 +41,12 @@ class UserNotifier extends Notifier<UserVM> {
       log(response.data.toString());
       final data = (response.data as Map);
       final userToken = data.values.first as String;
+      _isOTP = response.data['oneTimePassword'];
       final newUser = state.copyWith(
         username: userName,
         userToken: userToken,
       );
+      // TODO: Think about create a stored user with name or something else for later remote uses, No Password saving!!
       _api.storeToken(userToken);
       if (newUser != state) state = newUser;
       return true;

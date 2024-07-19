@@ -1,9 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final languangeProvider = StateProvider<Dictionary>((ref) => GermanLanguage());
-
 abstract class Dictionary {
+  const Dictionary();
   String get amount;
+  String get changePassword;
   String get checkInput;
   String get choosedImage;
   String get createEntry;
@@ -34,6 +32,7 @@ abstract class Dictionary {
   String get takePicture;
   String get documentationLabel;
   String get overView;
+  String get logUserOut;
   String get timeoverview;
   String get taskOverview;
   String get consumables;
@@ -43,9 +42,24 @@ abstract class Dictionary {
   String get workOrder;
 
   String get failed;
+
+  String get plsEnterUserName;
+
+  String get changeLanguage;
+
+  String get english;
+
+  String get german;
+
+  get lightTheme;
+
+  get themeModeSystem;
+
+  get darkMode;
 }
 
 class EnglishLanguage extends Dictionary {
+  const EnglishLanguage();
   @override
   String get amount => 'AMOUNT';
 
@@ -161,9 +175,37 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get failed => 'Failed';
+
+  @override
+  String get plsEnterUserName => 'Please enter your email';
+
+  @override
+  String get changePassword => 'Change Passowrd';
+
+  @override
+  String get logUserOut => 'Log out user';
+
+  @override
+  String get changeLanguage => 'Languages';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get german => 'German';
+
+  @override
+  get darkMode => 'Darkmode';
+
+  @override
+  get lightTheme => 'Lightmode';
+
+  @override
+  get themeModeSystem => 'Systemmode';
 }
 
 class GermanLanguage extends Dictionary {
+  const GermanLanguage();
   @override
   String get amount => 'MENGE';
   @override
@@ -277,4 +319,31 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get failed => 'Fehlgeschlagen';
+
+  @override
+  String get plsEnterUserName => 'Bitte geb dein Nutzernamen ein ';
+
+  @override
+  String get changePassword => 'Password ändern';
+
+  @override
+  String get logUserOut => 'Nutzer abmelden';
+
+  @override
+  String get changeLanguage => 'Sprachen';
+
+  @override
+  String get english => 'Englisch';
+
+  @override
+  String get german => 'Deutsch';
+
+  @override
+  get darkMode => 'Dunkel';
+
+  @override
+  get lightTheme => 'Hell';
+
+  @override
+  get themeModeSystem => 'System';
 }

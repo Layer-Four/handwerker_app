@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +51,7 @@ class Api {
   Future<Response> postResetPasswordRequest(Map<String, dynamic> json, String email) =>
       _api.post(_postResetPasswordRequest + email, data: json);
   void storeToken(String token) => _storage.then((e) => e.setString('TOKEN', token));
+
   void deleteToken() => _storage.then((e) => e.remove('TOKEN'));
   Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
 
@@ -80,10 +79,6 @@ class Api {
         if (error.response?.statusCode == 500 ||
             (error.message != null && error.message!.contains('500'))) {
           _storage.then((value) => value.clear());
-          log('message');
-        }
-        if (error.response?.statusCode == 400) {
-          return;
         }
 
         return handler.next(error);
