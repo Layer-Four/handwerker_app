@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/documentation_view/doku_nav_view.dart';
 import 'package:handwerker_app/view/history_views/history_nav_view.dart';
-import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
+import 'package:handwerker_app/view/navigation_view/widgets/app_navigation_bar.dart';
 import 'package:handwerker_app/view/user_view/user_view.dart';
+
+import '../time_tracker_view/time_tracker_view.dart';
 
 class MainViewNavigator extends ConsumerStatefulWidget {
   const MainViewNavigator({super.key});
@@ -41,7 +43,7 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(ref.watch(languangeProvider).sessionHasEnded)));
+                      SnackBar(content: Text(ref.watch(settingsProv).dictionary.sessionHasEnded)));
                   Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
 
                   // TODO: can throw error after false login
@@ -56,16 +58,6 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
           notifier.state = provider.views(index);
         },
       ),
-    );
-  }
-}
-
-class TimeTrackView extends StatelessWidget {
-  const TimeTrackView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Time tracker')),
     );
   }
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/history_views/history_consumable/history_consumable_view.dart';
 import 'package:handwerker_app/view/history_views/workorder_view/workorder_view.dart';
 import 'package:handwerker_app/view/history_views/history_project/project_overview.dart';
 import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
 import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
-
-import '../../provider/settings_provider/language_provider.dart';
 
 class HistoryNavigationView extends ConsumerWidget {
   const HistoryNavigationView({super.key});
@@ -57,7 +56,7 @@ class NavBarHistoryVWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
             child: NavigationIcon(
-              title: ref.watch(languangeProvider).timeoverview,
+              title: ref.watch(settingsProv).dictionary.timeoverview,
               isCurrent: viewProvider == HistoryViews.jobs,
             ),
           ),
@@ -72,16 +71,16 @@ class NavBarHistoryVWidget extends ConsumerWidget {
         //     ),
         //   ),
         // ),
-        // GestureDetector(
-        //   onTap: () => viewNotifier.state = HistoryViews.projects,
-        //   child: Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
-        //     child: NavigationIcon(
-        //       title: ref.watch(languangeProvider).project,
-        //       isCurrent: viewProvider == HistoryViews.projects,
-        //     ),
-        //   ),
-        // ),
+        GestureDetector(
+          onTap: () => viewNotifier.state = HistoryViews.projects,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4.0),
+            child: NavigationIcon(
+              title: ref.watch(settingsProv).dictionary.project,
+              isCurrent: viewProvider == HistoryViews.projects,
+            ),
+          ),
+        ),
         // GestureDetector(
         //   onTap: () {},
         //   // onTap: () => viewNotifier.state = HistoryViews.consumables,
