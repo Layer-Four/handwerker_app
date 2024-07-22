@@ -1,13 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/documentation_view/doku_nav_view.dart';
 import 'package:handwerker_app/view/history_views/history_nav_view.dart';
-import 'package:handwerker_app/view/navigation_view/app_navigation_bar.dart';
+import 'package:handwerker_app/view/navigation_view/widgets/app_navigation_bar.dart';
+import 'package:handwerker_app/view/time_track_view/time_tracker_view.dart';
 import 'package:handwerker_app/view/user_view/user_view.dart';
 
 class MainViewNavigator extends ConsumerStatefulWidget {
@@ -24,7 +24,6 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
     if (_firstLoad) {
       setState(() {
         _firstLoad = false;
-        log('change first load on main nav');
       });
     }
     final provider = ref.watch(viewProvider);
@@ -39,12 +38,14 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
           MainViews.user => const UserView(),
           MainViews.logOut => Focus(
               autofocus: true,
-              child: const SizedBox(
-                child: Center(child: Text('welcome to the matrix')),
-              ),
+              child: const SizedBox.shrink(),
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
-                  Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(ref.watch(settingsProv).dictionary.sessionHasEnded)));
+                  Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
+
+                  // TODO: can throw error after false login
                 }
               },
             ),
@@ -56,16 +57,6 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
           notifier.state = provider.views(index);
         },
       ),
-    );
-  }
-}
-
-class TimeTrackView extends StatelessWidget {
-  const TimeTrackView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Time tracker')),
     );
   }
 }

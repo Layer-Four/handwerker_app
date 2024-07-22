@@ -11,10 +11,12 @@ import 'package:handwerker_app/models/project_models/project_list_vm/project_lis
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
+
+import '../../../provider/settings_provider/settings_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -33,9 +35,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
-  List<MaterialVM> _materials = [];
+  List<ConsumeableVM> _materials = [];
   ProjectListVM? _project;
-  MaterialVM? _selectedMaterial;
+  ConsumeableVM? _selectedMaterial;
   @override
   void initState() {
     super.initState();
@@ -86,7 +88,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
-                  ref.watch(languangeProvider).amount,
+                  ref.watch(settingsProv).dictionary.amount,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
@@ -137,11 +139,15 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             textInputAction: TextInputAction.done,
             controller: _amountController,
             decoration: Utilits.textFieldDecorator(
-              context,
-              hintText: ref.watch(languangeProvider).amount,
+              ref.watch(settingsProv).dictionary.amount,
             ),
             onChanged: (value) {
-              setState(() => _amountController.text = value);
+              if (_amountController.text.length > 20) {
+                return;
+              }
+              if (_amountController.text.length <= 20) {
+                setState(() => _amountController.text = value);
+              }
             },
           ),
         ),
@@ -164,7 +170,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
           child: Text(
-            ref.watch(languangeProvider).sum,
+            ref.watch(settingsProv).dictionary.sum,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ),
@@ -178,13 +184,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             textInputAction: TextInputAction.done,
             controller: _summeryController,
             decoration: Utilits.textFieldDecorator(
-              context,
-              hintText: '${ref.watch(languangeProvider).sum} €',
+              '${ref.watch(settingsProv).dictionary.sum} €',
             ),
             onChanged: (value) {
               setState(() {
+                if (value.length < 20) {
+                  _summeryController.text = value;
+                }
                 // _entry = _entry.copyWith(cost: int.tryParse(value));
-                _summeryController.text = value;
               });
             },
           ),
@@ -194,70 +201,74 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _chooseCustomerProjectField() {
-    return ref.read(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
-              setState(() {
-                _project = projects.first;
-                _entry = _entry.copyWith(projectID: projects.first.id);
-                _isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      ref.watch(languangeProvider).customerProject,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+    return ref.watch(projectVMProvider).isEmpty
+        ? WaitingMessageWidget('PAss mich an')
+        :
+        // .when(
+        //       error: (error, stackTrace) {
+        //         log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
+        //         return const SizedBox(child: Text('Etwas lief schief'));
+        //       },
+        //       loading: () => const CircularProgressIndicator.adaptive(),
+        //       data: (data) {
+        //         if (data == null) {
+        //           ref.read(projectVMProvider.notifier).loadpProject();
+        //         }
+        //         final projects = data;
+        //         if (projects != null && !_isProjectSet) {
+        //           setState(() {
+        //             _project = projects.first;
+        //             _entry = _entry.copyWith(projectID: projects.first.id);
+        //             _isProjectSet = true;
+        //           });
+        //         }
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    ref.watch(settingsProv).dictionary.customerProject,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _project,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _project = e!;
-                          _entry = _entry.copyWith(projectID: e.id);
-                        });
-                      },
-                    ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
                   ),
-                ],
-              ),
-            );
-          },
-        );
+                  child: DropdownButton(
+                    menuMaxHeight: 350,
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: ref.watch(projectVMProvider).isNotEmpty
+                        ? ref.watch(projectVMProvider).first
+                        : null,
+                    items: ref
+                        .watch(projectVMProvider)
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.title}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      // setState(() {
+                      //   _project = e!;
+                      //   _entry = _entry.copyWith(projectID: e.id);
+                      // });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   Widget _chooseMaterialField() {
@@ -288,7 +299,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(4),
-                    child: Text(ref.watch(languangeProvider).material,
+                    child: Text(ref.watch(settingsProv).dictionary.material,
                         style: Theme.of(context).textTheme.labelMedium),
                   ),
                   Container(
@@ -325,7 +336,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _dayInputWidget() => LabeldTextfield(
-        label: ref.watch(languangeProvider).date,
+        label: ref.watch(settingsProv).dictionary.date,
         controller: _dayPickerController,
         textInputType: TextInputType.datetime,
         onTap: () async {
@@ -353,31 +364,27 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
         color: AppColor.kPrimaryButtonColor,
-        text: ref.watch(languangeProvider).createEntry,
+        text: ref.watch(settingsProv).dictionary.createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           final material = Consumable(
             amount: int.tryParse(_amountController.text) ?? 1,
             materialUnitID: _unit!.id,
-            // name: _selectedMaterial!.name,
             price: int.tryParse(_summeryController.text) ?? 0,
             materialID: _selectedMaterial!.id.toString(),
           );
           _entry = _entry.copyWith(
             consumables: [material],
-            // cost: int.tryParse(_summeryController.text) ?? 0,
           );
-          // log(json.encode(_entry.toJson()));
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(ref.watch(languangeProvider).succes),
+            content: Text(ref.watch(settingsProv).dictionary.succes),
           ));
           final now = DateTime.now();
           setState(() {
             _selectedMaterial = _materials.first;
             _amountController.clear();
             _summeryController.clear();
-            // _duration = _durationSteps.first;
             _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
           });
         },

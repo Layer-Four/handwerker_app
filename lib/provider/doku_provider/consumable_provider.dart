@@ -36,6 +36,9 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
       }
       return result;
     } catch (e) {
+      if (e.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+      }
       log('request was incompleted this was the error-> $e');
       return result;
     }
@@ -57,6 +60,9 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
       log('request success-> ${response.data}');
       return;
     } catch (e) {
+      if (e.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+      }
       log('request was incompleted this was the error-> $e');
     }
   }

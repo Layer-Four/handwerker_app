@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/documentation_view/documentation_entry/documentation_body.dart';
 import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
@@ -23,7 +23,7 @@ class DokuNavigationView extends ConsumerWidget {
           child: switch (dokuViewRef) {
             DokuViews.project => const DocumentationBody(),
             DokuViews.consumables => const MaterialBody(),
-            _ => const TimeEntryBody(),
+            _ => const TimeEntriesBody(),
           },
         ),
       ),
@@ -36,13 +36,12 @@ class NavAppBarWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final language = ref.watch(languangeProvider);
+    final language = ref.watch(settingsProv).dictionary;
     final viewProvider = ref.watch(dokuViewProvider);
     final viewNotifier = ref.read(dokuViewProvider.notifier);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // TODO: InkWell or GesturDetector???
         GestureDetector(
           onTap: () => viewNotifier.state = DokuViews.timeEntry,
           child: Padding(
@@ -69,7 +68,7 @@ class NavAppBarWidget extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: NavigationIcon(
-              title: 'Material',
+              title: language.consumables,
               isCurrent: viewProvider == DokuViews.consumables,
             ),
           ),

@@ -1,53 +1,47 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
+import 'package:handwerker_app/models/time_models/time_entry_dm/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final timeEntryProvider =
-    NotifierProvider<TimeEntryNotifier, List<TimeEntry>>(() => TimeEntryNotifier());
+final timeEntriesProvider =
+    NotifierProvider<TimeEntriesNotifier, List<TimeEntriesVM>>(() => TimeEntriesNotifier());
 
-class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
-  final Api api = Api();
+class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
+  final Api _api = Api();
   @override
   build() => [];
 
-  void addTimeEntry(TimeEntry entry) => state = [...state, entry];
-
-  // TODO: write request provider for encaplusalted logic
-  void uploadTimeEntry(TimeEntry entry) async {
-    // final uri = DbAdresses().postTimeEnty;
-    // final Dio dio = Dio();
+  Future<bool> createTimeEntriesVM(TimeEntriesVM entry) async {
+    final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
+    data.removeWhere((key, value) => key == 'userID');
     try {
-      // final response = await dio.post(uri, data: entry.toJson());
-      final response = await api.postTimeEnty(entry.toJson());
+      final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
-        log('Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message');
-        return;
+        throw Exception(
+            'Error occuren on createTimeEntriesVM: ${response.statusCode}\n${response.data}');
       }
-      final jsonResponse = response.data;
-      final eentry = TimeEntry.fromJson(jsonResponse);
-      final list = <TimeEntry>[...state, eentry];
-      state = list;
-      log('request success-> $jsonResponse');
-      return;
+      return true;
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 401) {
+        ref.read(userProvider.notifier).userLogOut();
+        log('UserToken is outdated ${e.response!.statusMessage}');
+        return false;
+      }
+      throw Exception('DioException: ${e.message}');
     } catch (e) {
-      log('request was incompleted this was the error: $e');
+      log(e.toString());
+      return false;
     }
   }
 
-  void loadEntrys() async {
-    // final String url = DbAdresses().getAllTimeEntrys;
-    // final Dio dio = Dio();
+  void loadTimeEntriesVM() async {
     try {
-      // final response = await dio.get(url);
-      final response = await api.getAllTimeEntrys;
+      final response = await _api.getAllTimeentriesDM;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -58,32 +52,48 @@ class TimeEntryNotifier extends Notifier<List<TimeEntry>> {
       }
       final List data = response.data.map((e) => e).toList();
       data.map((e) => e.asMap());
-      final entry = data.map((e) => TimeEntry.fromJson(e)).toSet().toList();
-      state = entry;
+      final newstate =
+          data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
+      newstate.sort((a, b) => a.date.compareTo(b.date));
+      state = newstate;
       return;
     } catch (e) {
       log('request was incompleted this was the error: $e');
+      return;
     }
   }
 
+  List<TimeEntriesVM> loadWorkOrder() {
+    final allEntries = state;
+    if (state.isEmpty) {
+      // loadTimeEntriesVM();
+      log('state s empty load list');
+      return [];
+    }
+    allEntries.sort(
+      (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
+    );
+    return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
+  }
+
   // sortiere einträge in workdays
-  List<Workday?> getListOfWorkdays() {
+  List<Workday> getListOfWorkdays() {
     List<Workday> listOfWorkdays = [];
     for (var e in state) {
       if (listOfWorkdays.any((element) =>
-          element.date.day == e.startTime.day &&
-          element.date.month == e.startTime.month &&
-          element.date.year == e.startTime.year)) {
+          element.date.day == e.date.day &&
+          element.date.month == e.date.month &&
+          element.date.year == e.date.year)) {
         final date = listOfWorkdays.firstWhere((element) =>
-            element.date.day == e.startTime.day &&
-            element.date.month == e.startTime.month &&
-            element.date.year == e.startTime.year);
+            element.date.day == e.date.day &&
+            element.date.month == e.date.month &&
+            element.date.year == e.date.year);
         date.timeEntries.add(e);
       } else if (!listOfWorkdays.any((element) =>
-          element.date.day == e.startTime.day &&
-          element.date.month == e.startTime.month &&
-          element.date.year == e.startTime.year)) {
-        listOfWorkdays.add(Workday(date: e.startTime, timeEntries: [e]));
+          element.date.day == e.date.day &&
+          element.date.month == e.date.month &&
+          element.date.year == e.date.year)) {
+        listOfWorkdays.add(Workday(date: e.date, timeEntries: [e]));
       } else {
         log('no matches');
       }

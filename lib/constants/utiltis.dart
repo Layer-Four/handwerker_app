@@ -30,41 +30,47 @@ class Utilits {
         ),
       );
 
-  static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
-    const Permission storagePermission = Permission.storage;
-    if (await storagePermission.isDenied) {
-      await askForPermission(context);
-    }
-    // final permission = await Permission.camera.status;
-    try {
-      final XFile? file = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxHeight: 1024,
-        maxWidth: 1024,
-      );
-      if (file != null) return file;
-    } catch (e) {
-      final status = await Permission.camera.status;
-      log('permission was denied: $e');
-      if (status.isDenied) {
-        askForPermission(context);
-      }
-    }
-    return null;
-  }
+  // static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
+  //   const Permission storagePermission = Permission.camera;
+  //   if (await storagePermission.isDenied) {
+  //     // await askForPermission(context);
+  //   }
+  //   // final permission = await Permission.camera.status;
+  //   try {
+  //     final XFile? file = await ImagePicker().pickImage(
+  //       source: ImageSource.camera,
+  //       maxHeight: 1024,
+  //       maxWidth: 1024,
+  //     );
+  //     if (file != null) return file;
+  //   } catch (e) {
+  //     final status = await Permission.camera.status;
+  //     log('permission was denied: $e');
+  //     if (status.isDenied) {
+  //       askForPermission(context);
+  //     }
+  //   }
+  //   return null;
+  // }
 
-  static Future<XFile?> pickImageFromGalery(BuildContext context, String projectName) async {
-    final permission = Permission.storage.status;
+  static Future<XFile?> pickImage(
+    BuildContext context,
+    String projectName, {
+    required Permission permission,
+  }) async {
+    // final permission = Permission.storage.status;
+    final source = permission == Permission.camera ? ImageSource.camera : ImageSource.gallery;
     if (await permission.isDenied) {
       await askForPermission(context);
     }
     try {
       final XFile? file = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxHeight: 1024,
         maxWidth: 1024,
       );
       if (file != null) return XFile(file.path);
+      return null;
     } catch (e) {
       final status = await Permission.storage.status;
       log('permission was denied: $e');
@@ -98,25 +104,26 @@ class Utilits {
     );
   }
 
-  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+  static InputDecoration textFieldDecorator([String? hintText, Icon? suffixIcon]) =>
       InputDecoration(
         hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: AppColor.kTextfieldBorder,
-            ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 5,
-        ),
+        filled: true,
+        fillColor: AppColor.kTextfieldColor,
+        suffixIcon: suffixIcon,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(
             color: AppColor.kTextfieldBorder,
           ),
         ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: BorderSide.none,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppColor.kPrimaryButtonColor),
+          borderSide: const BorderSide(color: Colors.grey, width: 0),
         ),
       );
 

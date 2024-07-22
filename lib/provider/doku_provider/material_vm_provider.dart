@@ -5,13 +5,13 @@ import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final materialVMProvider =
-    AsyncNotifierProvider<MaterialNotifier, List<MaterialVM>>(() => MaterialNotifier());
+    AsyncNotifierProvider<MaterialNotifier, List<ConsumeableVM>>(() => MaterialNotifier());
 
-class MaterialNotifier extends AsyncNotifier<List<MaterialVM>> {
+class MaterialNotifier extends AsyncNotifier<List<ConsumeableVM>> {
   final Api api = Api();
 
   @override
-  List<MaterialVM> build() => [];
+  List<ConsumeableVM> build() => [];
 
   void loadMaterials() async {
     // final materialUri = DbAdresses().getMaterialsList;
@@ -28,7 +28,7 @@ class MaterialNotifier extends AsyncNotifier<List<MaterialVM>> {
         return;
       }
       final List data = response.data.map((e) => e as Map).toList();
-      final materials = data.map((e) => MaterialVM.fromJson(e)).toList();
+      final materials = data.map((e) => ConsumeableVM.fromJson(e)).toList();
       state = AsyncValue.data(materials);
       return;
     } catch (e) {

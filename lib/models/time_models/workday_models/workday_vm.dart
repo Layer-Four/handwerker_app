@@ -1,8 +1,8 @@
-import 'package:handwerker_app/models/time_models/time_entry.dart';
+import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 
 class Workday {
   final DateTime date;
-  final List<TimeEntry> timeEntries;
+  final List<TimeEntriesVM> timeEntries;
   const Workday({required this.date, required this.timeEntries});
 
   String getSumOfToday() {
@@ -19,4 +19,6 @@ class Workday {
     if (minutes < 10) return '$hours:0$minutes Stunden';
     return '$hours:$minutes Stunden';
   }
+
+  List<TimeEntriesVM> get entries => timeEntries;
 }

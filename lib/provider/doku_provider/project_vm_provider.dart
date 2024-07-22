@@ -7,24 +7,24 @@ import 'package:handwerker_app/models/project_models/project_overview_vm/project
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final projectVMProvider =
-    AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
+    NotifierProvider<ProjectNotifer, List<ProjectListVM>>(() => ProjectNotifer());
 
-class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
-  final Api api = Api();
+class ProjectNotifer extends Notifier<List<ProjectListVM>> {
+  final List _customer = [
+    'Kunde A',
+    'Kunde B',
+    'Kunde C',
+    'Kunde D',
+  ];
+  final Api _api = Api();
+  // TODO: copy customerDataShort from webapp
+  List get customer => _customer;
   @override
-  List<ProjectListVM>? build() => null;
+  List<ProjectListVM> build() => [];
 
   void loadpProject() async {
-    // final uri = DbAdresses().getProjectsDM;
-    // final Dio http = Dio();
     try {
-      // final response = await http.get(uri);
-      final response = await api.getProjectsDM;
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
-        state = AsyncValue.data(projects);
-      }
+      final response = await _api.getProjectsDM;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -33,21 +33,20 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
         log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
         return;
       }
+      final data = response.data;
+      final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
+      state = projects;
+      return;
     } catch (e) {
       throw Exception(e);
     }
-    return;
   }
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
-    // final Dio dio = Dio();
-    // final url = DbAdresses().getCustomerProjects;
     final result = <ProjectCustomer>[];
-    // int count = 0;
 
     try {
-      // final response = await dio.get(url);
-      final response = await api.getCustomerProjects;
+      final response = await _api.getCustomerProjects;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -66,10 +65,9 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
   }
 
   Future<List<DocumentationDM>?> loadDocumentationForProject(int projectID) async {
-    final api = Api();
     List<DocumentationDM> result = [];
     try {
-      final response = await api.getDokuforProjectURL(projectID);
+      final response = await _api.getDokuforProjectURL(projectID);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -87,6 +85,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
           for (var j in something) {
             if (j != null || j!.isNotEmpty) {
               final url = 'https://rsahapp.blob.core.windows.net/$j';
+              log(url);
               imageUrls.add(url);
             }
           }
@@ -100,6 +99,10 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       }
       return result;
     } catch (error) {
+      if (error.toString().contains('500')) {
+        ref.read(userProvider.notifier).userLogOut();
+        return [];
+      }
       throw Exception(error);
     }
   }
