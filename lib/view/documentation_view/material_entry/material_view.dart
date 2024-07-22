@@ -14,6 +14,7 @@ import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
 
 import '../../../provider/settings_provider/settings_provider.dart';
 
@@ -200,70 +201,72 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _chooseCustomerProjectField() {
-    return ref.read(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
-              setState(() {
-                _project = projects.first;
-                _entry = _entry.copyWith(projectID: projects.first.id);
-                _isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      ref.watch(settingsProv).dictionary.customerProject,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+    return ref.watch(projectVMProvider).isEmpty
+        ? WaitingMessageWidget('PAss mich an')
+        :
+        // .when(
+        //       error: (error, stackTrace) {
+        //         log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
+        //         return const SizedBox(child: Text('Etwas lief schief'));
+        //       },
+        //       loading: () => const CircularProgressIndicator.adaptive(),
+        //       data: (data) {
+        //         if (data == null) {
+        //           ref.read(projectVMProvider.notifier).loadpProject();
+        //         }
+        //         final projects = data;
+        //         if (projects != null && !_isProjectSet) {
+        //           setState(() {
+        //             _project = projects.first;
+        //             _entry = _entry.copyWith(projectID: projects.first.id);
+        //             _isProjectSet = true;
+        //           });
+        //         }
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    ref.watch(settingsProv).dictionary.customerProject,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _project,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _project = e!;
-                          _entry = _entry.copyWith(projectID: e.id);
-                        });
-                      },
-                    ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
                   ),
-                ],
-              ),
-            );
-          },
-        );
+                  child: DropdownButton(
+                    menuMaxHeight: 350,
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: '',
+                    items: ref
+                        .watch(projectVMProvider)
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.title}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      // setState(() {
+                      //   _project = e!;
+                      //   _entry = _entry.copyWith(projectID: e.id);
+                      // });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   Widget _chooseMaterialField() {

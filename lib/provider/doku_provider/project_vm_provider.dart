@@ -7,12 +7,20 @@ import 'package:handwerker_app/models/project_models/project_overview_vm/project
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
 final projectVMProvider =
-    AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
+    NotifierProvider<ProjectNotifer, List<ProjectListVM>>(() => ProjectNotifer());
 
-class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
+class ProjectNotifer extends Notifier<List<ProjectListVM>> {
+  final List _customer = [
+    'Kunde A',
+    'Kunde B',
+    'Kunde C',
+    'Kunde D',
+  ];
   final Api _api = Api();
+  // TODO: copy customerDataShort from webapp
+  List get customer => _customer;
   @override
-  List<ProjectListVM>? build() => null;
+  List<ProjectListVM> build() => [];
 
   void loadpProject() async {
     try {
@@ -27,7 +35,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       }
       final data = response.data;
       final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
-      state = AsyncValue.data(projects);
+      state = projects;
       return;
     } catch (e) {
       throw Exception(e);
