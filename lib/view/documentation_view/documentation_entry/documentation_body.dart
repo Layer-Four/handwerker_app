@@ -196,7 +196,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     menuMaxHeight: 350,
                     underline: const SizedBox(),
                     isExpanded: true,
-                    value: '_project',
+                    value: _project,
                     items: ref
                         .watch(projectVMProvider.notifier)
                         .customer
@@ -204,7 +204,9 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                           (e) => DropdownMenuItem(
                             alignment: Alignment.center,
                             value: e,
-                            child: Text(' ${e.title}'),
+                            // TODO: change to attribute from obkect
+                            child: Text(' e.title'),
+                            // child: Text(' ${e.title}'),
                           ),
                         )
                         .toList(),

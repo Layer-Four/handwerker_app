@@ -245,7 +245,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     menuMaxHeight: 350,
                     underline: const SizedBox(),
                     isExpanded: true,
-                    value: '',
+                    value: ref.watch(projectVMProvider).isNotEmpty
+                        ? ref.watch(projectVMProvider).first
+                        : null,
                     items: ref
                         .watch(projectVMProvider)
                         .map(
