@@ -15,12 +15,34 @@ class LoginView extends ConsumerStatefulWidget {
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-  bool _isPasswordVisible = false;
+  bool isUsernameFocused = false;
+  bool isPasswordFocused = false;
   bool _isLoaded = false;
 
   final TextEditingController _emailCon = TextEditingController();
   final TextEditingController _passCon = TextEditingController();
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
+
+  String? validateEmail(String? input) {
+    const emailRegex = r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
+    if (input == null || input.isEmpty) {
+      return "Email bitte eingeben";
+    } else if (RegExp(emailRegex).hasMatch(input)) {
+      return null;
+    } else {
+      return "Ungültige Nutzernamen Format";
+    }
+  }
+
+  String? validatePassword(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'Passwort bitte eingeben';
+    } else if (input.length >= 6) {
+      return null;
+    } else {
+      return "Mehr als 6 Zeichen bitte eingeben";
+    }
+  }
 
   @override
   void dispose() {
@@ -68,12 +90,17 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 20),
                           CustomTextField(
                             controller: _emailCon,
                             inputAction: TextInputAction.next,
+                            validator: validateEmail,
                             onFieldSubmitted: (_) => _submitLogin(),
+                            onFocusChange: (hasFocus) {
+                              setState(() => isUsernameFocused = hasFocus);
+                            },
+                            autofillHints: const [AutofillHints.email],
                           ),
-                          const SizedBox(height: 20),
                           const SizedBox(
                             width: 350,
                             child: Align(
@@ -87,17 +114,18 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10),
                           CustomTextField(
                             controller: _passCon,
                             isPassword: true,
                             inputAction: TextInputAction.done,
+                            validator: validatePassword,
                             onFieldSubmitted: (_) => _submitLogin(),
-                            obscureText: !_isPasswordVisible,
-                            togglePasswordVisibility: () {
-                              setState(() => _isPasswordVisible = !_isPasswordVisible);
+                            onFocusChange: (hasFocus) {
+                              setState(() => isPasswordFocused = hasFocus);
                             },
+                            autofillHints: const [AutofillHints.password],
                           ),
-                          const SizedBox(height: 10),
                           _buildForgotPassword(),
                           const SizedBox(height: 20),
                           _buildLoginButton(),
@@ -118,37 +146,38 @@ class _LoginViewState extends ConsumerState<LoginView> {
     setState(() => _isLoaded = false);
     if (isSuccess) {
       Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
-      return;
+    } else {
+      showSnackBar(
+          context, 'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.');
+      _passCon.clear();
     }
-    _passCon.clear();
-    // ignore: void_checks
-    return showSnackBar(
-      context,
-      'Leider hat es nicht geklappt.\nKontrolliere deine Zugangsdaten und versuche es erneut.',
-    );
   }
 
   Future<void> _submitLogin() async {
-    if (_emailCon.text.isEmpty || _passCon.text.isEmpty) {
-      showSnackBar(context, 'Bitte alle Textfelder ausfüllen.');
-      return;
+    if (_formstate.currentState!.validate()) {
+      final String email = _emailCon.text;
+      final String password = _passCon.text;
+
+      setState(() {
+        _isLoaded = true;
+      });
+
+      try {
+        bool isSuccess = await ref.read(userProvider.notifier).loginUser(
+              password: password,
+              userName: email,
+            );
+
+        reactionOfLogin(isSuccess);
+      } catch (e) {
+        setState(() {
+          _isLoaded = false;
+        });
+        showSnackBar(context, 'Leider hat es nicht geklappt: ${e.toString()}');
+      }
+    } else {
+      showSnackBar(context, 'Ungültige Nutzernamme oder Passwort Eingabe');
     }
-
-    if (_passCon.text.length < 7) {
-      showSnackBar(context, 'Bitte mehr als 6 Zeichen eingeben.');
-      return;
-    }
-
-    setState(() {
-      // _showError = true;
-      _isLoaded = true;
-    });
-
-    bool isSuccess = await ref.read(userProvider.notifier).loginUser(
-          password: _passCon.text,
-          userName: _emailCon.text,
-        );
-    reactionOfLogin(isSuccess);
   }
 
   Widget _buildForgotPassword() => SizedBox(
@@ -185,7 +214,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   width: 340,
                   height: 44,
                   child: ElevatedButton(
-                    onPressed: () => _submitLogin(),
+                    onPressed: _submitLogin,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

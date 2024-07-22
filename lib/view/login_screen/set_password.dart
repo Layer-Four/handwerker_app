@@ -416,3 +416,117 @@ class _PasswordViewState extends State<PasswordView> {
     );
   }
 }
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// final passwordVisibilityProvider = StateProvider((ref) => false);
+
+// class CustomTextField extends ConsumerWidget {
+//   final TextEditingController controller;
+//   final bool isLoaded;
+//   final bool isPassword;
+//   final TextInputAction inputAction;
+//   final bool obscureText;
+//   final Function(String)? onFieldSubmitted;
+//   final Function()? togglePasswordVisibility;
+//   final String? Function(String?)? validator; // Updated to accept String? Function(String?)
+//   final Function(bool)? onFocusChange;
+
+//   const CustomTextField({
+//     Key? key,
+//     required this.controller,
+//     this.isPassword = false,
+//     this.isLoaded = false,
+//     required this.inputAction,
+//     this.obscureText = false,
+//     this.onFieldSubmitted,
+//     this.togglePasswordVisibility,
+//     this.validator,
+//     this.onFocusChange,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final bool isPasswordVisible = ref.watch(passwordVisibilityProvider);
+
+//     return Container(
+//       margin: const EdgeInsets.only(top: 3, bottom: 20),
+//       width: 355,
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(8),
+//         color: const Color.fromARGB(255, 231, 226, 226),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           TextFormField(
+//             controller: controller,
+//             obscureText: obscureText && !isPasswordVisible,
+//             textInputAction: inputAction,
+//             onFieldSubmitted: onFieldSubmitted,
+//             validator: (value) {
+//               if (validator != null && value != null && value.isNotEmpty) {
+//                 return validator!(value);
+//               }
+//               return null;
+//             },
+//             decoration: InputDecoration(
+//               filled: true,
+//               fillColor: Colors.transparent,
+//               contentPadding: const EdgeInsets.all(10),
+//               suffixIcon: isPassword
+//                   ? IconButton(
+//                       onPressed: togglePasswordVisibility,
+//                       icon: Icon(
+//                         isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+//                       ),
+//                       color: Theme.of(context).iconTheme.color,
+//                     )
+//                   : null,
+//               focusedErrorBorder: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(8),
+//                 borderSide: const BorderSide(
+//                   color: Colors.transparent,
+//                   width: 0,
+//                 ),
+//               ),
+//               focusedBorder: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(8),
+//                 borderSide: const BorderSide(
+//                   color: Colors.transparent,
+//                   width: 0,
+//                 ),
+//               ),
+//               enabledBorder: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(8),
+//                 borderSide: const BorderSide(
+//                   color: Colors.transparent,
+//                   width: 0,
+//                 ),
+//               ),
+//               errorBorder: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(8),
+//                 borderSide: const BorderSide(
+//                   color: Colors.transparent,
+//                   width: 0,
+//                 ),
+//               ),
+//               hoverColor: Theme.of(context).primaryColor.withOpacity(0.2),
+//             ),
+//           ),
+//           if (validator != null && isLoaded && validator!(controller.text) != null)
+//             Padding(
+//               padding: const EdgeInsets.only(left: 12.0, top: 4),
+//               child: Text(
+//                 validator!(controller.text)!,
+//                 style: TextStyle(color: Colors.amber),
+//               ),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
