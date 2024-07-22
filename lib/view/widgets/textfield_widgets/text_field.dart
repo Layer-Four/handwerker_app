@@ -49,7 +49,7 @@ class _UserAndPasswordFieldState extends State<UserAndPasswordField> {
 
             validator: (value) => (value == null || value.isEmpty)
                 ? "Required"
-                : (value.length < 6
+                : (value.length < 3
                     ? "Password must be at least 6 characters"
                     : null),
 
