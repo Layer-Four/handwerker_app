@@ -1,50 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
-class CustomTextInput extends StatelessWidget {
+final passwordVisibilityProvider = StateProvider((ref) => false);
+
+class CustomTextField extends ConsumerWidget {
   final TextEditingController controller;
-  final String? labelText;
   final bool isPassword;
-  final bool isVisable;
-  final ValueChanged<String>? onChanged;
-  final FormFieldValidator<String>? validator;
-  final AutovalidateMode autovalidateMode;
+  final TextInputAction inputAction;
+  final bool obscureText;
+  final Function(String)? onFieldSubmitted;
+  final Function()? togglePasswordVisibility;
+  final String? Function(String?)? validator;
+  final Function(bool)? onFocusChange;
+  final Iterable<String>? autofillHints;
 
-  const CustomTextInput({
+  const CustomTextField({
     super.key,
     required this.controller,
-    this.labelText,
     this.isPassword = false,
-    this.isVisable = true,
-    this.onChanged,
+    required this.inputAction,
+    this.obscureText = false,
+    this.onFieldSubmitted,
+    this.togglePasswordVisibility,
     this.validator,
-    this.autovalidateMode = AutovalidateMode.disabled,
+    this.onFocusChange,
+    this.autofillHints,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      onChanged: onChanged,
-      validator: validator,
-      autovalidateMode: autovalidateMode,
-      obscureText: isPassword && isVisable,
-      decoration: InputDecoration(
-        labelText: labelText,
-        contentPadding: const EdgeInsets.all(8),
-        isDense: true,
-        suffixIcon: isPassword
-            ? IconButton(
-                icon: isVisable
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off),
-                onPressed: () {
-                  // Toggling password visibility
-                  onChanged
-                      ?.call(""); // Clearing focus to ensure validation occurs
-                  onChanged?.call(controller.text); // Restore focus
-                },
-              )
-            : null,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isPasswordVisible = ref.watch(passwordVisibilityProvider);
+    void togglePasswordVisibility() {
+      ref.read(passwordVisibilityProvider.notifier).state = !ref.watch(passwordVisibilityProvider);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 3, bottom: 20),
+      width: 355,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: const Color.fromARGB(255, 231, 226, 226),
+      ),
+      child: Focus(
+        onFocusChange: onFocusChange,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: 44, // Adjust this to your needs
+          width: 355,
+          child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autofocus: true,
+            keyboardType: isPassword ? TextInputType.text : TextInputType.emailAddress,
+            textInputAction: inputAction,
+            validator: validator,
+            onFieldSubmitted: onFieldSubmitted,
+            controller: controller,
+            obscureText: isPassword && !isPasswordVisible,
+            autofillHints: autofillHints,
+            decoration: InputDecoration(
+              errorStyle: const TextStyle(fontSize: 0.01),
+              filled: true,
+              fillColor: Colors.transparent,
+              contentPadding: const EdgeInsets.all(10),
+              suffixIcon: isPassword
+                  ? IconButton(
+                      onPressed: togglePasswordVisibility,
+                      icon: Icon(isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                      color: Theme.of(context).iconTheme.color,
+                    )
+                  : null,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.kPrimaryButtonColor,
+                  width: 2,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.kPrimaryButtonColor,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 2,
+                  style: BorderStyle.solid,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

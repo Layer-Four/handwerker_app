@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
+import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/background_widget.dart';
-import 'package:handwerker_app/view/widgets/logo.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
-import '../../provider/settings_provider/settings_provider.dart';
+import 'shared/custom_text_field.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -17,163 +16,217 @@ class LoginView extends ConsumerStatefulWidget {
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-  late final TextEditingController _userNameController, _passwordController;
-  late final GlobalKey<FormState> formstate;
+  bool isUsernameFocused = false;
+  bool isPasswordFocused = false;
+  bool _isLoaded = false;
 
-  @override
-  void initState() {
-    _userNameController = TextEditingController();
-    _passwordController = TextEditingController();
-    formstate = GlobalKey();
-    super.initState();
+  final TextEditingController _emailCon = TextEditingController();
+  final TextEditingController _passCon = TextEditingController();
+  final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
+
+  String? validateEmail(String? input) {
+    const emailRegex = r"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9\.\-_]+\.[a-zA-Z]+$";
+    if (input == null || input.isEmpty) {
+      return "Email bitte eingeben";
+    } else if (RegExp(emailRegex).hasMatch(input)) {
+      return null;
+    } else {
+      return "Ungültige Nutzernamen Format";
+    }
   }
 
-  void reactionOfLogin(bool isSuccess) {
-    if (isSuccess) {
-      if (ref.watch(userProvider.notifier).isOneTimePassword == false) {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
-        return;
-      }
-      Navigator.of(context).pushNamed(AppRoutes.setPasswordScreen);
-      return;
+  String? validatePassword(String? input) {
+    if (input == null || input.isEmpty) {
+      return 'Passwort bitte eingeben';
+    } else if (input.length >= 6) {
+      return null;
+    } else {
+      return "Mehr als 6 Zeichen bitte eingeben";
     }
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('leider hats nicht geklappt')));
-    return;
   }
 
   @override
   void dispose() {
-    _userNameController.dispose();
-    _passwordController.dispose();
+    _emailCon.dispose();
+    _passCon.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BackgroundWidget(
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: BackgroundWidget(
+          imageName: 'img_anmelden.png',
           body: Padding(
-            padding: const EdgeInsets.only(top: 50, left: 40, right: 40),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: AppLogo(),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Anmelden",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: AppColor.kWhiteWOpacity),
+            padding: const EdgeInsets.only(top: 60),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 46,
+                      child: Image.asset('assets/images/img_techtool.png'),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Form(
-                    key: formstate,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Nutzername",
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        UserAndPasswordField(
-                          controller: _userNameController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return ref.watch(settingsProv).dictionary.plsEnterUserName;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          ref.watch(settingsProv).dictionary.enterPassword,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        UserAndPasswordField(
-                          controller: _passwordController,
-                          isPass: true,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: GestureDetector(
+                    const SizedBox(height: 75),
+                    Form(
+                      key: _formstate,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: 350,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
                               child: Text(
-                                ref.watch(settingsProv).dictionary.forgetPassword,
-                                style: Theme.of(context).textTheme.labelMedium,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pushNamed(AppRoutes.forgotPassword);
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Center(
-                          child: SizedBox(
-                            width: 235,
-                            height: 35,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                if (formstate.currentState!.validate()) {
-                                  ref
-                                      .read(userProvider.notifier)
-                                      .loginUser(
-                                        _passwordController.text,
-                                        _userNameController.text,
-                                      )
-                                      .then((value) => reactionOfLogin(value));
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                backgroundColor: AppColor.kPrimaryButtonColor,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "Anmelden",
-                                  style: TextStyle(color: Colors.white),
+                                'Nutzername',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 20),
+                          CustomTextField(
+                            controller: _emailCon,
+                            inputAction: TextInputAction.next,
+                            validator: validateEmail,
+                            onFieldSubmitted: (_) => _submitLogin(),
+                            onFocusChange: (hasFocus) {
+                              setState(() => isUsernameFocused = hasFocus);
+                            },
+                            autofillHints: const [AutofillHints.email],
+                          ),
+                          const SizedBox(
+                            width: 350,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                'Passwort',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextField(
+                            controller: _passCon,
+                            isPassword: true,
+                            inputAction: TextInputAction.done,
+                            validator: validatePassword,
+                            onFieldSubmitted: (_) => _submitLogin(),
+                            onFocusChange: (hasFocus) {
+                              setState(() => isPasswordFocused = hasFocus);
+                            },
+                            autofillHints: const [AutofillHints.password],
+                          ),
+                          _buildForgotPassword(),
+                          const SizedBox(height: 20),
+                          _buildLoginButton(),
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          imageName: 'img_anmelden.png'),
+        ),
+      ),
     );
   }
+
+  void reactionOfLogin(bool isSuccess) {
+    setState(() => _isLoaded = false);
+    if (isSuccess) {
+      Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+    } else {
+      showSnackBar(context,
+          'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.');
+      _passCon.clear();
+    }
+  }
+
+  Future<void> _submitLogin() async {
+    if (_formstate.currentState!.validate()) {
+      final String email = _emailCon.text;
+      final String password = _passCon.text;
+
+      setState(() {
+        _isLoaded = true;
+      });
+
+      try {
+        bool isSuccess = await ref.read(userProvider.notifier).loginUser(password, email);
+
+        reactionOfLogin(isSuccess);
+      } catch (e) {
+        setState(() {
+          _isLoaded = false;
+        });
+        showSnackBar(context, 'Leider hat es nicht geklappt: ${e.toString()}');
+      }
+    } else {
+      showSnackBar(context, 'Ungültige Nutzernamme oder Passwort Eingabe');
+    }
+  }
+
+  Widget _buildForgotPassword() => SizedBox(
+        width: 350,
+        child: Align(
+          alignment: Alignment.topRight,
+          child: GestureDetector(
+            child: const Text(
+              'Passwort vergessen?',
+              style: TextStyle(
+                color: AppColor.kWhite,
+                fontWeight: FontWeight.w700,
+                decorationColor: AppColor.kPrimaryButtonColor,
+                decorationThickness: 2.0,
+              ),
+            ),
+            onTap: () => Navigator.of(context).pushReplacementNamed(AppRoutes.forgotPassword),
+          ),
+        ),
+      );
+
+  Widget _buildLoginButton() => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: _isLoaded
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColor.kPrimaryButtonColor),
+                  ),
+                )
+              : SizedBox(
+                  width: 340,
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: _submitLogin,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      backgroundColor: AppColor.kPrimaryButtonColor,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Anmelden',
+                        style: TextStyle(color: AppColor.kWhite),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+      );
 }

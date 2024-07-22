@@ -14,11 +14,9 @@ class PasswordView extends StatefulWidget {
 }
 
 class _PasswordViewState extends State<PasswordView> {
-  bool isVisable = true;
-  bool isPasswordVisible = false;
+  bool isVisable = true, isPasswordVisible = false, isLoading = false;
 
   late final GlobalKey<FormState> _formKey;
-  bool isLoading = false;
   late final TextEditingController _oldPWController, _passwordController, _newpasswordController;
   @override
   void initState() {
@@ -29,11 +27,11 @@ class _PasswordViewState extends State<PasswordView> {
     super.initState();
   }
 
-  bool isPassword6Char = false;
-  bool isPasswordHas1Number = false;
-  bool hasUppercase = false;
-  bool hasLowercase = false;
-  bool hasSpecialCharacters = false;
+  bool isPassword6Char = false,
+      isPasswordHas1Number = false,
+      hasUppercase = false,
+      hasLowercase = false,
+      hasSpecialCharacters = false;
 
   onPasswordChanged(String password) {
     isPassword6Char = false;
@@ -135,10 +133,7 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Neues Passwort",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 TextFormField(
