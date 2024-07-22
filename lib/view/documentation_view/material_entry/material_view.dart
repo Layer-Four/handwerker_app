@@ -51,13 +51,17 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   @override
   Widget build(BuildContext context) {
+    final materialsAsyncValue = ref.watch(materialVMProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
           _dayInputWidget(),
           _chooseCustomerProjectField(),
-          _chooseMaterialField(),
+          // _chooseCustomerKundeField(),
+          // _chooseMaterialField(),
+          _chooseMaterialField(materialsAsyncValue),
           _buildAmountPriceFields(),
           const SizedBox(height: 184),
           _submitInput(),
@@ -90,40 +94,37 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  if (_units == null) _refreshUnits();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: SizedBox(
-                    width: 100,
-                    height: 30,
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _unit,
-                      items: (_units ?? List.empty())
-                          .map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(
-                                e.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall!
-                                    .copyWith(color: AppColor.kPrimary),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) => setState(() => _unit = e),
-                    ),
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     if (_units == null) _refreshUnits();
+              //   },
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(left: 5.0),
+              //     child: SizedBox(
+              //       width: 100,
+              //       height: 30,
+              //       child: DropdownButton(
+              //         menuMaxHeight: 350,
+              //         underline: const SizedBox(),
+              //         isExpanded: true,
+              //         value: _unit,
+              //         items: (_units ?? List.empty())
+              //             .map(
+              //               (e) => DropdownMenuItem(
+              //                 alignment: Alignment.center,
+              //                 value: e,
+              //                 child: Text(
+              //                   e.name,
+              //                   style: Theme.of(context).textTheme.labelSmall!.copyWith(color: AppColor.kPrimary),
+              //                 ),
+              //               ),
+              //             )
+              //             .toList(),
+              //         onChanged: (e) => setState(() => _unit = e),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -267,68 +268,145 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         );
   }
 
-  Widget _chooseMaterialField() {
-    return ref.read(materialVMProvider).when(
-          error: (err, stackTrace) {
-            log('error occurent in buildServieDropdown in MaterialEntryBody-> $err \n\n this was the stack $stackTrace');
-            return const SizedBox.expand(
-              child: Center(child: Text('Etwas lief schief')),
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          data: (materials) {
-            if (materials.isEmpty) {
-              ref.read(materialVMProvider.notifier).loadMaterials();
-            }
-            if (materials.isNotEmpty && !_isMaterialsLoaded) {
-              setState(() {
-                _selectedMaterial = materials.first;
-                _materials = materials;
-                _isMaterialsLoaded = true;
-              });
-            }
+  // Widget _chooseCustomerKundeField() {
+  //   return ref.read(projectVMProvider).when(
+  //         error: (error, stackTrace) {
+  //           log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
+  //           return const SizedBox(child: Text('Etwas lief schief'));
+  //         },
+  //         loading: () => const CircularProgressIndicator.adaptive(),
+  //         data: (data) {
+  //           if (data == null) {
+  //             ref.read(projectVMProvider.notifier).loadpProject();
+  //           }
+  //           final projects = data;
+  //           if (projects != null && !_isProjectSet) {
+  //             setState(() {
+  //               _project = projects.first;
+  //               _entry = _entry.copyWith(projectID: projects.first.id);
+  //               _isProjectSet = true;
+  //             });
+  //           }
+  //           return Padding(
+  //             padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(4),
+  //                   child: Text(
+  //                     ref.watch(languangeProvider).customerProject,
+  //                     style: Theme.of(context).textTheme.labelMedium,
+  //                   ),
+  //                 ),
+  //                 Container(
+  //                   height: 40,
+  //                   padding: const EdgeInsets.only(left: 20, right: 15),
+  //                   decoration: BoxDecoration(
+  //                     borderRadius: BorderRadius.circular(12),
+  //                     border: Border.all(color: AppColor.kTextfieldBorder),
+  //                   ),
+  //                   child: DropdownButton(
+  //                     menuMaxHeight: 350,
+  //                     underline: const SizedBox(),
+  //                     isExpanded: true,
+  //                     value: _project,
+  //                     items: projects
+  //                         ?.map(
+  //                           (e) => DropdownMenuItem(
+  //                             alignment: Alignment.center,
+  //                             value: e,
+  //                             child: Text(' ${e.title}'),
+  //                           ),
+  //                         )
+  //                         .toList(),
+  //                     onChanged: (e) {
+  //                       setState(() {
+  //                         _project = e!;
+  //                         _entry = _entry.copyWith(projectID: e.id);
+  //                       });
+  //                     },
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         },
+  //       );
+  // }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(ref.watch(languangeProvider).material,
-                        style: Theme.of(context).textTheme.labelMedium),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox.shrink(),
-                      isExpanded: true,
-                      value: _selectedMaterial,
-                      items: _materials
-                          .map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(e.name),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() => _selectedMaterial = e!);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+  Widget _chooseMaterialField(AsyncValue<List<ConsumeableVM>> materialsAsyncValue) {
+    return materialsAsyncValue.when(
+      error: (err, stackTrace) {
+        log('error occurred in buildServiceDropdown in MaterialEntryBody-> $err \n\n this was the stack $stackTrace');
+        return const SizedBox.expand(
+          child: Center(child: Text('Etwas lief schief')),
         );
+      },
+      loading: () => const CircularProgressIndicator(),
+      data: (materials) {
+        if (materials.isEmpty) {
+          ref.read(materialVMProvider.notifier).loadMaterials();
+        }
+        if (materials.isNotEmpty && !_isMaterialsLoaded) {
+          setState(() {
+            _selectedMaterial = materials.first;
+            _materials = materials;
+            _isMaterialsLoaded = true;
+          });
+        }
+
+        final double sum = (_selectedMaterial?.amount ?? 0) * (_selectedMaterial?.price ?? 0);
+
+        _summeryController.text = sum.toStringAsFixed(2);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(ref.watch(languangeProvider).material, style: Theme.of(context).textTheme.labelMedium),
+              ),
+              Container(
+                height: 40,
+                padding: const EdgeInsets.only(left: 20, right: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                ),
+                child: DropdownButton<ConsumeableVM>(
+                  menuMaxHeight: 350,
+                  underline: const SizedBox.shrink(),
+                  isExpanded: true,
+                  value: _selectedMaterial,
+                  items: _materials
+                      .map(
+                        (e) => DropdownMenuItem(
+                          alignment: Alignment.center,
+                          value: e,
+                          child: Text(e.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (e) {
+                    setState(() {
+                      _selectedMaterial = e!;
+                      _amountController.text = _selectedMaterial!.amount.toString();
+                      // Update the sum in _summeryController
+                      final double sum = _selectedMaterial!.amount * _selectedMaterial!.price;
+                      _summeryController.text = sum.toStringAsFixed(2);
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 16), // Add spacing between elements
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _dayInputWidget() => LabeldTextfield(

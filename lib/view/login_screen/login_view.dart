@@ -24,13 +24,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
 
   String? validateEmail(String? input) {
-    const emailRegex = r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
+    const emailRegex = r'^(\S+@[^\s@]+\.\S+)$';
     if (input == null || input.isEmpty) {
-      return "Email bitte eingeben";
+      return 'Email bitte eingeben';
     } else if (RegExp(emailRegex).hasMatch(input)) {
       return null;
     } else {
-      return "Ungültige Nutzernamen Format";
+      return 'Ungültige Nutzernamen Format';
     }
   }
 

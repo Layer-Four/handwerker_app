@@ -9,8 +9,8 @@ part of 'documentation_entry.dart';
 _$DocumentationEntryImpl _$$DocumentationEntryImplFromJson(
         Map<String, dynamic> json) =>
     _$DocumentationEntryImpl(
-      id: json['id'] as int?,
-      projectID: json['projectID'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      projectID: (json['projectID'] as num?)?.toInt(),
       projectName: json['projectName'] as String?,
       createDate: DateTime.parse(json['createDate'] as String),
       imageUrl: (json['imageUrl'] as List<dynamic>?)

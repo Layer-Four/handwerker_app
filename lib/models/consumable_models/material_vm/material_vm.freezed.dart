@@ -22,6 +22,9 @@ ConsumeableVM _$ConsumeableVMFromJson(Map<String, dynamic> json) {
 mixin _$ConsumeableVM {
   String get name => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
+  double get amount => throw _privateConstructorUsedError;
+  double get price => throw _privateConstructorUsedError;
+  String get materialUnitName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +38,12 @@ abstract class $ConsumeableVMCopyWith<$Res> {
           ConsumeableVM value, $Res Function(ConsumeableVM) then) =
       _$ConsumeableVMCopyWithImpl<$Res, ConsumeableVM>;
   @useResult
-  $Res call({String name, int id});
+  $Res call(
+      {String name,
+      int id,
+      double amount,
+      double price,
+      String materialUnitName});
 }
 
 /// @nodoc
@@ -53,6 +61,9 @@ class _$ConsumeableVMCopyWithImpl<$Res, $Val extends ConsumeableVM>
   $Res call({
     Object? name = null,
     Object? id = null,
+    Object? amount = null,
+    Object? price = null,
+    Object? materialUnitName = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -63,6 +74,18 @@ class _$ConsumeableVMCopyWithImpl<$Res, $Val extends ConsumeableVM>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as double,
+      materialUnitName: null == materialUnitName
+          ? _value.materialUnitName
+          : materialUnitName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -75,7 +98,12 @@ abstract class _$$ConsumeableVMImplCopyWith<$Res>
       __$$ConsumeableVMImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int id});
+  $Res call(
+      {String name,
+      int id,
+      double amount,
+      double price,
+      String materialUnitName});
 }
 
 /// @nodoc
@@ -91,6 +119,9 @@ class __$$ConsumeableVMImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? id = null,
+    Object? amount = null,
+    Object? price = null,
+    Object? materialUnitName = null,
   }) {
     return _then(_$ConsumeableVMImpl(
       name: null == name
@@ -101,6 +132,18 @@ class __$$ConsumeableVMImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as double,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as double,
+      materialUnitName: null == materialUnitName
+          ? _value.materialUnitName
+          : materialUnitName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -108,7 +151,12 @@ class __$$ConsumeableVMImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ConsumeableVMImpl implements _ConsumeableVM {
-  const _$ConsumeableVMImpl({required this.name, required this.id});
+  const _$ConsumeableVMImpl(
+      {required this.name,
+      required this.id,
+      required this.amount,
+      required this.price,
+      required this.materialUnitName});
 
   factory _$ConsumeableVMImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsumeableVMImplFromJson(json);
@@ -117,10 +165,16 @@ class _$ConsumeableVMImpl implements _ConsumeableVM {
   final String name;
   @override
   final int id;
+  @override
+  final double amount;
+  @override
+  final double price;
+  @override
+  final String materialUnitName;
 
   @override
   String toString() {
-    return 'ConsumeableVM(name: $name, id: $id)';
+    return 'ConsumeableVM(name: $name, id: $id, amount: $amount, price: $price, materialUnitName: $materialUnitName)';
   }
 
   @override
@@ -129,12 +183,17 @@ class _$ConsumeableVMImpl implements _ConsumeableVM {
         (other.runtimeType == runtimeType &&
             other is _$ConsumeableVMImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.price, price) || other.price == price) &&
+            (identical(other.materialUnitName, materialUnitName) ||
+                other.materialUnitName == materialUnitName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, id);
+  int get hashCode =>
+      Object.hash(runtimeType, name, id, amount, price, materialUnitName);
 
   @JsonKey(ignore: true)
   @override
@@ -153,7 +212,10 @@ class _$ConsumeableVMImpl implements _ConsumeableVM {
 abstract class _ConsumeableVM implements ConsumeableVM {
   const factory _ConsumeableVM(
       {required final String name,
-      required final int id}) = _$ConsumeableVMImpl;
+      required final int id,
+      required final double amount,
+      required final double price,
+      required final String materialUnitName}) = _$ConsumeableVMImpl;
 
   factory _ConsumeableVM.fromJson(Map<String, dynamic> json) =
       _$ConsumeableVMImpl.fromJson;
@@ -162,6 +224,12 @@ abstract class _ConsumeableVM implements ConsumeableVM {
   String get name;
   @override
   int get id;
+  @override
+  double get amount;
+  @override
+  double get price;
+  @override
+  String get materialUnitName;
   @override
   @JsonKey(ignore: true)
   _$$ConsumeableVMImplCopyWith<_$ConsumeableVMImpl> get copyWith =>
