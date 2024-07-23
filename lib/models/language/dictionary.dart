@@ -1,9 +1,5 @@
-<<<<<<<< HEAD:lib/models/language/dictionary.dart
-sealed class Dictionary {
-  const Dictionary();
-========
 abstract class Dictionary {
->>>>>>>> 47bec6f47df0d8c32d58f6983250dbe3ac8d64e4:lib/provider/settings_provider/language_provider.dart
+  const Dictionary();
   String get amount;
   String get changeLanguage;
   String get changePassword;
@@ -61,6 +57,8 @@ abstract class Dictionary {
   String get timeoverview;
 
   String get workOrder;
+
+  String get loadData;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -210,6 +208,9 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Work order';
+
+  @override
+  String get loadData => 'Load data...';
 }
 
 class GermanLanguage extends Dictionary {
@@ -357,4 +358,7 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Aufträge';
+
+  @override
+  String get loadData => 'Lade Daten...';
 }

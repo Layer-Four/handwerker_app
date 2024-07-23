@@ -49,7 +49,6 @@ class UserNotifier extends Notifier<UserVM> {
       final newUser = state.copyWith(
         username: userName,
         userToken: userToken,
-        mandantId: int.tryParse(mandandId),
       );
       _api.storeToken(userToken);
       if (newUser != state) state = newUser;

@@ -13,10 +13,12 @@ final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectListVM>>(
 );
 
 class ProjectNotifer extends Notifier<List<ProjectListVM>> {
-  final Api _api = Api();
-
   @override
   List<ProjectListVM> build() => [];
+
+  ProjectListVM? _choicenProject;
+  ProjectListVM? get choicenProject => _choicenProject;
+  final Api _api = Api();
 
   void loadpProject() async {
     try {
@@ -37,6 +39,8 @@ class ProjectNotifer extends Notifier<List<ProjectListVM>> {
       throw Exception(e);
     }
   }
+
+  void updateProject(ProjectListVM? e) => _choicenProject = e;
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
     final result = <ProjectCustomer>[];
@@ -133,7 +137,7 @@ class ProjectNotifer extends Notifier<List<ProjectListVM>> {
           title: shortVM.title!,
         );
       }).toList();
-      state = AsyncValue.data(projectListVMs);
+      state = projectListVMs;
     } catch (e) {
       throw Exception(e);
     }

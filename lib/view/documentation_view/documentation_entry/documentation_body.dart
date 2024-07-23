@@ -1,18 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/dokumentation_models/documentation_entry/documentation_entry.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
-import 'package:handwerker_app/provider/doku_provider/documentation_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
-import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
-import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
+
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../constants/apptheme/app_colors.dart';
+import '../../../constants/utiltis.dart';
+import '../../../models/dokumentation_models/documentation_entry/documentation_entry.dart';
+import '../../../models/project_models/project_list_vm/project_list.dart';
+import '../../../provider/doku_provider/documentation_provider.dart';
+import '../../../provider/doku_provider/project_vm_provider.dart';
+import '../../../provider/settings_provider/settings_provider.dart';
+import '../../widgets/symetric_button_widget.dart';
+import '../../widgets/textfield_widgets/labelt_textfield.dart';
 
 class DocumentationBody extends ConsumerStatefulWidget {
   const DocumentationBody({super.key});
@@ -22,8 +22,7 @@ class DocumentationBody extends ConsumerStatefulWidget {
 }
 
 class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
-  final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  late final TextEditingController _dayPickerController, _descriptionController;
   late DocumentationEntry _entry;
   bool isProjectSet = false;
 
@@ -33,15 +32,15 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   void initState() {
     super.initState();
     final now = DateTime.now();
+    _dayPickerController = TextEditingController(text: '${now.day}.${now.month}.${now.year}');
+    _descriptionController = TextEditingController();
     setState(() {
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
       _entry = DocumentationEntry(
         createDate: now,
       );
     });
   }
 
-  late final dictionary = ref.watch(settingsProv).dictionary;
   late final dictionary = ref.watch(settingsProv).dictionary;
   @override
   Widget build(BuildContext context) => Padding(
@@ -81,7 +80,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(dictionary.makePicture),
-                    Text(dictionary.makePicture),
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
@@ -113,7 +111,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(dictionary.takePicture),
-                    Text(dictionary.takePicture),
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
@@ -144,7 +141,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               ],
             ),
             Text(
-              _entry.imageUrl.isEmpty ? '' : '${_entry.imageUrl.length} ${dictionary.choosedImage}',
               _entry.imageUrl.isEmpty ? '' : '${_entry.imageUrl.length} ${dictionary.choosedImage}',
               style: _entry.imageUrl.isEmpty
                   ? const TextStyle(fontSize: 0)
@@ -178,7 +174,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
 
   Widget _buildCustomerProjectField() {
     return ref.watch(projectVMProvider).isEmpty
-        ? const WaitingMessageWidget('Lade Projekt übersicht')
+        ? const Center(child: Text('Lade Projekt übersicht'))
         : Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
@@ -238,7 +234,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         textInputAction: TextInputAction.newline,
         textInputType: TextInputType.multiline,
         label: dictionary.description,
-        label: dictionary.description,
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
@@ -250,7 +245,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         },
       );
   Widget _dayInputWidget() => LabeldTextfield(
-        label: dictionary.date,
         label: dictionary.date,
         textInputType: TextInputType.datetime,
         controller: _dayPickerController,
@@ -270,13 +264,11 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
           text: dictionary.createEntry,
-          text: dictionary.createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(dictionary.plsChooseDay),
                   content: Text(dictionary.plsChooseDay),
                 ),
               );
@@ -296,7 +288,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(dictionary.succes),
                   content: Text(dictionary.succes),
                 ),
               );
