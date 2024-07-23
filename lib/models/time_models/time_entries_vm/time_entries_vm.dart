@@ -23,8 +23,11 @@ class TimeEntriesVM with _$TimeEntriesVM {
     @Default(TimeEntryType.timeEntry) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;
+
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
+
   const TimeEntriesVM._();
+
   factory TimeEntriesVM.fromTimeEntryDM(TimeEntry e) => TimeEntriesVM(
         customerName: e.customerName,
         date: e.date,

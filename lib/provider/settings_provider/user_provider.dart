@@ -45,7 +45,7 @@ class UserNotifier extends Notifier<UserVM> {
       log(response.data.toString());
       _api.storeToken(response.data['token']);
       final userToken = response.data['token'];
-      final mandandId = response.data['id'];
+      final mandandId = response.data['\$id'];
       _isOTP = response.data['oneTimePassword'];
       final newUser = state.copyWith(
         username: userName,
