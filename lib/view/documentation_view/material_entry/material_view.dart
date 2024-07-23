@@ -29,7 +29,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   late final dictionary = ref.watch(settingsProv).dictionary;
   late ConsumealbeEntry _entry;
   UnitDM? _unit;
-  bool _isProjectSet = false, _isMaterialsLoaded = false;
+  bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
   List<ConsumeableVM> _materials = [];
@@ -208,72 +208,73 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       ],
     );
   }
+// .when(
+//           error: (error, stackTrace) {
+//             log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
+//             return const SizedBox(child: Text('Etwas lief schief'));
+//           },
+//           loading: () => const CircularProgressIndicator.adaptive(),
+//           data: (data) {
+//             if (data == null) {
+//               ref.read(projectVMProvider.notifier).loadpProject();
+//             }
+//             final projects = data;
+//             if (projects != null && !_isProjectSet) {
+//               setState(() {
+//                 _project = projects.first;
+//                 _entry = _entry.copyWith(projectID: projects.first.id);
+//                 _isProjectSet = true;
+//               });
+//             }
 
   Widget _chooseCustomerProjectField() {
-    return ref.read(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
-              setState(() {
-                _project = projects.first;
-                _entry = _entry.copyWith(projectID: projects.first.id);
-                _isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      dictionary.customerProject,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+    return ref.read(projectVMProvider).isEmpty
+        ? const Text('lade Projekte')
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    dictionary.customerProject,
+                    style: Theme.of(context).textTheme.labelMedium,
                   ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _project,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _project = e!;
-                          _entry = _entry.copyWith(projectID: e.id);
-                        });
-                      },
-                    ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
                   ),
-                ],
-              ),
-            );
-          },
-        );
+                  child: DropdownButton(
+                    menuMaxHeight: 350,
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: _project,
+                    items: ref
+                        .watch(projectVMProvider)
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.title}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      setState(() {
+                        _project = e!;
+                        _entry = _entry.copyWith(projectID: e.id);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   Widget _chooseMaterialField() {
@@ -324,7 +325,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                             (e) => DropdownMenuItem(
                               alignment: Alignment.center,
                               value: e,
-                              child: Text(e.name),
+                              child: Text(e.name ?? 'Kein Name'),
                             ),
                           )
                           .toList(),

@@ -6,13 +6,14 @@ import 'package:handwerker_app/models/project_models/project_list_vm/project_lis
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final projectVMProvider =
-    AsyncNotifierProvider<ProjectNotifer, List<ProjectListVM>?>(() => ProjectNotifer());
+final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectListVM>>(
+  () => ProjectNotifer(),
+);
 
-class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
+class ProjectNotifer extends Notifier<List<ProjectListVM>> {
   final Api _api = Api();
   @override
-  List<ProjectListVM>? build() => null;
+  List<ProjectListVM> build() => [];
 
   void loadpProject() async {
     try {
@@ -27,7 +28,7 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
       }
       final data = response.data;
       final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
-      state = AsyncValue.data(projects);
+      state = projects;
       return;
     } catch (e) {
       throw Exception(e);
@@ -36,18 +37,20 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
     final result = <ProjectCustomer>[];
-
     try {
       final response = await _api.getCustomerProjects;
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return result;
-        }
-        return result;
+        throw Exception(
+          'Error occurent on getAllProjectEntries, status->${response.statusCode}\n${response.data}',
+        );
       }
-      final List data = (response.data as List).map((e) => e as Map<String, dynamic>).toList();
+      final List data = (response.data).map((e) => e).toList();
       final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
+      // for (var e in data) {
+      //   log(e.toString());
+      //   result.add(ProjectCustomer.fromJson(e));
+      // }
+      // log(result.length.toString());
       result.addAll(projects);
       return result;
     } catch (e) {
@@ -77,7 +80,6 @@ class ProjectNotifer extends AsyncNotifier<List<ProjectListVM>?> {
           for (var j in something) {
             if (j != null || j!.isNotEmpty) {
               final url = 'https://rsahapp.blob.core.windows.net/$j';
-              log(url);
               imageUrls.add(url);
             }
           }

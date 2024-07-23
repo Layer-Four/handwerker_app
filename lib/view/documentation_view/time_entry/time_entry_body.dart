@@ -11,6 +11,7 @@ import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
 
 import '../../../provider/settings_provider/settings_provider.dart';
 
@@ -26,7 +27,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
-  bool isServiceSet = false, _isProjectSet = false;
+  bool isServiceSet = false;
   TimeOfDay? selectedTime;
   late final dictionary = ref.watch(settingsProv).dictionary;
   ServiceListVM? _choosenService;
@@ -74,76 +75,78 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   }
 
   Widget _buildCustomerProjectField() {
-    return ref.watch(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox.expand(
-              child: Center(child: Text('Etwas lief schief')),
-            );
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
-              setState(() {
-                _choosenProject = projects.first;
-                _entry = _entry.copyWith(
-                  projectID: projects.first.id,
-                  projektTitle: projects.first.title,
-                );
-                _isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(dictionary.customerProject,
-                        style: Theme.of(context).textTheme.labelMedium),
+    return ref.watch(projectVMProvider).isEmpty
+        ? WaitingMessageWidget('lade Projekte')
+        :
+        // .when(
+        //       error: (error, stackTrace) {
+        //         log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
+        //         return const SizedBox.expand(
+        //           child: Center(child: Text('Etwas lief schief')),
+        //         );
+        //       },
+        //       loading: () => const CircularProgressIndicator.adaptive(),
+        //       data: (data) {
+        //         if (data == null) {
+        //           ref.read(projectVMProvider.notifier).loadpProject();
+        //         }
+        //         final projects = data;
+        //         if (projects != null && !_isProjectSet) {
+        //           setState(() {
+        //             _choosenProject = projects.first;
+        //             _entry = _entry.copyWith(
+        //               projectID: projects.first.id,
+        //               projektTitle: projects.first.title,
+        //             );
+        //             _isProjectSet = true;
+        //           });
+        //         }
+        Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(dictionary.customerProject,
+                      style: Theme.of(context).textTheme.labelMedium),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
                   ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _choosenProject,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _choosenProject = e!;
-                          _entry = _entry.copyWith(
-                            projectID: e.id,
-                            projektTitle: e.title,
-                          );
-                        });
-                      },
-                    ),
+                  child: DropdownButton(
+                    menuMaxHeight: 350,
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: _choosenProject,
+                    items: ref
+                        .watch(projectVMProvider)
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.title}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      setState(() {
+                        _choosenProject = e!;
+                        _entry = _entry.copyWith(
+                          projectID: e.id,
+                          projektTitle: e.title,
+                        );
+                      });
+                    },
                   ),
-                ],
-              ),
-            );
-          },
-        );
+                ),
+              ],
+            ),
+          );
   }
 
   Widget _buildDescription() => LabeldTextfield(

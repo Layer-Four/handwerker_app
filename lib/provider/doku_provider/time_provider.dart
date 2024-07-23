@@ -20,7 +20,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
   Future<bool> createTimeEntriesVM(TimeEntriesVM entry) async {
     final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
     data.removeWhere((key, value) => key == 'userID');
-    log(json.encode(data));
+    // log(json.encode(data));
     try {
       final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
@@ -31,14 +31,13 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     } on DioException catch (e) {
       if (e.response!.statusCode == 401) {
         ref.read(userProvider.notifier).userLogOut();
-        log('UserToken is outdated ${e.response!.statusMessage}');
-        return false;
+        log('userLogout on createTimeEntriesVM \n${jsonEncode(e)}');
       }
       throw Exception('DioException: ${e.message}');
     } catch (e) {
       log(e.toString());
-      return false;
     }
+    return false;
   }
 
   void loadTimeEntriesVM() async {
@@ -67,20 +66,11 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
 
   List<TimeEntriesVM> loadWorkOrder() {
     final allEntries = state;
-    if (state.isEmpty) {
-      // loadTimeEntriesVM();
-      log('state s empty load list');
-      return [];
-    }
-    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
-      log(e.toJson().toString());
-    }
+    if (state.isEmpty) return [];
+
     allEntries.sort(
       (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
     );
-    for (var e in allEntries.where((e) => e.type == TimeEntryType.workOrder)) {
-      print(e.toJson().toString());
-    }
     return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
   }
 

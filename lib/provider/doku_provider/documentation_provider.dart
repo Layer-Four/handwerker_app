@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,20 +47,16 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
       // final response = await http.post(createUri, data: formData);
       final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
-
         log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
-        return;
+        throw Exception(
+            'on postDocumentationEntry got statuscode: ${response.statusCode}\nbackend returned: ${response.data}');
       }
       log('request was successful-> ${response.data}');
       return;
     } catch (e) {
       if (e.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
+        log('userLogout on postDocumentationEntry \n${jsonEncode(e)}');
         return;
       }
       log('request was incompleted this was the error: $e');

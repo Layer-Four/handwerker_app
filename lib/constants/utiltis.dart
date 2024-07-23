@@ -18,7 +18,8 @@ class Utilits {
         locale: const Locale('de'));
   }
 
-  static Widget buildIndicator({required int selectedIndex, required int length}) => AnimatedSmoothIndicator(
+  static Widget buildIndicator({required int selectedIndex, required int length}) =>
+      AnimatedSmoothIndicator(
         activeIndex: selectedIndex,
         count: length,
         effect: const SlideEffect(
@@ -29,47 +30,31 @@ class Utilits {
         ),
       );
 
-  static Future<XFile?> pickImageFromCamera(BuildContext context, String projectName) async {
-    const Permission storagePermission = Permission.storage;
-    if (await storagePermission.isDenied) {
-      await askForPermission(context);
-    }
-    // final permission = await Permission.camera.status;
-    try {
-      final XFile? file = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxHeight: 1024,
-        maxWidth: 1024,
-      );
-      if (file != null) return file;
-    } catch (e) {
-      final status = await Permission.camera.status;
-      log('permission was denied: $e');
-      if (status.isDenied) {
-        askForPermission(context);
-      }
-    }
-    return null;
-  }
-
-  static Future<XFile?> pickImageFromGalery(BuildContext context, String projectName) async {
-    final permission = Permission.storage.status;
+  static Future<XFile?> pickImage(
+    BuildContext context,
+    String projectName, {
+    required Permission permission,
+  }) async {
+    // final permission = Permission.storage.status;
+    final source = permission == Permission.camera ? ImageSource.camera : ImageSource.gallery;
     if (await permission.isDenied) {
       await askForPermission(context);
     }
     try {
       final XFile? file = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxHeight: 1024,
         maxWidth: 1024,
       );
       if (file != null) return XFile(file.path);
+      return null;
     } catch (e) {
-      final status = await Permission.storage.status;
+      // final status = await Permission.storage.status;
       log('permission was denied: $e');
-      if (status.isDenied) {
-        askForPermission(context);
-      }
+      // ? Second reqeust after denied permisson
+      // if (status.isDenied) {
+      //   askForPermission(context);
+      // }
     }
     return null;
   }
@@ -97,7 +82,8 @@ class Utilits {
     );
   }
 
-  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) => InputDecoration(
+  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+      InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
               color: AppColor.kLightLabelColor,

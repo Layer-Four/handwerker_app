@@ -5,7 +5,7 @@ import 'package:handwerker_app/provider/view_provider/view_provider.dart';
 import 'package:handwerker_app/view/documentation_view/documentation_entry/documentation_body.dart';
 import 'package:handwerker_app/view/documentation_view/material_entry/material_view.dart';
 import 'package:handwerker_app/view/documentation_view/time_entry/time_entry_body.dart';
-import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
+import 'package:handwerker_app/view/navigation_view/widgets/navigation_head.dart';
 
 class DokuNavigationView extends ConsumerWidget {
   const DokuNavigationView({super.key});

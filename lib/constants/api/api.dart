@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -80,9 +81,10 @@ class Api {
         if (error.response?.statusCode == 500 ||
             (error.message != null && error.message!.contains('500'))) {
           _storage.then((value) => value.clear());
-          log('message');
+          log('DB return ${jsonEncode(error)}');
         }
         if (error.response?.statusCode == 400) {
+          log('DB return ${jsonEncode(error)}');
           return;
         }
 
