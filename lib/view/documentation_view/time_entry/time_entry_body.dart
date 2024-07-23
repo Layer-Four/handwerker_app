@@ -9,9 +9,13 @@ import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_v
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+//import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import '../../../provider/settings_provider/settings_provider.dart';
+//import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
+import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
+//import 'package:handwerker_app/provider/doku_provider/customer_provider.dart';
 
 class TimeEntriesBody extends ConsumerStatefulWidget {
   const TimeEntriesBody({super.key});
@@ -27,11 +31,19 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   final TextEditingController _startController = TextEditingController();
   bool isServiceSet = false;
   bool _isProjectSet = false;
+  bool _isCustomerSet = false;
   TimeOfDay? selectedTime;
 
+  late final dictionary = ref.watch(settingsProv).dictionary;
+
+  CustomerShortDM? _chosenCustomer;
   ServiceListVM? _choosenService;
-  ProjectListVM? _choosenProject;
+  ProjectListVM? _chosenProject;
   late TimeEntriesVM _entry;
+
+  //List<ProjectShortVM> _projectsFormCustomer = [];
+  //List<CustomerShortDM> _customers = [];
+
 
   @override
   void initState() {
@@ -57,7 +69,8 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           _dayInputRow(),
           _timeInputRow(),
           // TODO: create a standart for saving projekt Customer with seperate with "/"
-          _buildCustomerProjectField(),
+          _buildCustomerDropdown(),
+          _buildProjectDropdown(),
           _buildServiceDropdown(),
           _buildDescription(),
           const SizedBox(height: 46),
@@ -73,84 +86,107 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
     );
   }
 
-  Widget _buildCustomerProjectField() {
-    return ref.watch(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox.expand(
-              child: Center(child: Text('Etwas lief schief')),
-            );
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
+  Widget _buildCustomerDropdown() {
+    return FutureBuilder<List<CustomerShortDM>>(
+      future: ref.read(timeEntriesProvider.notifier).getAllCustomer(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator.adaptive();
+        }
+        if (snapshot.hasError) {
+          return const Text('Error loading customers');
+        }
+        final customers = snapshot.data ?? [];
+        if (customers.isNotEmpty && !_isCustomerSet) {
+          setState(() {
+            _chosenCustomer = customers.first;
+            _isCustomerSet = true;
+          });
+        }
+        return Container(
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColor.kTextfieldBorder),
+          ),
+          child: DropdownButton<CustomerShortDM>(
+            isExpanded: true,
+            value: _chosenCustomer,
+            underline: const SizedBox(),
+            items: customers.map((customer) => DropdownMenuItem<CustomerShortDM>(
+              value: customer,
+              child: Text(customer.companyName),
+            )).toList(),
+            onChanged: (customer) {
               setState(() {
-                _choosenProject = projects.first;
-                _entry = _entry.copyWith(
-                  projectID: projects.first.id,
-                  projektTitle: projects.first.title,
-                );
-                _isProjectSet = true;
+                _chosenCustomer = customer;
+                _chosenProject = null;
+                _isProjectSet = false;
               });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(ref.watch(languangeProvider).customerProject,
-                        style: Theme.of(context).textTheme.labelMedium),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _choosenProject,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _choosenProject = e!;
-                          _entry = _entry.copyWith(
-                            projectID: e.id,
-                            projektTitle: e.title,
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+              ref.read(projectVMProvider.notifier).loadProjectsForCustomer(customer!.id);
+            },
+          ),
         );
+      },
+    );
+  }
+
+  Widget _buildProjectDropdown() {
+    return ref.watch(projectVMProvider).when(
+      error: (error, stackTrace) {
+        log('Error occurred in _buildProjectDropdown in TimeEntriesBody -> $error \n\nStack trace: $stackTrace');
+        return const SizedBox.expand(
+          child: Center(child: Text('Something went wrong')),
+        );
+      },
+      loading: () => const CircularProgressIndicator.adaptive(),
+      data: (data) {
+        if (data == null) {
+          ref.read(projectVMProvider.notifier).loadpProject();
+          return const CircularProgressIndicator.adaptive();
+        } else {
+          final List<ProjectListVM> projects = data;
+          if (projects.isNotEmpty && !_isProjectSet) {
+            setState(() {
+              _chosenProject = projects.first;
+              _entry = _entry.copyWith(projectID: projects.first.id);
+              _isProjectSet = true;
+            });
+          }
+          return Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton<ProjectListVM>(
+              isExpanded: true,
+              value: _chosenProject,
+              underline: const SizedBox(),
+              items: projects.map((project) => DropdownMenuItem<ProjectListVM>(
+                value: project,
+                child: Text(project.title),
+              )).toList(),
+              onChanged: (project) {
+                setState(() {
+                  _chosenProject = project;
+                  _entry = _entry.copyWith(projectID: project!.id);
+                });
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 
   Widget _buildDescription() => LabeldTextfield(
         heigt: 80,
         textInputAction: TextInputAction.newline,
         textInputType: TextInputType.multiline,
-        label: ref.watch(languangeProvider).description,
+    label: dictionary.description,
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
@@ -189,7 +225,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
-                      ref.watch(languangeProvider).service,
+                      dictionary.service,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ),
@@ -266,7 +302,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           LabeldTextfield(
-            label: ref.watch(languangeProvider).date,
+            label: dictionary.date,
             width: 150,
             textInputType: TextInputType.datetime,
             controller: _dayPickerController,
@@ -281,7 +317,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             },
           ),
           LabeldTextfield(
-            label: ref.watch(languangeProvider).duration,
+            label: dictionary.duration,
             width: 150,
             hintText: 'min.',
             textInputType: TextInputType.number,
@@ -298,23 +334,23 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         padding: const EdgeInsets.all(16.0),
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
-          text: ref.watch(languangeProvider).createEntry,
+          text: dictionary.createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () => _checkAndSendEntry(context),
         ),
       );
   _checkAndSendEntry(BuildContext context) {
-    if (_choosenProject == null || _choosenService == null) {
+    if (_chosenProject == null || _choosenService == null) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Center(child: Text(ref.watch(languangeProvider).plsChooseCustomerService)),
+          content: Center(child: Text(dictionary.plsChooseCustomerService)),
         ),
       );
     }
     if (_startController.text.isEmpty || _endController.text.isEmpty) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Center(child: Text(ref.watch(languangeProvider).plsChooseBeginEnd)),
+          content: Center(child: Text(dictionary.plsChooseBeginEnd)),
         ),
       );
       // TODO: change wählen to an editable object
@@ -328,14 +364,13 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             _descriptionController.clear();
             _endController.clear();
             _durationController.clear();
-            _choosenProject = null;
+            _chosenProject = null;
             _choosenService = null;
           });
         }
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text(e ? ref.watch(languangeProvider).succes : ref.watch(languangeProvider).failed),
+            content: Text(e ? dictionary.succes : dictionary.failed),
           ),
         );
       });
@@ -349,7 +384,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.next,
-            label: ref.watch(languangeProvider).start,
+            label: dictionary.start,
             controller: _startController,
             onTap: () async {
               final time = await showTimePicker(
@@ -374,7 +409,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.done,
-            label: ref.watch(languangeProvider).end,
+            label: dictionary.end,
             controller: _endController,
             onTap: () async {
               final time = await showTimePicker(

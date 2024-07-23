@@ -7,6 +7,7 @@ class Api {
 // Routes
   static const String _baseUrl = 'https://r-wa-happ-be.azurewebsites.net/api';
   static const String _getAllProjects = '/project/read/all';
+  static const String _getListCustomer = '/customer/list';
   static const String _getAllTimeTacks = '/timetracking/read/all';
   static const String _getCustomerProject = '/customer/project/read/all';
   static const String _getMaterialsList = '/material/list';
@@ -15,6 +16,7 @@ class Api {
   static const String _getServiceAdress = '/service/list';
   static const String _getTimeTacks = '/timetracking/read/3';
   static const String _getUserProjectDocumentation = '/userProjectDay/read/2';
+  static const String _getProjectByCustomer = '/project/list?customerId=';
   static const String _postLoginUserAdress = '/user/login';
   static const String _postResetPasswordRequest = '/user/password/request/';
   static const String _postDocumentationDay = '/userProjectDay/create';
@@ -28,6 +30,7 @@ class Api {
 // Getter
 
   Future<Response> get getAllProjects => _api.get(_getAllProjects);
+  Future<Response> get getListCustomer => _api.get(_getListCustomer);
   Future<Response> get getAllTimeentriesDM => _api.get(_getAllTimeTacks);
   Future<Response> get getAllUnits => _api.get(_getAllUnitsList);
   Future<Response> get getCustomerProjects => _api.get(_getCustomerProject);
@@ -39,6 +42,7 @@ class Api {
   Future<Response> get getProjectConsumableEntry => _api.get(_getProjectsConsumable);
   Future<Response> get getProjectsTimeEntrys => _api.get(_getTimeTacks);
   Future<Response> get getUserDocumentationEntry => _api.get(_getUserProjectDocumentation);
+  Future<Response> getProjectByCustomerID(int id) => _api.get('$_getProjectByCustomer$id');
   Future<Response> postloginUser(loginData) => _api.post(_postLoginUserAdress, data: loginData);
 
   Future<Response> postProjectConsumable(data) => _api.post(_postProjectConsumabele, data: data);
