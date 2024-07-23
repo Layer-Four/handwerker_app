@@ -1,5 +1,9 @@
+<<<<<<<< HEAD:lib/models/language/dictionary.dart
 sealed class Dictionary {
   const Dictionary();
+========
+abstract class Dictionary {
+>>>>>>>> 47bec6f47df0d8c32d58f6983250dbe3ac8d64e4:lib/provider/settings_provider/language_provider.dart
   String get amount;
   String get changeLanguage;
   String get changePassword;

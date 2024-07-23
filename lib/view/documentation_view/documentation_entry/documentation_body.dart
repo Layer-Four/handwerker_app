@@ -8,6 +8,7 @@ import 'package:handwerker_app/models/project_models/project_list_vm/project_lis
 import 'package:handwerker_app/provider/doku_provider/documentation_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
@@ -40,6 +41,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
     });
   }
 
+  late final dictionary = ref.watch(settingsProv).dictionary;
   late final dictionary = ref.watch(settingsProv).dictionary;
   @override
   Widget build(BuildContext context) => Padding(
@@ -79,6 +81,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(dictionary.makePicture),
+                    Text(dictionary.makePicture),
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
@@ -110,6 +113,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(dictionary.takePicture),
+                    Text(dictionary.takePicture),
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
@@ -140,6 +144,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               ],
             ),
             Text(
+              _entry.imageUrl.isEmpty ? '' : '${_entry.imageUrl.length} ${dictionary.choosedImage}',
               _entry.imageUrl.isEmpty ? '' : '${_entry.imageUrl.length} ${dictionary.choosedImage}',
               style: _entry.imageUrl.isEmpty
                   ? const TextStyle(fontSize: 0)
@@ -233,6 +238,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         textInputAction: TextInputAction.newline,
         textInputType: TextInputType.multiline,
         label: dictionary.description,
+        label: dictionary.description,
         controller: _descriptionController,
         onChanged: (value) {
           setState(() {
@@ -244,6 +250,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         },
       );
   Widget _dayInputWidget() => LabeldTextfield(
+        label: dictionary.date,
         label: dictionary.date,
         textInputType: TextInputType.datetime,
         controller: _dayPickerController,
@@ -263,11 +270,13 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
           text: dictionary.createEntry,
+          text: dictionary.createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () {
             if (_dayPickerController.text.isEmpty) {
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  content: Text(dictionary.plsChooseDay),
                   content: Text(dictionary.plsChooseDay),
                 ),
               );
@@ -287,6 +296,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               });
               return ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  content: Text(dictionary.succes),
                   content: Text(dictionary.succes),
                 ),
               );

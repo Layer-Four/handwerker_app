@@ -44,10 +44,21 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       _dayPickerController = TextEditingController(text: '${now.day}.${now.month}.${now.year}');
       _amountController = TextEditingController();
       _summeryController = TextEditingController();
+      _dayPickerController = TextEditingController(text: '${now.day}.${now.month}.${now.year}');
+      _amountController = TextEditingController();
+      _summeryController = TextEditingController();
     });
     _refreshUnits();
     ref.read(materialVMProvider.notifier).loadMaterials();
     ref.read(projectVMProvider.notifier).loadpProject();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _dayPickerController.dispose();
+    _summeryController.dispose();
+    super.dispose();
   }
 
   @override
@@ -95,6 +106,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
+                  dictionary.amount,
                   dictionary.amount,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
@@ -148,6 +160,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             decoration: Utilits.textFieldDecorator(
               context,
               hintText: dictionary.amount,
+              hintText: dictionary.amount,
             ),
             onChanged: (value) {
               if (_amountController.text.length > 20) {
@@ -179,6 +192,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
           child: Text(
             dictionary.sum,
+            dictionary.sum,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ),
@@ -193,6 +207,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             controller: _summeryController,
             decoration: Utilits.textFieldDecorator(
               context,
+              hintText: '${dictionary.sum} €',
               hintText: '${dictionary.sum} €',
             ),
             onChanged: (value) {
@@ -307,6 +322,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                     padding: const EdgeInsets.all(4),
                     child:
                         Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
+                    child:
+                        Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
                   ),
                   Container(
                     height: 40,
@@ -343,6 +360,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   Widget _dayInputWidget() => LabeldTextfield(
         label: dictionary.date,
+        label: dictionary.date,
         controller: _dayPickerController,
         textInputType: TextInputType.datetime,
         onTap: () async {
@@ -371,6 +389,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       child: SymmetricButton(
         color: AppColor.kPrimaryButtonColor,
         text: dictionary.createEntry,
+        text: dictionary.createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           final material = Consumable(
@@ -384,6 +403,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           );
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(dictionary.succes),
             content: Text(dictionary.succes),
           ));
           final now = DateTime.now();

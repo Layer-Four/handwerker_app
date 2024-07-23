@@ -9,8 +9,13 @@ import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_v
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
+//import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import '../../../provider/settings_provider/settings_provider.dart';
+//import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
+import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
+//import 'package:handwerker_app/provider/doku_provider/customer_provider.dart';
 import 'package:handwerker_app/view/widgets/waiting_message_widget.dart';
 
 import '../../../provider/settings_provider/settings_provider.dart';
@@ -28,11 +33,18 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
   bool isServiceSet = false;
+  bool _isCustomerSet = false;
   TimeOfDay? selectedTime;
   late final dictionary = ref.watch(settingsProv).dictionary;
+  late final dictionary = ref.watch(settingsProv).dictionary;
+
+  CustomerShortDM? _chosenCustomer;
   ServiceListVM? _choosenService;
-  ProjectListVM? _choosenProject;
+  ProjectListVM? _chosenProject;
   late TimeEntriesVM _entry;
+
+  //List<ProjectShortVM> _projectsFormCustomer = [];
+  //List<CustomerShortDM> _customers = [];
 
   @override
   void initState() {
@@ -58,7 +70,8 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           _dayInputRow(),
           _timeInputRow(),
           // TODO: create a standart for saving projekt Customer with seperate with "/"
-          _buildCustomerProjectField(),
+          _buildCustomerDropdown(),
+          _buildProjectDropdown(),
           _buildServiceDropdown(),
           _buildDescription(),
           const SizedBox(height: 46),
@@ -193,6 +206,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
                       dictionary.service,
+                      dictionary.service,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ),
@@ -270,6 +284,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         children: [
           LabeldTextfield(
             label: dictionary.date,
+            label: dictionary.date,
             width: 150,
             textInputType: TextInputType.datetime,
             controller: _dayPickerController,
@@ -284,6 +299,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             },
           ),
           LabeldTextfield(
+            label: dictionary.duration,
             label: dictionary.duration,
             width: 150,
             hintText: 'min.',
@@ -302,14 +318,16 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         child: SymmetricButton(
           color: AppColor.kPrimaryButtonColor,
           text: dictionary.createEntry,
+          text: dictionary.createEntry,
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
           onPressed: () => _checkAndSendEntry(context),
         ),
       );
   _checkAndSendEntry(BuildContext context) {
-    if (_choosenProject == null || _choosenService == null) {
+    if (_chosenProject == null || _choosenService == null) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          content: Center(child: Text(dictionary.plsChooseCustomerService)),
           content: Center(child: Text(dictionary.plsChooseCustomerService)),
         ),
       );
@@ -317,6 +335,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
     if (_startController.text.isEmpty || _endController.text.isEmpty) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          content: Center(child: Text(dictionary.plsChooseBeginEnd)),
           content: Center(child: Text(dictionary.plsChooseBeginEnd)),
         ),
       );
@@ -331,12 +350,13 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             _descriptionController.clear();
             _endController.clear();
             _durationController.clear();
-            _choosenProject = null;
+            _chosenProject = null;
             _choosenService = null;
           });
         }
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            content: Text(e ? dictionary.succes : dictionary.failed),
             content: Text(e ? dictionary.succes : dictionary.failed),
           ),
         );
@@ -351,6 +371,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.next,
+            label: dictionary.start,
             label: dictionary.start,
             controller: _startController,
             onTap: () async {
@@ -376,6 +397,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.done,
+            label: dictionary.end,
             label: dictionary.end,
             controller: _endController,
             onTap: () async {

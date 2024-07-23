@@ -8,6 +8,8 @@ import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_v
 import 'package:handwerker_app/models/time_models/time_entry_dm/time_entry.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
+import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
+import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 
 final timeEntriesProvider =
     NotifierProvider<TimeEntriesNotifier, List<TimeEntriesVM>>(() => TimeEntriesNotifier());
@@ -97,5 +99,42 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
       }
     }
     return listOfWorkdays;
+  }
+
+  Future<List<ProjectShortVM>> getProjectForCustomer(int customerId) async {
+    try {
+      final response = await _api.getProjectByCustomerID(customerId);
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Error on getProjectForCustomer, status-> ${response.statusCode}\n ${response.data}',
+        );
+      }
+      final List data = response.data.map((e) => e).toList();
+      return data.map((e) => ProjectShortVM.fromJson(e)).toList();
+    } on DioException catch (e) {
+      log('DioException: ${e.message}');
+    } catch (e) {
+      log('Exception on getProjectForCustomer: $e');
+    }
+    return [];
+  }
+
+  Future<List<CustomerShortDM>> getAllCustomer() async {
+    try {
+      final response = await _api.getListCustomer;
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Error on getAllCustomer, status-> ${response.statusCode}\n ${response.data}',
+        );
+      }
+      final result = <CustomerShortDM>[];
+      response.data.map((e) => result.add(CustomerShortDM.fromJson(e))).toList();
+      return result;
+    } on DioException catch (e) {
+      log('DioException: ${e.message}');
+    } catch (e) {
+      log('Exception on getAllCustomer: $e');
+    }
+    return [];
   }
 }

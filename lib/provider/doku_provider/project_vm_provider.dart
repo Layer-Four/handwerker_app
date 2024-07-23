@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
 import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
+import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 
 final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectListVM>>(
   () => ProjectNotifer(),
@@ -12,6 +14,7 @@ final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectListVM>>(
 
 class ProjectNotifer extends Notifier<List<ProjectListVM>> {
   final Api _api = Api();
+
   @override
   List<ProjectListVM> build() => [];
 
@@ -54,7 +57,7 @@ class ProjectNotifer extends Notifier<List<ProjectListVM>> {
       result.addAll(projects);
       return result;
     } catch (e) {
-      log('this error occurent-> $e');
+      log('this error occurred -> $e');
       throw Exception(e);
     }
   }
@@ -99,6 +102,40 @@ class ProjectNotifer extends Notifier<List<ProjectListVM>> {
         return [];
       }
       throw Exception(error);
+    }
+  }
+
+  Future<List<ProjectShortVM>> getProjectsForCustomer(int customerId) async {
+    try {
+      final response = await _api.getProjectByCustomerID(customerId);
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Error on getProjectsForCustomer, status-> ${response.statusCode}\n ${response.data}',
+        );
+      }
+      final List data = response.data.map((e) => e).toList();
+      return data.map((e) => ProjectShortVM.fromJson(e)).toList();
+    } on DioException catch (e) {
+      log('DioException: ${e.message}');
+    } catch (e) {
+      log('Exception on getProjectsForCustomer: $e');
+    }
+    return [];
+  }
+
+  Future<void> loadProjectsForCustomer(int customerID) async {
+    try {
+      final projects = await getProjectsForCustomer(customerID);
+      // Directly mapping from ProjectShortVM to ProjectListVM
+      final projectListVMs = projects.map((shortVM) {
+        return ProjectListVM(
+          id: shortVM.id!,
+          title: shortVM.title!,
+        );
+      }).toList();
+      state = AsyncValue.data(projectListVMs);
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }
