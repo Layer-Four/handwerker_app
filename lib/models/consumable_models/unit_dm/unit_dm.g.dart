@@ -8,7 +8,7 @@ part of 'unit_dm.dart';
 
 _$UnitDMImpl _$$UnitDMImplFromJson(Map<String, dynamic> json) => _$UnitDMImpl(
       name: json['name'] as String,
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$UnitDMImplToJson(_$UnitDMImpl instance) =>

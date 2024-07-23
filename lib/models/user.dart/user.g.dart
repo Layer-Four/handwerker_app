@@ -10,6 +10,7 @@ _$UserVMImpl _$$UserVMImplFromJson(Map<String, dynamic> json) => _$UserVMImpl(
       userID: json['userID'] as String? ?? '',
       userToken: json['userToken'] as String? ?? '',
       username: json['username'] as String? ?? '',
+      mandantId: (json['mandantId'] as num?)?.toInt(),
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String?,
       hiringDate: json['hiringDate'] == null
@@ -32,6 +33,7 @@ Map<String, dynamic> _$$UserVMImplToJson(_$UserVMImpl instance) =>
       'userID': instance.userID,
       'userToken': instance.userToken,
       'username': instance.username,
+      'mandantId': instance.mandantId,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'hiringDate': instance.hiringDate?.toIso8601String(),

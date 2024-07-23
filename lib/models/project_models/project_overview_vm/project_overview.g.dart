@@ -9,13 +9,13 @@ part of 'project_overview.dart';
 _$ProjectOverViewImpl _$$ProjectOverViewImplFromJson(
         Map<String, dynamic> json) =>
     _$ProjectOverViewImpl(
-      customerID: json['customerID'] as int,
+      customerID: (json['customerID'] as num).toInt(),
       customerName: json['customerName'] as String?,
       hasDocumentations: json['hasDocumentations'] as bool? ?? false,
       materialViewModels:
           json['materialViewModels'] as List<dynamic>? ?? const [],
       projectCreated: DateTime.parse(json['projectCreated'] as String),
-      projectID: json['projectID'] as int,
+      projectID: (json['projectID'] as num).toInt(),
       projectMaterials: json['projectMaterials'] as List<dynamic>? ?? const [],
       projectName: json['projectName'] as String?,
       timeViewModels: (json['timeViewModels'] as List<dynamic>?)

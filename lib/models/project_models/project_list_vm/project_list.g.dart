@@ -8,7 +8,7 @@ part of 'project_list.dart';
 
 _$ProjectListVMImpl _$$ProjectListVMImplFromJson(Map<String, dynamic> json) =>
     _$ProjectListVMImpl(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       title: json['title'] as String,
     );
 

@@ -43,12 +43,14 @@ class UserNotifier extends Notifier<UserVM> {
         throw Exception('something went wrong status -> ${response.statusCode} : ${response.data}');
       }
       log(response.data.toString());
-      final data = (response.data as Map);
-      final userToken = data.values.first as String;
+      _api.storeToken(response.data['token']);
+      final userToken = response.data['token'];
+      final mandandId = response.data['id'];
       _isOTP = response.data['oneTimePassword'];
       final newUser = state.copyWith(
         username: userName,
         userToken: userToken,
+        mandantId: int.tryParse(mandandId),
       );
       _api.storeToken(userToken);
       if (newUser != state) state = newUser;
