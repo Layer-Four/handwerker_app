@@ -9,6 +9,7 @@ class UserVM with _$UserVM {
     @Default('') String userID,
     @Default('') String userToken,
     @Default('') String username,
+    int? mandantId,
     String? firstName,
     String? lastName,
     DateTime? hiringDate,

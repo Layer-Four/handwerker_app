@@ -147,7 +147,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void reactionOfLogin(bool isSuccess) {
     setState(() => _isLoaded = false);
     if (isSuccess) {
+      if (ref.watch(userProvider.notifier).isOneTimePassword) {
+        Navigator.of(context).pushReplacementNamed(AppRoutes.setPasswordScreen);
+        return;
+      }
       Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
+      return;
     } else {
       showSnackBar(
           context, 'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.');
@@ -160,9 +165,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       final String email = _emailCon.text;
       final String password = _passCon.text;
 
-      setState(() {
-        _isLoaded = true;
-      });
+      setState(() => _isLoaded = true);
 
       try {
         bool isSuccess = await ref.read(userProvider.notifier).loginUser(
@@ -172,9 +175,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
         reactionOfLogin(isSuccess);
       } catch (e) {
-        setState(() {
-          _isLoaded = false;
-        });
+        setState(() => _isLoaded = false);
         showSnackBar(context, 'Leider hat es nicht geklappt: ${e.toString()}');
       }
     } else {

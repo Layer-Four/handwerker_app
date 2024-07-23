@@ -4,7 +4,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_overview.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
@@ -82,7 +82,7 @@ class _CostumerOverviewBodyState extends ConsumerState<CostumerOverviewBody> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
         child: Text(
-          ref.watch(languangeProvider).overView,
+          ref.watch(settingsProv).dictionary.overView,
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ),

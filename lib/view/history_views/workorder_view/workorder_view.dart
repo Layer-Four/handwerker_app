@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/models/language/dictionary.dart';
 import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
+
+import '../../../provider/settings_provider/settings_provider.dart';
 
 class WorkOrderViewBody extends ConsumerStatefulWidget {
   const WorkOrderViewBody({super.key});
@@ -17,6 +19,7 @@ class WorkOrderViewBody extends ConsumerStatefulWidget {
 class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
   List<TimeEntriesVM> _choosenList = [];
   List<TimeEntriesVM> _allAssignemts = [];
+  late final dictionary = ref.watch(settingsProv).dictionary;
 
   @override
   void initState() {
@@ -84,7 +87,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 4),
                       child: Text(
-                        ref.watch(languangeProvider).workOrder,
+                        dictionary.workOrder,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                     ),
@@ -263,6 +266,7 @@ class AssigmentInfoCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final Dictionary dictionary = ref.watch(settingsProv).dictionary;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -277,7 +281,7 @@ class AssigmentInfoCard extends ConsumerWidget {
                 children: [
                   _labeledInput(
                     context,
-                    ref.watch(languangeProvider).projectName,
+                    dictionary.projectName,
                     entry.customerName,
                   ),
                   Text(
@@ -289,8 +293,7 @@ class AssigmentInfoCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              _labeledInput(context, ref.watch(languangeProvider).service,
-                  entry.serviceTitle ?? 'Kein Titel'),
+              _labeledInput(context, dictionary.service, entry.serviceTitle ?? 'Kein Titel'),
               _labeldDescripction(ref, context),
             ],
           ),
@@ -307,7 +310,7 @@ class AssigmentInfoCard extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            ref.watch(languangeProvider).description,
+            ref.watch(settingsProv).dictionary.description,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColor.kLightLabelColor,
                 ),
