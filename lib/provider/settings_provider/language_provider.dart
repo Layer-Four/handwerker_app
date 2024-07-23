@@ -1,7 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final languangeProvider = StateProvider<Dictionary>((ref) => GermanLanguage());
-
 abstract class Dictionary {
   String get amount;
   String get checkInput;

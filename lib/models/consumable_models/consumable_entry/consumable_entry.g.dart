@@ -10,7 +10,7 @@ _$ConsumealbeEntryImpl _$$ConsumealbeEntryImplFromJson(
         Map<String, dynamic> json) =>
     _$ConsumealbeEntryImpl(
       createDate: DateTime.parse(json['createDate'] as String),
-      projectID: json['projectID'] as int?,
+      projectID: (json['projectID'] as num?)?.toInt(),
       consumables: (json['consumables'] as List<dynamic>?)
               ?.map((e) => Consumable.fromJson(e as Map<String, dynamic>))
               .toList() ??

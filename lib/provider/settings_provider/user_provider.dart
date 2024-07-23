@@ -12,6 +12,8 @@ final userProvider = NotifierProvider<UserNotifier, UserVM>(() => UserNotifier()
 
 class UserNotifier extends Notifier<UserVM> {
   final Api _api = Api();
+  bool _isOTP = false;
+  bool get isOneTimePassword => _isOTP;
   @override
   UserVM build() {
     _api.getToken.then((value) {
@@ -27,8 +29,12 @@ class UserNotifier extends Notifier<UserVM> {
     return _api.deleteToken();
   }
 
+  /// return token from API object
   Future<String?> getToken() async => await _api.getToken;
-  Future<bool> loginUser({required password, required String userName, String? mandantID = '1'}) async {
+
+  /// called API and request a [String] userNamen and a [String] password, also it exist a property mandandID for diffenrent mandanten
+  Future<bool> loginUser(
+      {required password, required String userName, String? mandantID = '1'}) async {
     final json = {"username": userName, "password": password, "mandant": mandantID};
 
     try {
@@ -37,11 +43,14 @@ class UserNotifier extends Notifier<UserVM> {
         throw Exception('something went wrong status -> ${response.statusCode} : ${response.data}');
       }
       log(response.data.toString());
-      final data = (response.data as Map);
-      final userToken = data.values.first as String;
+      _api.storeToken(response.data['token']);
+      final userToken = response.data['token'];
+      final mandandId = response.data['\$id'];
+      _isOTP = response.data['oneTimePassword'];
       final newUser = state.copyWith(
         username: userName,
         userToken: userToken,
+        mandantId: int.tryParse(mandandId),
       );
       _api.storeToken(userToken);
       if (newUser != state) state = newUser;
@@ -65,20 +74,16 @@ class UserNotifier extends Notifier<UserVM> {
       if (response.statusCode != 200) {
         throw Exception('Error on  resetPasswordRequest: ${response.statusCode}\n${response.data}');
       }
-      log(response.data.toString());
+      // log(response.data.toString());
     } on DioException catch (e) {
-      throw Exception('DioExcption ${e.message}');
+      log('DioExcption ${e.message}');
     } catch (e) {
       log('Error on resetPasswordRequest:\n$e');
     }
   }
 
   Future<bool> setNewPassword(String oldPW, String newPW) async {
-    final json = {
-      'userName': state.username,
-      'oldPassword': oldPW,
-      'newPassword': newPW,
-    };
+    final json = {'userName': state.username, 'oldPassword': oldPW, 'newPassword': newPW};
     log(jsonEncode(json));
     try {
       final response = await _api.setNewPassword(json);
@@ -88,10 +93,10 @@ class UserNotifier extends Notifier<UserVM> {
       log(response.data.toString());
       return true;
     } on DioException catch (e) {
-      throw Exception('DioExcption ${e.message}');
+      log('DioExcption ${e.message}');
     } catch (e) {
       log('Error on resetPasswordRequest:\n$e');
-      return false;
     }
+    return false;
   }
 }

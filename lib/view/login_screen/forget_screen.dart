@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
+import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
@@ -53,7 +54,7 @@ class _ForgetScreenState extends State<ForgetScreen> {
                   builder: (context, ref, child) => ElevatedButton(
                     onPressed: () {
                       if (_emailCon.text.isNotEmpty) {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.initialRoute);
                         ref.read(userProvider.notifier).resetPasswordRequest(_emailCon.text);
                         showSnackBar(
                           context,

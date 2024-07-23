@@ -6,8 +6,10 @@ part of 'project_material.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ProjectMaterialVMImpl _$$ProjectMaterialVMImplFromJson(Map<String, dynamic> json) =>
-    const _$ProjectMaterialVMImpl();
+_$ProjectMaterialVMImpl _$$ProjectMaterialVMImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ProjectMaterialVMImpl();
 
-Map<String, dynamic> _$$ProjectMaterialVMImplToJson(_$ProjectMaterialVMImpl instance) =>
+Map<String, dynamic> _$$ProjectMaterialVMImplToJson(
+        _$ProjectMaterialVMImpl instance) =>
     <String, dynamic>{};

@@ -9,7 +9,7 @@ part of 'material_vm.dart';
 _$ConsumeableVMImpl _$$ConsumeableVMImplFromJson(Map<String, dynamic> json) =>
     _$ConsumeableVMImpl(
       name: json['name'] as String,
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$ConsumeableVMImplToJson(_$ConsumeableVMImpl instance) =>

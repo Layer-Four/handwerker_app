@@ -11,23 +11,23 @@ _$TimeEntryImpl _$$TimeEntryImplFromJson(Map<String, dynamic> json) =>
       customerName: json['customerName'] as String? ?? '',
       date: DateTime.parse(json['date'] as String),
       description: json['description'] as String?,
-      duration: json['duration'] as int?,
+      duration: (json['duration'] as num?)?.toInt(),
       endTime: json['endTime'] == null
           ? null
           : DateTime.parse(json['endTime'] as String),
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       pauseEnd: json['pauseEnd'] == null
           ? null
           : DateTime.parse(json['pauseEnd'] as String),
       pauseStart: json['pauseStart'] == null
           ? null
           : DateTime.parse(json['pauseStart'] as String),
-      projectID: json['projectID'] as int?,
+      projectID: (json['projectID'] as num?)?.toInt(),
       projektTitle: json['projektTitle'] as String?,
-      serviceID: json['serviceID'] as int?,
+      serviceID: (json['serviceID'] as num?)?.toInt(),
       serviceTitle: json['serviceTitle'] as String?,
       startTime: DateTime.parse(json['startTime'] as String),
-      type: json['type'] as int? ?? 0,
+      type: (json['type'] as num?)?.toInt() ?? 0,
       userID: json['userID'] as String?,
     );
 
