@@ -25,6 +25,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   String? validateEmail(String? input) {
     const emailRegex = r'^(\S+@[^\s@]+\.\S+)$';
+    // const emailRegex = r'^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$';
+
     if (input == null || input.isEmpty) {
       return 'Email bitte eingeben';
     } else if (RegExp(emailRegex).hasMatch(input)) {
