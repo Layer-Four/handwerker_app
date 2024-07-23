@@ -11,10 +11,11 @@ import 'package:handwerker_app/models/project_models/project_list_vm/project_lis
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/language_provider.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+
+import '../../../provider/settings_provider/settings_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -24,13 +25,11 @@ class MaterialBody extends ConsumerStatefulWidget {
 }
 
 class _MaterialBodyState extends ConsumerState<MaterialBody> {
-  final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _summeryController = TextEditingController();
+  late final TextEditingController _dayPickerController, _amountController, _summeryController;
+  late final dictionary = ref.watch(settingsProv).dictionary;
   late ConsumealbeEntry _entry;
   UnitDM? _unit;
-  bool _isProjectSet = false;
-  bool _isMaterialsLoaded = false;
+  bool _isProjectSet = false, _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
   List<ConsumeableVM> _materials = [];
@@ -42,11 +41,21 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     final now = DateTime.now();
     setState(() {
       _entry = ConsumealbeEntry(createDate: now);
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+      _dayPickerController = TextEditingController(text: '${now.day}.${now.month}.${now.year}');
+      _amountController = TextEditingController();
+      _summeryController = TextEditingController();
     });
     _refreshUnits();
     ref.read(materialVMProvider.notifier).loadMaterials();
     ref.read(projectVMProvider.notifier).loadpProject();
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _dayPickerController.dispose();
+    _summeryController.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +95,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: Text(
-                  ref.watch(languangeProvider).amount,
+                  dictionary.amount,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
@@ -138,7 +147,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             controller: _amountController,
             decoration: Utilits.textFieldDecorator(
               context,
-              hintText: ref.watch(languangeProvider).amount,
+              hintText: dictionary.amount,
             ),
             onChanged: (value) {
               if (_amountController.text.length > 20) {
@@ -169,7 +178,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 7),
           child: Text(
-            ref.watch(languangeProvider).sum,
+            dictionary.sum,
             style: Theme.of(context).textTheme.labelMedium,
           ),
         ),
@@ -184,7 +193,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             controller: _summeryController,
             decoration: Utilits.textFieldDecorator(
               context,
-              hintText: '${ref.watch(languangeProvider).sum} €',
+              hintText: '${dictionary.sum} €',
             ),
             onChanged: (value) {
               setState(() {
@@ -227,7 +236,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: Text(
-                      ref.watch(languangeProvider).customerProject,
+                      dictionary.customerProject,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                   ),
@@ -295,8 +304,8 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(4),
-                    child: Text(ref.watch(languangeProvider).material,
-                        style: Theme.of(context).textTheme.labelMedium),
+                    child:
+                        Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
                   ),
                   Container(
                     height: 40,
@@ -332,7 +341,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _dayInputWidget() => LabeldTextfield(
-        label: ref.watch(languangeProvider).date,
+        label: dictionary.date,
         controller: _dayPickerController,
         textInputType: TextInputType.datetime,
         onTap: () async {
@@ -360,7 +369,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
         color: AppColor.kPrimaryButtonColor,
-        text: ref.watch(languangeProvider).createEntry,
+        text: dictionary.createEntry,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         onPressed: () {
           final material = Consumable(
@@ -374,7 +383,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           );
           ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(ref.watch(languangeProvider).succes),
+            content: Text(dictionary.succes),
           ));
           final now = DateTime.now();
           setState(() {

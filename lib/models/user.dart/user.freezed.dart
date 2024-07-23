@@ -23,6 +23,7 @@ mixin _$UserVM {
   String get userID => throw _privateConstructorUsedError;
   String get userToken => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
+  int? get mandantId => throw _privateConstructorUsedError;
   String? get firstName => throw _privateConstructorUsedError;
   String? get lastName => throw _privateConstructorUsedError;
   DateTime? get hiringDate => throw _privateConstructorUsedError;
@@ -47,6 +48,7 @@ abstract class $UserVMCopyWith<$Res> {
       {String userID,
       String userToken,
       String username,
+      int? mandantId,
       String? firstName,
       String? lastName,
       DateTime? hiringDate,
@@ -74,6 +76,7 @@ class _$UserVMCopyWithImpl<$Res, $Val extends UserVM>
     Object? userID = null,
     Object? userToken = null,
     Object? username = null,
+    Object? mandantId = freezed,
     Object? firstName = freezed,
     Object? lastName = freezed,
     Object? hiringDate = freezed,
@@ -97,6 +100,10 @@ class _$UserVMCopyWithImpl<$Res, $Val extends UserVM>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
+      mandantId: freezed == mandantId
+          ? _value.mandantId
+          : mandantId // ignore: cast_nullable_to_non_nullable
+              as int?,
       firstName: freezed == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
@@ -148,6 +155,7 @@ abstract class _$$UserVMImplCopyWith<$Res> implements $UserVMCopyWith<$Res> {
       {String userID,
       String userToken,
       String username,
+      int? mandantId,
       String? firstName,
       String? lastName,
       DateTime? hiringDate,
@@ -173,6 +181,7 @@ class __$$UserVMImplCopyWithImpl<$Res>
     Object? userID = null,
     Object? userToken = null,
     Object? username = null,
+    Object? mandantId = freezed,
     Object? firstName = freezed,
     Object? lastName = freezed,
     Object? hiringDate = freezed,
@@ -196,6 +205,10 @@ class __$$UserVMImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
+      mandantId: freezed == mandantId
+          ? _value.mandantId
+          : mandantId // ignore: cast_nullable_to_non_nullable
+              as int?,
       firstName: freezed == firstName
           ? _value.firstName
           : firstName // ignore: cast_nullable_to_non_nullable
@@ -243,6 +256,7 @@ class _$UserVMImpl implements _UserVM {
       {this.userID = '',
       this.userToken = '',
       this.username = '',
+      this.mandantId,
       this.firstName,
       this.lastName,
       this.hiringDate,
@@ -266,6 +280,8 @@ class _$UserVMImpl implements _UserVM {
   @JsonKey()
   final String username;
   @override
+  final int? mandantId;
+  @override
   final String? firstName;
   @override
   final String? lastName;
@@ -286,7 +302,7 @@ class _$UserVMImpl implements _UserVM {
 
   @override
   String toString() {
-    return 'UserVM(userID: $userID, userToken: $userToken, username: $username, firstName: $firstName, lastName: $lastName, hiringDate: $hiringDate, cancellationDate: $cancellationDate, email: $email, profilePictureUrl: $profilePictureUrl, dateOfBirth: $dateOfBirth, address: $address, phoneNumber: $phoneNumber)';
+    return 'UserVM(userID: $userID, userToken: $userToken, username: $username, mandantId: $mandantId, firstName: $firstName, lastName: $lastName, hiringDate: $hiringDate, cancellationDate: $cancellationDate, email: $email, profilePictureUrl: $profilePictureUrl, dateOfBirth: $dateOfBirth, address: $address, phoneNumber: $phoneNumber)';
   }
 
   @override
@@ -299,6 +315,8 @@ class _$UserVMImpl implements _UserVM {
                 other.userToken == userToken) &&
             (identical(other.username, username) ||
                 other.username == username) &&
+            (identical(other.mandantId, mandantId) ||
+                other.mandantId == mandantId) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
@@ -324,6 +342,7 @@ class _$UserVMImpl implements _UserVM {
       userID,
       userToken,
       username,
+      mandantId,
       firstName,
       lastName,
       hiringDate,
@@ -353,6 +372,7 @@ abstract class _UserVM implements UserVM {
       {final String userID,
       final String userToken,
       final String username,
+      final int? mandantId,
       final String? firstName,
       final String? lastName,
       final DateTime? hiringDate,
@@ -371,6 +391,8 @@ abstract class _UserVM implements UserVM {
   String get userToken;
   @override
   String get username;
+  @override
+  int? get mandantId;
   @override
   String? get firstName;
   @override

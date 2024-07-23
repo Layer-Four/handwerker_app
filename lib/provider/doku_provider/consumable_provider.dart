@@ -10,9 +10,7 @@ final consumableProvider =
     NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
 
 class ConsumableNotifier extends Notifier<List<Consumable>> {
-  // final Dio http = Dio();
   final api = Api();
-  // final adressBook = DbAdresses();
   @override
   List<Consumable> build() => [];
   void addConsumable(Consumable consumable) => state = [...state, consumable];
@@ -20,7 +18,6 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     final List<UnitDM> result = [];
     try {
       final response = await api.getAllUnits;
-      // final response = await http.get(adressBook.getAllUnits);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
@@ -49,7 +46,6 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     final json = entry.toJson();
     try {
       final response = await api.postProjectConsumable(json);
-      // final response= await http.post( adressBook.postProjectConsumable, data: json,);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();

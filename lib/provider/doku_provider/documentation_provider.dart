@@ -11,7 +11,7 @@ final documentationProvider =
     AsyncNotifierProvider<ProjectNotifer, List<DocumentationEntry>?>(() => ProjectNotifer());
 
 class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
-  final Api api = Api();
+  final Api _api = Api();
   @override
   List<DocumentationEntry>? build() => null;
 
@@ -44,7 +44,7 @@ class ProjectNotifer extends AsyncNotifier<List<DocumentationEntry>?> {
 
     try {
       // final response = await http.post(createUri, data: formData);
-      final response = await api.postDocumentationEntry(formData);
+      final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
