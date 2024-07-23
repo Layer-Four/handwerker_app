@@ -21,7 +21,7 @@ class AppNavigationBar extends StatefulWidget {
 class _AppNavigationBarState extends State<AppNavigationBar> {
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 95,
+        // height: 95,
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -31,10 +31,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
               NavTabIcon(
                 icon: const Icon(Icons.note_alt_outlined),
                 isSelected: (widget.index == 1),
-                onTap: () {
-                  log('message ');
-                  widget.onChangedTab(1);
-                },
+                onTap: () => widget.onChangedTab(1),
               ),
               NavTabIcon(
                 icon: const Icon(Icons.storage),

@@ -43,15 +43,13 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(ref.watch(languangeProvider).sessionHasEnded)));
+                      .showSnackBar(SnackBar(content: Text(ref.watch(settingsProv).dictionary.sessionHasEnded)));
                   Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
 
                   // TODO: can throw error after false login
                 }
               },
             ),
-          // TODO: Handle this case.
-          MainViews.timeEntry => throw UnimplementedError(),
         },
       ),
       bottomNavigationBar: AppNavigationBar(
