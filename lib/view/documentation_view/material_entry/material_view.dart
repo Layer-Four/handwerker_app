@@ -286,7 +286,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         (e) => DropdownMenuItem<ConsumeableVM>(
                           alignment: Alignment.center,
                           value: e,
-                          child: Text(e.name),
+                          child: Text(
+                            '${e.name} / ${e.materialUnitName}',
+                          ),
                         ),
                       )
                       .toList(),
