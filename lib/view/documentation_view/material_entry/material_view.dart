@@ -287,7 +287,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                           alignment: Alignment.center,
                           value: e,
                           child: Text(
-                            '${e.name} / ${e.materialUnitName}',
+                            '${e.name}/ ${e.materialUnitName}',
                           ),
                         ),
                       )
