@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'nav_tab_icon.dart';
@@ -48,24 +46,3 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         ),
       );
 }
-               // buildTabItem(1, const Icon(Icons.note_alt_outlined)),
-              // buildTabItem(2, const Icon(Icons.storage)),
-              // buildTabItem(3, const Icon(Icons.account_box_outlined)),
-  // Widget buildTabItem(int index, Icon icon) {
-  //   final isSelected = index == widget.index;
-
-  //   return Container(
-  //     width: 50.0,
-  //     height: 50.0,
-  //     decoration: BoxDecoration(
-  //       border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
-  //       borderRadius: BorderRadius.circular(30),
-  //       color: AppColor.kPrimaryButtonColor,
-  //     ),
-  //     child: IconButton(
-  //       icon: icon,
-  //       color: AppColor.kWhite,
-  //       onPressed: () => widget.onChangedTab(index),
-  //     ),
-  //   );
-  // }
