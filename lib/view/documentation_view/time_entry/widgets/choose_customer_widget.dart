@@ -6,11 +6,13 @@ class ChooseCustomer<T> extends StatelessWidget {
   final String title;
   final List<DropdownMenuItem<T>>? items;
   final void Function(T?)? onChanged;
+  final void Function()? onTap;
   const ChooseCustomer({
     super.key,
     required this.title,
     required this.items,
     required this.onChanged,
+    this.onTap,
     required this.value,
   });
 
@@ -22,16 +24,22 @@ class ChooseCustomer<T> extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(4),
-              child: Text(title, style: Theme.of(context).textTheme.labelMedium),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
             ),
             Container(
               height: 40,
               padding: const EdgeInsets.only(left: 20, right: 15),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: AppColor.kTextfieldBorder),
               ),
               child: DropdownButton<T?>(
+                onTap: onTap,
                 menuMaxHeight: 350,
                 underline: const SizedBox(),
                 isExpanded: true,

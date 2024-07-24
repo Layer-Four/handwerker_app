@@ -62,8 +62,8 @@ class Api {
   Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
 
   final Dio _api = Dio();
-
   final _storage = SharedPreferences.getInstance();
+
   Api() {
     _api.options = BaseOptions(baseUrl: _baseUrl);
 
@@ -88,6 +88,7 @@ class Api {
           log('DB return ${jsonEncode(error)}');
         }
         if (error.response?.statusCode == 400) {
+          deleteToken();
           log('DB return ${jsonEncode(error)}');
           return;
         }

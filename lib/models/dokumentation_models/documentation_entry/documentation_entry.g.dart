@@ -12,7 +12,9 @@ _$DocumentationEntryImpl _$$DocumentationEntryImplFromJson(
       id: (json['id'] as num?)?.toInt(),
       projectID: (json['projectID'] as num?)?.toInt(),
       projectName: json['projectName'] as String?,
-      createDate: DateTime.parse(json['createDate'] as String),
+      createDate: json['createDate'] == null
+          ? null
+          : DateTime.parse(json['createDate'] as String),
       imageUrl: (json['imageUrl'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -26,7 +28,7 @@ Map<String, dynamic> _$$DocumentationEntryImplToJson(
       'id': instance.id,
       'projectID': instance.projectID,
       'projectName': instance.projectName,
-      'createDate': instance.createDate.toIso8601String(),
+      'createDate': instance.createDate?.toIso8601String(),
       'imageUrl': instance.imageUrl,
       'description': instance.description,
     };

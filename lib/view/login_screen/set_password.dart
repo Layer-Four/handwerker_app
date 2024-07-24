@@ -97,7 +97,8 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Passwort ändern",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack),
+                    style:
+                        Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack),
                   ),
                 ),
                 const SizedBox(
@@ -107,7 +108,10 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Altes Passwort",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 TextFormField(
@@ -125,7 +129,10 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Neues Passwort",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 TextFormField(
@@ -157,15 +164,17 @@ class _PasswordViewState extends State<PasswordView> {
                           isVisable = !isVisable;
                         });
                       },
-                      icon: isVisable ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                      icon: isVisable
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                   ),
                 ),
@@ -179,7 +188,10 @@ class _PasswordViewState extends State<PasswordView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Passwort widerholen",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColor.kBlack, fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(color: AppColor.kBlack, fontSize: 16),
                   ),
                 ),
                 const SizedBox(
@@ -205,15 +217,17 @@ class _PasswordViewState extends State<PasswordView> {
                           isVisable = !isVisable;
                         });
                       },
-                      icon: isVisable ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                      icon: isVisable
+                          ? const Icon(Icons.visibility)
+                          : const Icon(Icons.visibility_off),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: AppColor.kRed),
+                      borderSide: const BorderSide(color: AppColor.kRed),
                     ),
                   ),
                 ),
@@ -261,7 +275,8 @@ class _PasswordViewState extends State<PasswordView> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isPasswordHas1Number ? Colors.green : Colors.white,
-                                    border: Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
+                                    border:
+                                        Border.all(color: const Color.fromARGB(255, 189, 189, 189)),
                                   ),
                                   child: const Icon(
                                     Icons.check,

@@ -7,7 +7,6 @@ import 'package:handwerker_app/models/consumable_models/consumable_entry/consuma
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
@@ -15,6 +14,7 @@ import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
 import '../../../provider/settings_provider/settings_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
@@ -33,7 +33,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   List<UnitDM>? _units;
 
   List<ConsumeableVM> _materials = [];
-  ProjectListVM? _project;
+  ProjectShortVM? _project;
   ConsumeableVM? _selectedMaterial;
   @override
   void initState() {
@@ -145,7 +145,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             cursorHeight: 20,
             textInputAction: TextInputAction.done,
             controller: _amountController,
-            decoration: Utilits.textFieldDecorator(
+            decoration: Utilits.textFieldDecoration(
               context,
               hintText: dictionary.amount,
             ),
@@ -191,7 +191,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
             cursorHeight: 20,
             textInputAction: TextInputAction.done,
             controller: _summeryController,
-            decoration: Utilits.textFieldDecorator(
+            decoration: Utilits.textFieldDecoration(
               context,
               hintText: '${dictionary.sum} €',
             ),
@@ -238,7 +238,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 Padding(
                   padding: const EdgeInsets.all(4),
                   child: Text(
-                    dictionary.customerProject,
+                    dictionary.customer,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ),
@@ -265,10 +265,10 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         )
                         .toList(),
                     onChanged: (e) {
-                      setState(() {
-                        _project = e!;
-                        _entry = _entry.copyWith(projectID: e.id);
-                      });
+                      // setState(() {
+                      //   _project = e;
+                      //   _entry = _entry.copyWith(projectID: e.id);
+                      // });
                     },
                   ),
                 ),

@@ -4,7 +4,7 @@ import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 
 final passwordVisibilityProvider = StateProvider((ref) => false);
 
-class CustomTextField extends ConsumerWidget {
+class CustomLoginTextField extends ConsumerWidget {
   final TextEditingController controller;
   final bool isPassword;
   final TextInputAction inputAction;
@@ -15,7 +15,7 @@ class CustomTextField extends ConsumerWidget {
   final Function(bool)? onFocusChange;
   final Iterable<String>? autofillHints;
 
-  const CustomTextField({
+  const CustomLoginTextField({
     super.key,
     required this.controller,
     this.isPassword = false,

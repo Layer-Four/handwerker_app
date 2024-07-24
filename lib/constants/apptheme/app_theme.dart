@@ -7,7 +7,7 @@ class AppTheme {
         canvasColor: AppColor.kWhite,
         cardColor: AppColor.kWhite,
         focusColor: AppColor.kPrimaryButtonColor,
-        bottomAppBarTheme: BottomAppBarTheme(color: AppColor.kPrimary),
+        bottomAppBarTheme: const BottomAppBarTheme(color: AppColor.kPrimary),
         useMaterial3: true,
         fontFamily: 'poppins',
         primarySwatch: AppColor.materialColorPrimary,

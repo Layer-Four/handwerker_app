@@ -48,7 +48,7 @@ class LabeldTextfield extends StatelessWidget {
               keyboardType: textInputType,
               textInputAction: textInputAction,
               maxLines: textInputType == TextInputType.multiline ? null : 1,
-              decoration: Utilits.textFieldDecorator(context, hintText: hintText),
+              decoration: Utilits.textFieldDecoration(context, hintText: hintText),
               onChanged: onChanged,
               onTap: onTap,
             ),

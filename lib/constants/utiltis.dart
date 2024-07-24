@@ -31,8 +31,7 @@ class Utilits {
       );
 
   static Future<XFile?> pickImage(
-    BuildContext context,
-    String projectName, {
+    BuildContext context, {
     required Permission permission,
   }) async {
     // final permission = Permission.storage.status;
@@ -46,8 +45,7 @@ class Utilits {
         maxHeight: 1024,
         maxWidth: 1024,
       );
-      if (file != null) return XFile(file.path);
-      return null;
+      return file;
     } catch (e) {
       // final status = await Permission.storage.status;
       log('permission was denied: $e');
@@ -82,7 +80,7 @@ class Utilits {
     );
   }
 
-  static InputDecoration textFieldDecorator(BuildContext context, {String? hintText}) =>
+  static InputDecoration textFieldDecoration(BuildContext context, {String? hintText}) =>
       InputDecoration(
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -94,7 +92,7 @@ class Utilits {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: AppColor.kTextfieldBorder,
           ),
         ),
