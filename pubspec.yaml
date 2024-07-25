@@ -27,6 +27,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+<<<<<<< HEAD
+=======
+
+
+dependency_overrides:
+  meta: ^1.14.0
+>>>>>>> de01c1b07abdcb2e395c0d5fe0c2de471a29cb06
   freezed: ^2.5.2
   flutter_lints: ^4.0.0
   build_runner: ^2.4.8
