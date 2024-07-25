@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart' as slider;
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
@@ -155,10 +155,10 @@ class _ShowProjectDocumentationState extends State<ShowProjectDocumentation> {
                               ? const SizedBox()
                               : Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: slider.CarouselSlider.builder(
+                                  child: CarouselSlider.builder(
                                     itemCount: image.length,
                                     itemBuilder: (context, i, _) => image[i],
-                                    options: slider.CarouselOptions(
+                                    options: CarouselOptions(
                                       viewportFraction: 1,
                                       height: 150,
                                       enableInfiniteScroll: false,
