@@ -15,6 +15,8 @@ import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
 
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
+
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
 
@@ -30,7 +32,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   late ConsumealbeEntry _entry;
   UnitDM? _unit;
-  bool _isProjectSet = false;
 
   bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
