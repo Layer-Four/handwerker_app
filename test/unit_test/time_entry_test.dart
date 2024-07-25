@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
+import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 
@@ -14,7 +14,7 @@ void main() {
   final DateTime date = DateTime(2024, 03, 05);
   final DateTime start = DateTime(2024, 03, 05, 13, 05);
   final DateTime end = DateTime(2024, 03, 05, 15, 15);
-  const ProjectListVM costumer = ProjectListVM(id: 5, title: 'Meier/ Bad verfliesen');
+  const ProjectShortVM costumer = ProjectShortVM(id: 5, title: 'Meier/ Bad verfliesen');
   const ServiceListVM service = ServiceListVM(name: 'Bad verfliesen', id: 7);
   const String description = '';
   group('create entry', () {

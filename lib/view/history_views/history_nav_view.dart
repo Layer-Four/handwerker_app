@@ -6,7 +6,7 @@ import 'package:handwerker_app/view/history_views/history_consumable/history_con
 import 'package:handwerker_app/view/history_views/workorder_view/workorder_view.dart';
 import 'package:handwerker_app/view/history_views/history_project/project_overview.dart';
 import 'package:handwerker_app/view/history_views/history_time_entry/history_time_entry.dart';
-import 'package:handwerker_app/view/widgets/navigaton_widget/navigation_head.dart';
+import 'package:handwerker_app/view/navigation_view/widgets/navigation_head.dart';
 
 class HistoryNavigationView extends ConsumerWidget {
   const HistoryNavigationView({super.key});

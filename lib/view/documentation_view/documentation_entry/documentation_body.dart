@@ -1,16 +1,16 @@
-import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/dokumentation_models/documentation_entry/documentation_entry.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
-import 'package:handwerker_app/provider/doku_provider/documentation_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
-import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:intl/intl.dart';
+import '../../../constants/apptheme/app_colors.dart';
+import '../../../models/customer_models/customer_short_model/customer_short_dm.dart';
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
+import '../../../provider/doku_provider/documentation_provider.dart';
+import '../../../provider/settings_provider/settings_provider.dart';
+import '../../widgets/choose_media_widget.dart';
+import '../../widgets/custom_datepicker_widget.dart';
+import '../../widgets/custom_textfield_widget.dart';
+import '../../widgets/symetric_button_widget.dart';
+import '../time_entry/widgets/choose_customer_widget.dart';
 
 class DocumentationBody extends ConsumerStatefulWidget {
   const DocumentationBody({super.key});
@@ -20,23 +20,21 @@ class DocumentationBody extends ConsumerStatefulWidget {
 }
 
 class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
-  final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  late DocumentationEntry _entry;
-  bool isProjectSet = false;
-
-  ProjectListVM? _project;
+  late final TextEditingController _dayPickerController, _descriptionController;
 
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    setState(() {
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      _entry = DocumentationEntry(
-        createDate: now,
-      );
-    });
+    _dayPickerController =
+        TextEditingController(text: DateFormat('dd.MM.y').format(DateTime.now()));
+    _descriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _dayPickerController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   late final dictionary = ref.watch(settingsProv).dictionary;
@@ -45,12 +43,94 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
-            _dayInputWidget(),
-            _buildCustomerProjectField(),
-            _buildChooseMedai(),
-            _buildDescription(),
-            const SizedBox(height: 56),
-            _submitInput(),
+            CustomDatePicker(
+              controller: _dayPickerController,
+              initDate: DateTime.now(),
+              title: dictionary.date,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: AppColor.kTextfieldBorder),
+              ),
+            ),
+            ref.watch(documentationProvider).customers.isEmpty
+                ? GestureDetector(
+                    onTap: () => ref.watch(documentationProvider).customers.isEmpty
+                        ? ref.read(documentationProvider.notifier).getAllCustomer()
+                        : null,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: Center(child: Text(dictionary.loadData)),
+                    ),
+                  )
+                : ChooseCustomer<CustomerShortDM>(
+                    title: dictionary.customer,
+                    items: ref
+                        .watch(documentationProvider)
+                        .customers
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.companyName}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) => ref.read(documentationProvider.notifier).updateCustomer(e),
+                    value: ref.watch(documentationProvider.notifier).currentCustomer,
+                  ),
+            ChooseCustomer<ProjectShortVM>(
+              title: dictionary.projectUpperCase,
+              items: ref
+                  .watch(documentationProvider.notifier)
+                  .projects
+                  .map(
+                    (e) => DropdownMenuItem(
+                      alignment: Alignment.center,
+                      value: e,
+                      child: Text(' ${e.title}'),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (e) {
+                ref.read(documentationProvider.notifier).updateProject(e);
+              },
+              value: ref.watch(documentationProvider).project,
+            ),
+            const ChooseMediaWidget(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: CustomTextfield(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                title: dictionary.description,
+                widgetWidth: MediaQuery.of(context).size.width,
+                textfieldHeight: 80,
+                controller: _descriptionController,
+                isMultiLine: true,
+              ),
+            ),
+            Container(
+              height: 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColor.kTextfieldBorder),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Center(
+                child: Text('Hier könnte ihre Unterschrift stehen'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SymmetricButton(
+                color: AppColor.kPrimaryButtonColor,
+                text: dictionary.createEntry,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+                onPressed: _checkAndSubmit,
+              ),
+            ),
             SizedBox(
               height: 70,
               child: Center(
@@ -61,228 +141,123 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         ),
       );
 
-  Container _buildChooseMedai() => Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        height: 145,
-        decoration: BoxDecoration(
-          color: AppColor.kTextfieldBorder,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(dictionary.makePicture),
-                    IconButton(
-                      icon: const Icon(Icons.camera_alt, size: 75),
-                      onPressed: () async {
-                        final image =
-                            await Utilits.pickImageFromCamera(context, _project?.title ?? '');
-                        if (image != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.transparent,
-                            content: Image.file(
-                              File(image.path),
-                              height: 100,
-                              width: 150,
-                            ),
-                          ));
-                          setState(() {
-                            _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, image.path],
-                            );
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(dictionary.takePicture),
-                    IconButton(
-                      icon: const Icon(Icons.image, size: 70),
-                      onPressed: () async {
-                        final image =
-                            await Utilits.pickImageFromGalery(context, _project?.title ?? '');
-                        if (image != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.transparent,
-                            content: Image.file(
-                              File(image.path),
-                              height: 100,
-                              width: 150,
-                            ),
-                          ));
-                          setState(() {
-                            _entry = _entry.copyWith(
-                              imageUrl: [..._entry.imageUrl, image.path],
-                            );
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Text(
-              _entry.imageUrl.isEmpty ? '' : '${_entry.imageUrl.length} ${dictionary.choosedImage}',
-              style: _entry.imageUrl.isEmpty
-                  ? const TextStyle(fontSize: 0)
-                  : Theme.of(context).textTheme.labelSmall,
-            ),
-          ],
-        ),
+  _checkAndSubmit() {
+    if (_dayPickerController.text.isEmpty) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(dictionary.plsChooseDay)),
       );
-
-  Widget _buildCustomerProjectField() {
-    return ref.read(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntryBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
-          },
-          loading: () => const CircularProgressIndicator(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !isProjectSet) {
-              setState(() {
-                _project = projects.first;
-                _entry = _entry.copyWith(
-                  projectID: projects.first.id,
-                  projectName: projects.first.title,
-                );
-                isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      dictionary.customerProject,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _project,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _project = e!;
-                          _entry = _entry.copyWith(
-                            projectID: e.id,
-                            projectName: e.title,
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              //  LabeledInputWidget(
-              //   label:
-              //   child:
-              // ),
-            );
-          },
+    }
+    if (ref.watch(documentationProvider).project == null) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(dictionary.plsChooseProject)),
+      );
+    }
+    if (_dayPickerController.text.isNotEmpty && ref.watch(documentationProvider).project != null) {
+      final d = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+      ref.read(documentationProvider.notifier).updateDocumentation(
+            description: _descriptionController.text,
+            createDate: DateTime(d[2], d[1], d[0]),
+          );
+      ref.read(documentationProvider.notifier).createDocumentationEntry().then((e) {
+        _descriptionController.clear();
+        _dayPickerController.text = DateFormat('d.M.y').format(DateTime.now());
+        return ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(e ? dictionary.succes : dictionary.failed),
+            ),
+          ),
         );
+      });
+    }
   }
-
-  Widget _buildDescription() => LabeldTextfield(
-        heigt: 80,
-        textInputAction: TextInputAction.newline,
-        textInputType: TextInputType.multiline,
-        label: dictionary.description,
-        controller: _descriptionController,
-        onChanged: (value) {
-          setState(() {
-            TextSelection previousSelection = _descriptionController.selection;
-            _descriptionController.text = value;
-            _descriptionController.selection = previousSelection;
-            _entry = _entry.copyWith(description: _descriptionController.text);
-          });
-        },
-      );
-  Widget _dayInputWidget() => LabeldTextfield(
-        label: dictionary.date,
-        textInputType: TextInputType.datetime,
-        controller: _dayPickerController,
-        onTap: () async {
-          final date = await Utilits.selecetDate(context);
-          if (date != null) {
-            setState(() {
-              _entry = _entry.copyWith(createDate: date);
-              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-            });
-          }
-        },
-      );
-
-  Widget _submitInput() => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SymmetricButton(
-          color: AppColor.kPrimaryButtonColor,
-          text: dictionary.createEntry,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-          onPressed: () {
-            if (_dayPickerController.text.isEmpty) {
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(dictionary.plsChooseDay),
-                ),
-              );
-            }
-            if (_dayPickerController.text.isNotEmpty) {
-              ref.read(documentationProvider.notifier).createDocumentationEntry(_entry);
-              final now = DateTime.now();
-              setState(() {
-                _descriptionController.clear();
-                _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-                _entry = DocumentationEntry(
-                    projectID: _project!.id,
-                    projectName: null,
-                    imageUrl: [],
-                    description: null,
-                    createDate: DateTime.now());
-              });
-              return ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(dictionary.succes),
-                ),
-              );
-            }
-          },
-        ),
-      );
 }
+
+  // Container _buildChooseMedai() => Container(
+  //       padding: const EdgeInsets.symmetric(vertical: 6),
+  //       height: 150,
+  //       decoration: BoxDecoration(
+  //         color: AppColor.kTextfieldBorder,
+  //         borderRadius: BorderRadius.circular(12),
+  //       ),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //             children: [
+  //               Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   Text(dictionary.makePicture),
+  //                   IconButton(
+  //                     icon: const Icon(Icons.camera_alt, size: 75),
+  //                     onPressed: () async {
+  //                       final image = await Utilits.pickImage(
+  //                         context,
+  //                         permission: Permission.camera,
+  //                       );
+  //                       if (image != null) {
+  //                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //                           backgroundColor: Colors.transparent,
+  //                           content: Image.file(
+  //                             File(image.path),
+  //                             height: 100,
+  //                             width: 150,
+  //                           ),
+  //                         ));
+  //                         ref.read(documentationProvider.notifier).updateDocumentation(
+  //                           imageUrl: [
+  //                             ...ref.watch(documentationProvider).docu.imageUrl,
+  //                             image.path,
+  //                           ],
+  //                         );
+  //                       }
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //               Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   Text(dictionary.takePicture),
+  //                   IconButton(
+  //                     icon: const Icon(Icons.image, size: 70),
+  //                     onPressed: () async {
+  //                       final image = await Utilits.pickImage(
+  //                         context,
+  //                         permission: Permission.storage,
+  //                       );
+  //                       if (image != null) {
+  //                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //                           backgroundColor: Colors.transparent,
+  //                           content: Image.file(
+  //                             File(image.path),
+  //                             height: 100,
+  //                             width: 150,
+  //                           ),
+  //                         ));
+  //                         ref.read(documentationProvider.notifier).updateDocumentation(
+  //                           imageUrl: [
+  //                             ...ref.watch(documentationProvider).docu.imageUrl,
+  //                             image.path,
+  //                           ],
+  //                         );
+  //                       }
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //           Text(
+  //             ref.watch(documentationProvider).docu.imageUrl.isEmpty
+  //                 ? ''
+  //                 : '${ref.watch(documentationProvider).docu.imageUrl.length} ${dictionary.choosedImage}',
+  //             style: ref.watch(documentationProvider).docu.imageUrl.isEmpty
+  //                 ? const TextStyle(fontSize: 0)
+  //                 : Theme.of(context).textTheme.labelSmall,
+  //           ),
+  //         ],
+  //       ),
+  //     );
