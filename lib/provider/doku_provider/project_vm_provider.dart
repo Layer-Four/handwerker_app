@@ -3,44 +3,45 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
 import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 
-final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectListVM>>(
+final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectShortVM>>(
   () => ProjectNotifer(),
 );
 
-class ProjectNotifer extends Notifier<List<ProjectListVM>> {
+class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
+  final bool isError = false;
   @override
-  List<ProjectListVM> build() => [];
+  List<ProjectShortVM> build() {
+    loadpProject();
+    return [];
+  }
 
-  ProjectListVM? _choicenProject;
-  ProjectListVM? get choicenProject => _choicenProject;
+  ProjectShortVM? _choicenProject;
+  ProjectShortVM? get choicenProject => _choicenProject;
   final Api _api = Api();
 
-  void loadpProject() async {
+  Future<bool> loadpProject() async {
     try {
       final response = await _api.getProjectsDM;
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
         log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
-        return;
+        // TODO: throw Exception
+        return false;
       }
       final data = response.data;
-      final projects = data.map<ProjectListVM>((e) => ProjectListVM.fromJson(e)).toList();
+      final projects = data.map<ProjectShortVM>((e) => ProjectShortVM.fromJson(e)).toList();
       state = projects;
-      return;
+      return true;
     } catch (e) {
-      throw Exception(e);
+      log('request dismissed statuscode: $e');
     }
+    return false;
   }
 
-  void updateProject(ProjectListVM? e) => _choicenProject = e;
+  void updateProject(ProjectShortVM? e) => _choicenProject = e;
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
     final result = <ProjectCustomer>[];
@@ -132,7 +133,7 @@ class ProjectNotifer extends Notifier<List<ProjectListVM>> {
       final projects = await getProjectsForCustomer(customerID);
       // Directly mapping from ProjectShortVM to ProjectListVM
       final projectListVMs = projects.map((shortVM) {
-        return ProjectListVM(
+        return ProjectShortVM(
           id: shortVM.id!,
           title: shortVM.title!,
         );

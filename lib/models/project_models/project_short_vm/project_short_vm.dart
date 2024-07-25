@@ -3,6 +3,8 @@ part 'project_short_vm.freezed.dart';
 part 'project_short_vm.g.dart';
 
 @freezed
+
+/// Outdated please change with [ProjectShortVM] and Delete this class.
 class ProjectShortVM with _$ProjectShortVM {
   const factory ProjectShortVM({
     int? id,

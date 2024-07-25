@@ -5,7 +5,7 @@ import 'package:handwerker_app/view/documentation_view/time_entry/widgets/choose
 
 import '../../../constants/apptheme/app_colors.dart';
 import '../../../constants/utiltis.dart';
-import '../../../models/project_models/project_list_vm/project_list.dart';
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
 import '../../../models/service_models/service_list_vm/service_list.dart';
 import '../../../models/time_models/time_entries_vm/time_entries_vm.dart';
 import '../../../provider/doku_provider/project_vm_provider.dart';
@@ -32,7 +32,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   late final dictionary = ref.watch(settingsProv).dictionary;
 
   ServiceListVM? _choosenService;
-  ProjectListVM? _chosenProject;
+  ProjectShortVM? _chosenProject;
   late TimeEntriesVM _entry;
 
   //List<ProjectShortVM> _projectsFormCustomer = [];
@@ -63,26 +63,28 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           _timeInputRow(),
           // TODO: create a standart for saving projekt Customer with seperate with "/"
           // _buildCustomerDropdown(),
-          ref.watch(projectVMProvider).isEmpty
-              ? Text(ref.watch(settingsProv).dictionary.loadData)
-              : ChooseCustomer(
-                  title: ref.watch(settingsProv).dictionary.customerProject,
-                  value: ref.watch(projectVMProvider).first,
-                  items: ref
-                      .watch(projectVMProvider)
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text(e.title),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (e) =>
-                      ref.read(projectVMProvider.notifier).updateProject(e as ProjectListVM),
-                ),
+          ref.watch(projectVMProvider.notifier).isError
+              ? Text('Fehler')
+              : ref.watch(projectVMProvider).isEmpty
+                  ? Text(ref.watch(settingsProv).dictionary.loadData)
+                  : ChooseCustomer(
+                      title: ref.watch(settingsProv).dictionary.projectUpperCase,
+                      value: ref.watch(projectVMProvider).first,
+                      items: ref
+                          .watch(projectVMProvider)
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Text(e.title ?? 'Kein Kitel'),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) =>
+                          ref.read(projectVMProvider.notifier).updateProject(e as ProjectShortVM),
+                    ),
           _buildServiceDropdown(),
           _buildDescription(),
           const SizedBox(height: 46),

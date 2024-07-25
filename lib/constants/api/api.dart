@@ -20,10 +20,12 @@ class Api {
   static const String _getProjectByCustomer = '/project/list?customerId=';
   static const String _postLoginUserAdress = '/user/login';
   static const String _postResetPasswordRequest = '/user/password/request/';
+
   static const String _postDocumentationDay = '/userProjectDay/create';
   static const String _postProjectConsumabele = '/userProjectMaterial/create';
   static const String _postTimeEntryAdress = '/timetracking/create';
   static const String _putChangePassword = '/user/password/change';
+  // TODO: dont used
   static const String _putDocumentationDay = '/userProjectDay/update';
   static const String _putProjectMaterial = '/userProjectMaterial/update';
 
@@ -48,12 +50,14 @@ class Api {
   Future<Response> postloginUser(loginData) => _api.post(_postLoginUserAdress, data: loginData);
 
   Future<Response> postProjectConsumable(data) => _api.post(_postProjectConsumabele, data: data);
-  Future<Response> postDocumentationEntry(data) => _api.post(_postDocumentationDay, data: data);
+  Future<Response> postDocumentationEntry(FormData data) =>
+      _api.post(_postDocumentationDay, data: data);
   Future<Response> postTimeEnty(data) => _api.post(_postTimeEntryAdress, data: data);
   Future<Response> setNewPassword(Map<String, dynamic> json) =>
       _api.put(_putChangePassword, data: json);
   Future<Response> putUpdateProjectConsumableEntry(data) =>
       _api.post(_putProjectMaterial, data: data);
+  // TODO: dont used
   Future<Response> putpdateDocumentationEntry(data) => _api.post(_putDocumentationDay, data: data);
   Future<Response> postResetPasswordRequest(Map<String, dynamic> json) =>
       _api.post(_postResetPasswordRequest, data: json);
@@ -62,8 +66,8 @@ class Api {
   Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
 
   final Dio _api = Dio();
-
   final _storage = SharedPreferences.getInstance();
+
   Api() {
     _api.options = BaseOptions(baseUrl: _baseUrl);
 
@@ -87,7 +91,9 @@ class Api {
           _storage.then((value) => value.clear());
           log('DB return ${jsonEncode(error)}');
         }
+        // TODO: think about retry logic for wake up database
         if (error.response?.statusCode == 400) {
+          deleteToken();
           log('DB return ${jsonEncode(error)}');
           return;
         }
