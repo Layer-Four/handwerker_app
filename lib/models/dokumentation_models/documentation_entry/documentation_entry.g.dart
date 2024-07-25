@@ -15,6 +15,7 @@ _$DocumentationEntryImpl _$$DocumentationEntryImplFromJson(
       createDate: json['createDate'] == null
           ? null
           : DateTime.parse(json['createDate'] as String),
+      signature: json['signature'] as String?,
       imageUrl: (json['imageUrl'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -29,6 +30,7 @@ Map<String, dynamic> _$$DocumentationEntryImplToJson(
       'projectID': instance.projectID,
       'projectName': instance.projectName,
       'createDate': instance.createDate?.toIso8601String(),
+      'signature': instance.signature,
       'imageUrl': instance.imageUrl,
       'description': instance.description,
     };

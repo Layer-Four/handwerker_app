@@ -12,31 +12,33 @@ final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectShortVM>>
 );
 
 class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
+  final bool isError = false;
   @override
-  List<ProjectShortVM> build() => [];
+  List<ProjectShortVM> build() {
+    loadpProject();
+    return [];
+  }
 
   ProjectShortVM? _choicenProject;
   ProjectShortVM? get choicenProject => _choicenProject;
   final Api _api = Api();
 
-  void loadpProject() async {
+  Future<bool> loadpProject() async {
     try {
       final response = await _api.getProjectsDM;
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
         log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
-        return;
+        // TODO: throw Exception
+        return false;
       }
       final data = response.data;
       final projects = data.map<ProjectShortVM>((e) => ProjectShortVM.fromJson(e)).toList();
       state = projects;
-      return;
+      return true;
     } catch (e) {
-      throw Exception(e);
+      log('request dismissed statuscode: $e');
     }
+    return false;
   }
 
   void updateProject(ProjectShortVM? e) => _choicenProject = e;

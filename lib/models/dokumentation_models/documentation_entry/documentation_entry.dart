@@ -10,6 +10,7 @@ class DocumentationEntry with _$DocumentationEntry {
     int? projectID,
     String? projectName,
     DateTime? createDate,
+    String? signature,
     @Default(<String>[]) List<String> imageUrl,
     String? description,
   }) = _DocumentationEntry;

@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 
+import '../../constants/api/api.dart';
+import '../../models/customer_models/customer_short_model/customer_short_dm.dart';
 import '../../models/dokumentation_models/documentation_entry/documentation_entry.dart';
 import '../../models/dokumentation_models/documentation_state/documentation_state.dart';
 import '../../models/project_models/project_short_vm/project_short_vm.dart';
 import '../settings_provider/user_provider.dart';
 
-final documentationProvider =
-    NotifierProvider<ProjectNotifer, DocumentationState>(() => ProjectNotifer());
+final documentationProvider = NotifierProvider<ProjectNotifer, DocumentationState>(
+  () => ProjectNotifer(),
+);
 
 class ProjectNotifer extends Notifier<DocumentationState> {
   final Api _api = Api();
@@ -51,34 +53,8 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   }
 
   Future<bool> createDocumentationEntry() async {
-    final entry = state.docu;
-    if (entry.createDate == null) return false;
-    final xFileList = [];
-    for (var path in entry.imageUrl) {
-      final xfile = XFile(path,
-          name:
-              '${entry.projectName}/${entry.createDate!.day}:${entry.createDate!.month}:${entry.createDate!.year}');
-      xFileList.add(xfile);
-    }
-    FormData formData = FormData.fromMap({
-      'projectID': entry.projectID,
-      'createDate': entry.createDate!.toIso8601String(),
-      'description': entry.description,
-    });
-    for (var i = 0; i < xFileList.length; i++) {
-      final XFile file = xFileList[i];
-      try {
-        final multiPartFile = MultipartFile.fromFileSync(
-          file.path,
-          filename: file.name,
-          contentType: MediaType('image', 'png'),
-        );
-        formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
-      } catch (e) {
-        log('Error reading file: $e');
-      }
-    }
-
+    if (state.docu.createDate == null) return false;
+    final FormData formData = _buildFormData();
     try {
       final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
@@ -150,20 +126,84 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     return;
   }
 
+  /// Update Documentation entry in DocumentationState object.
   updateDocumentation({
-    int? projectID,
-    String? projectName,
     DateTime? createDate,
     List<String>? imageUrl,
+    Uint8List? newSignature,
     String? description,
-  }) {
+  }) async {
     final newDoc = state.docu.copyWith(
       createDate: createDate ?? state.docu.createDate,
-      projectID: state.project?.id,
-      projectName: state.project?.title,
+      projectID: project?.id,
+      projectName: project?.title,
       imageUrl: imageUrl ?? state.docu.imageUrl,
+      signature: newSignature != null ? String.fromCharCodes(newSignature) : state.docu.signature,
       description: description ?? state.docu.description,
     );
     state = state.copyWith(editedDoc: newDoc);
+  }
+
+  _buildFormData() {
+    final entry = state.docu;
+    final List<XFile> files = [];
+    entry.imageUrl
+        .map(
+          (e) => files.add(
+            XFile(
+              e,
+              name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
+            ),
+          ),
+        )
+        .toList();
+    if (entry.signature != null) {
+      files.add(
+        XFile.fromData(
+          utf8.encode(entry.signature!),
+          name: '${state.currentCustomer!.companyName}/signature.png',
+          lastModified: DateTime.now(),
+        ),
+      );
+    }
+    // for (var path in entry.imageUrl) {
+    //   final xfile = XFile(
+    //     path,
+    //     name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
+    //     mimeType: 'png',
+    //   );
+    //   xFileList.add(xfile);
+    // }
+    FormData formData = FormData.fromMap({
+      'projectID': entry.projectID,
+      'createDate': entry.createDate!.toIso8601String(),
+      'description': entry.description,
+    });
+
+    formData.files.addAll(
+      files.map(
+        (e) => MapEntry(
+          e.name,
+          MultipartFile.fromFileSync(
+            e.path,
+            filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png',
+            // contentType: MediaType('image', 'png'),
+            // contentType: MediaType.parse(e.mimeType ?? 'image/png'),
+          ),
+        ),
+      ),
+    );
+    // for (var i = 0; i < files.length; i++) {
+    //   final XFile file = files[i];
+    //   try {
+    //     final multiPartFile = MultipartFile.fromFileSync(
+    //       file.path,
+    //       filename: file.name,
+    //       contentType: MediaType('image', 'png'),
+    //     );
+    //     formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
+    return formData;
+    // } catch (e) {
+    //   log('Error reading file: $e');
   }
 }

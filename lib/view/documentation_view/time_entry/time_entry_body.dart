@@ -63,26 +63,28 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           _timeInputRow(),
           // TODO: create a standart for saving projekt Customer with seperate with "/"
           // _buildCustomerDropdown(),
-          ref.watch(projectVMProvider).isEmpty
-              ? Text(ref.watch(settingsProv).dictionary.loadData)
-              : ChooseCustomer(
-                  title: ref.watch(settingsProv).dictionary.customer,
-                  value: ref.watch(projectVMProvider).first,
-                  items: ref
-                      .watch(projectVMProvider)
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Text(e.title ?? 'Kein Kitel'),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (e) =>
-                      ref.read(projectVMProvider.notifier).updateProject(e as ProjectShortVM),
-                ),
+          ref.watch(projectVMProvider.notifier).isError
+              ? Text('Fehler')
+              : ref.watch(projectVMProvider).isEmpty
+                  ? Text(ref.watch(settingsProv).dictionary.loadData)
+                  : ChooseCustomer(
+                      title: ref.watch(settingsProv).dictionary.projectUpperCase,
+                      value: ref.watch(projectVMProvider).first,
+                      items: ref
+                          .watch(projectVMProvider)
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Text(e.title ?? 'Kein Kitel'),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) =>
+                          ref.read(projectVMProvider.notifier).updateProject(e as ProjectShortVM),
+                    ),
           _buildServiceDropdown(),
           _buildDescription(),
           const SizedBox(height: 46),

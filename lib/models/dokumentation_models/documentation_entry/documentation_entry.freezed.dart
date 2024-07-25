@@ -24,6 +24,7 @@ mixin _$DocumentationEntry {
   int? get projectID => throw _privateConstructorUsedError;
   String? get projectName => throw _privateConstructorUsedError;
   DateTime? get createDate => throw _privateConstructorUsedError;
+  String? get signature => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
@@ -44,6 +45,7 @@ abstract class $DocumentationEntryCopyWith<$Res> {
       int? projectID,
       String? projectName,
       DateTime? createDate,
+      String? signature,
       List<String> imageUrl,
       String? description});
 }
@@ -65,6 +67,7 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
     Object? projectID = freezed,
     Object? projectName = freezed,
     Object? createDate = freezed,
+    Object? signature = freezed,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
@@ -85,6 +88,10 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      signature: freezed == signature
+          ? _value.signature
+          : signature // ignore: cast_nullable_to_non_nullable
+              as String?,
       imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -110,6 +117,7 @@ abstract class _$$DocumentationEntryImplCopyWith<$Res>
       int? projectID,
       String? projectName,
       DateTime? createDate,
+      String? signature,
       List<String> imageUrl,
       String? description});
 }
@@ -129,6 +137,7 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
     Object? projectID = freezed,
     Object? projectName = freezed,
     Object? createDate = freezed,
+    Object? signature = freezed,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
@@ -149,6 +158,10 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      signature: freezed == signature
+          ? _value.signature
+          : signature // ignore: cast_nullable_to_non_nullable
+              as String?,
       imageUrl: null == imageUrl
           ? _value._imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -169,6 +182,7 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
       this.projectID,
       this.projectName,
       this.createDate,
+      this.signature,
       final List<String> imageUrl = const <String>[],
       this.description})
       : _imageUrl = imageUrl;
@@ -184,6 +198,8 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
   final String? projectName;
   @override
   final DateTime? createDate;
+  @override
+  final String? signature;
   final List<String> _imageUrl;
   @override
   @JsonKey()
@@ -198,7 +214,7 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
 
   @override
   String toString() {
-    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, signature: $signature, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
@@ -213,6 +229,8 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
                 other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
+            (identical(other.signature, signature) ||
+                other.signature == signature) &&
             const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description));
@@ -220,8 +238,15 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, projectID, projectName,
-      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      projectID,
+      projectName,
+      createDate,
+      signature,
+      const DeepCollectionEquality().hash(_imageUrl),
+      description);
 
   @JsonKey(ignore: true)
   @override
@@ -244,6 +269,7 @@ abstract class _DocumentationEntry implements DocumentationEntry {
       final int? projectID,
       final String? projectName,
       final DateTime? createDate,
+      final String? signature,
       final List<String> imageUrl,
       final String? description}) = _$DocumentationEntryImpl;
 
@@ -258,6 +284,8 @@ abstract class _DocumentationEntry implements DocumentationEntry {
   String? get projectName;
   @override
   DateTime? get createDate;
+  @override
+  String? get signature;
   @override
   List<String> get imageUrl;
   @override

@@ -33,25 +33,38 @@ class ChooseMediaWidget extends ConsumerWidget {
                     IconButton(
                       icon: const Icon(Icons.camera_alt, size: 75),
                       onPressed: () async {
-                        final image = await Utilits.pickImage(
-                          context,
-                          permission: Permission.camera,
-                        );
-                        if (image != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.transparent,
-                            content: Image.file(
-                              File(image.path),
-                              height: 100,
-                              width: 150,
+                        if (ref.watch(documentationProvider).project == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Center(
+                                child: Text(ref.watch(settingsProv).dictionary.plsChooseProject),
+                              ),
                             ),
-                          ));
-                          ref.read(documentationProvider.notifier).updateDocumentation(
-                            imageUrl: [
-                              ...ref.watch(documentationProvider).docu.imageUrl,
-                              image.path,
-                            ],
                           );
+                          return;
+                        } else {
+                          final image = await Utilits.pickImage(
+                            context,
+                            ref.watch(documentationProvider).project!.title!,
+                            permission: Permission.camera,
+                          );
+                          if (image != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.transparent,
+                              content: Image.memory(
+                                await image.readAsBytes(),
+                                height: 100,
+                                width: 150,
+                              ),
+                            ));
+
+                            ref.read(documentationProvider.notifier).updateDocumentation(
+                              imageUrl: [
+                                ...ref.watch(documentationProvider).docu.imageUrl,
+                                image.path,
+                              ],
+                            );
+                          }
                         }
                       },
                     ),
@@ -64,25 +77,37 @@ class ChooseMediaWidget extends ConsumerWidget {
                     IconButton(
                       icon: const Icon(Icons.image, size: 70),
                       onPressed: () async {
-                        final image = await Utilits.pickImage(
-                          context,
-                          permission: Permission.storage,
-                        );
-                        if (image != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.transparent,
-                            content: Image.file(
-                              File(image.path),
-                              height: 100,
-                              width: 150,
+                        if (ref.watch(documentationProvider).project == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Center(
+                                child: Text(ref.watch(settingsProv).dictionary.plsChooseProject),
+                              ),
                             ),
-                          ));
-                          ref.read(documentationProvider.notifier).updateDocumentation(
-                            imageUrl: [
-                              ...ref.watch(documentationProvider).docu.imageUrl,
-                              image.path,
-                            ],
                           );
+                          return;
+                        } else {
+                          final image = await Utilits.pickImage(
+                            context,
+                            ref.watch(documentationProvider).project!.title ?? 'NoProject',
+                            permission: Permission.storage,
+                          );
+                          if (image != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.transparent,
+                              content: Image.file(
+                                File(image.path),
+                                height: 100,
+                                width: 150,
+                              ),
+                            ));
+                            ref.read(documentationProvider.notifier).updateDocumentation(
+                              imageUrl: [
+                                ...ref.watch(documentationProvider).docu.imageUrl,
+                                image.path,
+                              ],
+                            );
+                          }
                         }
                       },
                     ),

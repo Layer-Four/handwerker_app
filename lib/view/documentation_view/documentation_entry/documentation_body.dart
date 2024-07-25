@@ -163,7 +163,9 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
         _dayPickerController.text = DateFormat('d.M.y').format(DateTime.now());
         return ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e ? dictionary.succes : dictionary.failed),
+            content: Center(
+              child: Text(e ? dictionary.succes : dictionary.failed),
+            ),
           ),
         );
       });
