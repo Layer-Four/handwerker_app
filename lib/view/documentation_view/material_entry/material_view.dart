@@ -27,7 +27,7 @@ class MaterialBody extends ConsumerStatefulWidget {
 
 class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController(text: '1');
   final TextEditingController _summeryController = TextEditingController();
   late final dictionary = ref.watch(settingsProv).dictionary;
 
@@ -97,40 +97,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     if (_units == null) _refreshUnits();
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 5.0),
-              //     child: SizedBox(
-              //       width: 100,
-              //       height: 30,
-              //       child: DropdownButton(
-              //         menuMaxHeight: 350,
-              //         underline: const SizedBox(),
-              //         isExpanded: true,
-              //         value: _unit,
-              //         items: (_units ?? List.empty())
-              //             .map(
-              //               (e) => DropdownMenuItem(
-              //                 alignment: Alignment.center,
-              //                 value: e,
-              //                 child: Text(
-              //                   e.name,
-              //                   style: Theme.of(context)
-              //                       .textTheme
-              //                       .labelSmall!
-              //                       .copyWith(color: AppColor.kPrimary),
-              //                 ),
-              //               ),
-              //             )
-              //             .toList(),
-              //         onChanged: (e) => setState(() => _unit = e),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -138,6 +104,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           height: 35,
           width: 150,
           child: TextField(
+            // onTapOutside: (_) {
+            //   final multi = int.parse(_amountController.text);
+            //   final price = _selectedMaterial!.price;
+            //   _summeryController.text = (price * multi).toString();
+            // },
             keyboardType: TextInputType.number,
             autofocus: false,
             cursorHeight: 20,
@@ -293,8 +264,9 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           });
         }
 
-        final double sum = (_selectedMaterial?.amount ?? 0) * (_selectedMaterial?.price ?? 0);
-        _summeryController.text = sum.toStringAsFixed(2);
+        final multi = int.tryParse(_amountController.text) ?? 1;
+        final price = _selectedMaterial?.price ?? 0;
+        _summeryController.text = (price * multi).toStringAsFixed(2);
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -322,12 +294,16 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                         (e) => DropdownMenuItem(
                           alignment: Alignment.center,
                           value: e,
-                          child: Text(e.name ?? 'Kein Name'),
+                          child: Text('${e.name}/ ${e.materialUnitName}'),
                         ),
                       )
                       .toList(),
                   onChanged: (e) {
-                    setState(() => _selectedMaterial = e!);
+                    setState(() {
+                      _selectedMaterial = e!;
+                      final multi = int.tryParse(_amountController.text) ?? 1;
+                      _summeryController.text = (e.price * multi).toStringAsFixed(2);
+                    });
                   },
                 ),
               ),
