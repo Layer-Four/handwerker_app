@@ -80,7 +80,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
     return GestureDetector(
       child: Container(
         height: 20,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(bottom: BorderSide(color: AppColor.kTextfieldBorder)),
         ),
         child: Text('Dokumentation', style: Theme.of(context).textTheme.bodyMedium),

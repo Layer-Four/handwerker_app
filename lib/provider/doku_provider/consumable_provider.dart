@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
@@ -35,7 +36,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     } catch (e) {
       if (e.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
+        log('userLogout on addConsumable \n${jsonEncode(e)}');
       }
       log('request was incompleted this was the error-> $e');
       return result;
@@ -59,7 +60,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     } catch (e) {
       if (e.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
+        log('userLogout on uploadConsumableEntry \n${jsonEncode(e)}');
       }
       log('request was incompleted this was the error-> $e');
     }

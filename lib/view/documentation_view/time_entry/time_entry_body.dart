@@ -1,18 +1,19 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/constants/apptheme/app_colors.dart';
-import 'package:handwerker_app/constants/utiltis.dart';
-import 'package:handwerker_app/models/project_models/project_list_vm/project_list.dart';
-import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
-import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
-import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/service_provider.dart';
-import 'package:handwerker_app/provider/doku_provider/time_provider.dart';
-import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
-import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/view/documentation_view/time_entry/widgets/choose_customer_widget.dart';
 
+import '../../../constants/apptheme/app_colors.dart';
+import '../../../constants/utiltis.dart';
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
+import '../../../models/service_models/service_list_vm/service_list.dart';
+import '../../../models/time_models/time_entries_vm/time_entries_vm.dart';
+import '../../../provider/doku_provider/project_vm_provider.dart';
+import '../../../provider/doku_provider/service_provider.dart';
+import '../../../provider/doku_provider/time_provider.dart';
 import '../../../provider/settings_provider/settings_provider.dart';
+import '../../widgets/symetric_button_widget.dart';
+import '../../widgets/textfield_widgets/labelt_textfield.dart';
 
 class TimeEntriesBody extends ConsumerStatefulWidget {
   const TimeEntriesBody({super.key});
@@ -26,12 +27,16 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   final TextEditingController _startController = TextEditingController();
-  bool isServiceSet = false, _isProjectSet = false;
+  bool isServiceSet = false;
   TimeOfDay? selectedTime;
   late final dictionary = ref.watch(settingsProv).dictionary;
+
   ServiceListVM? _choosenService;
-  ProjectListVM? _choosenProject;
+  ProjectShortVM? _chosenProject;
   late TimeEntriesVM _entry;
+
+  //List<ProjectShortVM> _projectsFormCustomer = [];
+  //List<CustomerShortDM> _customers = [];
 
   @override
   void initState() {
@@ -57,7 +62,29 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
           _dayInputRow(),
           _timeInputRow(),
           // TODO: create a standart for saving projekt Customer with seperate with "/"
-          _buildCustomerProjectField(),
+          // _buildCustomerDropdown(),
+          ref.watch(projectVMProvider.notifier).isError
+              ? Text('Fehler')
+              : ref.watch(projectVMProvider).isEmpty
+                  ? Text(ref.watch(settingsProv).dictionary.loadData)
+                  : ChooseCustomer(
+                      title: ref.watch(settingsProv).dictionary.projectUpperCase,
+                      value: ref.watch(projectVMProvider).first,
+                      items: ref
+                          .watch(projectVMProvider)
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Text(e.title ?? 'Kein Kitel'),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (e) =>
+                          ref.read(projectVMProvider.notifier).updateProject(e as ProjectShortVM),
+                    ),
           _buildServiceDropdown(),
           _buildDescription(),
           const SizedBox(height: 46),
@@ -73,78 +100,35 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
     );
   }
 
-  Widget _buildCustomerProjectField() {
-    return ref.watch(projectVMProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox.expand(
-              child: Center(child: Text('Etwas lief schief')),
-            );
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.read(projectVMProvider.notifier).loadpProject();
-            }
-            final projects = data;
-            if (projects != null && !_isProjectSet) {
-              setState(() {
-                _choosenProject = projects.first;
-                _entry = _entry.copyWith(
-                  projectID: projects.first.id,
-                  projektTitle: projects.first.title,
-                );
-                _isProjectSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(dictionary.customerProject,
-                        style: Theme.of(context).textTheme.labelMedium),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _choosenProject,
-                      items: projects
-                          ?.map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(' ${e.title}'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() {
-                          _choosenProject = e!;
-                          _entry = _entry.copyWith(
-                            projectID: e.id,
-                            projektTitle: e.title,
-                          );
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-  }
+  // Widget _buildCustomerProjectField() {
+  //   return ref.watch(projectVMProvider).isEmpty
+  //       ? const WaitingMessageWidget('lade Projekte')
+  //       :
+  // .when(
+  //       error: (error, stackTrace) {
+  //         log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
+  //         return const SizedBox.expand(
+  //           child: Center(child: Text('Etwas lief schief')),
+  //         );
+  //       },
+  //       loading: () => const CircularProgressIndicator.adaptive(),
+  //       data: (data) {
+  //         if (data == null) {
+  //           ref.read(projectVMProvider.notifier).loadpProject();
+  //         }
+  //         final projects = data;
+  //         if (projects != null && !_isProjectSet) {
+  //           setState(() {
+  //             _choosenProject = projects.first;
+  //             _entry = _entry.copyWith(
+  //               projectID: projects.first.id,
+  //               projektTitle: projects.first.title,
+  //             );
+  //             _isProjectSet = true;
+  //           });
+  //         }
+
+  // }
 
   Widget _buildDescription() => LabeldTextfield(
         heigt: 80,
@@ -304,7 +288,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         ),
       );
   _checkAndSendEntry(BuildContext context) {
-    if (_choosenProject == null || _choosenService == null) {
+    if (_chosenProject == null || _choosenService == null) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(child: Text(dictionary.plsChooseCustomerService)),
@@ -328,7 +312,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             _descriptionController.clear();
             _endController.clear();
             _durationController.clear();
-            _choosenProject = null;
+            _chosenProject = null;
             _choosenService = null;
           });
         }

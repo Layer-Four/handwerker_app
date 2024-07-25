@@ -1,4 +1,4 @@
-sealed class Dictionary {
+abstract class Dictionary {
   const Dictionary();
   String get amount;
   String get changeLanguage;
@@ -8,7 +8,7 @@ sealed class Dictionary {
   String get consumables;
   String get createEntry;
   String get createPassword;
-  String get customerProject;
+  String get customer;
   String get darkMode;
   String get date;
   String get description;
@@ -38,6 +38,7 @@ sealed class Dictionary {
   String get plsChooseProject;
   String get plsEnterUserName;
   String get project;
+  String get projectUpperCase;
   String get projectName;
   String get service;
   String get sessionHasEnded;
@@ -57,6 +58,8 @@ sealed class Dictionary {
   String get timeoverview;
 
   String get workOrder;
+
+  String get loadData;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -85,7 +88,7 @@ class EnglishLanguage extends Dictionary {
   String get createPassword => 'Create new password';
 
   @override
-  String get customerProject => 'COSTUMER/PROJECT';
+  String get customer => 'COSTUMER';
 
   @override
   get darkMode => 'Darkmode';
@@ -206,6 +209,12 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Work order';
+
+  @override
+  String get loadData => 'Load data...';
+
+  @override
+  String get projectUpperCase => 'PROJECT';
 }
 
 class GermanLanguage extends Dictionary {
@@ -234,7 +243,7 @@ class GermanLanguage extends Dictionary {
   String get createPassword => 'Erstelle neues Password';
 
   @override
-  String get customerProject => 'KUNDE/PROJEKT';
+  String get customer => 'KUNDE';
 
   @override
   get darkMode => 'Dunkel';
@@ -353,4 +362,10 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get workOrder => 'Aufträge';
+
+  @override
+  String get loadData => 'Lade Daten...';
+
+  @override
+  String get projectUpperCase => 'PROJEKT';
 }

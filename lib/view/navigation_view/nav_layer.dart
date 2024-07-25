@@ -22,11 +22,7 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
   bool _firstLoad = true;
   @override
   Widget build(BuildContext context) {
-    if (_firstLoad) {
-      setState(() {
-        _firstLoad = false;
-      });
-    }
+    if (_firstLoad) setState(() => _firstLoad = false);
     final provider = ref.watch(viewProvider);
     final notifier = ref.read(viewProvider.notifier);
     return Scaffold(
@@ -54,9 +50,7 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
       ),
       bottomNavigationBar: AppNavigationBar(
         index: provider.index,
-        onChangedTab: (index) {
-          notifier.state = provider.views(index);
-        },
+        onChangedTab: (index) => notifier.state = provider.views(index),
       ),
     );
   }
