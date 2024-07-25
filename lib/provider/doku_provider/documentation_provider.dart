@@ -56,6 +56,8 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     if (state.docu.createDate == null) return false;
     final FormData formData = _buildFormData();
     try {
+      // final response = await Dio()
+      //     .post('https://r-wa-happ-be.azurewebsites.net/api/userProjectDay/create', data: formData);
       final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
         log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
@@ -180,30 +182,31 @@ class ProjectNotifer extends Notifier<DocumentationState> {
       'description': entry.description,
     });
 
-    formData.files.addAll(
-      files.map(
-        (e) => MapEntry(
-          e.name,
-          MultipartFile.fromFileSync(
-            e.path,
-            filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png',
-            // contentType: MediaType('image', 'png'),
-            // contentType: MediaType.parse(e.mimeType ?? 'image/png'),
-          ),
-        ),
-      ),
-    );
-    // for (var i = 0; i < files.length; i++) {
-    //   final XFile file = files[i];
-    //   try {
-    //     final multiPartFile = MultipartFile.fromFileSync(
-    //       file.path,
-    //       filename: file.name,
-    //       contentType: MediaType('image', 'png'),
-    //     );
-    //     formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
-    return formData;
-    // } catch (e) {
-    //   log('Error reading file: $e');
+    // formData.files.addAll(
+    //   files.map(
+    //     (e) => MapEntry(
+    //       e.name,
+    //       MultipartFile.fromFileSync(
+    //         e.path,
+    //         filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.jpg',
+    //         // contentType: MediaType('image', 'png'),
+    //         // contentType: MediaType.parse(e.mimeType ?? 'image/png'),
+    //       ),
+    //     ),
+    //   ),
+    // );
+    try {
+      for (var i = 0; i < files.length; i++) {
+        final XFile file = files[i];
+        final multiPartFile = MultipartFile.fromFileSync(
+          file.path,
+          filename: file.name,
+        );
+        formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
+      }
+      return formData;
+    } catch (e) {
+      log('Error reading file: $e');
+    }
   }
 }
