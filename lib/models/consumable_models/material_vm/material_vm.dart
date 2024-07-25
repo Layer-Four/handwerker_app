@@ -6,11 +6,12 @@ part 'material_vm.g.dart';
 @freezed
 class ConsumeableVM with _$ConsumeableVM {
   const factory ConsumeableVM({
-    required String name,
+    String? name,
     required int id,
-    required double amount,
+   required double amount,
     required double price,
     required String materialUnitName,
+
   }) = _ConsumeableVM;
 
   factory ConsumeableVM.fromJson(Map<String, dynamic> json) => _$ConsumeableVMFromJson(json);

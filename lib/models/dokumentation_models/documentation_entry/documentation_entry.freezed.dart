@@ -23,7 +23,8 @@ mixin _$DocumentationEntry {
   int? get id => throw _privateConstructorUsedError;
   int? get projectID => throw _privateConstructorUsedError;
   String? get projectName => throw _privateConstructorUsedError;
-  DateTime get createDate => throw _privateConstructorUsedError;
+  DateTime? get createDate => throw _privateConstructorUsedError;
+  String? get signature => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
@@ -43,7 +44,8 @@ abstract class $DocumentationEntryCopyWith<$Res> {
       {int? id,
       int? projectID,
       String? projectName,
-      DateTime createDate,
+      DateTime? createDate,
+      String? signature,
       List<String> imageUrl,
       String? description});
 }
@@ -64,7 +66,8 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
     Object? id = freezed,
     Object? projectID = freezed,
     Object? projectName = freezed,
-    Object? createDate = null,
+    Object? createDate = freezed,
+    Object? signature = freezed,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
@@ -81,10 +84,14 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
           ? _value.projectName
           : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
-      createDate: null == createDate
+      createDate: freezed == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
+      signature: freezed == signature
+          ? _value.signature
+          : signature // ignore: cast_nullable_to_non_nullable
+              as String?,
       imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -109,7 +116,8 @@ abstract class _$$DocumentationEntryImplCopyWith<$Res>
       {int? id,
       int? projectID,
       String? projectName,
-      DateTime createDate,
+      DateTime? createDate,
+      String? signature,
       List<String> imageUrl,
       String? description});
 }
@@ -128,7 +136,8 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? projectID = freezed,
     Object? projectName = freezed,
-    Object? createDate = null,
+    Object? createDate = freezed,
+    Object? signature = freezed,
     Object? imageUrl = null,
     Object? description = freezed,
   }) {
@@ -145,10 +154,14 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
           ? _value.projectName
           : projectName // ignore: cast_nullable_to_non_nullable
               as String?,
-      createDate: null == createDate
+      createDate: freezed == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
+      signature: freezed == signature
+          ? _value.signature
+          : signature // ignore: cast_nullable_to_non_nullable
+              as String?,
       imageUrl: null == imageUrl
           ? _value._imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
@@ -168,7 +181,8 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
       {this.id,
       this.projectID,
       this.projectName,
-      required this.createDate,
+      this.createDate,
+      this.signature,
       final List<String> imageUrl = const <String>[],
       this.description})
       : _imageUrl = imageUrl;
@@ -183,7 +197,9 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
   @override
   final String? projectName;
   @override
-  final DateTime createDate;
+  final DateTime? createDate;
+  @override
+  final String? signature;
   final List<String> _imageUrl;
   @override
   @JsonKey()
@@ -198,7 +214,7 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
 
   @override
   String toString() {
-    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, imageUrl: $imageUrl, description: $description)';
+    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, signature: $signature, imageUrl: $imageUrl, description: $description)';
   }
 
   @override
@@ -213,6 +229,8 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
                 other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
+            (identical(other.signature, signature) ||
+                other.signature == signature) &&
             const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
             (identical(other.description, description) ||
                 other.description == description));
@@ -220,8 +238,15 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, projectID, projectName,
-      createDate, const DeepCollectionEquality().hash(_imageUrl), description);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      projectID,
+      projectName,
+      createDate,
+      signature,
+      const DeepCollectionEquality().hash(_imageUrl),
+      description);
 
   @JsonKey(ignore: true)
   @override
@@ -243,7 +268,8 @@ abstract class _DocumentationEntry implements DocumentationEntry {
       {final int? id,
       final int? projectID,
       final String? projectName,
-      required final DateTime createDate,
+      final DateTime? createDate,
+      final String? signature,
       final List<String> imageUrl,
       final String? description}) = _$DocumentationEntryImpl;
 
@@ -257,7 +283,9 @@ abstract class _DocumentationEntry implements DocumentationEntry {
   @override
   String? get projectName;
   @override
-  DateTime get createDate;
+  DateTime? get createDate;
+  @override
+  String? get signature;
   @override
   List<String> get imageUrl;
   @override

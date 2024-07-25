@@ -12,6 +12,7 @@ _$ConsumeableVMImpl _$$ConsumeableVMImplFromJson(Map<String, dynamic> json) => _
       amount: (json['amount'] as num).toDouble(),
       price: (json['price'] as num).toDouble(),
       materialUnitName: json['materialUnitName'] as String,
+
     );
 
 Map<String, dynamic> _$$ConsumeableVMImplToJson(_$ConsumeableVMImpl instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$ConsumeableVMImplToJson(_$ConsumeableVMImpl instance) =>
       'amount': instance.amount,
       'price': instance.price,
       'materialUnitName': instance.materialUnitName,
+
     };
