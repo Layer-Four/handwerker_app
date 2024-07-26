@@ -27,7 +27,7 @@ class TimeEntry with _$TimeEntry {
 
   factory TimeEntry.fromTimeEntriesVM(TimeEntriesVM e) => TimeEntry(
         customerName: e.customerName,
-        date: e.date,
+        date: e.date!,
         description: e.description,
         duration: e.duration,
         endTime: e.endTime,
@@ -38,7 +38,7 @@ class TimeEntry with _$TimeEntry {
         projektTitle: e.projektTitle,
         serviceID: e.serviceID,
         serviceTitle: e.serviceTitle,
-        startTime: e.startTime,
+        startTime: e.startTime!,
         type: e.type.index,
         userID: e.userID,
       );

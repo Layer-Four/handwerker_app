@@ -8,7 +8,7 @@ part 'time_entries_vm.g.dart';
 class TimeEntriesVM with _$TimeEntriesVM {
   const factory TimeEntriesVM({
     @Default('') String customerName,
-    required DateTime date,
+    DateTime? date,
     String? description,
     int? duration,
     DateTime? endTime,
@@ -19,7 +19,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
     String? projektTitle,
     int? serviceID,
     String? serviceTitle,
-    required DateTime startTime,
+    DateTime? startTime,
     @Default(TimeEntryType.timeEntry) TimeEntryType type,
     String? userID,
   }) = _TimeEntriesVM;

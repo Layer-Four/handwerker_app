@@ -35,9 +35,6 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   ProjectShortVM? _chosenProject;
   late TimeEntriesVM _entry;
 
-  //List<ProjectShortVM> _projectsFormCustomer = [];
-  //List<CustomerShortDM> _customers = [];
-
   @override
   void initState() {
     super.initState();
@@ -343,9 +340,9 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                 final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
                 _entry = _entry.copyWith(
                     startTime: DateTime(
-                  _entry.date.year,
-                  _entry.date.month,
-                  _entry.date.day,
+                  _entry.date!.year,
+                  _entry.date!.month,
+                  _entry.date!.day,
                   time.hour,
                   time.minute,
                 ));

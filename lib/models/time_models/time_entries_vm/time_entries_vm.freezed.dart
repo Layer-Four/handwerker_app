@@ -21,7 +21,7 @@ TimeEntriesVM _$TimeEntriesVMFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TimeEntriesVM {
   String get customerName => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
+  DateTime? get date => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   DateTime? get endTime => throw _privateConstructorUsedError;
@@ -32,7 +32,7 @@ mixin _$TimeEntriesVM {
   String? get projektTitle => throw _privateConstructorUsedError;
   int? get serviceID => throw _privateConstructorUsedError;
   String? get serviceTitle => throw _privateConstructorUsedError;
-  DateTime get startTime => throw _privateConstructorUsedError;
+  DateTime? get startTime => throw _privateConstructorUsedError;
   TimeEntryType get type => throw _privateConstructorUsedError;
   String? get userID => throw _privateConstructorUsedError;
 
@@ -50,7 +50,7 @@ abstract class $TimeEntriesVMCopyWith<$Res> {
   @useResult
   $Res call(
       {String customerName,
-      DateTime date,
+      DateTime? date,
       String? description,
       int? duration,
       DateTime? endTime,
@@ -61,7 +61,7 @@ abstract class $TimeEntriesVMCopyWith<$Res> {
       String? projektTitle,
       int? serviceID,
       String? serviceTitle,
-      DateTime startTime,
+      DateTime? startTime,
       TimeEntryType type,
       String? userID});
 }
@@ -80,7 +80,7 @@ class _$TimeEntriesVMCopyWithImpl<$Res, $Val extends TimeEntriesVM>
   @override
   $Res call({
     Object? customerName = null,
-    Object? date = null,
+    Object? date = freezed,
     Object? description = freezed,
     Object? duration = freezed,
     Object? endTime = freezed,
@@ -91,7 +91,7 @@ class _$TimeEntriesVMCopyWithImpl<$Res, $Val extends TimeEntriesVM>
     Object? projektTitle = freezed,
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
-    Object? startTime = null,
+    Object? startTime = freezed,
     Object? type = null,
     Object? userID = freezed,
   }) {
@@ -100,10 +100,10 @@ class _$TimeEntriesVMCopyWithImpl<$Res, $Val extends TimeEntriesVM>
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
+      date: freezed == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -144,10 +144,10 @@ class _$TimeEntriesVMCopyWithImpl<$Res, $Val extends TimeEntriesVM>
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      startTime: null == startTime
+      startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -170,7 +170,7 @@ abstract class _$$TimeEntriesVMImplCopyWith<$Res>
   @useResult
   $Res call(
       {String customerName,
-      DateTime date,
+      DateTime? date,
       String? description,
       int? duration,
       DateTime? endTime,
@@ -181,7 +181,7 @@ abstract class _$$TimeEntriesVMImplCopyWith<$Res>
       String? projektTitle,
       int? serviceID,
       String? serviceTitle,
-      DateTime startTime,
+      DateTime? startTime,
       TimeEntryType type,
       String? userID});
 }
@@ -198,7 +198,7 @@ class __$$TimeEntriesVMImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? customerName = null,
-    Object? date = null,
+    Object? date = freezed,
     Object? description = freezed,
     Object? duration = freezed,
     Object? endTime = freezed,
@@ -209,7 +209,7 @@ class __$$TimeEntriesVMImplCopyWithImpl<$Res>
     Object? projektTitle = freezed,
     Object? serviceID = freezed,
     Object? serviceTitle = freezed,
-    Object? startTime = null,
+    Object? startTime = freezed,
     Object? type = null,
     Object? userID = freezed,
   }) {
@@ -218,10 +218,10 @@ class __$$TimeEntriesVMImplCopyWithImpl<$Res>
           ? _value.customerName
           : customerName // ignore: cast_nullable_to_non_nullable
               as String,
-      date: null == date
+      date: freezed == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -262,10 +262,10 @@ class __$$TimeEntriesVMImplCopyWithImpl<$Res>
           ? _value.serviceTitle
           : serviceTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      startTime: null == startTime
+      startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -283,7 +283,7 @@ class __$$TimeEntriesVMImplCopyWithImpl<$Res>
 class _$TimeEntriesVMImpl extends _TimeEntriesVM {
   const _$TimeEntriesVMImpl(
       {this.customerName = '',
-      required this.date,
+      this.date,
       this.description,
       this.duration,
       this.endTime,
@@ -294,7 +294,7 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
       this.projektTitle,
       this.serviceID,
       this.serviceTitle,
-      required this.startTime,
+      this.startTime,
       this.type = TimeEntryType.timeEntry,
       this.userID})
       : super._();
@@ -306,7 +306,7 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
   @JsonKey()
   final String customerName;
   @override
-  final DateTime date;
+  final DateTime? date;
   @override
   final String? description;
   @override
@@ -328,7 +328,7 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
   @override
   final String? serviceTitle;
   @override
-  final DateTime startTime;
+  final DateTime? startTime;
   @override
   @JsonKey()
   final TimeEntryType type;
@@ -409,7 +409,7 @@ class _$TimeEntriesVMImpl extends _TimeEntriesVM {
 abstract class _TimeEntriesVM extends TimeEntriesVM {
   const factory _TimeEntriesVM(
       {final String customerName,
-      required final DateTime date,
+      final DateTime? date,
       final String? description,
       final int? duration,
       final DateTime? endTime,
@@ -420,7 +420,7 @@ abstract class _TimeEntriesVM extends TimeEntriesVM {
       final String? projektTitle,
       final int? serviceID,
       final String? serviceTitle,
-      required final DateTime startTime,
+      final DateTime? startTime,
       final TimeEntryType type,
       final String? userID}) = _$TimeEntriesVMImpl;
   const _TimeEntriesVM._() : super._();
@@ -431,7 +431,7 @@ abstract class _TimeEntriesVM extends TimeEntriesVM {
   @override
   String get customerName;
   @override
-  DateTime get date;
+  DateTime? get date;
   @override
   String? get description;
   @override
@@ -453,7 +453,7 @@ abstract class _TimeEntriesVM extends TimeEntriesVM {
   @override
   String? get serviceTitle;
   @override
-  DateTime get startTime;
+  DateTime? get startTime;
   @override
   TimeEntryType get type;
   @override

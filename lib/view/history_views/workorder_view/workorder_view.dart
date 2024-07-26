@@ -36,10 +36,10 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
     }
     setState(() {
       _choosenList = _allAssignemts
-          .where((e) => e.date.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
+          .where((e) => e.date!.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
           .toList();
       _choosenList.sort((a, b) =>
-          b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch));
+          b.startTime!.millisecondsSinceEpoch.compareTo(a.startTime!.millisecondsSinceEpoch));
     });
     return;
   }
@@ -54,8 +54,8 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
           setState(
             () {
               _choosenList = _allAssignemts
-                  .where(
-                      (e) => e.date.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
+                  .where((e) =>
+                      e.date!.millisecondsSinceEpoch >= DateTime.now().millisecondsSinceEpoch)
                   .toList();
             },
           );
@@ -80,7 +80,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
                     onTap: () => setState(() {
                       _choosenList = _allAssignemts
                           .where((e) =>
-                              e.date.millisecondsSinceEpoch >=
+                              e.date!.millisecondsSinceEpoch >=
                               DateTime.now().millisecondsSinceEpoch)
                           .toList();
                     }),
@@ -150,7 +150,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
               setState(() {
                 _choosenList = _allAssignemts
                     .where(
-                      (e) => e.date.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch,
+                      (e) => e.date!.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch,
                     )
                     .toList();
               });
@@ -160,7 +160,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
   }
 
   Widget _buildHeadLine(TimeEntriesVM e) {
-    final dateString = '${e.date.day}.${e.date.month},${e.date.year}';
+    final dateString = '${e.date!.day}.${e.date!.month},${e.date!.year}';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +211,7 @@ class _WorkOrderViewBodyState extends ConsumerState<WorkOrderViewBody> {
   }
 
   Row _buildAlterCardHeadLine(TimeEntriesVM e) {
-    final dateString = '${e.date.day}.${e.date.month}.${e.date.year}';
+    final dateString = '${e.date!.day}.${e.date!.month}.${e.date!.year}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -261,7 +261,7 @@ class AssigmentInfoCard extends ConsumerWidget {
   String getTimeString() {
     final begin = entry.startTime;
     final ende = entry.endTime;
-    return '${begin.hour < 10 ? '0${begin.hour}' : '${begin.hour}'}:${begin.minute < 10 ? '0${begin.minute}' : '${begin.minute}'} - ${ende?.hour != null && ende!.hour < 10 ? '0${ende.hour}' : '${ende?.hour ?? ''}'}:${ende?.minute != null && ende!.minute < 10 ? '0${ende.minute}' : '${ende?.minute ?? ''}'}';
+    return '${begin!.hour < 10 ? '0${begin.hour}' : '${begin.hour}'}:${begin.minute < 10 ? '0${begin.minute}' : '${begin.minute}'} - ${ende?.hour != null && ende!.hour < 10 ? '0${ende.hour}' : '${ende?.hour ?? ''}'}:${ende?.minute != null && ende!.minute < 10 ? '0${ende.minute}' : '${ende?.minute ?? ''}'}';
   }
 
   @override

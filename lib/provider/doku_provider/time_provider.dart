@@ -57,7 +57,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
       data.map((e) => e.asMap());
       final newstate =
           data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
-      newstate.sort((a, b) => a.date.compareTo(b.date));
+      newstate.sort((a, b) => a.date!.compareTo(b.date!));
       state = newstate;
       return;
     } catch (e) {
@@ -71,7 +71,7 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     if (state.isEmpty) return [];
 
     allEntries.sort(
-      (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
+      (a, b) => b.startTime!.millisecondsSinceEpoch.compareTo(a.startTime!.millisecondsSinceEpoch),
     );
     return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
   }
@@ -81,19 +81,19 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
     List<Workday> listOfWorkdays = [];
     for (var e in state) {
       if (listOfWorkdays.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
         final date = listOfWorkdays.firstWhere((element) =>
-            element.date.day == e.date.day &&
-            element.date.month == e.date.month &&
-            element.date.year == e.date.year);
+            element.date.day == e.date!.day &&
+            element.date.month == e.date!.month &&
+            element.date.year == e.date!.year);
         date.timeEntries.add(e);
       } else if (!listOfWorkdays.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
-        listOfWorkdays.add(Workday(date: e.date, timeEntries: [e]));
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
+        listOfWorkdays.add(Workday(date: e.date!, timeEntries: [e]));
       } else {
         log('no matches');
       }

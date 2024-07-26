@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'nav_tab_icon.dart';
@@ -32,7 +30,6 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
                 icon: const Icon(Icons.note_alt_outlined),
                 isSelected: (widget.index == 1),
                 onTap: () {
-                  log('message ');
                   widget.onChangedTab(1);
                 },
               ),
