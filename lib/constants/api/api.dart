@@ -93,7 +93,7 @@ class Api {
         }
         // TODO: think about retry logic for wake up database
         if (error.response?.statusCode == 400) {
-          deleteToken();
+          // deleteToken();
           log('DB return ${jsonEncode(error)}');
           return;
         }

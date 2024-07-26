@@ -52,9 +52,15 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     return;
   }
 
+  deleteImage() {
+    final newDoc = state.docu.copyWith(imageUrl: []);
+    state = state.copyWith(editedDoc: newDoc);
+    return;
+  }
+
   Future<bool> createDocumentationEntry() async {
     if (state.docu.createDate == null) return false;
-    final FormData formData = _buildFormData();
+    final FormData formData = await _buildFormData();
     try {
       // final response = await Dio()
       //     .post('https://r-wa-happ-be.azurewebsites.net/api/userProjectDay/create', data: formData);
@@ -89,7 +95,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     final oldDoc = state.docu;
     state = state.copyWith(
       editedProject: () => e,
-      editedDoc: oldDoc.copyWith(projectID: e.id, projectName: e.title),
+      editedDoc: oldDoc.copyWith(projectID: e.id),
     );
   }
 
@@ -138,7 +144,6 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     final newDoc = state.docu.copyWith(
       createDate: createDate ?? state.docu.createDate,
       projectID: project?.id,
-      projectName: project?.title,
       imageUrl: imageUrl ?? state.docu.imageUrl,
       signature: newSignature != null ? String.fromCharCodes(newSignature) : state.docu.signature,
       description: description ?? state.docu.description,
@@ -146,67 +151,43 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     state = state.copyWith(editedDoc: newDoc);
   }
 
-  _buildFormData() {
+  Future<FormData> _buildFormData() async {
     final entry = state.docu;
     final List<XFile> files = [];
-    entry.imageUrl
-        .map(
-          (e) => files.add(
-            XFile(
-              e,
-              name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
-            ),
-          ),
-        )
-        .toList();
-    if (entry.signature != null) {
-      files.add(
-        XFile.fromData(
-          utf8.encode(entry.signature!),
-          name: '${state.currentCustomer!.companyName}/signature.png',
-          lastModified: DateTime.now(),
-        ),
+
+    for (var path in entry.imageUrl) {
+      final xfile = XFile(
+        path,
+        name:
+            '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
+        mimeType: 'jpeg',
       );
+      files.add(xfile);
     }
-    // for (var path in entry.imageUrl) {
-    //   final xfile = XFile(
-    //     path,
-    //     name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
-    //     mimeType: 'png',
-    //   );
-    //   xFileList.add(xfile);
-    // }
     FormData formData = FormData.fromMap({
       'projectID': entry.projectID,
       'createDate': entry.createDate!.toIso8601String(),
       'description': entry.description,
     });
-
-    // formData.files.addAll(
-    //   files.map(
-    //     (e) => MapEntry(
-    //       e.name,
-    //       MultipartFile.fromFileSync(
-    //         e.path,
-    //         filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.jpg',
-    //         // contentType: MediaType('image', 'png'),
-    //         // contentType: MediaType.parse(e.mimeType ?? 'image/png'),
-    //       ),
-    //     ),
-    //   ),
-    // );
-    try {
-      for (var i = 0; i < files.length; i++) {
-        final XFile file = files[i];
-        final multiPartFile = MultipartFile.fromFileSync(
-          file.path,
-          filename: file.name,
-        );
-        formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
-      }
-      return formData;
-    } catch (e) {
-      log('Error reading file: $e');
+    for (var i = 0; i < files.length; i++) {
+      final XFile file = files[i];
+      final multiPartFile = MultipartFile.fromFileSync(
+        file.path,
+        filename:
+            '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
+      );
+      formData.files.add(MapEntry('image${i == 0 ? "" : i}', multiPartFile));
     }
+
+    if (entry.signature != null) {
+      final signature = MultipartFile.fromBytes(
+        utf8.encode(entry.signature!),
+        filename: 'digitalSignature/${state.currentCustomer?.companyName ?? ''}.png',
+      );
+      formData.files.add(
+        MapEntry('signitaure/${state.project?.title ?? ''}', signature),
+      );
+    }
+    return formData;
   }
 }
