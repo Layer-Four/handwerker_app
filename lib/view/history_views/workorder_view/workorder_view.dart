@@ -282,7 +282,7 @@ class AssigmentInfoCard extends ConsumerWidget {
                   _labeledInput(
                     context,
                     dictionary.projectName,
-                    entry.customerName,
+                    entry.customerName!,
                   ),
                   Text(
                     getTimeString(),

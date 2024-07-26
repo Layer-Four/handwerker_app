@@ -7,7 +7,7 @@ part 'time_entries_vm.g.dart';
 @freezed
 class TimeEntriesVM with _$TimeEntriesVM {
   const factory TimeEntriesVM({
-    @Default('') String customerName,
+    String? customerName,
     DateTime? date,
     String? description,
     int? duration,
@@ -27,6 +27,14 @@ class TimeEntriesVM with _$TimeEntriesVM {
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
 
   const TimeEntriesVM._();
+  bool isMinfilled() {
+    if (date != null &&
+        startTime != null &&
+        endTime != null &&
+        serviceID != null &&
+        projectID != null) return true;
+    return false;
+  }
 
   factory TimeEntriesVM.fromTimeEntryDM(TimeEntry e) => TimeEntriesVM(
         customerName: e.customerName,

@@ -26,7 +26,7 @@ class TimeEntry with _$TimeEntry {
   const TimeEntry._();
 
   factory TimeEntry.fromTimeEntriesVM(TimeEntriesVM e) => TimeEntry(
-        customerName: e.customerName,
+        customerName: e.customerName!,
         date: e.date!,
         description: e.description,
         duration: e.duration,

@@ -33,19 +33,19 @@ void main() async {
     List<Workday> two = [];
     for (var e in entries) {
       if (two.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
         final date = two.firstWhere((element) =>
-            element.date.day == e.date.day &&
-            element.date.month == e.date.month &&
-            element.date.year == e.date.year);
+            element.date.day == e.date!.day &&
+            element.date.month == e.date!.month &&
+            element.date.year == e.date!.year);
         date.timeEntries.add(e);
       } else if (!two.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
-        two.add(Workday(date: e.date, timeEntries: [e]));
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
+        two.add(Workday(date: e.date!, timeEntries: [e]));
       } else {
         log('no matches');
       }

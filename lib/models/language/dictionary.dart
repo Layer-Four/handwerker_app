@@ -60,6 +60,10 @@ abstract class Dictionary {
   String get workOrder;
 
   String get loadData;
+
+  String get minutesShort;
+
+  String get errorOccured;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -215,6 +219,12 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get projectUpperCase => 'PROJECT';
+
+  @override
+  String get minutesShort => 'min.';
+
+  @override
+  String get errorOccured => 'An error has occurred, please try again or contact support';
 }
 
 class GermanLanguage extends Dictionary {
@@ -368,4 +378,11 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get projectUpperCase => 'PROJEKT';
+
+  @override
+  String get minutesShort => 'min.';
+
+  @override
+  String get errorOccured =>
+      'Ein Fehler ist aufgetreten, bitte versuche es erneut oder wende dich an den Support';
 }

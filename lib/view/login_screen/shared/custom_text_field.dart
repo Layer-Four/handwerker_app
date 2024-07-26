@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextInput extends StatelessWidget {
+class CustomTextInputIrgendwas extends StatelessWidget {
   final TextEditingController controller;
   final String? labelText;
   final bool isPassword;
@@ -9,7 +9,7 @@ class CustomTextInput extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final AutovalidateMode autovalidateMode;
 
-  const CustomTextInput({
+  const CustomTextInputIrgendwas({
     super.key,
     required this.controller,
     this.labelText,
@@ -34,13 +34,10 @@ class CustomTextInput extends StatelessWidget {
         isDense: true,
         suffixIcon: isPassword
             ? IconButton(
-                icon: isVisable
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off),
+                icon: isVisable ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                 onPressed: () {
                   // Toggling password visibility
-                  onChanged
-                      ?.call(""); // Clearing focus to ensure validation occurs
+                  onChanged?.call(""); // Clearing focus to ensure validation occurs
                   onChanged?.call(controller.text); // Restore focus
                 },
               )

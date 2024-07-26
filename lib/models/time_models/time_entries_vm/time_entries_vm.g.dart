@@ -8,7 +8,7 @@ part of 'time_entries_vm.dart';
 
 _$TimeEntriesVMImpl _$$TimeEntriesVMImplFromJson(Map<String, dynamic> json) =>
     _$TimeEntriesVMImpl(
-      customerName: json['customerName'] as String? ?? '',
+      customerName: json['customerName'] as String?,
       date:
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
       description: json['description'] as String?,

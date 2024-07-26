@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../../constants/api/api.dart';
 import '../../models/customer_models/customer_short_model/customer_short_dm.dart';
 import '../../models/dokumentation_models/documentation_entry/documentation_entry.dart';
-import '../../models/dokumentation_models/documentation_state/documentation_state.dart';
+import '../../models/state_models/documentation_state.dart';
 import '../../models/project_models/project_short_vm/project_short_vm.dart';
 import '../settings_provider/user_provider.dart';
 
@@ -33,7 +33,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
 
   /// Load projects from Database and filtered with customerID.
   /// for Filtering give unnamed customerID and update DocumentationState.projects
-  void getProjectForCustomer(int customerId) async {
+  void getProjectsForCustomer(int customerId) async {
     try {
       final response = await _api.getProjectByCustomerID(customerId);
       if (response.statusCode != 200) {
@@ -106,7 +106,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   /// Update customers ttribute from DocumentationState.currentCustomer
   void updateCustomer(CustomerShortDM? e) {
     if (e == null || e == state.currentCustomer) return;
-    getProjectForCustomer(e.id);
+    getProjectsForCustomer(e.id);
     state = state.copyWith(
       editedCustomer: () => e,
       editedProject: () => null,
@@ -135,7 +135,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   }
 
   /// Update Documentation entry in DocumentationState object.
-  updateDocumentation({
+  void updateDocumentation({
     DateTime? createDate,
     List<String>? imageUrl,
     Uint8List? newSignature,
