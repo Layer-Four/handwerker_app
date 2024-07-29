@@ -1,7 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-enum MainViews { timeEntry, doku, history, user, logOut }
+enum MainViews {
+  // timeEntry,
+  doku,
+  history,
+  user,
+  logOut,
+  timeEntry
+}
 
 final viewProvider = StateProvider<MainViews>((ref) {
   if (ref.watch(userProvider).userToken.isEmpty) return MainViews.logOut;
@@ -25,7 +32,11 @@ extension MainViewsExention on MainViews {
       };
 }
 
-enum DokuViews { timeEntry, project, consumables }
+enum DokuViews {
+  timeEntry,
+  project,
+  consumables,
+}
 
 final dokuViewProvider = StateProvider<DokuViews>((ref) => DokuViews.timeEntry);
 

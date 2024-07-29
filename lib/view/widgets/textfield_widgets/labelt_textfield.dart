@@ -10,6 +10,7 @@ class LabeldTextfield extends StatelessWidget {
   final TextInputType textInputType;
   final TextInputAction textInputAction;
   final Function()? onTap;
+  final Function()? onTapOutside;
   final String? hintText;
   const LabeldTextfield(
       {super.key,
@@ -18,6 +19,7 @@ class LabeldTextfield extends StatelessWidget {
       this.heigt = 35,
       this.width,
       this.onChanged,
+      this.onTapOutside,
       this.textInputType = TextInputType.text,
       this.textInputAction = TextInputAction.done,
       this.hintText,
@@ -40,6 +42,7 @@ class LabeldTextfield extends StatelessWidget {
             height: heigt,
             width: width,
             child: TextField(
+              onTapOutside: (event) => onTapOutside,
               readOnly: controller == null,
               // enableInteractiveSelection: true,
               controller: controller,

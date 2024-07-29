@@ -53,20 +53,14 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                             child: Text(
                               'name des Consumables',
                               // consumables[index].name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: AppColor.kLightLabelColor),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Text(
                               '${consumables![j].amount} ', //${consumables[index].unitTypeName}
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: AppColor.kLightLabelColor),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],
@@ -74,10 +68,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                     }),
                   )
                 : Text('Keine Materialien gefunden',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColor.kLightLabelColor)),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor)),
           )
         ],
       ),
@@ -146,12 +137,10 @@ class _ShowProjectDocumentationState extends State<ShowProjectDocumentation> {
               child: ListView.builder(
                   itemCount: value!.length,
                   itemBuilder: (context, index) {
-                    List<Image> image =
-                        value![index].imagesUrl.map((e) => Image.network(e)).toList();
+                    List<Image> image = value![index].imagesUrl.map((e) => Image.network(e)).toList();
                     return Container(
                       margin: const EdgeInsets.all(0.2),
-                      decoration:
-                          BoxDecoration(border: Border.all(color: AppColor.kTextfieldBorder)),
+                      decoration: BoxDecoration(border: Border.all(color: AppColor.kTextfieldBorder)),
                       height: image.isEmpty ? 65 : 210,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,8 +163,7 @@ class _ShowProjectDocumentationState extends State<ShowProjectDocumentation> {
                                       height: 150,
                                       enableInfiniteScroll: false,
                                       // enlargeCenterPage: true,
-                                      onPageChanged: (index, _) =>
-                                          setState(() => currentIndex = index),
+                                      onPageChanged: (index, _) => setState(() => currentIndex = index),
                                     ),
                                   ),
                                 ),
