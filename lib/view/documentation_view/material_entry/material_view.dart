@@ -14,6 +14,7 @@ import 'package:handwerker_app/provider/settings_provider/settings_provider.dart
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/project_models/project_short_vm/project_short_vm.dart';
 
@@ -25,9 +26,7 @@ class MaterialBody extends ConsumerStatefulWidget {
 }
 
 class _MaterialBodyState extends ConsumerState<MaterialBody> {
-  final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController(text: '1');
-  final TextEditingController _summeryController = TextEditingController();
+  late final TextEditingController _amountController, _dayPickerController, _summeryController;
   late final dictionary = ref.watch(settingsProv).dictionary;
 
   late ConsumealbeEntry _entry;
@@ -42,11 +41,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    setState(() {
-      _entry = ConsumealbeEntry(createDate: now);
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-    });
+    _amountController = TextEditingController(text: '1');
+    _dayPickerController = TextEditingController(
+      text: DateFormat('d.M.y').format(DateTime.now()),
+    );
+    _summeryController = TextEditingController();
+    _entry = ConsumealbeEntry(createDate: DateTime.now());
     _refreshUnits();
     ref.read(materialVMProvider.notifier).loadMaterials();
     ref.read(projectVMProvider.notifier).loadpProject();

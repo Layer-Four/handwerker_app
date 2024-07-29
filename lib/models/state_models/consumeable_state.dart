@@ -19,7 +19,14 @@ class ConsumeableState {
         _allCustomers = customers ?? const <CustomerShortDM>[],
         _selectedProject = project,
         _projectFromCustomers = customersProject ?? const <ProjectShortVM>[],
-        _currentConsumable = material ?? const ConsumeableVM(id: 0);
+        _currentConsumable = material ??
+            const ConsumeableVM(
+              id: -1,
+              name: 'Please change me',
+              amount: 0.1,
+              price: 0.0,
+              materialUnitName: 'Please change me',
+            );
 
 // Getter
   List<CustomerShortDM> get customers => _allCustomers;

@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
+// TODO: think the view change by index. When timeEntry is last than they don't have the correct index
 enum MainViews {
-  // timeEntry,
+  timeEntry,
   doku,
   history,
   user,
   logOut,
-  timeEntry
 }
 
 final viewProvider = StateProvider<MainViews>((ref) {
