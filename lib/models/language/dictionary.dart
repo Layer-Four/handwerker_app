@@ -64,6 +64,9 @@ abstract class Dictionary {
   String get minutesShort;
 
   String get errorOccured;
+  String get enterEmail;
+  String get invalidEmailFormat;
+  String get shortPassword;
 }
 
 class EnglishLanguage extends Dictionary {
@@ -177,6 +180,13 @@ class EnglishLanguage extends Dictionary {
 
   @override
   String get plsEnterUserName => 'Please enter your email';
+  @override
+  String get enterEmail => 'Please enter your email';
+  @override
+  String get invalidEmailFormat => 'Invalid email format';
+
+  @override
+  String get shortPassword => 'Please enter more than 6 characters';
 
   @override
   String get project => 'Project';
@@ -280,8 +290,6 @@ class GermanLanguage extends Dictionary {
   String get english => 'Englisch';
 
   @override
-  String get enterPassword => 'Password';
-  @override
   String get enterUserName => 'Bitte gib dein Nutzternamen ein';
 
   @override
@@ -381,8 +389,15 @@ class GermanLanguage extends Dictionary {
 
   @override
   String get minutesShort => 'min.';
+  @override
+  String get enterEmail => 'Email bitte eingeben';
+  @override
+  String get invalidEmailFormat => 'Ungültige Email-Format';
+  @override
+  String get enterPassword => 'Passwort bitte eingeben';
+  @override
+  String get shortPassword => 'Mehr als 6 Zeichen bitte eingeben';
 
   @override
-  String get errorOccured =>
-      'Ein Fehler ist aufgetreten, bitte versuche es erneut oder wende dich an den Support';
+  String get errorOccured => 'Ein Fehler ist aufgetreten, bitte versuche es erneut oder wende dich an den Support';
 }

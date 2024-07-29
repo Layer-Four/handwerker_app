@@ -47,7 +47,6 @@ class CustomLoginTextField extends ConsumerWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           height: 44,
-          height: 44,
           width: 355,
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -60,7 +59,6 @@ class CustomLoginTextField extends ConsumerWidget {
             obscureText: isPassword && !isPasswordVisible,
             autofillHints: autofillHints,
             decoration: InputDecoration(
-              errorStyle: const TextStyle(height: 0.1, fontSize: 00.1),
               errorStyle: const TextStyle(height: 0.1, fontSize: 00.1),
               filled: true,
               fillColor: Colors.transparent,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/models/language/dictionary.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/shared/custom_textfield.dart';
@@ -23,29 +25,25 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final TextEditingController _passCon = TextEditingController();
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
 
-  String? validateEmail(String? input) {
+  String? validateEmail(String? input, Dictionary dictionary) {
     const emailRegex = r"^[\w_%+-]+@[\w._-]+\.[a-zA-Z]{2,64}$";
 
     if (input == null || input.isEmpty) {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Email bitte eingeben';
+      return dictionary.enterEmail;
     } else if (RegExp(emailRegex).hasMatch(input)) {
       return null;
     } else {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Ungültige Nutzernamen Format';
+      return dictionary.invalidEmailFormat;
     }
   }
 
-  String? validatePassword(String? input) {
+  String? validatePassword(String? input, Dictionary dictionary) {
     if (input == null || input.isEmpty) {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Passwort bitte eingeben';
+      return dictionary.enterPassword;
     } else if (input.length >= 6) {
       return null;
     } else {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return "Mehr als 6 Zeichen bitte eingeben";
+      return dictionary.shortPassword;
     }
   }
 
@@ -58,6 +56,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final dictionary = ref.watch(settingsProv).dictionary;
+
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -99,7 +99,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           CustomLoginTextField(
                             controller: _emailCon,
                             inputAction: TextInputAction.next,
-                            validator: validateEmail,
+                            validator: (input) => validateEmail(input, dictionary),
+
+                            // validator: validateEmail,
                             onFieldSubmitted: (_) => _submitLogin(),
                             onFocusChange: (hasFocus) {
                               setState(() => isUsernameFocused = hasFocus);
@@ -124,7 +126,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             controller: _passCon,
                             isPassword: true,
                             inputAction: TextInputAction.done,
-                            validator: validatePassword,
+                            // validator: validatePassword,
+                            validator: (input) => validatePassword(input, dictionary),
+
                             onFieldSubmitted: (_) => _submitLogin(),
                             onFocusChange: (hasFocus) {
                               setState(() => isPasswordFocused = hasFocus);
@@ -181,6 +185,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         reactionOfLogin(isSuccess);
       } catch (e) {
         setState(() => _isLoaded = false);
+        // ignore: use_build_context_synchronously
         showSnackBar(context, 'Leider hat es nicht geklappt: ${e.toString()}');
       }
     } else {
