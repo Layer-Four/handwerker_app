@@ -1,44 +1,51 @@
-import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
+import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 
-import '../../project_models/project_short_vm/project_short_vm.dart';
-import '../documentation_entry/documentation_entry.dart';
+import '../customer_models/customer_short_model/customer_short_dm.dart';
+import '../project_models/project_short_vm/project_short_vm.dart';
 
-class DocumentationState {
-  final DocumentationEntry _currentDocumentation;
+class ConsumeableState {
+  final ConsumeableVM _currentConsumable;
   final List<CustomerShortDM> _allCustomers;
   final CustomerShortDM? _selectedCustomer;
   final List<ProjectShortVM> _projectFromCustomers;
   final ProjectShortVM? _selectedProject;
-  const DocumentationState({
+  const ConsumeableState({
     List<CustomerShortDM>? customers,
     CustomerShortDM? currentCustomer,
-    DocumentationEntry? doc,
+    ConsumeableVM? material,
     List<ProjectShortVM>? customersProject,
     ProjectShortVM? project,
   })  : _selectedCustomer = currentCustomer,
         _allCustomers = customers ?? const <CustomerShortDM>[],
         _selectedProject = project,
         _projectFromCustomers = customersProject ?? const <ProjectShortVM>[],
-        _currentDocumentation = doc ?? const DocumentationEntry();
+        _currentConsumable = material ??
+            const ConsumeableVM(
+              id: -1,
+              name: 'Please change me',
+              amount: 0.1,
+              price: 0.0,
+              materialUnitName: 'Please change me',
+            );
 
 // Getter
   List<CustomerShortDM> get customers => _allCustomers;
   CustomerShortDM? get currentCustomer => _selectedCustomer;
-  DocumentationEntry get docu => _currentDocumentation;
+  ConsumeableVM get consumable => _currentConsumable;
   ProjectShortVM? get project => _selectedProject;
   List<ProjectShortVM> get customerProject => _projectFromCustomers;
 
-  DocumentationState copyWith({
+  ConsumeableState copyWith({
     List<CustomerShortDM>? newCustomers,
     CustomerShortDM? Function()? editedCustomer,
     ProjectShortVM? Function()? editedProject,
-    DocumentationEntry? editedDoc,
+    ConsumeableVM? editedConsumable,
     List<ProjectShortVM>? newProjects,
   }) =>
-      DocumentationState(
+      ConsumeableState(
         project: editedProject != null ? editedProject() : _selectedProject,
         customersProject: newProjects ?? _projectFromCustomers,
-        doc: editedDoc ?? _currentDocumentation,
+        material: editedConsumable ?? _currentConsumable,
         customers: newCustomers ?? _allCustomers,
         currentCustomer: editedCustomer != null ? editedCustomer() : _selectedCustomer,
       );

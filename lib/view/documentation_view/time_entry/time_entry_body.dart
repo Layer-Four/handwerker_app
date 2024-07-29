@@ -1,19 +1,20 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:handwerker_app/view/documentation_view/time_entry/widgets/choose_customer_widget.dart';
+import 'package:handwerker_app/view/widgets/time_spinner_view_widget.dart';
+import 'package:intl/intl.dart';
 
 import '../../../constants/apptheme/app_colors.dart';
-import '../../../constants/utiltis.dart';
 import '../../../models/project_models/project_short_vm/project_short_vm.dart';
-import '../../../models/service_models/service_list_vm/service_list.dart';
-import '../../../models/time_models/time_entries_vm/time_entries_vm.dart';
+import '../../../provider/doku_provider/documentation_provider.dart';
 import '../../../provider/doku_provider/project_vm_provider.dart';
-import '../../../provider/doku_provider/service_provider.dart';
 import '../../../provider/doku_provider/time_provider.dart';
 import '../../../provider/settings_provider/settings_provider.dart';
+import '../../widgets/custom_datepicker_widget.dart';
+import '../../widgets/custom_textfield_widget.dart';
+import '../../widgets/error_message_widget.dart';
 import '../../widgets/symetric_button_widget.dart';
 import '../../widgets/textfield_widgets/labelt_textfield.dart';
+import 'widgets/choose_customer_widget.dart';
 
 class TimeEntriesBody extends ConsumerStatefulWidget {
   const TimeEntriesBody({super.key});
@@ -22,35 +23,41 @@ class TimeEntriesBody extends ConsumerStatefulWidget {
 }
 
 class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
-  final TextEditingController _dayPickerController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _endController = TextEditingController();
-  final TextEditingController _startController = TextEditingController();
-  bool isServiceSet = false;
-  TimeOfDay? selectedTime;
+  late final TextEditingController _dayPickerCtrl,
+      _descriptionCtrl,
+      _durationCtrl,
+      _endCtrl,
+      _startCtrl;
   late final dictionary = ref.watch(settingsProv).dictionary;
-
-  ServiceListVM? _choosenService;
-  ProjectShortVM? _chosenProject;
-  late TimeEntriesVM _entry;
-
-  //List<ProjectShortVM> _projectsFormCustomer = [];
-  //List<CustomerShortDM> _customers = [];
 
   @override
   void initState() {
     super.initState();
-    ref.read(projectVMProvider.notifier).loadpProject();
-    final now = DateTime.now();
-    _entry = TimeEntriesVM(date: now, startTime: now);
-    final minute = now.minute < 10 ? '0${now.minute}' : '${now.minute}';
-    if (selectedTime == null || _dayPickerController.text.isEmpty) {
-      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-      selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
-    }
+    _dayPickerCtrl = TextEditingController(
+      text: DateFormat('d.M.y').format(DateTime.now()),
+    );
+    _descriptionCtrl = TextEditingController();
+    _durationCtrl = TextEditingController();
+    _endCtrl = TextEditingController();
+    _startCtrl = TextEditingController(
+      text: DateFormat.Hm().format(DateTime.now()),
+    );
+    initEntry();
+  }
 
-    _startController.text = '${selectedTime!.hour}:$minute';
+  initEntry() async => Future.delayed(const Duration(microseconds: 1))
+      .then((_) => ref.read(timeEntriesProvider.notifier).updateEntry(
+            newDate: DateTime.now(),
+            startTime: DateTime.now(),
+          ));
+  @override
+  void dispose() {
+    _dayPickerCtrl.dispose();
+    _descriptionCtrl.dispose();
+    _durationCtrl.dispose();
+    _endCtrl.dispose();
+    _startCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,38 +66,160 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          _dayInputRow(),
-          _timeInputRow(),
-          // TODO: create a standart for saving projekt Customer with seperate with "/"
+          // _dayInputRow(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomDatePicker(
+                width: MediaQuery.of(context).size.width * 0.4,
+                controller: _dayPickerCtrl,
+                initDate: DateTime.now(),
+                title: dictionary.date,
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColor.kTextfieldBorder),
+                    borderRadius: BorderRadius.circular(6)),
+              ),
+              // TODO: implement a wheelspinner for pick Hours and minutes?
+              CustomTextfield(
+                widgetWidth: MediaQuery.of(context).size.width * 0.4,
+                controller: _durationCtrl,
+                title: dictionary.duration,
+                readOnly: true,
+                hintText: dictionary.minutesShort,
+                onTap: () {},
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+            ],
+          ),
+          // _timeInputRow(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomTextfield(
+                title: dictionary.start,
+                widgetWidth: MediaQuery.of(context).size.width * 0.40,
+                controller: _startCtrl,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                onTap: () => _selectStartTime(),
+                onTapOutside: (_) => setState(() {
+                  final result = _checkIfTimeFormat(_startCtrl.text);
+                  _startCtrl.text = result.isEmpty ? _startCtrl.text : result;
+                  if (_endCtrl.text.isNotEmpty) {
+                    _calculateDuration();
+                  }
+                }),
+                onEditingComplete: () => setState(() {
+                  final result = _checkIfTimeFormat(_startCtrl.text);
+                  _startCtrl.text = result.isEmpty ? _startCtrl.text : result;
+                  if (_endCtrl.text.isNotEmpty) {
+                    _calculateDuration();
+                  }
+                }),
+                //  () => showDialog(
+                //   context: context,
+                //   builder: (context) => TimeSpinnerViewWidget(initTime: DateTime.now()),
+                // ),
+              ),
+              CustomTextfield(
+                title: dictionary.end,
+                widgetWidth: MediaQuery.of(context).size.width * 0.40,
+                controller: _endCtrl,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                onTap: () => _selectEndTime(),
+              ),
+            ],
+          ),
           // _buildCustomerDropdown(),
           ref.watch(projectVMProvider.notifier).isError
-              ? Text('Fehler')
-              : ref.watch(projectVMProvider).isEmpty
+              ? Text(dictionary.errorOccured)
+              : ref.watch(timeEntriesProvider).customers.isEmpty
                   ? Text(ref.watch(settingsProv).dictionary.loadData)
                   : ChooseCustomer(
                       title: ref.watch(settingsProv).dictionary.projectUpperCase,
-                      value: ref.watch(projectVMProvider).first,
+                      value: ref.watch(timeEntriesProvider).currentCustomer,
                       items: ref
-                          .watch(projectVMProvider)
+                          .watch(timeEntriesProvider)
+                          .customers
                           .map(
                             (e) => DropdownMenuItem(
                               value: e,
                               child: Padding(
                                 padding: const EdgeInsets.all(4),
-                                child: Text(e.title ?? 'Kein Kitel'),
+                                child: Text(e.companyName),
                               ),
                             ),
                           )
                           .toList(),
                       onChanged: (e) =>
-                          ref.read(projectVMProvider.notifier).updateProject(e as ProjectShortVM),
+                          ref.read(timeEntriesProvider.notifier).updateSeletedCustomer(e),
                     ),
-          _buildServiceDropdown(),
-          _buildDescription(),
-          const SizedBox(height: 46),
+          ChooseCustomer<ProjectShortVM>(
+            title: dictionary.projectUpperCase,
+            items: ref
+                .watch(timeEntriesProvider.notifier)
+                .projects
+                .map(
+                  (e) => DropdownMenuItem(
+                    alignment: Alignment.center,
+                    value: e,
+                    child: Text(' ${e.title}'),
+                  ),
+                )
+                .toList(),
+            onChanged: (e) {
+              ref.read(documentationProvider.notifier).updateProject(e);
+            },
+            value: ref.watch(documentationProvider).project,
+          ),
+          // _buildServiceDropdown(),
+          // ref.watch(timeEntriesProvider).currentService == -1
+          // ? GestureDetector(
+          //     onTap: () => ref.read(timeEntriesProvider.notifier).loadAllServices(),
+          //     child: const Center(
+          //       child: Text('lade'),
+          //     ),
+          //   )              :
+          ChooseCustomer(
+            value: ref.watch(timeEntriesProvider).currentService,
+            items: ref
+                .watch(timeEntriesProvider)
+                .allServices
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Center(
+                      child: Text(e.name),
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (e) => ref.read(timeEntriesProvider.notifier).updateSelectedService(e),
+            title: dictionary.service,
+          ),
+          // _buildDescription(),
+          CustomTextfield(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColor.kTextfieldBorder),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            title: dictionary.description,
+            widgetWidth: MediaQuery.of(context).size.width,
+            textfieldHeight: 80,
+            controller: _descriptionCtrl,
+            isMultiLine: true,
+          ),
           _submitInput(),
           SizedBox(
-            height: 70,
+            height: 40,
             child: Center(
               child: Image.asset('assets/images/img_techtool.png', height: 20),
             ),
@@ -130,86 +259,68 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
 
   // }
 
-  Widget _buildDescription() => LabeldTextfield(
-        heigt: 80,
-        textInputAction: TextInputAction.newline,
-        textInputType: TextInputType.multiline,
-        label: dictionary.description,
-        controller: _descriptionController,
-        onChanged: (value) {
-          setState(() {
-            TextSelection previousSelection = _descriptionController.selection;
-            _descriptionController.text = value;
-            _descriptionController.selection = previousSelection;
-            _entry = _entry.copyWith(description: _descriptionController.text);
-          });
-        },
-      );
+  // Widget _buildDescription() => LabeldTextfield(
+  //       heigt: 80,
+  //       textInputAction: TextInputAction.newline,
+  //       textInputType: TextInputType.multiline,
+  //       label: dictionary.description,
+  //       controller: _descriptionCtrl,
+  // onChanged: (value) {
+  //   setState(() {
+  //     TextSelection previousSelection = _descriptionCtrl.selection;
+  //     _descriptionCtrl.text = value;
+  //     _descriptionCtrl.selection = previousSelection;
+  //     _entry = _entry.copyWith(description: _descriptionCtrl.text);
+  //   });
+  // },
+  // );
 
-  Widget _buildServiceDropdown() {
-    return ref.watch(serviceProvider).when(
-          error: (error, stackTrace) {
-            log('error occurent in buildServieDropdown in TimeEntriesBody-> $error \n\n this was the stack $stackTrace');
-            return const SizedBox(child: Text('Etwas lief schief'));
-          },
-          loading: () => const CircularProgressIndicator.adaptive(),
-          data: (data) {
-            if (data == null) {
-              ref.watch(serviceProvider.notifier).loadServices();
-            }
-            final services = data;
-            if (services != null && !isServiceSet) {
-              setState(() {
-                _choosenService = services.first;
-                _entry = _entry.copyWith(serviceID: services.first.id);
-                isServiceSet = true;
-              });
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      dictionary.service,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox(),
-                      isExpanded: true,
-                      value: _choosenService,
-                      items: services?.map(
-                        (e) {
-                          return DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: e,
-                            child: Text(' ${e.name}'),
-                          );
-                        },
-                      ).toList(),
-                      onChanged: (e) => setState(() {
-                        _choosenService = e!;
-                        _entry = _entry.copyWith(serviceID: e.id, serviceTitle: e.name);
-                      }),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-  }
+  // Widget _buildServiceDropdown() {
+  //   return ref.watch(timeEntriesProvider).allServices.isEmpty
+  //       ? Center(child: Text(dictionary.loadData))
+  //       : Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Padding(
+  //                 padding: const EdgeInsets.all(4.0),
+  //                 child: Text(
+  //                   dictionary.service,
+  //                   style: Theme.of(context).textTheme.labelMedium,
+  //                 ),
+  //               ),
+  //               Container(
+  //                 height: 40,
+  //                 padding: const EdgeInsets.only(left: 20, right: 15),
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(8),
+  //                   border: Border.all(color: AppColor.kTextfieldBorder),
+  //                 ),
+  //                 child: DropdownButton(
+  //                   menuMaxHeight: 350,
+  //                   underline: const SizedBox(),
+  //                   isExpanded: true,
+  //                   value: _choosenService,
+  //                   items: services?.map(
+  //                     (e) {
+  //                       return DropdownMenuItem(
+  //                         alignment: Alignment.center,
+  //                         value: e,
+  //                         child: Text(' ${e.name}'),
+  //                       );
+  //                     },
+  //                   ).toList(),
+  //                   onChanged: (e) => setState(() {
+  //                     _choosenService = e!;
+  //                     _entry = _entry.copyWith(serviceID: e.id, serviceTitle: e.name);
+  //                   }),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  // }
 
   /// Split the [String] values from the TextEdingController with the given
   /// format and build [DateTime] objects with the Compination from
@@ -217,66 +328,78 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
   /// than do  the same translation with _dayPickerController and _endController
   /// and return the different between this [DateTime] object in minutes.
   void _calculateDuration() {
-    if (_startController.text.isEmpty) {
+    if (_startCtrl.text.isEmpty) {
       final nowTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-      _startController.text = '${nowTime.hour}:${nowTime.minute}';
+      _startCtrl.text = '${nowTime.hour}:${nowTime.minute}';
     }
-    final dateAsList = _dayPickerController.text.split('.').map((e) => int.parse(e)).toList();
+    final dateAsList = _dayPickerCtrl.text.split('.').map((e) => int.parse(e)).toList();
     final start = DateTime(
       dateAsList[2],
       dateAsList[1],
       dateAsList[0],
-      int.parse(_startController.text.split(':').first),
-      int.parse(_startController.text.split(':').last),
+      int.parse(_startCtrl.text.split(':').first),
+      int.parse(_startCtrl.text.split(':').last),
     );
     final end = DateTime(
       start.year,
       start.month,
       start.day,
-      int.parse(_endController.text.split(':').first),
-      int.parse(_endController.text.split(':').last),
+      int.parse(_endCtrl.text.split(':').first),
+      int.parse(_endCtrl.text.split(':').last),
     );
     final sum = ((end.millisecondsSinceEpoch - start.millisecondsSinceEpoch) / 1000) ~/ 60;
-    setState(() {
-      _entry = _entry.copyWith(duration: sum);
-    });
+    //  TODO: update TimeProvider
+    // setState(() {
+    //   _entry = _entry.copyWith(duration: sum);
+    // });
     final hours = sum ~/ 60;
     final minutes = sum % 60;
     // TODO: exclude pause?
-    _durationController.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
+    _durationCtrl.text = '$hours:${minutes < 10 ? '0$minutes' : minutes} h.';
   }
 
-  _dayInputRow() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          LabeldTextfield(
-            label: dictionary.date,
-            width: 150,
-            textInputType: TextInputType.datetime,
-            controller: _dayPickerController,
-            onTap: () async {
-              final date = await Utilits.selecetDate(context);
-              if (date != null) {
-                setState(() {
-                  _entry = _entry.copyWith(date: date);
-                  _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-                });
-              }
-            },
-          ),
-          LabeldTextfield(
-            label: dictionary.duration,
-            width: 150,
-            hintText: 'min.',
-            textInputType: TextInputType.number,
-            controller: _durationController,
-            // TODO: implement a wheelspinner for pick Hours and minutes?
-            onChanged: (value) {
-              _entry = _entry.copyWith(duration: int.tryParse(value));
-            },
-          ),
-        ],
+  String _checkIfTimeFormat(String timeString) {
+    final regex = RegExp(r'^([01]?[0-9]|2[0-3]):[0-5]?[0-9]$');
+    if (!regex.hasMatch(timeString)) {
+      showDialog(
+        context: context,
+        builder: (context) => const ErrorMessageWidget('Keine Gültige Uhrzeit'),
       );
+      return '';
+    }
+    return timeString;
+  }
+  // _dayInputRow() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         // LabeldTextfield(
+  //         //   label: dictionary.date,
+  //         //   width: 150,
+  //         //   textInputType: TextInputType.datetime,
+  //         //   controller: _dayPickerCtrl,
+  //         //   onTap: () async {
+  //         //     final date = await Utilits.selecetDate(context);
+  //         //     if (date != null) {
+  //         //       setState(() {
+  //         //         _entry = _entry.copyWith(date: date);
+  //         //         _dayPickerCtrl.text = '${date.day}.${date.month}.${date.year}';
+  //         //       });
+  //         //     }
+  //         //   },
+  //         // ),
+  //         LabeldTextfield(
+  //           label: dictionary.duration,
+  //           width: 150,
+  //           hintText: 'min.',
+  //           textInputType: TextInputType.number,
+  //           controller: _durationCtrl,
+
+  //           onChanged: (value) {
+  //             _entry = _entry.copyWith(duration: int.tryParse(value));
+  //           },
+  //         ),
+  //       ],
+  //     );
 
   Padding _submitInput() => Padding(
         padding: const EdgeInsets.all(16.0),
@@ -288,14 +411,17 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
         ),
       );
   _checkAndSendEntry(BuildContext context) {
-    if (_chosenProject == null || _choosenService == null) {
+    final state = ref.watch(timeEntriesProvider);
+    if ((state.currentCustomer == null) ||
+        (state.project == null) ||
+        (state.currentService == null)) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(child: Text(dictionary.plsChooseCustomerService)),
         ),
       );
     }
-    if (_startController.text.isEmpty || _endController.text.isEmpty) {
+    if (_startCtrl.text.isEmpty || _endCtrl.text.isEmpty) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(child: Text(dictionary.plsChooseBeginEnd)),
@@ -303,17 +429,15 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       );
       // TODO: change wählen to an editable object
     } else {
-      ref.read(timeEntriesProvider.notifier).createTimeEntriesVM(_entry).then((e) {
+      ref.read(timeEntriesProvider.notifier).createTimeEntriesVM().then((e) {
         if (e) {
           setState(() {
             final now = DateTime.now();
-            _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-            _startController.text = '${now.hour}:${now.minute}';
-            _descriptionController.clear();
-            _endController.clear();
-            _durationController.clear();
-            _chosenProject = null;
-            _choosenService = null;
+            _dayPickerCtrl.text = '${now.day}.${now.month}.${now.year}';
+            _startCtrl.text = '${now.hour}:${now.minute}';
+            _descriptionCtrl.clear();
+            _endCtrl.clear();
+            _durationCtrl.clear();
           });
         }
         return ScaffoldMessenger.of(context).showSnackBar(
@@ -333,71 +457,150 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.next,
             label: dictionary.start,
-            controller: _startController,
-            onTap: () async {
-              final time = await showTimePicker(
-                context: context,
-                initialTime: selectedTime!,
-              );
-              if (time != null) {
-                final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
-                _entry = _entry.copyWith(
-                    startTime: DateTime(
-                  _entry.date.year,
-                  _entry.date.month,
-                  _entry.date.day,
-                  time.hour,
-                  time.minute,
-                ));
-                _startController.text = '${time.hour}:$minute';
-              }
-            },
+            controller: _startCtrl,
+            // onTap: () async {
+            //   final time = await showTimePicker(
+            //     context: context,
+            //     initialTime: selectedTime!,
+            //   );
+            //   if (time != null) {
+            //     final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+            //     _entry = _entry.copyWith(
+            //         startTime: DateTime(
+            //       _entry.date!.year,
+            //       _entry.date!.month,
+            //       _entry.date!.day,
+            //       time.hour,
+            //       time.minute,
+            //     ));
+            //     _startCtrl.text = '${time.hour}:$minute';
+            //   }
+            // },
           ),
           LabeldTextfield(
             width: 150,
             textInputType: TextInputType.datetime,
             textInputAction: TextInputAction.done,
             label: dictionary.end,
-            controller: _endController,
+            controller: _endCtrl,
             onTap: () async {
               final time = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay(
-                  hour: int.tryParse(_endController.text.split(':').first) ?? 16,
-                  minute: int.tryParse(_endController.text.split(':').last) ?? 30,
+                  hour: int.tryParse(_endCtrl.text.split(':').first) ?? 16,
+                  minute: int.tryParse(_endCtrl.text.split(':').last) ?? 30,
                 ),
               );
               if (time != null) {
                 final endWithDate = DateTime(
-                  int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
-                  int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
-                  int.tryParse(_dayPickerController.text.split('.')[0]) ?? DateTime.now().day,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[2]) ?? DateTime.now().year,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[1]) ?? DateTime.now().month,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[0]) ?? DateTime.now().day,
                   time.hour,
                   time.minute,
                 );
                 DateTime timeFromStart = DateTime(
-                  int.tryParse(_dayPickerController.text.split('.')[2]) ?? DateTime.now().year,
-                  int.tryParse(_dayPickerController.text.split('.')[1]) ?? DateTime.now().month,
-                  int.tryParse(_dayPickerController.text.split('.')[0]) ?? DateTime.now().day,
-                  int.tryParse(_startController.text.split(':').first) ?? time.hour,
-                  int.tryParse(_startController.text.split(':').first) ?? time.minute,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[2]) ?? DateTime.now().year,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[1]) ?? DateTime.now().month,
+                  int.tryParse(_dayPickerCtrl.text.split('.')[0]) ?? DateTime.now().day,
+                  int.tryParse(_startCtrl.text.split(':').first) ?? time.hour,
+                  int.tryParse(_startCtrl.text.split(':').first) ?? time.minute,
                 );
                 if (endWithDate.millisecondsSinceEpoch < timeFromStart.millisecondsSinceEpoch) {
                   timeFromStart = endWithDate.add(const Duration(minutes: -1));
-                  setState(() {
-                    _startController.text =
-                        '${timeFromStart.hour}:${timeFromStart.minute < 10 ? '0${timeFromStart.minute}' : '${timeFromStart.minute}'}';
-                  });
+                  // setState(() {
+                  _startCtrl.text = DateFormat.Hm().format(timeFromStart);
+                  // '${timeFromStart.hour}:${timeFromStart.minute < 10 ? '0${timeFromStart.minute}' : '${timeFromStart.minute}'}';
+                  // });
                 }
-                setState(() {
-                  _entry = _entry.copyWith(endTime: endWithDate);
-                  final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
-                  _endController.text = '${time.hour}:$minute';
-                });
+                // TODO:need i setState??
+                // setState(() {
+                ref.read(timeEntriesProvider.notifier).updateEntry(endTime: endWithDate);
+                final minute = time.minute < 10 ? '0${time.minute}' : '${time.minute}';
+                _endCtrl.text = '${time.hour}:$minute';
+                // });
                 _calculateDuration();
               }
             },
           ),
         ],
       );
+
+  void _selectEndTime() async {
+    final date = ref.watch(timeEntriesProvider).entry.date!;
+    final initialTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.tryParse(_endCtrl.text.split(':').first) ?? 16,
+      int.tryParse(_endCtrl.text.split(':').last) ?? 30,
+    );
+    final time = await showDialog(
+      context: context,
+      builder: (context) => TimeSpinnerViewWidget(initTime: initialTime),
+    );
+    if (time == null) return;
+    final timeAsList = time.split(':');
+    final hour = int.parse(timeAsList.first);
+    final minute = int.parse(timeAsList.last);
+
+    DateTime endDate = DateTime(date.year, date.month, date.day, hour, minute);
+    final startDate = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.tryParse(_startCtrl.text.split(':').first) ?? 0,
+      int.tryParse(_startCtrl.text.split(':').last) ?? 0,
+    );
+    if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
+      _startCtrl.text = DateFormat.Hm().format(endDate);
+      ref.read(timeEntriesProvider.notifier).updateEntry(startTime: endDate);
+    }
+    final minuteString = endDate.minute < 10 ? '0${endDate.minute}' : '${endDate.minute}';
+    ref.read(timeEntriesProvider.notifier).updateEntry(newDate: endDate);
+
+    _endCtrl.text = '${endDate.hour}:$minuteString';
+    _calculateDuration();
+    return;
+  }
+
+  void _selectStartTime() async {
+    final date = ref.watch(timeEntriesProvider).entry.date!;
+    final initialTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.tryParse(_startCtrl.text.split(':').first) ?? DateTime.now().hour,
+      int.tryParse(_startCtrl.text.split(':').last) ?? DateTime.now().minute,
+    );
+    final time = await showDialog(
+      context: context,
+      builder: (context) => TimeSpinnerViewWidget(initTime: initialTime),
+    );
+    if (time == null) return;
+    final timeAsList = time.split(':');
+    final hour = int.parse(timeAsList.first);
+    final minute = int.parse(timeAsList.last);
+    DateTime startDate = DateTime(date.year, date.month, date.day, hour, minute);
+    if (_endCtrl.text.isNotEmpty) {
+      DateTime endDate = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        int.tryParse(_endCtrl.text.split(':').first) ?? 0,
+        int.tryParse(_endCtrl.text.split(':').last) ?? 0,
+      );
+      if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
+        endDate = startDate;
+        _endCtrl.text = DateFormat.Hm().format(endDate);
+        ref.read(timeEntriesProvider.notifier).updateEntry(endTime: endDate);
+      }
+      _calculateDuration();
+    }
+
+    final minuteString = startDate.minute < 10 ? '0${startDate.minute}' : '${startDate.minute}';
+    ref.read(timeEntriesProvider.notifier).updateEntry(startTime: startDate);
+    _startCtrl.text = '${startDate.hour}:$minuteString';
+    return;
+  }
 }

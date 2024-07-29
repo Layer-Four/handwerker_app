@@ -6,7 +6,7 @@ import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 
-import '../../models/settings_state_model/setttings_state.dart';
+import '../../models/state_models/setttings_state.dart';
 
 class UserView extends ConsumerWidget {
   const UserView({super.key});

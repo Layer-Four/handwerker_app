@@ -10,6 +10,9 @@ class CustomTextfield extends StatelessWidget {
   final double? textfieldHeight;
   final Icon? suffixIcon;
   final bool isFilled;
+  final void Function()? onTap;
+  final void Function()? onEditingComplete;
+  final void Function(PointerDownEvent)? onTapOutside;
 
   ///  If A title is given than show Text Widget with Padding.
   final String? title;
@@ -26,15 +29,20 @@ class CustomTextfield extends StatelessWidget {
   /// In default set MaxLine parameter to 1 when set true is set maxLine to null.
   /// this make the textfield multiline accectable.
   final bool isMultiLine;
+  final bool readOnly;
 
   const CustomTextfield({
     super.key,
     required this.controller,
     this.inputDecoration,
+    this.onTapOutside,
+    this.onEditingComplete,
     this.decoration,
     this.hintText,
     this.isFilled = false,
     this.isMultiLine = false,
+    this.onTap,
+    this.readOnly = false,
     this.suffixIcon,
     this.title,
     this.textfieldHeight,
@@ -70,6 +78,7 @@ class CustomTextfield extends StatelessWidget {
               decoration: decoration,
               height: textfieldHeight,
               child: TextField(
+                readOnly: readOnly,
                 expands: textfieldHeight == null ? false : true,
                 controller: controller,
                 maxLines: isMultiLine ? null : 1,
@@ -90,6 +99,9 @@ class CustomTextfield extends StatelessWidget {
                       ),
                       suffixIcon: suffixIcon,
                     ),
+                onTap: onTap,
+                onTapOutside: onTapOutside,
+                onEditingComplete: onEditingComplete,
               ),
             ),
           ],

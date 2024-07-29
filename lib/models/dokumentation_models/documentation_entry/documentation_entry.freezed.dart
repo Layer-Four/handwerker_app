@@ -20,13 +20,12 @@ DocumentationEntry _$DocumentationEntryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DocumentationEntry {
-  int? get id => throw _privateConstructorUsedError;
-  int? get projectID => throw _privateConstructorUsedError;
-  String? get projectName => throw _privateConstructorUsedError;
   DateTime? get createDate => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError; // int? id,
+  int? get projectID =>
+      throw _privateConstructorUsedError; // String? projectName,
   String? get signature => throw _privateConstructorUsedError;
   List<String> get imageUrl => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,13 +40,11 @@ abstract class $DocumentationEntryCopyWith<$Res> {
       _$DocumentationEntryCopyWithImpl<$Res, DocumentationEntry>;
   @useResult
   $Res call(
-      {int? id,
+      {DateTime? createDate,
+      String? description,
       int? projectID,
-      String? projectName,
-      DateTime? createDate,
       String? signature,
-      List<String> imageUrl,
-      String? description});
+      List<String> imageUrl});
 }
 
 /// @nodoc
@@ -63,31 +60,25 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? projectID = freezed,
-    Object? projectName = freezed,
     Object? createDate = freezed,
+    Object? description = freezed,
+    Object? projectID = freezed,
     Object? signature = freezed,
     Object? imageUrl = null,
-    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectID: freezed == projectID
-          ? _value.projectID
-          : projectID // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectName: freezed == projectName
-          ? _value.projectName
-          : projectName // ignore: cast_nullable_to_non_nullable
-              as String?,
       createDate: freezed == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as int?,
       signature: freezed == signature
           ? _value.signature
           : signature // ignore: cast_nullable_to_non_nullable
@@ -96,10 +87,6 @@ class _$DocumentationEntryCopyWithImpl<$Res, $Val extends DocumentationEntry>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
@@ -113,13 +100,11 @@ abstract class _$$DocumentationEntryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int? id,
+      {DateTime? createDate,
+      String? description,
       int? projectID,
-      String? projectName,
-      DateTime? createDate,
       String? signature,
-      List<String> imageUrl,
-      String? description});
+      List<String> imageUrl});
 }
 
 /// @nodoc
@@ -133,31 +118,25 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? projectID = freezed,
-    Object? projectName = freezed,
     Object? createDate = freezed,
+    Object? description = freezed,
+    Object? projectID = freezed,
     Object? signature = freezed,
     Object? imageUrl = null,
-    Object? description = freezed,
   }) {
     return _then(_$DocumentationEntryImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectID: freezed == projectID
-          ? _value.projectID
-          : projectID // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectName: freezed == projectName
-          ? _value.projectName
-          : projectName // ignore: cast_nullable_to_non_nullable
-              as String?,
       createDate: freezed == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      projectID: freezed == projectID
+          ? _value.projectID
+          : projectID // ignore: cast_nullable_to_non_nullable
+              as int?,
       signature: freezed == signature
           ? _value.signature
           : signature // ignore: cast_nullable_to_non_nullable
@@ -166,10 +145,6 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
           ? _value._imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -178,26 +153,24 @@ class __$$DocumentationEntryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DocumentationEntryImpl implements _DocumentationEntry {
   const _$DocumentationEntryImpl(
-      {this.id,
+      {this.createDate,
+      this.description,
       this.projectID,
-      this.projectName,
-      this.createDate,
       this.signature,
-      final List<String> imageUrl = const <String>[],
-      this.description})
+      final List<String> imageUrl = const <String>[]})
       : _imageUrl = imageUrl;
 
   factory _$DocumentationEntryImpl.fromJson(Map<String, dynamic> json) =>
       _$$DocumentationEntryImplFromJson(json);
 
   @override
-  final int? id;
+  final DateTime? createDate;
+  @override
+  final String? description;
+// int? id,
   @override
   final int? projectID;
-  @override
-  final String? projectName;
-  @override
-  final DateTime? createDate;
+// String? projectName,
   @override
   final String? signature;
   final List<String> _imageUrl;
@@ -210,11 +183,8 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
   }
 
   @override
-  final String? description;
-
-  @override
   String toString() {
-    return 'DocumentationEntry(id: $id, projectID: $projectID, projectName: $projectName, createDate: $createDate, signature: $signature, imageUrl: $imageUrl, description: $description)';
+    return 'DocumentationEntry(createDate: $createDate, description: $description, projectID: $projectID, signature: $signature, imageUrl: $imageUrl)';
   }
 
   @override
@@ -222,31 +192,21 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DocumentationEntryImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.projectID, projectID) ||
-                other.projectID == projectID) &&
-            (identical(other.projectName, projectName) ||
-                other.projectName == projectName) &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.projectID, projectID) ||
+                other.projectID == projectID) &&
             (identical(other.signature, signature) ||
                 other.signature == signature) &&
-            const DeepCollectionEquality().equals(other._imageUrl, _imageUrl) &&
-            (identical(other.description, description) ||
-                other.description == description));
+            const DeepCollectionEquality().equals(other._imageUrl, _imageUrl));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      projectID,
-      projectName,
-      createDate,
-      signature,
-      const DeepCollectionEquality().hash(_imageUrl),
-      description);
+  int get hashCode => Object.hash(runtimeType, createDate, description,
+      projectID, signature, const DeepCollectionEquality().hash(_imageUrl));
 
   @JsonKey(ignore: true)
   @override
@@ -265,31 +225,25 @@ class _$DocumentationEntryImpl implements _DocumentationEntry {
 
 abstract class _DocumentationEntry implements DocumentationEntry {
   const factory _DocumentationEntry(
-      {final int? id,
+      {final DateTime? createDate,
+      final String? description,
       final int? projectID,
-      final String? projectName,
-      final DateTime? createDate,
       final String? signature,
-      final List<String> imageUrl,
-      final String? description}) = _$DocumentationEntryImpl;
+      final List<String> imageUrl}) = _$DocumentationEntryImpl;
 
   factory _DocumentationEntry.fromJson(Map<String, dynamic> json) =
       _$DocumentationEntryImpl.fromJson;
 
   @override
-  int? get id;
-  @override
-  int? get projectID;
-  @override
-  String? get projectName;
-  @override
   DateTime? get createDate;
   @override
+  String? get description;
+  @override // int? id,
+  int? get projectID;
+  @override // String? projectName,
   String? get signature;
   @override
   List<String> get imageUrl;
-  @override
-  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$DocumentationEntryImplCopyWith<_$DocumentationEntryImpl> get copyWith =>

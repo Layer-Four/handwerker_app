@@ -24,23 +24,27 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
 
   String? validateEmail(String? input) {
-    const emailRegex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$";
+    const emailRegex = r"^[\w_%+-]+@[\w._-]+\.[a-zA-Z]{2,64}$";
 
     if (input == null || input.isEmpty) {
+      // TODO: please check if is in Dictonary is a getter and use it or create it
       return 'Email bitte eingeben';
     } else if (RegExp(emailRegex).hasMatch(input)) {
       return null;
     } else {
+      // TODO: please check if is in Dictonary is a getter and use it or create it
       return 'Ungültige Nutzernamen Format';
     }
   }
 
   String? validatePassword(String? input) {
     if (input == null || input.isEmpty) {
+      // TODO: please check if is in Dictonary is a getter and use it or create it
       return 'Passwort bitte eingeben';
     } else if (input.length >= 6) {
       return null;
     } else {
+      // TODO: please check if is in Dictonary is a getter and use it or create it
       return "Mehr als 6 Zeichen bitte eingeben";
     }
   }
@@ -154,7 +158,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
       return;
     } else {
       showSnackBar(
-          context, 'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.');
+        context,
+        'Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.',
+      );
       _passCon.clear();
     }
   }

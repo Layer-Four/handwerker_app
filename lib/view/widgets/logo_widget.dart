@@ -5,7 +5,7 @@ class LogoWidget extends StatelessWidget {
   final double size;
   const LogoWidget({
     super.key,
-    required this.assetString,
+    this.assetString = 'assets/images/img_techtool.png',
     this.size = 20,
   });
   @override

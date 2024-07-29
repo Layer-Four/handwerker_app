@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../../constants/api/api.dart';
 import '../../models/customer_models/customer_short_model/customer_short_dm.dart';
 import '../../models/dokumentation_models/documentation_entry/documentation_entry.dart';
-import '../../models/dokumentation_models/documentation_state/documentation_state.dart';
+import '../../models/state_models/documentation_state.dart';
 import '../../models/project_models/project_short_vm/project_short_vm.dart';
 import '../settings_provider/user_provider.dart';
 
@@ -33,7 +33,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
 
   /// Load projects from Database and filtered with customerID.
   /// for Filtering give unnamed customerID and update DocumentationState.projects
-  void getProjectForCustomer(int customerId) async {
+  void getProjectsForCustomer(int customerId) async {
     try {
       final response = await _api.getProjectByCustomerID(customerId);
       if (response.statusCode != 200) {
@@ -52,10 +52,18 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     return;
   }
 
+  deleteImage() {
+    final newDoc = state.docu.copyWith(imageUrl: []);
+    state = state.copyWith(editedDoc: newDoc);
+    return;
+  }
+
   Future<bool> createDocumentationEntry() async {
     if (state.docu.createDate == null) return false;
-    final FormData formData = _buildFormData();
+    final FormData formData = await _buildFormData();
     try {
+      // final response = await Dio()
+      //     .post('https://r-wa-happ-be.azurewebsites.net/api/userProjectDay/create', data: formData);
       final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
         log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
@@ -87,7 +95,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     final oldDoc = state.docu;
     state = state.copyWith(
       editedProject: () => e,
-      editedDoc: oldDoc.copyWith(projectID: e.id, projectName: e.title),
+      editedDoc: oldDoc.copyWith(projectID: e.id),
     );
   }
 
@@ -98,7 +106,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   /// Update customers ttribute from DocumentationState.currentCustomer
   void updateCustomer(CustomerShortDM? e) {
     if (e == null || e == state.currentCustomer) return;
-    getProjectForCustomer(e.id);
+    getProjectsForCustomer(e.id);
     state = state.copyWith(
       editedCustomer: () => e,
       editedProject: () => null,
@@ -127,7 +135,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   }
 
   /// Update Documentation entry in DocumentationState object.
-  updateDocumentation({
+  void updateDocumentation({
     DateTime? createDate,
     List<String>? imageUrl,
     Uint8List? newSignature,
@@ -136,7 +144,6 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     final newDoc = state.docu.copyWith(
       createDate: createDate ?? state.docu.createDate,
       projectID: project?.id,
-      projectName: project?.title,
       imageUrl: imageUrl ?? state.docu.imageUrl,
       signature: newSignature != null ? String.fromCharCodes(newSignature) : state.docu.signature,
       description: description ?? state.docu.description,
@@ -144,66 +151,43 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     state = state.copyWith(editedDoc: newDoc);
   }
 
-  _buildFormData() {
+  Future<FormData> _buildFormData() async {
     final entry = state.docu;
     final List<XFile> files = [];
-    entry.imageUrl
-        .map(
-          (e) => files.add(
-            XFile(
-              e,
-              name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
-            ),
-          ),
-        )
-        .toList();
-    if (entry.signature != null) {
-      files.add(
-        XFile.fromData(
-          utf8.encode(entry.signature!),
-          name: '${state.currentCustomer!.companyName}/signature.png',
-          lastModified: DateTime.now(),
-        ),
+
+    for (var path in entry.imageUrl) {
+      final xfile = XFile(
+        path,
+        name:
+            '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
+        mimeType: 'jpeg',
       );
+      files.add(xfile);
     }
-    // for (var path in entry.imageUrl) {
-    //   final xfile = XFile(
-    //     path,
-    //     name: '${entry.projectName}/${DateFormat('t.M.y').format(entry.createDate!)}',
-    //     mimeType: 'png',
-    //   );
-    //   xFileList.add(xfile);
-    // }
     FormData formData = FormData.fromMap({
       'projectID': entry.projectID,
       'createDate': entry.createDate!.toIso8601String(),
       'description': entry.description,
     });
+    for (var i = 0; i < files.length; i++) {
+      final XFile file = files[i];
+      final multiPartFile = MultipartFile.fromFileSync(
+        file.path,
+        filename:
+            '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
+      );
+      formData.files.add(MapEntry('image${i == 0 ? "" : i}', multiPartFile));
+    }
 
-    formData.files.addAll(
-      files.map(
-        (e) => MapEntry(
-          e.name,
-          MultipartFile.fromFileSync(
-            e.path,
-            filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png',
-            // contentType: MediaType('image', 'png'),
-            // contentType: MediaType.parse(e.mimeType ?? 'image/png'),
-          ),
-        ),
-      ),
-    );
-    // for (var i = 0; i < files.length; i++) {
-    //   final XFile file = files[i];
-    //   try {
-    //     final multiPartFile = MultipartFile.fromFileSync(
-    //       file.path,
-    //       filename: file.name,
-    //       contentType: MediaType('image', 'png'),
-    //     );
-    //     formData.files.add(MapEntry('imageUrl${i == 0 ? "" : i}', multiPartFile));
+    if (entry.signature != null) {
+      final signature = MultipartFile.fromBytes(
+        utf8.encode(entry.signature!),
+        filename: 'digitalSignature/${state.currentCustomer?.companyName ?? ''}.png',
+      );
+      formData.files.add(
+        MapEntry('signitaure/${state.project?.title ?? ''}', signature),
+      );
+    }
     return formData;
-    // } catch (e) {
-    //   log('Error reading file: $e');
   }
 }
