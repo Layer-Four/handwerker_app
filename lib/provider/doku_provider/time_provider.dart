@@ -4,22 +4,93 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
+import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 import 'package:handwerker_app/models/time_models/time_entries_vm/time_entries_vm.dart';
 import 'package:handwerker_app/models/time_models/time_entry_dm/time_entry.dart';
+import 'package:handwerker_app/models/state_models/time_state.dart';
 import 'package:handwerker_app/models/time_models/workday_models/workday_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
+import 'package:handwerker_app/models/custom_notifier_model/abstract_entry.methods.dart';
 
 final timeEntriesProvider =
-    NotifierProvider<TimeEntriesNotifier, List<TimeEntriesVM>>(() => TimeEntriesNotifier());
+    NotifierProvider<TimeEntriesNotifier, TimeEntryState>(() => TimeEntriesNotifier());
 
-class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
+// Notifier<TimeEntryState> implements
+class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
   final Api _api = Api();
-  @override
-  build() => [];
 
-  Future<bool> createTimeEntriesVM(TimeEntriesVM entry) async {
+  TimeEntriesVM get entry => state.entry;
+  List<ServiceListVM> get allServices => state.allServices;
+  ServiceListVM? get service => state.currentService;
+  CustomerShortDM? get currentCustomer => state.currentCustomer;
+  ProjectShortVM? get project => state.project;
+  List<ProjectShortVM> get projects => state.customerProject;
+  List<CustomerShortDM>? get customers => state.customers;
+  @override
+  TimeEntryState build() {
+    loadAllCustomer();
+    loadAllServices();
+    return const TimeEntryState();
+  }
+
+  @override
+  void updateSeletedCustomer(CustomerShortDM? e) async {
+    if (e == null || state.currentCustomer == e) return;
+    final newProjects = await getProjectsForCustomer(e.id);
+    state = state.copyWith(
+      newProjects: newProjects,
+      editedCustomer: () => e,
+      editedProject: () => null,
+    );
+  }
+
+  loadAllServices() => getAllServices().then(
+        (e) => state = state.copyWith(newServices: e),
+      );
+  @override
+  void updateSelectedProject(ProjectShortVM? e) {
+    if (e == null || e == state.project) return;
+    final newEntry = state.entry.copyWith(projectID: e.id, projektTitle: e.title);
+    state = state.copyWith(editedProject: () => e, newEntry: newEntry);
+  }
+
+  void updateEntry({
+    DateTime? newDate,
+    String? description,
+    int? duration,
+    DateTime? endTime,
+    DateTime? pauseEnd,
+    DateTime? pauseStart,
+    DateTime? startTime,
+  }) {
+    final newEntry = state.entry.copyWith(
+      date: newDate ?? entry.date,
+      description: description ?? entry.description,
+      duration: duration ?? entry.duration,
+      endTime: endTime ?? entry.endTime,
+      pauseEnd: pauseEnd ?? entry.endTime,
+      pauseStart: pauseStart ?? entry.pauseStart,
+      startTime: startTime ?? entry.startTime,
+    );
+    state = state.copyWith(newEntry: newEntry);
+  }
+
+  void loadAllCustomer() {
+    getAllCustomer().then((e) => state = state.copyWith(newCustomers: e));
+    // state = state.copyWith(
+    //     newCustomers: await getAllCustomer(),
+    // );
+  }
+
+  void updateSelectedService(ServiceListVM? e) {
+    if (e == null || e == state.currentService) return;
+    state = state.copyWith(nextService: e);
+  }
+
+  Future<bool> createTimeEntriesVM() async {
+    if (!(entry.isMinfilled())) return false;
     final data = TimeEntry.fromTimeEntriesVM(entry).toJson();
     data.removeWhere((key, value) => key == 'userID');
     // log(json.encode(data));
@@ -55,10 +126,10 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
       }
       final List data = response.data.map((e) => e).toList();
       data.map((e) => e.asMap());
-      final newstate =
+      final allTimeEntries =
           data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
-      newstate.sort((a, b) => a.date.compareTo(b.date));
-      state = newstate;
+      allTimeEntries.sort((a, b) => a.date!.compareTo(b.date!));
+      state = state.copyWith(newEntries: allTimeEntries);
       return;
     } catch (e) {
       log('request was incompleted this was the error: $e');
@@ -67,74 +138,36 @@ class TimeEntriesNotifier extends Notifier<List<TimeEntriesVM>> {
   }
 
   List<TimeEntriesVM> loadWorkOrder() {
-    final allEntries = state;
-    if (state.isEmpty) return [];
+    if (state.allEntries.isEmpty) return [];
 
-    allEntries.sort(
-      (a, b) => b.startTime.millisecondsSinceEpoch.compareTo(a.startTime.millisecondsSinceEpoch),
+    state.allEntries.sort(
+      (a, b) => b.startTime!.millisecondsSinceEpoch.compareTo(a.startTime!.millisecondsSinceEpoch),
     );
-    return allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
+    return state.allEntries.where((e) => e.type == TimeEntryType.workOrder).toList();
   }
 
   // sortiere einträge in workdays
   List<Workday> getListOfWorkdays() {
     List<Workday> listOfWorkdays = [];
-    for (var e in state) {
+    for (var e in state.allEntries) {
       if (listOfWorkdays.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
         final date = listOfWorkdays.firstWhere((element) =>
-            element.date.day == e.date.day &&
-            element.date.month == e.date.month &&
-            element.date.year == e.date.year);
+            element.date.day == e.date!.day &&
+            element.date.month == e.date!.month &&
+            element.date.year == e.date!.year);
         date.timeEntries.add(e);
       } else if (!listOfWorkdays.any((element) =>
-          element.date.day == e.date.day &&
-          element.date.month == e.date.month &&
-          element.date.year == e.date.year)) {
-        listOfWorkdays.add(Workday(date: e.date, timeEntries: [e]));
+          element.date.day == e.date!.day &&
+          element.date.month == e.date!.month &&
+          element.date.year == e.date!.year)) {
+        listOfWorkdays.add(Workday(date: e.date!, timeEntries: [e]));
       } else {
         log('no matches');
       }
     }
     return listOfWorkdays;
-  }
-
-  Future<List<ProjectShortVM>> getProjectForCustomer(int customerId) async {
-    try {
-      final response = await _api.getProjectByCustomerID(customerId);
-      if (response.statusCode != 200) {
-        throw Exception(
-          'Error on getProjectForCustomer, status-> ${response.statusCode}\n ${response.data}',
-        );
-      }
-      final List data = response.data.map((e) => e).toList();
-      return data.map((e) => ProjectShortVM.fromJson(e)).toList();
-    } on DioException catch (e) {
-      log('DioException: ${e.message}');
-    } catch (e) {
-      log('Exception on getProjectForCustomer: $e');
-    }
-    return [];
-  }
-
-  Future<List<CustomerShortDM>> getAllCustomer() async {
-    try {
-      final response = await _api.getListCustomer;
-      if (response.statusCode != 200) {
-        throw Exception(
-          'Error on getAllCustomer, status-> ${response.statusCode}\n ${response.data}',
-        );
-      }
-      final result = <CustomerShortDM>[];
-      response.data.map((e) => result.add(CustomerShortDM.fromJson(e))).toList();
-      return result;
-    } on DioException catch (e) {
-      log('DioException: ${e.message}');
-    } catch (e) {
-      log('Exception on getAllCustomer: $e');
-    }
-    return [];
   }
 }

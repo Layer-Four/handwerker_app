@@ -10,12 +10,13 @@ import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/project_models/project_short_vm/project_short_vm.dart';
-import '../../../provider/settings_provider/settings_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -25,10 +26,12 @@ class MaterialBody extends ConsumerStatefulWidget {
 }
 
 class _MaterialBodyState extends ConsumerState<MaterialBody> {
-  late final TextEditingController _dayPickerController, _amountController, _summeryController;
+  late final TextEditingController _amountController, _dayPickerController, _summeryController;
   late final dictionary = ref.watch(settingsProv).dictionary;
+
   late ConsumealbeEntry _entry;
   UnitDM? _unit;
+
   bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
@@ -38,35 +41,30 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    setState(() {
-      _entry = ConsumealbeEntry(createDate: now);
-      _dayPickerController = TextEditingController(text: '${now.day}.${now.month}.${now.year}');
-      _amountController = TextEditingController();
-      _summeryController = TextEditingController();
-    });
+    _amountController = TextEditingController(text: '1');
+    _dayPickerController = TextEditingController(
+      text: DateFormat('d.M.y').format(DateTime.now()),
+    );
+    _summeryController = TextEditingController();
+    _entry = ConsumealbeEntry(createDate: DateTime.now());
     _refreshUnits();
     ref.read(materialVMProvider.notifier).loadMaterials();
     ref.read(projectVMProvider.notifier).loadpProject();
   }
 
   @override
-  void dispose() {
-    _amountController.dispose();
-    _dayPickerController.dispose();
-    _summeryController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final materialsAsyncValue = ref.watch(materialVMProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
           _dayInputWidget(),
           _chooseCustomerProjectField(),
-          _chooseMaterialField(),
+          // _chooseCustomerKundeField(),
+          // _chooseMaterialField(),
+          _chooseMaterialField(materialsAsyncValue),
           _buildAmountPriceFields(),
           const SizedBox(height: 184),
           _submitInput(),
@@ -99,40 +97,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     if (_units == null) _refreshUnits();
-              //   },
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 5.0),
-              //     child: SizedBox(
-              //       width: 100,
-              //       height: 30,
-              //       child: DropdownButton(
-              //         menuMaxHeight: 350,
-              //         underline: const SizedBox(),
-              //         isExpanded: true,
-              //         value: _unit,
-              //         items: (_units ?? List.empty())
-              //             .map(
-              //               (e) => DropdownMenuItem(
-              //                 alignment: Alignment.center,
-              //                 value: e,
-              //                 child: Text(
-              //                   e.name,
-              //                   style: Theme.of(context)
-              //                       .textTheme
-              //                       .labelSmall!
-              //                       .copyWith(color: AppColor.kPrimary),
-              //                 ),
-              //               ),
-              //             )
-              //             .toList(),
-              //         onChanged: (e) => setState(() => _unit = e),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -140,6 +104,11 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           height: 35,
           width: 150,
           child: TextField(
+            // onTapOutside: (_) {
+            //   final multi = int.parse(_amountController.text);
+            //   final price = _selectedMaterial!.price;
+            //   _summeryController.text = (price * multi).toString();
+            // },
             keyboardType: TextInputType.number,
             autofocus: false,
             cursorHeight: 20,
@@ -277,68 +246,72 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           );
   }
 
-  Widget _chooseMaterialField() {
-    return ref.read(materialVMProvider).when(
-          error: (err, stackTrace) {
-            log('error occurent in buildServieDropdown in MaterialEntryBody-> $err \n\n this was the stack $stackTrace');
-            return const SizedBox.expand(
-              child: Center(child: Text('Etwas lief schief')),
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          data: (materials) {
-            if (materials.isEmpty) {
-              ref.read(materialVMProvider.notifier).loadMaterials();
-            }
-            if (materials.isNotEmpty && !_isMaterialsLoaded) {
-              setState(() {
-                _selectedMaterial = materials.first;
-                _materials = materials;
-                _isMaterialsLoaded = true;
-              });
-            }
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child:
-                        Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
-                  ),
-                  Container(
-                    height: 40,
-                    padding: const EdgeInsets.only(left: 20, right: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColor.kTextfieldBorder),
-                    ),
-                    child: DropdownButton(
-                      menuMaxHeight: 350,
-                      underline: const SizedBox.shrink(),
-                      isExpanded: true,
-                      value: _selectedMaterial,
-                      items: _materials
-                          .map(
-                            (e) => DropdownMenuItem(
-                              alignment: Alignment.center,
-                              value: e,
-                              child: Text(e.name ?? 'Kein Name'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (e) {
-                        setState(() => _selectedMaterial = e!);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+  Widget _chooseMaterialField(AsyncValue<List<ConsumeableVM>> materialsAsyncValue) {
+    return materialsAsyncValue.when(
+      error: (err, stackTrace) {
+        log('Error occurred in buildServiceDropdown in MaterialEntryBody: $err \n\n Stack: $stackTrace');
+        return const SizedBox.expand(
+          child: Center(child: Text('Etwas lief schief')),
         );
+      },
+      loading: () => const CircularProgressIndicator(),
+      data: (materials) {
+        if (materials.isNotEmpty && !_isMaterialsLoaded) {
+          setState(() {
+            _selectedMaterial = materials.first;
+            _materials = materials;
+            _isMaterialsLoaded = true;
+          });
+        }
+
+        final multi = int.tryParse(_amountController.text) ?? 1;
+        final price = _selectedMaterial?.price ?? 0;
+        _summeryController.text = (price * multi).toStringAsFixed(2);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
+              ),
+              Container(
+                height: 40,
+                padding: const EdgeInsets.only(left: 20, right: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                ),
+                child: DropdownButton(
+                  menuMaxHeight: 350,
+                  underline: const SizedBox.shrink(),
+                  isExpanded: true,
+                  value: _selectedMaterial,
+                  items: _materials
+                      .map(
+                        (e) => DropdownMenuItem(
+                          alignment: Alignment.center,
+                          value: e,
+                          child: Text('${e.name}/ ${e.materialUnitName}'),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (e) {
+                    setState(() {
+                      _selectedMaterial = e!;
+                      final multi = int.tryParse(_amountController.text) ?? 1;
+                      _summeryController.text = (e.price * multi).toStringAsFixed(2);
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _dayInputWidget() => LabeldTextfield(
@@ -397,12 +370,4 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       ),
     );
   }
-
-  // Widget _addMoreMaterial() {
-  //   return Row(
-  //     children: [
-  //       SymmetricButton(color: AppColor.kPrimaryButtonColor, text: '+'),
-  //     ],
-  //   );
-  // }
 }

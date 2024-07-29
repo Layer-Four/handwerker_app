@@ -8,7 +8,7 @@ import 'package:handwerker_app/provider/settings_provider/settings_provider.dart
 import 'package:handwerker_app/view/widgets/empty_result_message.dart';
 import 'package:handwerker_app/view/widgets/hinged_widget.dart';
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
-import 'package:handwerker_app/view/widgets/show_project_details.dart';
+import 'package:handwerker_app/view/history_views/history_project/widgets/show_project_details.dart';
 
 class CostumerOverviewBody extends ConsumerStatefulWidget {
   const CostumerOverviewBody({super.key});

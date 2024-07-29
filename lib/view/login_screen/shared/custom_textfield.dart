@@ -46,7 +46,7 @@ class CustomLoginTextField extends ConsumerWidget {
         onFocusChange: onFocusChange,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 44, // Adjust this to your needs
+          height: 44,
           width: 355,
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -59,7 +59,7 @@ class CustomLoginTextField extends ConsumerWidget {
             obscureText: isPassword && !isPasswordVisible,
             autofillHints: autofillHints,
             decoration: InputDecoration(
-              errorStyle: const TextStyle(fontSize: 0.01),
+              errorStyle: const TextStyle(height: 0.1, fontSize: 00.1),
               filled: true,
               fillColor: Colors.transparent,
               contentPadding: const EdgeInsets.all(10),
@@ -88,7 +88,7 @@ class CustomLoginTextField extends ConsumerWidget {
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                  color: Colors.red,
+                  color: AppColor.kRed,
                   width: 2,
                   style: BorderStyle.solid,
                 ),
@@ -96,7 +96,7 @@ class CustomLoginTextField extends ConsumerWidget {
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                  color: Colors.red,
+                  color: AppColor.kRed,
                   width: 2,
                   style: BorderStyle.solid,
                 ),

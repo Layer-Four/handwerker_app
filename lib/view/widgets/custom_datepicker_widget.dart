@@ -54,6 +54,7 @@ class CustomDatePicker extends StatelessWidget {
               decoration: decoration,
               child: TextField(
                 controller: controller,
+                keyboardType: TextInputType.datetime,
                 decoration: InputDecoration(
                   filled: isFilled,
                   fillColor: AppColor.kTextfieldColor,

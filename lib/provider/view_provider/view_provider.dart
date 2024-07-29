@@ -1,7 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-enum MainViews { timeEntry, doku, history, user, logOut }
+// TODO: think the view change by index. When timeEntry is last than they don't have the correct index
+enum MainViews {
+  timeEntry,
+  doku,
+  history,
+  user,
+  logOut,
+}
 
 final viewProvider = StateProvider<MainViews>((ref) {
   if (ref.watch(userProvider).userToken.isEmpty) return MainViews.logOut;
@@ -25,7 +32,11 @@ extension MainViewsExention on MainViews {
       };
 }
 
-enum DokuViews { timeEntry, project, consumables }
+enum DokuViews {
+  timeEntry,
+  project,
+  consumables,
+}
 
 final dokuViewProvider = StateProvider<DokuViews>((ref) => DokuViews.timeEntry);
 

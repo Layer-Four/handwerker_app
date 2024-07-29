@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/language/dictionary.dart';
-import '../../models/settings_state_model/setttings_state.dart';
+import '../../models/state_models/setttings_state.dart';
 
 final settingsProv = NotifierProvider<SettingsNotifer, SettingsState>(() => SettingsNotifer());
 
