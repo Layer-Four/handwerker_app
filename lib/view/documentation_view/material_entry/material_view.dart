@@ -53,6 +53,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   @override
+  void dispose() {
+    _amountController.dispose();
+    _dayPickerController.dispose();
+    _summeryController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final materialsAsyncValue = ref.watch(materialVMProvider);
 
