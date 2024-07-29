@@ -536,7 +536,9 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       int.tryParse(_endCtrl.text.split(':').last) ?? 30,
     );
     final time = await showDialog(
-        context: context, builder: (context) => TimeSpinnerViewWidget(initTime: initialTime));
+      context: context,
+      builder: (context) => TimeSpinnerViewWidget(initTime: initialTime),
+    );
     if (time == null) return;
     final timeAsList = time.split(':');
     final hour = int.parse(timeAsList.first);
@@ -551,7 +553,8 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       int.tryParse(_startCtrl.text.split(':').last) ?? 0,
     );
     if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
-      endDate = startDate;
+      _startCtrl.text = DateFormat.Hm().format(endDate);
+      ref.read(timeEntriesProvider.notifier).updateEntry(startTime: endDate);
     }
     final minuteString = endDate.minute < 10 ? '0${endDate.minute}' : '${endDate.minute}';
     ref.read(timeEntriesProvider.notifier).updateEntry(newDate: endDate);
@@ -571,15 +574,28 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       int.tryParse(_startCtrl.text.split(':').last) ?? DateTime.now().minute,
     );
     final time = await showDialog(
-        context: context, builder: (context) => TimeSpinnerViewWidget(initTime: initialTime));
+      context: context,
+      builder: (context) => TimeSpinnerViewWidget(initTime: initialTime),
+    );
     if (time == null) return;
     final timeAsList = time.split(':');
     final hour = int.parse(timeAsList.first);
     final minute = int.parse(timeAsList.last);
-    // TODO: check if start before end and check if end is not empty
     DateTime startDate = DateTime(date.year, date.month, date.day, hour, minute);
-    if (endDate.millisecondsSinceEpoch > startDate.millisecondsSinceEpoch) {
-      endDate = startDate;
+    if (_endCtrl.text.isNotEmpty) {
+      DateTime endDate = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        int.tryParse(_endCtrl.text.split(':').first) ?? 0,
+        int.tryParse(_endCtrl.text.split(':').last) ?? 0,
+      );
+      if (endDate.millisecondsSinceEpoch < startDate.millisecondsSinceEpoch) {
+        endDate = startDate;
+        _endCtrl.text = DateFormat.Hm().format(endDate);
+        ref.read(timeEntriesProvider.notifier).updateEntry(endTime: endDate);
+      }
+      _calculateDuration();
     }
 
     final minuteString = startDate.minute < 10 ? '0${startDate.minute}' : '${startDate.minute}';
