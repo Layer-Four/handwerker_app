@@ -14,9 +14,12 @@ import 'package:handwerker_app/provider/settings_provider/settings_provider.dart
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/models/state_models/material_state.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/project_models/project_short_vm/project_short_vm.dart';
+import '../../../models/customer_models/customer_short_model/customer_short_dm.dart';
+import '../../../provider/doku_provider/customer_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -35,9 +38,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
 
+  String? _customerID;
+
   List<ConsumeableVM> _materials = [];
   ProjectShortVM? _project;
+  CustomerShortDM? _customer; // State for customer
   ConsumeableVM? _selectedMaterial;
+  List<ProjectShortVM> _projects = [];
+
   @override
   void initState() {
     super.initState();
@@ -48,26 +56,32 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     _summeryController = TextEditingController();
     _entry = ConsumealbeEntry(createDate: DateTime.now());
     _refreshUnits();
-    ref.read(materialVMProvider.notifier).loadMaterials();
+    ref.read(materialNotifierProvider.notifier).loadData();
     ref.read(projectVMProvider.notifier).loadpProject();
+    ref.read(customerProvider.notifier).loadCustomers(); // Load customers
   }
 
   @override
   Widget build(BuildContext context) {
-    final materialsAsyncValue = ref.watch(materialVMProvider);
+    final materials = ref.watch(materialNotifierProvider);
+    final customers = ref.watch(customerProvider);
+    final projectsAsync = ref.watch(projectVMProvider.select((state) => state));
+
+    if (_customer != null && _customer!.id != null) {
+      ref.read(projectVMProvider.notifier).loadProjectsForCustomer(_customer!.id);
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
           _dayInputWidget(),
-          _chooseCustomerProjectField(),
-          // _chooseCustomerKundeField(),
-          // _chooseMaterialField(),
-          _chooseMaterialField(materialsAsyncValue),
+          _chooseCustomerField(customers), // Customer dropdown
+          _chooseProjectField(projectsAsync),   // Project dropdown
+          _chooseMaterialField(materials),
           _buildAmountPriceFields(),
           const SizedBox(height: 184),
-          _submitInput(),
+          //_submitInput(),
           const SizedBox(
             height: 70,
             child: Center(
@@ -82,7 +96,13 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Column _buildAmointElement() {
+  void _refreshProjects() {
+    if (_customer != null) {
+      ref.read(projectVMProvider.notifier).loadProjectsForCustomer(_customer!.id);
+    }
+  }
+
+  Column _buildAmountElement() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,11 +124,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           height: 35,
           width: 150,
           child: TextField(
-            // onTapOutside: (_) {
-            //   final multi = int.parse(_amountController.text);
-            //   final price = _selectedMaterial!.price;
-            //   _summeryController.text = (price * multi).toString();
-            // },
             keyboardType: TextInputType.number,
             autofocus: false,
             cursorHeight: 20,
@@ -133,12 +148,12 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   }
 
   Widget _buildAmountPriceFields() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildAmointElement(),
-          _buildSumElement(),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      _buildAmountElement(),
+      _buildSumElement(),
+    ],
+  );
 
   Column _buildSumElement() {
     return Column(
@@ -169,7 +184,6 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
                 if (value.length < 20) {
                   _summeryController.text = value;
                 }
-                // _entry = _entry.copyWith(cost: int.tryParse(value));
               });
             },
           ),
@@ -177,197 +191,263 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       ],
     );
   }
-// .when(
-//           error: (error, stackTrace) {
-//             log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
-//             return const SizedBox(child: Text('Etwas lief schief'));
-//           },
-//           loading: () => const CircularProgressIndicator.adaptive(),
-//           data: (data) {
-//             if (data == null) {
-//               ref.read(projectVMProvider.notifier).loadpProject();
-//             }
-//             final projects = data;
-//             if (projects != null && !_isProjectSet) {
-//               setState(() {
-//                 _project = projects.first;
-//                 _entry = _entry.copyWith(projectID: projects.first.id);
-//                 _isProjectSet = true;
-//               });
-//             }
 
-  Widget _chooseCustomerProjectField() {
-    return ref.read(projectVMProvider).isEmpty
-        ? const Text('lade Projekte')
-        : Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Text(
-                    dictionary.customer,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.only(left: 20, right: 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColor.kTextfieldBorder),
-                  ),
-                  child: DropdownButton(
-                    menuMaxHeight: 350,
-                    underline: const SizedBox(),
-                    isExpanded: true,
-                    value: _project,
-                    items: ref
-                        .watch(projectVMProvider)
-                        .map(
-                          (e) => DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: e,
-                            child: Text(' ${e.title}'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (e) {
-                      // setState(() {
-                      //   _project = e;
-                      //   _entry = _entry.copyWith(projectID: e.id);
-                      // });
-                    },
-                  ),
-                ),
-              ],
+  Widget _chooseCustomerField(List<CustomerShortDM> customers) {
+    // Show loading text if customers are not yet loaded
+    if (customers.isEmpty) {
+      return const Text('Loading customers...');
+    }
+
+    // Ensure `_customer` is properly initialized
+    _customer = _customer ?? (customers.isNotEmpty ? customers.first : null);
+
+    // Ensure unique customers to avoid duplicate values
+    final uniqueCustomers = customers.toSet().toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              dictionary.customer,
+              style: Theme.of(context).textTheme.labelMedium,
             ),
-          );
-  }
-
-  Widget _chooseMaterialField(AsyncValue<List<ConsumeableVM>> materialsAsyncValue) {
-    return materialsAsyncValue.when(
-      error: (err, stackTrace) {
-        log('Error occurred in buildServiceDropdown in MaterialEntryBody: $err \n\n Stack: $stackTrace');
-        return const SizedBox.expand(
-          child: Center(child: Text('Etwas lief schief')),
-        );
-      },
-      loading: () => const CircularProgressIndicator(),
-      data: (materials) {
-        if (materials.isNotEmpty && !_isMaterialsLoaded) {
-          setState(() {
-            _selectedMaterial = materials.first;
-            _materials = materials;
-            _isMaterialsLoaded = true;
-          });
-        }
-
-        final multi = int.tryParse(_amountController.text) ?? 1;
-        final price = _selectedMaterial?.price ?? 0;
-        _summeryController.text = (price * multi).toStringAsFixed(2);
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
-              ),
-              Container(
-                height: 40,
-                padding: const EdgeInsets.only(left: 20, right: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColor.kTextfieldBorder),
-                ),
-                child: DropdownButton(
-                  menuMaxHeight: 350,
-                  underline: const SizedBox.shrink(),
-                  isExpanded: true,
-                  value: _selectedMaterial,
-                  items: _materials
-                      .map(
-                        (e) => DropdownMenuItem(
-                          alignment: Alignment.center,
-                          value: e,
-                          child: Text('${e.name}/ ${e.materialUnitName}'),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (e) {
-                    setState(() {
-                      _selectedMaterial = e!;
-                      final multi = int.tryParse(_amountController.text) ?? 1;
-                      _summeryController.text = (e.price * multi).toStringAsFixed(2);
-                    });
-                  },
-                ),
-              ),
-            ],
           ),
-        );
-      },
+          Container(
+            height: 40,
+            padding: const EdgeInsets.only(left: 20, right: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton<CustomerShortDM>(
+              value: _customer,
+              isExpanded: true,
+              underline: const SizedBox(),
+              items: [
+                DropdownMenuItem<CustomerShortDM>(
+                  alignment: Alignment.center,
+                  value: null,
+                  child: Text('Select a customer'),
+                ),
+                ...uniqueCustomers.map((customer) {
+                  return DropdownMenuItem<CustomerShortDM>(
+                    alignment: Alignment.center,
+                    value: customer,
+                    child: Text('${customer.companyName}'),
+                  );
+                }).toList(),
+              ],
+              onChanged: (selectedCustomer) {
+                setState(() {
+                  _customer = selectedCustomer;
+                  _project = null; // Reset project when customer changes
+                  _refreshProjects(); // Refresh projects based on the selected customer
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
+
+
+  Widget _chooseProjectField(List<ProjectShortVM> projects) {
+    // Show loading text if projects are not yet loaded
+    if (projects.isEmpty) {
+      return const Text('Loading projects...');
+    }
+
+    // Ensure `_project` is properly initialized
+    _project = _project ?? (projects.isNotEmpty ? projects.first : null);
+
+    // Ensure unique projects to avoid duplicate values
+    final uniqueProjects = projects.toSet().toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              dictionary.projectUpperCase,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ),
+          Container(
+            height: 40,
+            padding: const EdgeInsets.only(left: 20, right: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton<ProjectShortVM>(
+              value: _project,
+              isExpanded: true,
+              underline: const SizedBox(),
+              items: [
+                DropdownMenuItem<ProjectShortVM>(
+                  alignment: Alignment.center,
+                  value: null,
+                  child: Text('Select a project'),
+                ),
+                ...uniqueProjects.map((project) {
+                  return DropdownMenuItem<ProjectShortVM>(
+                    alignment: Alignment.center,
+                    value: project,
+                    child: Text('${project.title}'),
+                  );
+                }).toList(),
+              ],
+              onChanged: (selectedProject) {
+                setState(() {
+                  _project = selectedProject;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _chooseMaterialField(List<ConsumeableVM>? materials) {
+    if (materials == null || materials.isEmpty) {
+      return const Text('No materials available');
+    }
+
+    if (!_isMaterialsLoaded) {
+      setState(() {
+        _selectedMaterial = materials.first;
+        _materials = materials;
+        _isMaterialsLoaded = true;
+      });
+    }
+
+    final multi = int.tryParse(_amountController.text) ?? 1;
+    final price = _selectedMaterial?.price ?? 0;
+    _summeryController.text = (price * multi).toStringAsFixed(2);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
+          ),
+          Container(
+            height: 40,
+            padding: const EdgeInsets.only(left: 20, right: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.kTextfieldBorder),
+            ),
+            child: DropdownButton<ConsumeableVM>(
+              menuMaxHeight: 350,
+              underline: const SizedBox.shrink(),
+              isExpanded: true,
+              value: _selectedMaterial,
+              items: materials
+                  .map(
+                    (e) => DropdownMenuItem(
+                  alignment: Alignment.center,
+                  value: e,
+                  child: Text('${e.name}/ ${e.materialUnitName}'),
+                ),
+              )
+                  .toList(),
+              onChanged: (e) {
+                setState(() {
+                  _selectedMaterial = e!;
+                  final multi = int.tryParse(_amountController.text) ?? 1;
+                  _summeryController.text = (e.price * multi).toStringAsFixed(2);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
   Widget _dayInputWidget() => LabeldTextfield(
-        label: dictionary.date,
-        controller: _dayPickerController,
-        textInputType: TextInputType.datetime,
-        onTap: () async {
-          final date = await Utilits.selecetDate(context);
-          if (date != null) {
-            setState(() {
-              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-              _entry = _entry.copyWith(createDate: date);
-            });
-          }
-        },
-      );
+    label: dictionary.date,
+    controller: _dayPickerController,
+    textInputType: TextInputType.datetime,
+    onTap: () async {
+      final date = await Utilits.selecetDate(context);
+      if (date != null) {
+        setState(() {
+          _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+          _entry = _entry.copyWith(createDate: date);
+        });
+      }
+    },
+  );
 
   void _refreshUnits() {
     ref.read(consumableProvider.notifier).getUnits().then(
           (value) => setState(() {
-            _units = value;
-            _unit = _units!.first;
-          }),
-        );
+        _units = value;
+        _unit = _units!.first;
+      }),
+    );
   }
 
-  Padding _submitInput() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SymmetricButton(
-        color: AppColor.kPrimaryButtonColor,
-        text: dictionary.createEntry,
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-        onPressed: () {
-          final material = Consumable(
-            amount: int.tryParse(_amountController.text) ?? 1,
-            materialUnitID: _unit!.id,
-            price: int.tryParse(_summeryController.text) ?? 0,
-            materialID: _selectedMaterial!.id.toString(),
-          );
-          _entry = _entry.copyWith(
-            consumables: [material],
-          );
-          ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(dictionary.succes),
-          ));
-          final now = DateTime.now();
-          setState(() {
-            _selectedMaterial = _materials.first;
-            _amountController.clear();
-            _summeryController.clear();
-            _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
-          });
-        },
-      ),
+  void _submitInput() {
+    final unitId = _unit?.id;
+    final materialId = _selectedMaterial?.id.toString();
+
+    if (unitId == null || materialId == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Required fields are missing')),
+        );
+      });
+      return; // Exit early to avoid further processing
+    }
+
+    final material = Consumable(
+      amount: int.tryParse(_amountController.text) ?? 1,
+      materialUnitID: unitId,
+      price: int.tryParse(_summeryController.text) ?? 0,
+      materialID: materialId,
     );
+
+    _entry = _entry.copyWith(
+      consumables: [material],
+      projectID: _project?.id, // This should be checked if necessary
+      //customerID: _customer?.id, // This should be checked if necessary
+    );
+
+    ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(dictionary.succes)),
+      );
+    });
+
+    final now = DateTime.now();
+    setState(() {
+      _selectedMaterial = _materials.first;
+      _amountController.clear();
+      _summeryController.clear();
+      _dayPickerController.text = '${now.day}.${now.month}.${now.year}';
+      _customer = null; // Reset customer
+      _project = null;  // Reset project
+    });
   }
 }
