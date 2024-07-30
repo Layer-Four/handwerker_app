@@ -38,8 +38,8 @@ class TimeEntryState {
   ServiceListVM? get currentService => _selectedService;
   TimeEntriesVM get entry => _timeEntry;
   ProjectShortVM? get project => _selectedProject;
-  List<ProjectShortVM> get customerProject => _projectFromCustomers;
-  
+  List<ProjectShortVM> get customerProjects => _projectFromCustomers;
+
   TimeEntryState copyWith({
     TimeEntriesVM? newEntry,
     List<TimeEntriesVM>? newEntries,

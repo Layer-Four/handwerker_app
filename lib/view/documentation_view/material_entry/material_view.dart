@@ -322,20 +322,25 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _dayInputWidget() => LabeldTextfield(
-        label: dictionary.date,
-        controller: _dayPickerController,
-        textInputType: TextInputType.datetime,
-        onTap: () async {
-          final date = await Utilits.selecetDate(context);
-          if (date != null) {
-            setState(() {
-              _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
-              _entry = _entry.copyWith(createDate: date);
-            });
-          }
-        },
-      );
+  int count = 0;
+  Widget _dayInputWidget() {
+    count++;
+    log(count.toString());
+    return LabeldTextfield(
+      label: dictionary.date,
+      controller: _dayPickerController,
+      textInputType: TextInputType.datetime,
+      onTap: () async {
+        final date = await Utilits.selecetDate(context);
+        if (date != null) {
+          setState(() {
+            _dayPickerController.text = '${date.day}.${date.month}.${date.year}';
+            _entry = _entry.copyWith(createDate: date);
+          });
+        }
+      },
+    );
+  }
 
   void _refreshUnits() {
     ref.read(consumableProvider.notifier).getUnits().then(

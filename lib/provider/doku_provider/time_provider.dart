@@ -26,7 +26,7 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
   ServiceListVM? get service => state.currentService;
   CustomerShortDM? get currentCustomer => state.currentCustomer;
   ProjectShortVM? get project => state.project;
-  List<ProjectShortVM> get projects => state.customerProject;
+  List<ProjectShortVM> get projectsList => state.customerProjects;
   List<CustomerShortDM>? get customers => state.customers;
   @override
   TimeEntryState build() {
