@@ -52,20 +52,14 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                             child: Text(
                               'name des Consumables',
                               // consumables[index].name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: AppColor.kLightLabelColor),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Text(
                               '${consumables![j].amount} ', //${consumables[index].unitTypeName}
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: AppColor.kLightLabelColor),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor),
                             ),
                           ),
                         ],
@@ -73,10 +67,7 @@ class _ProjectCardState extends ConsumerState<ProjectDetails> {
                     }),
                   )
                 : Text('Keine Materialien gefunden',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColor.kLightLabelColor)),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColor.kLightLabelColor)),
           )
         ],
       ),
