@@ -36,7 +36,7 @@ class UserNotifier extends Notifier<UserVM> {
   Future<bool> loginUser(
       {required password, required String userName, String? mandantID = '1'}) async {
     final json = {
-      "username": userName,
+      "username": '$mandantID$userName',
       "password": password,
       // "mandant": mandantID,
     };
