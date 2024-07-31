@@ -35,7 +35,11 @@ class UserNotifier extends Notifier<UserVM> {
   /// called API and request a [String] userNamen and a [String] password, also it exist a property mandandID for diffenrent mandanten
   Future<bool> loginUser(
       {required password, required String userName, String? mandantID = '1'}) async {
-    final json = {"username": userName, "password": password, "mandant": mandantID};
+    final json = {
+      "username": userName,
+      "password": password,
+      // "mandant": mandantID,
+    };
 
     try {
       final response = await _api.postloginUser(json);

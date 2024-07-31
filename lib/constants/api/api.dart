@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -94,8 +93,8 @@ class Api {
         // TODO: think about retry logic for wake up database
         if (error.response?.statusCode == 400) {
           // deleteToken();
-          log('DB return ${jsonEncode(error)}');
-          return;
+          log('DB return ${error.response?.statusCode}\n ${error.response?.data}');
+          // return handler.next(error);
         }
 
         return handler.next(error);
