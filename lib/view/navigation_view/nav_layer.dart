@@ -38,8 +38,8 @@ class _MainViewNavigatorState extends ConsumerState<MainViewNavigator> {
               child: const SizedBox.shrink(),
               onFocusChange: (value) async {
                 if (ref.watch(userProvider).userToken.isEmpty && (!_firstLoad)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(ref.watch(settingsProv).dictionary.sessionHasEnded)));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(ref.watch(settingsProv).dictionary.sessionHasEnded)));
                   Navigator.of(context).pushReplacementNamed(AppRoutes.outloggedView);
 
                   // TODO: can throw error after false login
