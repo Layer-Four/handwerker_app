@@ -27,6 +27,7 @@ class TimeEntriesVM with _$TimeEntriesVM {
   factory TimeEntriesVM.fromJson(Map<String, dynamic> json) => _$TimeEntriesVMFromJson(json);
 
   const TimeEntriesVM._();
+
   bool isMinfilled() {
     if (date != null &&
         startTime != null &&

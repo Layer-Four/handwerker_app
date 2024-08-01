@@ -23,8 +23,8 @@ class ConsumeableState {
             const ConsumeableVM(
               id: -1,
               name: 'Please change me',
-              amount: 0.1,
-              price: 0.0,
+              amount: -0.1,
+              price: -0.1,
               materialUnitName: 'Please change me',
             );
 

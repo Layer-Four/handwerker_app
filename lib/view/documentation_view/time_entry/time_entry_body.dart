@@ -160,7 +160,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             title: dictionary.projectUpperCase,
             items: ref
                 .watch(timeEntriesProvider.notifier)
-                .projects
+                .projectsList
                 .map(
                   (e) => DropdownMenuItem(
                     alignment: Alignment.center,
