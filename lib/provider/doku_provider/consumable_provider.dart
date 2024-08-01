@@ -7,8 +7,7 @@ import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable
 import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final consumableProvider =
-    NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
+final consumableProvider = NotifierProvider<ConsumableNotifier, List<Consumable>>(() => ConsumableNotifier());
 
 class ConsumableNotifier extends Notifier<List<Consumable>> {
   final api = Api();
@@ -43,7 +42,7 @@ class ConsumableNotifier extends Notifier<List<Consumable>> {
     }
   }
 
-  void uploadConsumableEntry(ConsumealbeEntry entry) async {
+  void uploadConsumableEntry(ConsumableEntry entry) async {
     final json = entry.toJson();
     try {
       final response = await api.postProjectConsumable(json);

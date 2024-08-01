@@ -23,11 +23,7 @@ class TimeEntriesBody extends ConsumerStatefulWidget {
 }
 
 class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
-  late final TextEditingController _dayPickerCtrl,
-      _descriptionCtrl,
-      _durationCtrl,
-      _endCtrl,
-      _startCtrl;
+  late final TextEditingController _dayPickerCtrl, _descriptionCtrl, _durationCtrl, _endCtrl, _startCtrl;
   late final dictionary = ref.watch(settingsProv).dictionary;
 
   @override
@@ -45,8 +41,8 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
     initEntry();
   }
 
-  initEntry() async => Future.delayed(const Duration(microseconds: 1))
-      .then((_) => ref.read(timeEntriesProvider.notifier).updateEntry(
+  initEntry() async =>
+      Future.delayed(const Duration(microseconds: 1)).then((_) => ref.read(timeEntriesProvider.notifier).updateEntry(
             newDate: DateTime.now(),
             startTime: DateTime.now(),
           ));
@@ -76,8 +72,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                 initDate: DateTime.now(),
                 title: dictionary.date,
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.kTextfieldBorder),
-                    borderRadius: BorderRadius.circular(6)),
+                    border: Border.all(color: AppColor.kTextfieldBorder), borderRadius: BorderRadius.circular(6)),
               ),
               // TODO: implement a wheelspinner for pick Hours and minutes?
               CustomTextfield(
@@ -159,8 +154,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
                             ),
                           )
                           .toList(),
-                      onChanged: (e) =>
-                          ref.read(timeEntriesProvider.notifier).updateSeletedCustomer(e),
+                      onChanged: (e) => ref.read(timeEntriesProvider.notifier).updateSeletedCustomer(e),
                     ),
           ChooseCustomer<ProjectShortVM>(
             title: dictionary.projectUpperCase,
@@ -412,9 +406,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
       );
   _checkAndSendEntry(BuildContext context) {
     final state = ref.watch(timeEntriesProvider);
-    if ((state.currentCustomer == null) ||
-        (state.project == null) ||
-        (state.currentService == null)) {
+    if ((state.currentCustomer == null) || (state.project == null) || (state.currentService == null)) {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(child: Text(dictionary.plsChooseCustomerService)),

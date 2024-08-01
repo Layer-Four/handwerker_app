@@ -2,46 +2,51 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
-import 'package:handwerker_app/models/dokumentation_models/docmentation_dm/documentation_dm.dart';
-import 'package:handwerker_app/models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
-import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
+import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final projectVMProvider = NotifierProvider<ProjectNotifer, List<ProjectShortVM>>(
-  () => ProjectNotifer(),
+import '../../models/dokumentation_models/docmentation_dm/documentation_dm.dart';
+import '../../models/project_models/project_overview_vm/project_customer_vm/project_customer.dart';
+
+final projectVMProvider = StateNotifierProvider<ProjectNotifier, List<ProjectShortVM>>(
+  (ref) => ProjectNotifier(ref),
 );
 
-class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
+class ProjectNotifier extends StateNotifier<List<ProjectShortVM>> {
   final bool isError = false;
-  @override
   List<ProjectShortVM> build() {
     loadpProject();
     return [];
   }
 
-  ProjectShortVM? _choicenProject;
-  ProjectShortVM? get choicenProject => _choicenProject;
+  final Ref ref;
   final Api _api = Api();
 
-  Future<bool> loadpProject() async {
+  ProjectNotifier(this.ref) : super([]);
+
+  ProjectShortVM? _chosenProject;
+  ProjectShortVM? get chosenProject => _chosenProject;
+
+  Future<List<ProjectShortVM>> loadpProject() async {
     try {
       final response = await _api.getProjectsDM;
       if (response.statusCode != 200) {
-        log('request dismissed statuscode: ${response.statusCode} meldung: ${response.data}');
-        // TODO: throw Exception
-        return false;
+        log('Request dismissed statusCode: ${response.statusCode}, message: ${response.data}');
+        state = [];
+        return [];
       }
-      final data = response.data;
+      final List<dynamic> data = response.data;
       final projects = data.map<ProjectShortVM>((e) => ProjectShortVM.fromJson(e)).toList();
       state = projects;
-      return true;
+      return projects;
     } catch (e) {
-      log('request dismissed statuscode: $e');
+      log('Error occurred: $e');
+      state = []; // Set state to an empty list in case of error
+      return []; // Return an empty list in case of error
     }
-    return false;
   }
 
-  void updateProject(ProjectShortVM? e) => _choicenProject = e;
+  void updateProject(ProjectShortVM? e) => _chosenProject = e;
 
   Future<List<ProjectCustomer>> getAllProjectEntries() async {
     final result = <ProjectCustomer>[];
@@ -49,26 +54,21 @@ class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
       final response = await _api.getCustomerProjects;
       if (response.statusCode != 200) {
         throw Exception(
-          'Error occurent on getAllProjectEntries, status->${response.statusCode}\n${response.data}',
+          'Error occurred on getAllProjectEntries, status: ${response.statusCode}, data: ${response.data}',
         );
       }
-      final List data = (response.data).map((e) => e).toList();
+      final List<dynamic> data = response.data;
       final projects = data.map((e) => ProjectCustomer.fromJson(e)).toList();
-      // for (var e in data) {
-      //   log(e.toString());
-      //   result.add(ProjectCustomer.fromJson(e));
-      // }
-      // log(result.length.toString());
       result.addAll(projects);
       return result;
     } catch (e) {
-      log('this error occurred -> $e');
+      log('Error occurred: $e');
       throw Exception(e);
     }
   }
 
   Future<List<DocumentationDM>?> loadDocumentationForProject(int projectID) async {
-    List<DocumentationDM> result = [];
+    final result = <DocumentationDM>[];
     try {
       final response = await _api.getDokuforProjectURL(projectID);
       if (response.statusCode != 200) {
@@ -76,17 +76,17 @@ class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
           ref.read(userProvider.notifier).userLogOut();
           return result;
         }
-        log('something went wrong-> ${response.data}');
+        log('Error occurred: ${response.data}');
         return null;
       }
-      final List data = response.data.map((e) => e).toList();
+      final List<dynamic> data = response.data;
       for (var e in data) {
         final imageUrls = <String>[];
         final String? description = e['description'];
-        final List something = e['images'];
-        if (something.isNotEmpty) {
-          for (var j in something) {
-            if (j != null || j!.isNotEmpty) {
+        final List<dynamic> images = e['images'];
+        if (images.isNotEmpty) {
+          for (var j in images) {
+            if (j != null && j.isNotEmpty) {
               final url = 'https://rsahapp.blob.core.windows.net/$j';
               imageUrls.add(url);
             }
@@ -96,14 +96,13 @@ class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
           description: description,
           imagesUrl: imageUrls,
         );
-
         result.add(documentation);
       }
       return result;
     } catch (error) {
       if (error.toString().contains('500')) {
         ref.read(userProvider.notifier).userLogOut();
-        log('message');
+        log('Server error');
         return [];
       }
       throw Exception(error);
@@ -115,10 +114,10 @@ class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
       final response = await _api.getProjectByCustomerID(customerId);
       if (response.statusCode != 200) {
         throw Exception(
-          'Error on getProjectsForCustomer, status-> ${response.statusCode}\n ${response.data}',
+          'Error on getProjectsForCustomer, status: ${response.statusCode}, data: ${response.data}',
         );
       }
-      final List data = response.data.map((e) => e).toList();
+      final List<dynamic> data = response.data;
       return data.map((e) => ProjectShortVM.fromJson(e)).toList();
     } on DioException catch (e) {
       log('DioException: ${e.message}');
@@ -131,16 +130,15 @@ class ProjectNotifer extends Notifier<List<ProjectShortVM>> {
   Future<void> loadProjectsForCustomer(int customerID) async {
     try {
       final projects = await getProjectsForCustomer(customerID);
-      // Directly mapping from ProjectShortVM to ProjectListVM
-      final projectListVMs = projects.map((shortVM) {
+      state = projects.map((shortVM) {
         return ProjectShortVM(
           id: shortVM.id!,
           title: shortVM.title!,
         );
       }).toList();
-      state = projectListVMs;
     } catch (e) {
-      throw Exception(e);
+      log('Exception: $e');
+      state = []; // Set state to an empty list in case of error
     }
   }
 }

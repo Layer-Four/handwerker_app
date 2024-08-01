@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ConsumealbeEntry _$ConsumealbeEntryFromJson(Map<String, dynamic> json) {
-  return _ConsumealbeEntry.fromJson(json);
+ConsumableEntry _$ConsumableEntryFromJson(Map<String, dynamic> json) {
+  return _ConsumableEntry.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ConsumealbeEntry {
+mixin _$ConsumableEntry {
   DateTime get createDate =>
       throw _privateConstructorUsedError; // @Default('') String entryID,
 // String? projectName,
@@ -28,24 +28,24 @@ mixin _$ConsumealbeEntry {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ConsumealbeEntryCopyWith<ConsumealbeEntry> get copyWith =>
+  $ConsumableEntryCopyWith<ConsumableEntry> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ConsumealbeEntryCopyWith<$Res> {
-  factory $ConsumealbeEntryCopyWith(
-          ConsumealbeEntry value, $Res Function(ConsumealbeEntry) then) =
-      _$ConsumealbeEntryCopyWithImpl<$Res, ConsumealbeEntry>;
+abstract class $ConsumableEntryCopyWith<$Res> {
+  factory $ConsumableEntryCopyWith(
+          ConsumableEntry value, $Res Function(ConsumableEntry) then) =
+      _$ConsumableEntryCopyWithImpl<$Res, ConsumableEntry>;
   @useResult
   $Res call(
       {DateTime createDate, int? projectID, List<Consumable> consumables});
 }
 
 /// @nodoc
-class _$ConsumealbeEntryCopyWithImpl<$Res, $Val extends ConsumealbeEntry>
-    implements $ConsumealbeEntryCopyWith<$Res> {
-  _$ConsumealbeEntryCopyWithImpl(this._value, this._then);
+class _$ConsumableEntryCopyWithImpl<$Res, $Val extends ConsumableEntry>
+    implements $ConsumableEntryCopyWith<$Res> {
+  _$ConsumableEntryCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -77,11 +77,11 @@ class _$ConsumealbeEntryCopyWithImpl<$Res, $Val extends ConsumealbeEntry>
 }
 
 /// @nodoc
-abstract class _$$ConsumealbeEntryImplCopyWith<$Res>
-    implements $ConsumealbeEntryCopyWith<$Res> {
-  factory _$$ConsumealbeEntryImplCopyWith(_$ConsumealbeEntryImpl value,
-          $Res Function(_$ConsumealbeEntryImpl) then) =
-      __$$ConsumealbeEntryImplCopyWithImpl<$Res>;
+abstract class _$$ConsumableEntryImplCopyWith<$Res>
+    implements $ConsumableEntryCopyWith<$Res> {
+  factory _$$ConsumableEntryImplCopyWith(_$ConsumableEntryImpl value,
+          $Res Function(_$ConsumableEntryImpl) then) =
+      __$$ConsumableEntryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -89,11 +89,11 @@ abstract class _$$ConsumealbeEntryImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ConsumealbeEntryImplCopyWithImpl<$Res>
-    extends _$ConsumealbeEntryCopyWithImpl<$Res, _$ConsumealbeEntryImpl>
-    implements _$$ConsumealbeEntryImplCopyWith<$Res> {
-  __$$ConsumealbeEntryImplCopyWithImpl(_$ConsumealbeEntryImpl _value,
-      $Res Function(_$ConsumealbeEntryImpl) _then)
+class __$$ConsumableEntryImplCopyWithImpl<$Res>
+    extends _$ConsumableEntryCopyWithImpl<$Res, _$ConsumableEntryImpl>
+    implements _$$ConsumableEntryImplCopyWith<$Res> {
+  __$$ConsumableEntryImplCopyWithImpl(
+      _$ConsumableEntryImpl _value, $Res Function(_$ConsumableEntryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -103,7 +103,7 @@ class __$$ConsumealbeEntryImplCopyWithImpl<$Res>
     Object? projectID = freezed,
     Object? consumables = null,
   }) {
-    return _then(_$ConsumealbeEntryImpl(
+    return _then(_$ConsumableEntryImpl(
       createDate: null == createDate
           ? _value.createDate
           : createDate // ignore: cast_nullable_to_non_nullable
@@ -122,15 +122,15 @@ class __$$ConsumealbeEntryImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ConsumealbeEntryImpl implements _ConsumealbeEntry {
-  const _$ConsumealbeEntryImpl(
+class _$ConsumableEntryImpl implements _ConsumableEntry {
+  const _$ConsumableEntryImpl(
       {required this.createDate,
       this.projectID,
       final List<Consumable> consumables = const <Consumable>[]})
       : _consumables = consumables;
 
-  factory _$ConsumealbeEntryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ConsumealbeEntryImplFromJson(json);
+  factory _$ConsumableEntryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ConsumableEntryImplFromJson(json);
 
   @override
   final DateTime createDate;
@@ -149,14 +149,14 @@ class _$ConsumealbeEntryImpl implements _ConsumealbeEntry {
 
   @override
   String toString() {
-    return 'ConsumealbeEntry(createDate: $createDate, projectID: $projectID, consumables: $consumables)';
+    return 'ConsumableEntry(createDate: $createDate, projectID: $projectID, consumables: $consumables)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ConsumealbeEntryImpl &&
+            other is _$ConsumableEntryImpl &&
             (identical(other.createDate, createDate) ||
                 other.createDate == createDate) &&
             (identical(other.projectID, projectID) ||
@@ -173,26 +173,26 @@ class _$ConsumealbeEntryImpl implements _ConsumealbeEntry {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ConsumealbeEntryImplCopyWith<_$ConsumealbeEntryImpl> get copyWith =>
-      __$$ConsumealbeEntryImplCopyWithImpl<_$ConsumealbeEntryImpl>(
+  _$$ConsumableEntryImplCopyWith<_$ConsumableEntryImpl> get copyWith =>
+      __$$ConsumableEntryImplCopyWithImpl<_$ConsumableEntryImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsumealbeEntryImplToJson(
+    return _$$ConsumableEntryImplToJson(
       this,
     );
   }
 }
 
-abstract class _ConsumealbeEntry implements ConsumealbeEntry {
-  const factory _ConsumealbeEntry(
+abstract class _ConsumableEntry implements ConsumableEntry {
+  const factory _ConsumableEntry(
       {required final DateTime createDate,
       final int? projectID,
-      final List<Consumable> consumables}) = _$ConsumealbeEntryImpl;
+      final List<Consumable> consumables}) = _$ConsumableEntryImpl;
 
-  factory _ConsumealbeEntry.fromJson(Map<String, dynamic> json) =
-      _$ConsumealbeEntryImpl.fromJson;
+  factory _ConsumableEntry.fromJson(Map<String, dynamic> json) =
+      _$ConsumableEntryImpl.fromJson;
 
   @override
   DateTime get createDate;
@@ -203,6 +203,6 @@ abstract class _ConsumealbeEntry implements ConsumealbeEntry {
   List<Consumable> get consumables;
   @override
   @JsonKey(ignore: true)
-  _$$ConsumealbeEntryImplCopyWith<_$ConsumealbeEntryImpl> get copyWith =>
+  _$$ConsumableEntryImplCopyWith<_$ConsumableEntryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

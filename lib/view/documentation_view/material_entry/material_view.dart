@@ -29,7 +29,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   final TextEditingController _amountController = TextEditingController(text: '1');
   final TextEditingController _summaryController = TextEditingController();
 
-  late ConsumealbeEntry _entry;
+  late ConsumableEntry _entry;
   UnitDM? _unit;
   List<UnitDM>? _units;
   List<ConsumeableVM> _materials = [];
@@ -51,7 +51,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   void _initializeEntry() {
     final now = DateTime.now();
-    _entry = ConsumealbeEntry(createDate: now);
+    _entry = ConsumableEntry(createDate: now);
   }
 
   void _loadInitialData() {
@@ -320,7 +320,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       _amountController.text = '1';
       _summaryController.clear();
       _dateController.text = _formatDate(now);
-      _entry = ConsumealbeEntry(createDate: now);
+      _entry = ConsumableEntry(createDate: now);
     });
   }
 

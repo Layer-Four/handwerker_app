@@ -4,8 +4,7 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 
-final materialVMProvider =
-    AsyncNotifierProvider<MaterialNotifier, List<ConsumeableVM>>(() => MaterialNotifier());
+final materialVMProvider = AsyncNotifierProvider<MaterialNotifier, List<ConsumeableVM>>(() => MaterialNotifier());
 
 class MaterialNotifier extends AsyncNotifier<List<ConsumeableVM>> {
   final Api api = Api();
@@ -13,26 +12,23 @@ class MaterialNotifier extends AsyncNotifier<List<ConsumeableVM>> {
   @override
   List<ConsumeableVM> build() => [];
 
-  void loadMaterials() async {
-    // final materialUri = DbAdresses().getMaterialsList;
-    // final Dio dio = Dio();
+  Future<List<ConsumeableVM>> loadMaterials() async {
     try {
-      // final response = await dio.get(materialUri);
       final response = await api.getMaterialsList;
       if (response.statusCode != 200) {
         if (response.statusCode == 401) {
           ref.read(userProvider.notifier).userLogOut();
-          return;
+          return [];
         }
-        log('request is not successed -> ${response.data}');
-        return;
+        log('request is not successful -> ${response.data}');
+        return [];
       }
       final List data = response.data.map((e) => e as Map).toList();
       final materials = data.map((e) => ConsumeableVM.fromJson(e)).toList();
-      state = AsyncValue.data(materials);
-      return;
+      return materials;
     } catch (e) {
-      log('request was incompleted this was the error-> $e');
+      log('request was incomplete this was the error-> $e');
+      return [];
     }
   }
 }

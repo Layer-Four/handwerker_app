@@ -9,6 +9,7 @@ class CustomerNotifier extends StateNotifier<List<CustomerShortDM>> {
   CustomerNotifier() : super([]);
 
   Future<void> loadCustomers() async {
+    log(state.length.toString());
     try {
       final response = await _api.getListCustomer;
       if (response.statusCode != 200) {
@@ -27,6 +28,7 @@ class CustomerNotifier extends StateNotifier<List<CustomerShortDM>> {
 
 final customerProvider = StateNotifierProvider<CustomerNotifier, List<CustomerShortDM>>((ref) {
   final notifier = CustomerNotifier();
+  CustomerNotifier().loadCustomers();
   notifier.loadCustomers();
   return notifier;
 });
