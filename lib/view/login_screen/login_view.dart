@@ -24,9 +24,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final TextEditingController _emailCon = TextEditingController();
   final TextEditingController _passCon = TextEditingController();
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
+  late final dictionary = ref.watch(settingsProv).dictionary;
 
   String? validateEmail(String? input, Dictionary dictionary) {
-    const emailRegex = r"^[\w_%+-]+@[\w._-]+\.[a-zA-Z]{2,64}$";
+    // const emailRegex = r"^[\w_%+-]+@[\w-,]+\.[a-zA-Z]{2,64}$";
+    const emailRegex = r"""^[\w.,!"§$%&/()=?]+@[\w-,]+\.\w{2,62}$""";
 
     if (input == null || input.isEmpty) {
       return dictionary.enterEmail;
@@ -37,7 +39,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     }
   }
 
-  String? validatePassword(String? input, Dictionary dictionary) {
+  String? validatePassword(String? input) {
     if (input == null || input.isEmpty) {
       return dictionary.enterPassword;
     } else if (input.length >= 6) {
@@ -56,8 +58,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    final dictionary = ref.watch(settingsProv).dictionary;
-
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -127,7 +127,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             isPassword: true,
                             inputAction: TextInputAction.done,
                             // validator: validatePassword,
-                            validator: (input) => validatePassword(input, dictionary),
+                            validator: (input) => validatePassword(input),
 
                             onFieldSubmitted: (_) => _submitLogin(),
                             onFocusChange: (hasFocus) {

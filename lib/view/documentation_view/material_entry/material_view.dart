@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +9,6 @@ import 'package:handwerker_app/models/consumable_models/consumable_entry/consuma
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
-import 'package:handwerker_app/models/language/dictionary.dart';
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
@@ -35,6 +36,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
   List<ConsumeableVM> _materials = [];
   ProjectShortVM? _project;
   ConsumeableVM? _selectedMaterial;
+  bool _isMaterialsLoaded = false;
 
   @override
   void initState() {
@@ -60,6 +62,14 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     ref.read(projectVMProvider.notifier).loadpProject();
   }
 
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _dateController.dispose();
+    _summaryController.dispose();
+    super.dispose();
+  }
+
   void _refreshUnits() {
     ref.read(consumableProvider.notifier).getUnits().then(
           (value) => setState(() {
@@ -71,27 +81,26 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 
+  late final dictionary = ref.watch(settingsProv).dictionary;
   @override
   Widget build(BuildContext context) {
-    final dictionary = ref.watch(settingsProv).dictionary;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          _buildDateInput(dictionary),
-          _buildProjectSelector(dictionary),
-          _buildMaterialSelector(dictionary),
-          _buildAmountAndPriceFields(dictionary),
+          _buildDateInput(),
+          _buildProjectSelector(),
+          _buildMaterialSelector(),
+          _buildAmountAndPriceFields(),
           const SizedBox(height: 184),
-          _buildSubmitButton(dictionary),
+          _buildSubmitButton(),
           _buildLogo(),
         ],
       ),
     );
   }
 
-  Widget _buildDateInput(Dictionary dictionary) {
+  Widget _buildDateInput() {
     return LabeldTextfield(
       label: dictionary.date,
       controller: _dateController,
@@ -110,7 +119,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     }
   }
 
-  Widget _buildProjectSelector(Dictionary dictionary) {
+  Widget _buildProjectSelector() {
     final projects = ref.watch(projectVMProvider);
     return projects.isEmpty
         ? const Text('Lade Projekte...')
@@ -134,7 +143,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
           );
   }
 
-  Widget _buildMaterialSelector(Dictionary dictionary) {
+  Widget _buildMaterialSelector() {
     return ref.watch(materialVMProvider).when(
           data: (materials) {
             if (materials.isNotEmpty && _selectedMaterial == null) {
@@ -200,17 +209,29 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _buildAmountAndPriceFields(Dictionary dictionary) {
+  Widget _buildSubmitButton() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SymmetricButton(
+        color: AppColor.kPrimaryButtonColor,
+        text: dictionary.createEntry,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+        onPressed: _submitEntry,
+      ),
+    );
+  }
+
+  Widget _buildAmountAndPriceFields() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildAmountField(dictionary),
-        _buildSummaryField(dictionary),
+        _buildAmountField(),
+        _buildSummaryField(),
       ],
     );
   }
 
-  Widget _buildAmountField(Dictionary dictionary) {
+  Widget _buildAmountField() {
     return _buildNumberField(
       label: dictionary.amount,
       controller: _amountController,
@@ -222,7 +243,7 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _buildSummaryField(Dictionary dictionary) {
+  Widget _buildSummaryField() {
     return _buildNumberField(
       label: dictionary.sum,
       controller: _summaryController,
@@ -272,7 +293,165 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     _summaryController.text = '${(price * amount).toStringAsFixed(2)} €';
   }
 
-  Widget _buildSubmitButton(Dictionary dictionary) {
+  // Widget _buildSubmitButton() {
+// .when(
+//           error: (error, stackTrace) {
+//             log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
+//             return const SizedBox(child: Text('Etwas lief schief'));
+//           },
+//           loading: () => const CircularProgressIndicator.adaptive(),
+//           data: (data) {
+//             if (data == null) {
+//               ref.read(projectVMProvider.notifier).loadpProject();
+//             }
+//             final projects = data;
+//             if (projects != null && !_isProjectSet) {
+//               setState(() {
+//                 _project = projects.first;
+//                 _entry = _entry.copyWith(projectID: projects.first.id);
+//                 _isProjectSet = true;
+//               });
+//             }
+
+  Widget _chooseCustomerProjectField() {
+    return ref.read(projectVMProvider).isEmpty
+        ? const Text('lade Projekte')
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    dictionary.customer,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColor.kTextfieldBorder),
+                  ),
+                  child: DropdownButton(
+                    menuMaxHeight: 350,
+                    underline: const SizedBox(),
+                    isExpanded: true,
+                    value: _project,
+                    items: ref
+                        .watch(projectVMProvider)
+                        .map(
+                          (e) => DropdownMenuItem(
+                            alignment: Alignment.center,
+                            value: e,
+                            child: Text(' ${e.title}'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (e) {
+                      // setState(() {
+                      //   _project = e;
+                      //   _entry = _entry.copyWith(projectID: e.id);
+                      // });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
+
+  Widget _chooseMaterialField(AsyncValue<List<ConsumeableVM>> materialsAsyncValue) {
+    return materialsAsyncValue.when(
+      error: (err, stackTrace) {
+        log('Error occurred in buildServiceDropdown in MaterialEntryBody: $err \n\n Stack: $stackTrace');
+        return const SizedBox.expand(
+          child: Center(child: Text('Etwas lief schief')),
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      data: (materials) {
+        if (materials.isNotEmpty && !_isMaterialsLoaded) {
+          setState(() {
+            _selectedMaterial = materials.first;
+            _materials = materials;
+            _isMaterialsLoaded = true;
+          });
+        }
+
+        final multi = int.tryParse(_amountController.text) ?? 1;
+        final price = _selectedMaterial?.price ?? 0;
+        _summaryController.text = (price * multi).toStringAsFixed(2);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
+              ),
+              Container(
+                height: 40,
+                padding: const EdgeInsets.only(left: 20, right: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                ),
+                child: DropdownButton(
+                  menuMaxHeight: 350,
+                  underline: const SizedBox.shrink(),
+                  isExpanded: true,
+                  value: _selectedMaterial,
+                  items: _materials
+                      .map(
+                        (e) => DropdownMenuItem(
+                          alignment: Alignment.center,
+                          value: e,
+                          child: Text('${e.name}/ ${e.materialUnitName}'),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (e) {
+                    setState(() {
+                      _selectedMaterial = e!;
+                      final multi = int.tryParse(_amountController.text) ?? 1;
+                      _summaryController.text = (e.price * multi).toStringAsFixed(2);
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  int count = 0;
+  Widget _dayInputWidget() {
+    count++;
+    log(count.toString());
+    return LabeldTextfield(
+      label: dictionary.date,
+      controller: _dateController,
+      textInputType: TextInputType.datetime,
+      onTap: () async {
+        final date = await Utilits.selecetDate(context);
+        if (date != null) {
+          setState(() {
+            _dateController.text = '${date.day}.${date.month}.${date.year}';
+            _entry = _entry.copyWith(createDate: date);
+          });
+        }
+      },
+    );
+  }
+
+  Padding _submitInput() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SymmetricButton(
@@ -334,13 +513,5 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    _amountController.dispose();
-    _summaryController.dispose();
-    super.dispose();
   }
 }
