@@ -56,15 +56,14 @@ class StartView extends ConsumerWidget {
                           onPressed: () async {
                             log('token after press start > ${ref.watch(userProvider).userToken}');
                             // TODO: set Await the navigate to QrScannerview
-                            final mandant = await ref.watch(userProvider.notifier).mandant;
-                            final user = await ref.watch(userProvider.notifier).username;
-                            (mandant == null && user == null)
-                                ? Navigator.pushReplacementNamed(
-                                    context, AppRoutes.firstSigninScreen)
-                                : ref.watch(userProvider).userToken.isEmpty
-                                    ? Navigator.pushReplacementNamed(
-                                        context, AppRoutes.anmeldeScreen)
-                                    : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
+                            // final mandant = await ref.watch(userProvider.notifier).mandant;
+                            // final user = await ref.watch(userProvider.notifier).username;
+                            // (mandant == null && user == null)
+                            // ? Navigator.pushReplacementNamed(
+                            // context, AppRoutes.firstSigninScreen)                             :
+                            ref.watch(userProvider).userToken.isEmpty
+                                ? Navigator.pushReplacementNamed(context, AppRoutes.anmeldeScreen)
+                                : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
