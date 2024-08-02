@@ -111,6 +111,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           CustomLoginTextField(
                             controller: _emailCon,
                             inputAction: TextInputAction.next,
+                            // TODO: we need it later???
                             // validator: (input) => validateEmail(input, dictionary),
 
                             // validator: validateEmail,
