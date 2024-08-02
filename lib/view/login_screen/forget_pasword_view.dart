@@ -7,14 +7,14 @@ import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/text_field.dart';
 
-class ForgetScreen extends StatefulWidget {
-  const ForgetScreen({super.key});
+class ForgetPasswordView extends StatefulWidget {
+  const ForgetPasswordView({super.key});
 
   @override
-  State<ForgetScreen> createState() => _ForgetScreenState();
+  State<ForgetPasswordView> createState() => _ForgetPasswordViewState();
 }
 
-class _ForgetScreenState extends State<ForgetScreen> {
+class _ForgetPasswordViewState extends State<ForgetPasswordView> {
   final TextEditingController _emailCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
