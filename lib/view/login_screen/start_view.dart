@@ -12,7 +12,6 @@ class StartView extends ConsumerWidget {
   const StartView({super.key});
 
   @override
-  @override
   Widget build(BuildContext context, ref) {
     WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) => ref.watch(userProvider));
     return GestureDetector(
@@ -54,11 +53,18 @@ class StartView extends ConsumerWidget {
                         width: 240,
                         height: 40,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             log('token after press start > ${ref.watch(userProvider).userToken}');
-                            ref.watch(userProvider).userToken.isEmpty
-                                ? Navigator.pushReplacementNamed(context, AppRoutes.anmeldeScreen)
-                                : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
+                            // TODO: set Await the navigate to QrScannerview
+                            final mandant = await ref.watch(userProvider.notifier).mandant;
+                            final user = await ref.watch(userProvider.notifier).username;
+                            (mandant == null && user == null)
+                                ? Navigator.pushReplacementNamed(
+                                    context, AppRoutes.firstSigninScreen)
+                                : ref.watch(userProvider).userToken.isEmpty
+                                    ? Navigator.pushReplacementNamed(
+                                        context, AppRoutes.anmeldeScreen)
+                                    : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

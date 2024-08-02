@@ -20,11 +20,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
   bool isUsernameFocused = false;
   bool isPasswordFocused = false;
   bool _isLoaded = false;
-
-  final TextEditingController _emailCon = TextEditingController();
-  final TextEditingController _passCon = TextEditingController();
+  late final TextEditingController _emailCon, _passCon;
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
   late final dictionary = ref.watch(settingsProv).dictionary;
+  @override
+  void initState() {
+    _emailCon = TextEditingController();
+    _passCon = TextEditingController();
+    isUserNameSaved();
+    super.initState();
+  }
+
+  void isUserNameSaved() async {
+    Future.delayed(Duration(microseconds: 0)).then((_) {
+      ref.watch(userProvider.notifier).username.then((e) => e != null ? _emailCon.text = e : null);
+      // TODO:when save password in securestorage, than can autofil here.
+    });
+  }
 
   String? validateEmail(String? input, Dictionary dictionary) {
     // const emailRegex = r"^[\w_%+-]+@[\w-,]+\.[a-zA-Z]{2,64}$";
@@ -99,7 +111,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           CustomLoginTextField(
                             controller: _emailCon,
                             inputAction: TextInputAction.next,
-                            validator: (input) => validateEmail(input, dictionary),
+                            // validator: (input) => validateEmail(input, dictionary),
 
                             // validator: validateEmail,
                             onFieldSubmitted: (_) => _submitLogin(),
