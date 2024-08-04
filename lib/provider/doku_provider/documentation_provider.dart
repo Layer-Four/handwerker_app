@@ -154,12 +154,10 @@ class ProjectNotifer extends Notifier<DocumentationState> {
   Future<FormData> _buildFormData() async {
     final entry = state.docu;
     final List<XFile> files = [];
-
     for (var path in entry.imageUrl) {
       final xfile = XFile(
         path,
-        name:
-            '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
+        name: '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
         mimeType: 'jpeg',
       );
       files.add(xfile);
@@ -173,8 +171,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
       final XFile file = files[i];
       final multiPartFile = MultipartFile.fromFileSync(
         file.path,
-        filename:
-            '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
+        filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
       );
       formData.files.add(MapEntry('image${i == 0 ? "" : i}', multiPartFile));
     }
@@ -188,6 +185,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
         MapEntry('signitaure/${state.project?.title ?? ''}', signature),
       );
     }
+
     return formData;
   }
 }

@@ -25,8 +25,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   @override
   void initState() {
     super.initState();
-    _dayPickerController =
-        TextEditingController(text: DateFormat('dd.MM.y').format(DateTime.now()));
+    _dayPickerController = TextEditingController(text: DateFormat('dd.MM.y').format(DateTime.now()));
     _descriptionController = TextEditingController();
   }
 
@@ -65,6 +64,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   )
                 : ChooseCustomer<CustomerShortDM>(
                     title: dictionary.customer,
+                    value: ref.watch(documentationProvider.notifier).currentCustomer,
                     items: ref
                         .watch(documentationProvider)
                         .customers
@@ -77,10 +77,10 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                         )
                         .toList(),
                     onChanged: (e) => ref.read(documentationProvider.notifier).updateCustomer(e),
-                    value: ref.watch(documentationProvider.notifier).currentCustomer,
                   ),
             ChooseCustomer<ProjectShortVM>(
               title: dictionary.projectUpperCase,
+              value: ref.watch(documentationProvider).project,
               items: ref
                   .watch(documentationProvider.notifier)
                   .projects
@@ -92,10 +92,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     ),
                   )
                   .toList(),
-              onChanged: (e) {
-                ref.read(documentationProvider.notifier).updateProject(e);
-              },
-              value: ref.watch(documentationProvider).project,
+              onChanged: (e) => ref.read(documentationProvider.notifier).updateProject(e),
             ),
             const ChooseMediaWidget(),
             Padding(
@@ -112,14 +109,23 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                 isMultiLine: true,
               ),
             ),
-            Container(
-              height: 80,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColor.kTextfieldBorder),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Center(
-                child: Text('Hier könnte ihre Unterschrift stehen'),
+            GestureDetector(
+              onDoubleTap: () {
+                final sig = showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const SignaturePopUpWidget();
+                    });
+              },
+              child: Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kTextfieldBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Center(
+                  child: Text('Hier könnte ihre Unterschrift stehen'),
+                ),
               ),
             ),
             Padding(
@@ -171,6 +177,28 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
       });
     }
   }
+}
+
+class SignaturePopUpWidget extends StatelessWidget {
+  const SignaturePopUpWidget({super.key});
+  @override
+  Widget build(BuildContext context) => Dialog(
+        child: Column(
+          children: [
+            Text('siganturefeld'),
+            Row(
+              children: [
+                GestureDetector(
+                  child: Text('bestätigen'),
+                  onTap: () => Navigator.of(context).pop('byteString from singature'),
+                ),
+                Text('neu'),
+                Text('ablehnen'),
+              ],
+            ),
+          ],
+        ),
+      );
 }
 
   // Container _buildChooseMedai() => Container(
