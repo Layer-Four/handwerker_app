@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
+import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/shared/constants.dart';
 import 'package:handwerker_app/view/login_screen/shared/snackbar.dart';
 import 'package:handwerker_app/view/widgets/logo.dart';
@@ -19,9 +20,7 @@ class _PasswordViewState extends State<PasswordView> {
 
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  final TextEditingController _oldPWController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _newpasswordController = TextEditingController();
+  late final TextEditingController _oldPWController, _passwordController, _newpasswordController;
 
   bool isPassword6Char = false;
   bool isPasswordHas1Number = false;
@@ -56,6 +55,14 @@ class _PasswordViewState extends State<PasswordView> {
         hasSpecialCharacters = true;
       }
     });
+  }
+
+  @override
+  void initState() {
+    _oldPWController = TextEditingController();
+    _newpasswordController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
   }
 
   waitLoad() async {
@@ -387,7 +394,7 @@ class _PasswordViewState extends State<PasswordView> {
                                   .read(userProvider.notifier)
                                   .setNewPassword(_oldPWController.text, _passwordController.text)
                                   .then((e) {
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pushReplacementNamed(AppRoutes.viewScreen);
                                 showSnackBar(
                                     context,
                                     e

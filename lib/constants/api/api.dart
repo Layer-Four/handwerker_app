@@ -60,12 +60,44 @@ class Api {
   Future<Response> putpdateDocumentationEntry(data) => _api.post(_putDocumentationDay, data: data);
   Future<Response> postResetPasswordRequest(Map<String, dynamic> json) =>
       _api.post(_postResetPasswordRequest, data: json);
-  void storeToken(String token) => _storage.then((e) => e.setString('TOKEN', token));
-  void deleteToken() => _storage.then((e) => e.remove('TOKEN'));
-  Future<String?> get getToken => _storage.then((value) => value.getString('TOKEN'));
-
+  void storeToken(String token) async => _storage.then(
+        (e) => e.setString('TOKEN', token),
+      ); //.write(key: 'TOKEN', value: token);
+  void storeUserName(String name) async => _storage.then(
+        (e) => e.setString('USERNAME', name),
+      ); //.write(key: 'USERNAME', value: name);
+  void storeMandant(String mandantID) async => _storage.then(
+        (e) => e.setString('MANDANT', mandantID),
+      ); //.write(key: 'MANDANT', value: mandantID);
+  //  .then((e) => e.setString('TOKEN', token));
+  void deleteToken() async => _storage.then(
+        (e) => e.remove('TOKEN'),
+      ); //.delete(key: 'TOKEN');
+  void deleteMandant() async => _storage.then(
+        (e) => e.remove('MANDANT'),
+      ); //.delete(key: 'MANDANT');
+  void deleteUserName() async => _storage.then(
+        (e) => e.remove('USERNAME'),
+      ); //.delete(key: 'userName');
+  //  .then((e) => e.remove('TOKEN'));
+  Future<String?> get getMandant async => _storage.then(
+        (e) => e.getString('MANDANT'),
+      ); //) .read(key: 'MANDANT');
+  // Future<String?> get getMandant async => await _storage.read(key: 'MANDANT');
+  Future<String?> get getUsername async => _storage.then(
+        (e) => e.getString('USERNAME'),
+      ); //.read(key: 'userName');
+  Future<String?> get getToken async => _storage.then(
+        (e) => e.getString('TOKEN'),
+      ); //.read(key: 'TOKEN');
+  // aOptions: _getAndroidOptions(),
+  // iOptions: _getIOSOptions(),
+  //((value) => value.getString('TOKEN'));
+  // AndroidOptions _getAndroidOptions() => AndroidOptions();
+  // IOSOptions _getIOSOptions([String accName = 'unDefin']) => IOSOptions(accountName: accName);
   final Dio _api = Dio();
   final _storage = SharedPreferences.getInstance();
+  // final _storage = const FlutterSecureStorage();
 
   Api() {
     _api.options = BaseOptions(baseUrl: _baseUrl);
@@ -87,7 +119,7 @@ class Api {
       onError: (DioException error, handler) async {
         if (error.response?.statusCode == 500 ||
             (error.message != null && error.message!.contains('500'))) {
-          // deleteToken();
+          // deleteToken();P
           log('DB return $error');
         }
         // TODO: think about retry logic for wake up database

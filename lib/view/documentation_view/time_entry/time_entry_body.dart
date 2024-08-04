@@ -139,7 +139,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
               : ref.watch(timeEntriesProvider).customers.isEmpty
                   ? Text(ref.watch(settingsProv).dictionary.loadData)
                   : ChooseCustomer(
-                      title: ref.watch(settingsProv).dictionary.projectUpperCase,
+                      title: ref.watch(settingsProv).dictionary.customer,
                       value: ref.watch(timeEntriesProvider).currentCustomer,
                       items: ref
                           .watch(timeEntriesProvider)
