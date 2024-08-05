@@ -87,7 +87,7 @@ class CustomLoginTextField extends ConsumerWidget {
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
+                borderSide: BorderSide(
                   color: AppColor.kRed,
                   width: 2,
                   style: BorderStyle.solid,
@@ -95,7 +95,7 @@ class CustomLoginTextField extends ConsumerWidget {
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
+                borderSide: BorderSide(
                   color: AppColor.kRed,
                   width: 2,
                   style: BorderStyle.solid,

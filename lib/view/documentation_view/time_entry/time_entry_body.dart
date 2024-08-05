@@ -144,7 +144,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
               : ref.watch(timeEntriesProvider).customers.isEmpty
                   ? Text(ref.watch(settingsProv).dictionary.loadData)
                   : ChooseCustomer(
-                      title: ref.watch(settingsProv).dictionary.projectUpperCase,
+                      title: ref.watch(settingsProv).dictionary.customer,
                       value: ref.watch(timeEntriesProvider).currentCustomer,
                       items: ref
                           .watch(timeEntriesProvider)
@@ -166,7 +166,7 @@ class _TimeEntriesState extends ConsumerState<TimeEntriesBody> {
             title: dictionary.projectUpperCase,
             items: ref
                 .watch(timeEntriesProvider.notifier)
-                .projects
+                .projectsList
                 .map(
                   (e) => DropdownMenuItem(
                     alignment: Alignment.center,

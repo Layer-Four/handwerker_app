@@ -26,7 +26,7 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
   ServiceListVM? get service => state.currentService;
   CustomerShortDM? get currentCustomer => state.currentCustomer;
   ProjectShortVM? get project => state.project;
-  List<ProjectShortVM> get projects => state.customerProject;
+  List<ProjectShortVM> get projectsList => state.customerProjects;
   List<CustomerShortDM>? get customers => state.customers;
   @override
   TimeEntryState build() {
@@ -37,6 +37,10 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
 
   @override
   void updateSeletedCustomer(CustomerShortDM? e) async {
+    final user = await _api.getUsername;
+    final mandant = await _api.getMandant;
+    log(user.toString());
+    log(mandant.toString());
     if (e == null || state.currentCustomer == e) return;
     final newProjects = await getProjectsForCustomer(e.id);
     state = state.copyWith(

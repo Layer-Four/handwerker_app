@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
+import 'package:handwerker_app/models/language/dictionary.dart';
+import 'package:handwerker_app/provider/settings_provider/settings_provider.dart';
 import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
 import 'package:handwerker_app/routes/app_routes.dart';
 import 'package:handwerker_app/view/login_screen/shared/custom_textfield.dart';
@@ -18,34 +20,44 @@ class _LoginViewState extends ConsumerState<LoginView> {
   bool isUsernameFocused = false;
   bool isPasswordFocused = false;
   bool _isLoaded = false;
-
-  final TextEditingController _emailCon = TextEditingController();
-  final TextEditingController _passCon = TextEditingController();
+  late final TextEditingController _emailCon, _passCon;
   final GlobalKey<FormState> _formstate = GlobalKey<FormState>();
+  late final dictionary = ref.watch(settingsProv).dictionary;
+  @override
+  void initState() {
+    _emailCon = TextEditingController();
+    _passCon = TextEditingController();
+    isUserNameSaved();
+    super.initState();
+  }
 
-  String? validateEmail(String? input) {
-    const emailRegex = r"^[\w_%+-]+@[\w._-]+\.[a-zA-Z]{2,64}$";
+  void isUserNameSaved() async {
+    Future.delayed(Duration(microseconds: 0)).then((_) {
+      ref.watch(userProvider.notifier).username.then((e) => e != null ? _emailCon.text = e : null);
+      // TODO:when save password in securestorage, than can autofil here.
+    });
+  }
+
+  String? validateEmail(String? input, Dictionary dictionary) {
+    // const emailRegex = r"^[\w_%+-]+@[\w-,]+\.[a-zA-Z]{2,64}$";
+    const emailRegex = r"""^[\w.,!"§$%&/()=?]+@[\w-,]+\.\w{2,62}$""";
 
     if (input == null || input.isEmpty) {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Email bitte eingeben';
+      return dictionary.enterEmail;
     } else if (RegExp(emailRegex).hasMatch(input)) {
       return null;
     } else {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Ungültige Nutzernamen Format';
+      return dictionary.invalidEmailFormat;
     }
   }
 
   String? validatePassword(String? input) {
     if (input == null || input.isEmpty) {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return 'Passwort bitte eingeben';
+      return dictionary.enterPassword;
     } else if (input.length >= 6) {
       return null;
     } else {
-      // TODO: please check if is in Dictonary is a getter and use it or create it
-      return "Mehr als 6 Zeichen bitte eingeben";
+      return dictionary.shortPassword;
     }
   }
 
@@ -99,7 +111,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           CustomLoginTextField(
                             controller: _emailCon,
                             inputAction: TextInputAction.next,
-                            validator: validateEmail,
+                            // TODO: we need it later???
+                            // validator: (input) => validateEmail(input, dictionary),
+
+                            // validator: validateEmail,
                             onFieldSubmitted: (_) => _submitLogin(),
                             onFocusChange: (hasFocus) {
                               setState(() => isUsernameFocused = hasFocus);
@@ -124,7 +139,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             controller: _passCon,
                             isPassword: true,
                             inputAction: TextInputAction.done,
-                            validator: validatePassword,
+                            // validator: validatePassword,
+                            validator: (input) => validatePassword(input),
+
                             onFieldSubmitted: (_) => _submitLogin(),
                             onFocusChange: (hasFocus) {
                               setState(() => isPasswordFocused = hasFocus);
@@ -181,6 +198,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         reactionOfLogin(isSuccess);
       } catch (e) {
         setState(() => _isLoaded = false);
+        // ignore: use_build_context_synchronously
         showSnackBar(context, 'Leider hat es nicht geklappt: ${e.toString()}');
       }
     } else {
