@@ -11,6 +11,9 @@ final materialNotifierProvider = NotifierProvider<MaterialNotifier, List<Consume
 );
 
 class MaterialNotifier extends AbstractEntryMethod<List<ConsumeableVM>> {
+  final Api _api = Api();
+  Future<String?> get mandant async => await _api.getMandant;
+
   @override
   List<ConsumeableVM> build() {
     // Initialize state with an empty list
@@ -29,6 +32,14 @@ class MaterialNotifier extends AbstractEntryMethod<List<ConsumeableVM>> {
 
   Future<void> loadData() async {
     try {
+      // Fetch Mandant ID from storage
+      final mandantID = await _api.getMandant;
+
+      if (mandantID == null) {
+        log('Mandant ID is missing');
+        return;
+      }
+
       // Fetch customers
       final customers = await getAllCustomer();
       if (customers.isEmpty) {
@@ -42,7 +53,11 @@ class MaterialNotifier extends AbstractEntryMethod<List<ConsumeableVM>> {
           : <ProjectShortVM>[];
 
       // Fetch materials from the API
-      final response = await Api().getMaterialsList;
+      final response = await _api.getMaterialsList;
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch materials: ${response.statusCode} ${response.data}');
+      }
+
       final data = response.data as List<dynamic>;  // Ensure response data is of type List<dynamic>
       final consumables = data.map((item) => ConsumeableVM.fromJson(item)).toList();
 
