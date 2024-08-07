@@ -1,12 +1,15 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/provider/doku_provider/documentation_provider.dart';
+import 'package:handwerker_app/view/documentation_view/documentation_entry/signature.dart';
+import 'package:handwerker_app/view/widgets/choose_media_widget.dart';
 import 'package:intl/intl.dart';
+
 import '../../../constants/apptheme/app_colors.dart';
 import '../../../models/customer_models/customer_short_model/customer_short_dm.dart';
 import '../../../models/project_models/project_short_vm/project_short_vm.dart';
-import '../../../provider/doku_provider/documentation_provider.dart';
 import '../../../provider/settings_provider/settings_provider.dart';
-import '../../widgets/choose_media_widget.dart';
 import '../../widgets/custom_datepicker_widget.dart';
 import '../../widgets/custom_textfield_widget.dart';
 import '../../widgets/symetric_button_widget.dart';
@@ -21,6 +24,7 @@ class DocumentationBody extends ConsumerStatefulWidget {
 
 class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   late final TextEditingController _dayPickerController, _descriptionController;
+  Uint8List? _signature;
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   }
 
   late final dictionary = ref.watch(settingsProv).dictionary;
+
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -110,12 +115,19 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               ),
             ),
             GestureDetector(
-              onDoubleTap: () {
-                final sig = showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const SignaturePopUpWidget();
-                    });
+              onDoubleTap: () async {
+                final signature = await showDialog<Uint8List?>(
+                  context: context,
+                  builder: (context) {
+                    return const SignaturePopUpWidget();
+                  },
+                );
+
+                if (signature != null) {
+                  setState(() {
+                    _signature = signature;
+                  });
+                }
               },
               child: Container(
                 height: 80,
@@ -123,9 +135,9 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                   border: Border.all(color: AppColor.kTextfieldBorder),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Center(
-                  child: Text('Hier könnte ihre Unterschrift stehen'),
-                ),
+                child: _signature == null
+                    ? const Center(child: Text('Hier könnte ihre Unterschrift stehen'))
+                    : Image.memory(_signature!),
               ),
             ),
             Padding(
@@ -178,114 +190,3 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
     }
   }
 }
-
-class SignaturePopUpWidget extends StatelessWidget {
-  const SignaturePopUpWidget({super.key});
-  @override
-  Widget build(BuildContext context) => Dialog(
-        child: Column(
-          children: [
-            Text('siganturefeld'),
-            Row(
-              children: [
-                GestureDetector(
-                  child: Text('bestätigen'),
-                  onTap: () => Navigator.of(context).pop('byteString from singature'),
-                ),
-                Text('neu'),
-                Text('ablehnen'),
-              ],
-            ),
-          ],
-        ),
-      );
-}
-
-  // Container _buildChooseMedai() => Container(
-  //       padding: const EdgeInsets.symmetric(vertical: 6),
-  //       height: 150,
-  //       decoration: BoxDecoration(
-  //         color: AppColor.kTextfieldBorder,
-  //         borderRadius: BorderRadius.circular(12),
-  //       ),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //             children: [
-  //               Column(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   Text(dictionary.makePicture),
-  //                   IconButton(
-  //                     icon: const Icon(Icons.camera_alt, size: 75),
-  //                     onPressed: () async {
-  //                       final image = await Utilits.pickImage(
-  //                         context,
-  //                         permission: Permission.camera,
-  //                       );
-  //                       if (image != null) {
-  //                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //                           backgroundColor: Colors.transparent,
-  //                           content: Image.file(
-  //                             File(image.path),
-  //                             height: 100,
-  //                             width: 150,
-  //                           ),
-  //                         ));
-  //                         ref.read(documentationProvider.notifier).updateDocumentation(
-  //                           imageUrl: [
-  //                             ...ref.watch(documentationProvider).docu.imageUrl,
-  //                             image.path,
-  //                           ],
-  //                         );
-  //                       }
-  //                     },
-  //                   ),
-  //                 ],
-  //               ),
-  //               Column(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   Text(dictionary.takePicture),
-  //                   IconButton(
-  //                     icon: const Icon(Icons.image, size: 70),
-  //                     onPressed: () async {
-  //                       final image = await Utilits.pickImage(
-  //                         context,
-  //                         permission: Permission.storage,
-  //                       );
-  //                       if (image != null) {
-  //                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //                           backgroundColor: Colors.transparent,
-  //                           content: Image.file(
-  //                             File(image.path),
-  //                             height: 100,
-  //                             width: 150,
-  //                           ),
-  //                         ));
-  //                         ref.read(documentationProvider.notifier).updateDocumentation(
-  //                           imageUrl: [
-  //                             ...ref.watch(documentationProvider).docu.imageUrl,
-  //                             image.path,
-  //                           ],
-  //                         );
-  //                       }
-  //                     },
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //           Text(
-  //             ref.watch(documentationProvider).docu.imageUrl.isEmpty
-  //                 ? ''
-  //                 : '${ref.watch(documentationProvider).docu.imageUrl.length} ${dictionary.choosedImage}',
-  //             style: ref.watch(documentationProvider).docu.imageUrl.isEmpty
-  //                 ? const TextStyle(fontSize: 0)
-  //                 : Theme.of(context).textTheme.labelSmall,
-  //           ),
-  //         ],
-  //       ),
-  //     );
