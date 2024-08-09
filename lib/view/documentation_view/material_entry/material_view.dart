@@ -1,7 +1,5 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/apptheme/app_colors.dart';
 import 'package:handwerker_app/constants/utiltis.dart';
@@ -9,7 +7,6 @@ import 'package:handwerker_app/models/consumable_models/consumable_entry/consuma
 import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
 import 'package:handwerker_app/models/consumable_models/unit_dm/unit_dm.dart';
-import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 import 'package:handwerker_app/provider/doku_provider/consumable_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/material_vm_provider.dart';
 import 'package:handwerker_app/provider/doku_provider/project_vm_provider.dart';
@@ -17,6 +14,11 @@ import 'package:handwerker_app/provider/settings_provider/settings_provider.dart
 import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:handwerker_app/view/widgets/symetric_button_widget.dart';
 import 'package:handwerker_app/view/widgets/textfield_widgets/labelt_textfield.dart';
+import 'package:handwerker_app/models/state_models/material_state.dart';
+import 'package:intl/intl.dart';
+import '../../../models/project_models/project_short_vm/project_short_vm.dart';
+import '../../../models/customer_models/customer_short_model/customer_short_dm.dart';
+import '../../../provider/doku_provider/customer_provider.dart';
 
 class MaterialBody extends ConsumerStatefulWidget {
   const MaterialBody({super.key});
@@ -26,182 +28,320 @@ class MaterialBody extends ConsumerStatefulWidget {
 }
 
 class _MaterialBodyState extends ConsumerState<MaterialBody> {
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController(text: '1');
-  final TextEditingController _summaryController = TextEditingController();
+  late final TextEditingController _amountController, _dayPickerController, _summeryController;
+  late final dictionary = ref.watch(settingsProv).dictionary;
 
   late ConsumealbeEntry _entry;
   UnitDM? _unit;
+  bool _isMaterialsLoaded = false;
   List<UnitDM>? _units;
+
+  String? _customerID;
   List<ConsumeableVM> _materials = [];
   ProjectShortVM? _project;
+  CustomerShortDM? _customer;
   ConsumeableVM? _selectedMaterial;
-  bool _isMaterialsLoaded = false;
+  List<ProjectShortVM> _projects = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeControllers();
-    _initializeEntry();
-    _loadInitialData();
-  }
-
-  void _initializeControllers() {
-    final now = DateTime.now();
-    _dateController.text = _formatDate(now);
-  }
-
-  void _initializeEntry() {
-    final now = DateTime.now();
-    _entry = ConsumealbeEntry(createDate: now);
-  }
-
-  void _loadInitialData() {
+    _amountController = TextEditingController(text: '1');
+    _dayPickerController = TextEditingController(
+      text: DateFormat('d.M.y').format(DateTime.now()),
+    );
+    _summeryController = TextEditingController();
+    _entry = ConsumealbeEntry(createDate: DateTime.now());
     _refreshUnits();
-    ref.read(materialVMProvider.notifier).loadMaterials();
+    ref.read(materialNotifierProvider.notifier).loadData();
     ref.read(projectVMProvider.notifier).loadpProject();
+    ref.read(customerProvider.notifier).loadCustomers();
   }
 
   @override
-  void dispose() {
-    _amountController.dispose();
-    _dateController.dispose();
-    _summaryController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    final materialsAsync = ref.watch(materialNotifierProvider);
+    final customersAsync = ref.watch(customerProvider);
+    final projectsAsync = ref.watch(projectVMProvider.select((state) => state));
+
+    final uniqueCustomers = customersAsync.toSet().toList();
+
+    if (_customer != null && !uniqueCustomers.contains(_customer)) {
+      log('Warning: Selected customer is not in the list.');
+      _customer = null;
+    }
+
+    if (_customer != null && _customer!.id != null) {
+      ref.read(projectVMProvider.notifier).loadProjectsForCustomer(_customer!.id);
+    }
+
+    _initializeSelectedValues(uniqueCustomers, _projects);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _dayInputWidget(),
+          _chooseCustomerField(uniqueCustomers),
+          _chooseProjectField(projectsAsync),
+          _chooseMaterialField(materialsAsync),
+          _buildAmountPriceFields(),
+          const SizedBox(height: 20),
+          SymmetricButton(
+            color: AppColor.kPrimaryButtonColor,
+            text: 'Submit',
+            onPressed: _submitInput,
+          ),
+          const SizedBox(height: 20),
+          const Center(
+            child: LogoWidget(
+              assetString: 'assets/images/img_techtool.png',
+              size: 40,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _refreshProjects() {
+    if (_customer != null) {
+      ref.read(projectVMProvider.notifier).loadProjectsForCustomer(_customer!.id);
+    }
   }
 
   void _refreshUnits() {
     ref.read(consumableProvider.notifier).getUnits().then(
           (value) => setState(() {
-            _units = value;
-            _unit = _units?.first;
-          }),
-        );
+        _units = value;
+        _unit = _units!.first;
+      }),
+    );
   }
 
-  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
+  void _submitInput() {
+    final unitId = _unit?.id;
+    final materialId = _selectedMaterial?.id?.toString();
 
-  late final dictionary = ref.watch(settingsProv).dictionary;
-  @override
-  Widget build(BuildContext context) {
+    if (unitId == null || materialId == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Required fields are missing')),
+        );
+      });
+      return;
+    }
+
+    final price = int.tryParse(_summeryController.text) ?? 0;
+
+    final material = Consumable(
+      amount: int.tryParse(_amountController.text) ?? 1,
+      materialUnitID: unitId,
+      price: price,
+      materialID: materialId,
+    );
+
+    _entry = _entry.copyWith(
+      consumables: [material],
+      projectID: _project?.id,
+    );
+
+    ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Submission successful')),
+      );
+    });
+
+    final now = DateTime.now();
+    setState(() {
+      _selectedMaterial = _materials.isNotEmpty ? _materials.first : null;
+      _amountController.clear();
+      _summeryController.clear();
+      _dayPickerController.text = DateFormat('d.M.y').format(now);
+      _customer = null;
+      _project = null;
+    });
+  }
+
+  Widget _chooseCustomerField(List<CustomerShortDM> customers) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        children: [
-          _buildDateInput(),
-          _buildProjectSelector(),
-          _buildMaterialSelector(),
-          _buildAmountAndPriceFields(),
-          const SizedBox(height: 184),
-          _buildSubmitButton(),
-          _buildLogo(),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField<CustomerShortDM>(
+        decoration: InputDecoration(
+          labelText: dictionary.customer,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        value: _customer,
+        items: [
+          DropdownMenuItem<CustomerShortDM>(
+            value: null,
+            child: Text('Select a customer'),
+          ),
+          ...customers.map((customer) {
+            return DropdownMenuItem<CustomerShortDM>(
+              value: customer,
+              child: Text(customer.companyName),
+            );
+          }).toList(),
         ],
+        onChanged: (selectedCustomer) {
+          setState(() {
+            _customer = selectedCustomer;
+            _project = null;
+            _refreshProjects();
+          });
+        },
       ),
     );
   }
 
-  Widget _buildDateInput() {
-    return LabeldTextfield(
-      label: dictionary.date,
-      controller: _dateController,
-      textInputType: TextInputType.datetime,
-      onTap: () => _selectDate(context),
+  Widget _chooseProjectField(List<ProjectShortVM> projects) {
+    if (projects.isEmpty) {
+      return const Text('No projects available.');
+    }
+
+    _project = _project ?? (projects.isNotEmpty ? projects.first : null);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField<ProjectShortVM>(
+        decoration: InputDecoration(
+          labelText: dictionary.project,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        value: _project,
+        items: [
+          DropdownMenuItem<ProjectShortVM>(
+            value: null,
+            child: Text('Select a project'),
+          ),
+          ...projects.map((project) {
+            return DropdownMenuItem<ProjectShortVM>(
+              value: project,
+              child: Text(project.title!),
+            );
+          }).toList(),
+        ],
+        onChanged: (selectedProject) {
+          setState(() {
+            _project = selectedProject;
+          });
+        },
+      ),
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final date = await Utilits.selecetDate(context);
-    if (date != null) {
-      setState(() {
-        _dateController.text = _formatDate(date);
-        _entry = _entry.copyWith(createDate: date);
-      });
+  Widget _chooseMaterialField(List<ConsumeableVM> materials) {
+    if (materials.isEmpty) {
+      return const Text('No materials available.');
     }
-  }
 
-  Widget _buildProjectSelector() {
-    final projects = ref.watch(projectVMProvider);
-    return projects.isEmpty
-        ? const Text('Lade Projekte...')
-        : _buildDropdown(
-            label: dictionary.customer,
-            value: _project,
-            items: projects
-                .map((e) => DropdownMenuItem<ProjectShortVM>(
-                      value: e,
-                      child: Text(e.title ?? 'Untitled Projekt'),
-                    ))
-                .toList(),
-            onChanged: (dynamic value) {
-              if (value is ProjectShortVM) {
-                setState(() {
-                  _project = value;
-                  _entry = _entry.copyWith(projectID: value.id);
-                });
-              }
-            },
-          );
-  }
-
-  Widget _buildMaterialSelector() {
-    return ref.watch(materialVMProvider).when(
-          data: (materials) {
-            if (materials.isNotEmpty && _selectedMaterial == null) {
-              _selectedMaterial = materials.first;
-              _materials = materials;
-            }
-            return _buildDropdown(
-              label: dictionary.material,
-              value: _selectedMaterial,
-              items: _materials
-                  .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text('${e.name}/ ${e.materialUnitName}'),
-                      ))
-                  .toList(),
-              onChanged: (dynamic value) {
-                if (value is ConsumeableVM) {
-                  setState(() {
-                    _selectedMaterial = value;
-                    _updateSummary();
-                  });
-                }
-              },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField<ConsumeableVM>(
+        decoration: InputDecoration(
+          labelText: dictionary.material,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        value: _selectedMaterial,
+        items: [
+          DropdownMenuItem<ConsumeableVM>(
+            value: null,
+            child: Text('Select a material'),
+          ),
+          ...materials.map((material) {
+            return DropdownMenuItem<ConsumeableVM>(
+              value: material,
+              child: Text(material.name),
             );
-          },
-          loading: () => const CircularProgressIndicator(),
-          error: (err, stack) => Text('Error: $err'),
-        );
+          }).toList(),
+        ],
+        onChanged: (selectedMaterial) {
+          setState(() {
+            _selectedMaterial = selectedMaterial;
+          });
+        },
+      ),
+    );
   }
 
-  Widget _buildDropdown({
-    required String label,
-    required dynamic value,
-    required List<DropdownMenuItem<dynamic>> items,
-    required Function(dynamic) onChanged,
-  }) {
+  Widget _dayInputWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: _dayPickerController,
+        decoration: InputDecoration(
+          labelText: dictionary.date,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+          ),
+          suffixIcon: Icon(Icons.calendar_today),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        readOnly: true,
+        onTap: () async {
+          final selectedDate = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+          );
+          if (selectedDate != null) {
+            _dayPickerController.text = DateFormat('d.M.y').format(selectedDate);
+            setState(() {
+              _entry = _entry.copyWith(createDate: selectedDate);
+            });
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildAmountPriceFields() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(4),
-            child: Text(label, style: Theme.of(context).textTheme.labelMedium),
-          ),
-          Container(
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColor.kTextfieldBorder),
+          TextFormField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Amount',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             ),
-            child: DropdownButton<dynamic>(
-              value: value,
-              items: items,
-              onChanged: onChanged,
-              isExpanded: true,
-              underline: const SizedBox.shrink(),
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _summeryController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Price',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColor.kTextfieldBorder),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             ),
           ),
         ],
@@ -209,309 +349,20 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
     );
   }
 
-  Widget _buildSubmitButton() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SymmetricButton(
-        color: AppColor.kPrimaryButtonColor,
-        text: dictionary.createEntry,
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-        onPressed: _submitEntry,
-      ),
-    );
-  }
-
-  Widget _buildAmountAndPriceFields() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildAmountField(),
-        _buildSummaryField(),
-      ],
-    );
-  }
-
-  Widget _buildAmountField() {
-    return _buildNumberField(
-      label: dictionary.amount,
-      controller: _amountController,
-      onChanged: (value) {
-        if (value.length <= 20) {
-          setState(_updateSummary);
-        }
-      },
-    );
-  }
-
-  Widget _buildSummaryField() {
-    return _buildNumberField(
-      label: dictionary.sum,
-      controller: _summaryController,
-      onChanged: (value) {
-        if (value.length < 20) {
-          setState(_updateSummary);
-        }
-      },
-      suffix: '€',
-    );
-  }
-
-  Widget _buildNumberField({
-    required String label,
-    required TextEditingController controller,
-    required Function(String) onChanged,
-    String? suffix,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          child: Text(label, style: Theme.of(context).textTheme.labelMedium),
-        ),
-        SizedBox(
-          height: 35,
-          width: 150,
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-            decoration: Utilits.textFieldDecoration(
-              context,
-              hintText: suffix != null ? '$label $suffix' : label,
-            ),
-            onChanged: onChanged,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _updateSummary() {
-    final amount = int.tryParse(_amountController.text) ?? 1;
-    final price = _selectedMaterial?.price ?? 0;
-    _summaryController.text = '${(price * amount).toStringAsFixed(2)} €';
-  }
-
-  // Widget _buildSubmitButton() {
-// .when(
-//           error: (error, stackTrace) {
-//             log('error occurent in buildServieDropdown in MaterialEntryBody-> $error \n\n this was the stack $stackTrace');
-//             return const SizedBox(child: Text('Etwas lief schief'));
-//           },
-//           loading: () => const CircularProgressIndicator.adaptive(),
-//           data: (data) {
-//             if (data == null) {
-//               ref.read(projectVMProvider.notifier).loadpProject();
-//             }
-//             final projects = data;
-//             if (projects != null && !_isProjectSet) {
-//               setState(() {
-//                 _project = projects.first;
-//                 _entry = _entry.copyWith(projectID: projects.first.id);
-//                 _isProjectSet = true;
-//               });
-//             }
-
-  Widget _chooseCustomerProjectField() {
-    return ref.read(projectVMProvider).isEmpty
-        ? const Text('lade Projekte')
-        : Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Text(
-                    dictionary.customer,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.only(left: 20, right: 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColor.kTextfieldBorder),
-                  ),
-                  child: DropdownButton(
-                    menuMaxHeight: 350,
-                    underline: const SizedBox(),
-                    isExpanded: true,
-                    value: _project,
-                    items: ref
-                        .watch(projectVMProvider)
-                        .map(
-                          (e) => DropdownMenuItem(
-                            alignment: Alignment.center,
-                            value: e,
-                            child: Text(' ${e.title}'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (e) {
-                      // setState(() {
-                      //   _project = e;
-                      //   _entry = _entry.copyWith(projectID: e.id);
-                      // });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-  }
-
-  Widget _chooseMaterialField(AsyncValue<List<ConsumeableVM>> materialsAsyncValue) {
-    return materialsAsyncValue.when(
-      error: (err, stackTrace) {
-        log('Error occurred in buildServiceDropdown in MaterialEntryBody: $err \n\n Stack: $stackTrace');
-        return const SizedBox.expand(
-          child: Center(child: Text('Etwas lief schief')),
-        );
-      },
-      loading: () => const CircularProgressIndicator(),
-      data: (materials) {
-        if (materials.isNotEmpty && !_isMaterialsLoaded) {
-          setState(() {
-            _selectedMaterial = materials.first;
-            _materials = materials;
-            _isMaterialsLoaded = true;
-          });
-        }
-
-        final multi = int.tryParse(_amountController.text) ?? 1;
-        final price = _selectedMaterial?.price ?? 0;
-        _summaryController.text = (price * multi).toStringAsFixed(2);
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(dictionary.material, style: Theme.of(context).textTheme.labelMedium),
-              ),
-              Container(
-                height: 40,
-                padding: const EdgeInsets.only(left: 20, right: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColor.kTextfieldBorder),
-                ),
-                child: DropdownButton(
-                  menuMaxHeight: 350,
-                  underline: const SizedBox.shrink(),
-                  isExpanded: true,
-                  value: _selectedMaterial,
-                  items: _materials
-                      .map(
-                        (e) => DropdownMenuItem(
-                          alignment: Alignment.center,
-                          value: e,
-                          child: Text('${e.name}/ ${e.materialUnitName}'),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (e) {
-                    setState(() {
-                      _selectedMaterial = e!;
-                      final multi = int.tryParse(_amountController.text) ?? 1;
-                      _summaryController.text = (e.price * multi).toStringAsFixed(2);
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  int count = 0;
-  Widget _dayInputWidget() {
-    count++;
-    log(count.toString());
-    return LabeldTextfield(
-      label: dictionary.date,
-      controller: _dateController,
-      textInputType: TextInputType.datetime,
-      onTap: () async {
-        final date = await Utilits.selecetDate(context);
-        if (date != null) {
-          setState(() {
-            _dateController.text = '${date.day}.${date.month}.${date.year}';
-            _entry = _entry.copyWith(createDate: date);
-          });
-        }
-      },
-    );
-  }
-
-  Padding _submitInput() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SymmetricButton(
-        color: AppColor.kPrimaryButtonColor,
-        text: dictionary.createEntry,
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-        onPressed: _submitEntry,
-      ),
-    );
-  }
-
-  void _submitEntry() {
-    if (_selectedMaterial == null || _project == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a material and project')),
-      );
-      return;
+  void _initializeSelectedValues(
+      List<CustomerShortDM> customers,
+      List<ProjectShortVM> projects,
+      ) {
+    if (_customer == null && customers.isNotEmpty) {
+      _customer = customers.first;
     }
 
-    final material = Consumable(
-      amount: int.tryParse(_amountController.text) ?? 1,
-      materialUnitID: _unit!.id,
-      price: int.tryParse(_summaryController.text) ?? 0,
-      materialID: _selectedMaterial!.id.toString(),
-    );
+    if (_project == null && projects.isNotEmpty) {
+      _project = projects.first;
+    }
 
-    _entry = _entry.copyWith(
-      consumables: [material],
-      projectID: _project!.id,
-    );
-
-    ref.read(consumableProvider.notifier).uploadConsumableEntry(_entry);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(ref.read(settingsProv).dictionary.succes)),
-    );
-
-    _resetForm();
-  }
-
-  void _resetForm() {
-    final now = DateTime.now();
-    setState(() {
+    if (_selectedMaterial == null && _materials.isNotEmpty) {
       _selectedMaterial = _materials.first;
-      _amountController.text = '1';
-      _summaryController.clear();
-      _dateController.text = _formatDate(now);
-      _entry = ConsumealbeEntry(createDate: now);
-    });
-  }
-
-  Widget _buildLogo() {
-    return const SizedBox(
-      height: 70,
-      child: Center(
-        child: LogoWidget(
-          assetString: 'assets/images/img_techtool.png',
-          size: 20,
-        ),
-      ),
-    );
+    }
   }
 }

@@ -2,37 +2,70 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
-import 'package:handwerker_app/provider/settings_provider/user_provider.dart';
+import 'package:handwerker_app/models/customer_models/customer_short_model/customer_short_dm.dart';
+import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
+import 'package:handwerker_app/models/custom_notifier_model/abstract_entry.methods.dart';
 
-final materialVMProvider =
-    AsyncNotifierProvider<MaterialNotifier, List<ConsumeableVM>>(() => MaterialNotifier());
+final materialNotifierProvider = NotifierProvider<MaterialNotifier, List<ConsumeableVM>>(
+      () => MaterialNotifier(),
+);
 
-class MaterialNotifier extends AsyncNotifier<List<ConsumeableVM>> {
-  final Api api = Api();
+class MaterialNotifier extends AbstractEntryMethod<List<ConsumeableVM>> {
+  final Api _api = Api();
+  Future<String?> get mandant async => await _api.getMandant;
 
   @override
-  List<ConsumeableVM> build() => [];
+  List<ConsumeableVM> build() {
+    // Initialize state with an empty list
+    return [];
+  }
 
-  void loadMaterials() async {
-    // final materialUri = DbAdresses().getMaterialsList;
-    // final Dio dio = Dio();
+  @override
+  void updateSelectedProject(ProjectShortVM? project) {
+    // Implement project update logic if needed
+  }
+
+  @override
+  void updateSeletedCustomer(CustomerShortDM? customer) {
+    // Implement customer update logic if needed
+  }
+
+  Future<void> loadData() async {
     try {
-      // final response = await dio.get(materialUri);
-      final response = await api.getMaterialsList;
-      if (response.statusCode != 200) {
-        if (response.statusCode == 401) {
-          ref.read(userProvider.notifier).userLogOut();
-          return;
-        }
-        log('request is not successed -> ${response.data}');
+      // Fetch Mandant ID from storage
+      final mandantID = await _api.getMandant;
+
+      if (mandantID == null) {
+        log('Mandant ID is missing');
         return;
       }
-      final List data = response.data.map((e) => e as Map).toList();
-      final materials = data.map((e) => ConsumeableVM.fromJson(e)).toList();
-      state = AsyncValue.data(materials);
-      return;
-    } catch (e) {
-      log('request was incompleted this was the error-> $e');
+
+      // Fetch customers
+      final customers = await getAllCustomer();
+      if (customers.isEmpty) {
+        state = [];
+        return;
+      }
+
+      // Fetch projects for the first customer if available
+      final projects = customers.isNotEmpty
+          ? await getProjectsForCustomer(customers.first.id)
+          : <ProjectShortVM>[];
+
+      // Fetch materials from the API
+      final response = await _api.getMaterialsList;
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch materials: ${response.statusCode} ${response.data}');
+      }
+
+      final data = response.data as List<dynamic>;  // Ensure response data is of type List<dynamic>
+      final consumables = data.map((item) => ConsumeableVM.fromJson(item)).toList();
+
+      // Update state with fetched data
+      state = consumables;
+    } catch (error) {
+      log('Error loading data: $error');
+      // Handle error appropriately, e.g., update state to indicate an error
     }
   }
 }
