@@ -23,7 +23,7 @@ mixin _$ProjectOverview {
   int get customerID => throw _privateConstructorUsedError;
   String? get customerName => throw _privateConstructorUsedError;
   bool get hasDocumentations => throw _privateConstructorUsedError;
-  List<ConsumeableVM> get materialViewModels =>
+  List<ConsumableDM> get materialViewModels =>
       throw _privateConstructorUsedError; // @Default([]) List materialViewModels,
   DateTime get projectCreated => throw _privateConstructorUsedError;
   int get projectID =>
@@ -47,7 +47,7 @@ abstract class $ProjectOverviewCopyWith<$Res> {
       {int customerID,
       String? customerName,
       bool hasDocumentations,
-      List<ConsumeableVM> materialViewModels,
+      List<ConsumableDM> materialViewModels,
       DateTime projectCreated,
       int projectID,
       String? projectName,
@@ -92,7 +92,7 @@ class _$ProjectOverviewCopyWithImpl<$Res, $Val extends ProjectOverview>
       materialViewModels: null == materialViewModels
           ? _value.materialViewModels
           : materialViewModels // ignore: cast_nullable_to_non_nullable
-              as List<ConsumeableVM>,
+              as List<ConsumableDM>,
       projectCreated: null == projectCreated
           ? _value.projectCreated
           : projectCreated // ignore: cast_nullable_to_non_nullable
@@ -125,7 +125,7 @@ abstract class _$$ProjectOverViewImplCopyWith<$Res>
       {int customerID,
       String? customerName,
       bool hasDocumentations,
-      List<ConsumeableVM> materialViewModels,
+      List<ConsumableDM> materialViewModels,
       DateTime projectCreated,
       int projectID,
       String? projectName,
@@ -168,7 +168,7 @@ class __$$ProjectOverViewImplCopyWithImpl<$Res>
       materialViewModels: null == materialViewModels
           ? _value._materialViewModels
           : materialViewModels // ignore: cast_nullable_to_non_nullable
-              as List<ConsumeableVM>,
+              as List<ConsumableDM>,
       projectCreated: null == projectCreated
           ? _value.projectCreated
           : projectCreated // ignore: cast_nullable_to_non_nullable
@@ -196,7 +196,7 @@ class _$ProjectOverViewImpl extends _ProjectOverView {
       {required this.customerID,
       this.customerName,
       this.hasDocumentations = false,
-      final List<ConsumeableVM> materialViewModels = const <ConsumeableVM>[],
+      final List<ConsumableDM> materialViewModels = const <ConsumableDM>[],
       required this.projectCreated,
       required this.projectID,
       this.projectName,
@@ -215,10 +215,10 @@ class _$ProjectOverViewImpl extends _ProjectOverView {
   @override
   @JsonKey()
   final bool hasDocumentations;
-  final List<ConsumeableVM> _materialViewModels;
+  final List<ConsumableDM> _materialViewModels;
   @override
   @JsonKey()
-  List<ConsumeableVM> get materialViewModels {
+  List<ConsumableDM> get materialViewModels {
     if (_materialViewModels is EqualUnmodifiableListView)
       return _materialViewModels;
     // ignore: implicit_dynamic_type
@@ -303,7 +303,7 @@ abstract class _ProjectOverView extends ProjectOverview {
       {required final int customerID,
       final String? customerName,
       final bool hasDocumentations,
-      final List<ConsumeableVM> materialViewModels,
+      final List<ConsumableDM> materialViewModels,
       required final DateTime projectCreated,
       required final int projectID,
       final String? projectName,
@@ -320,7 +320,7 @@ abstract class _ProjectOverView extends ProjectOverview {
   @override
   bool get hasDocumentations;
   @override
-  List<ConsumeableVM> get materialViewModels;
+  List<ConsumableDM> get materialViewModels;
   @override // @Default([]) List materialViewModels,
   DateTime get projectCreated;
   @override

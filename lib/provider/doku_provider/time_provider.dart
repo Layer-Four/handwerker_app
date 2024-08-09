@@ -14,8 +14,7 @@ import 'package:handwerker_app/models/customer_models/customer_short_model/custo
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 import 'package:handwerker_app/models/custom_notifier_model/abstract_entry.methods.dart';
 
-final timeEntriesProvider =
-    NotifierProvider<TimeEntriesNotifier, TimeEntryState>(() => TimeEntriesNotifier());
+final timeEntriesProvider = NotifierProvider<TimeEntriesNotifier, TimeEntryState>(() => TimeEntriesNotifier());
 
 // Notifier<TimeEntryState> implements
 class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
@@ -37,16 +36,14 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
 
   @override
   void updateSeletedCustomer(CustomerShortDM? e) async {
-    final user = await _api.getUsername;
-    final mandant = await _api.getMandant;
-    log(user.toString());
-    log(mandant.toString());
     if (e == null || state.currentCustomer == e) return;
     final newProjects = await getProjectsForCustomer(e.id);
+    final newEntry = state.entry.copyWith(customerName: e.companyName);
     state = state.copyWith(
       newProjects: newProjects,
       editedCustomer: () => e,
       editedProject: () => null,
+      newEntry: newEntry,
     );
   }
 
@@ -74,7 +71,7 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
       description: description ?? entry.description,
       duration: duration ?? entry.duration,
       endTime: endTime ?? entry.endTime,
-      pauseEnd: pauseEnd ?? entry.endTime,
+      pauseEnd: pauseEnd ?? entry.pauseEnd,
       pauseStart: pauseStart ?? entry.pauseStart,
       startTime: startTime ?? entry.startTime,
     );
@@ -83,14 +80,12 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
 
   void loadAllCustomer() {
     getAllCustomer().then((e) => state = state.copyWith(newCustomers: e));
-    // state = state.copyWith(
-    //     newCustomers: await getAllCustomer(),
-    // );
   }
 
   void updateSelectedService(ServiceListVM? e) {
     if (e == null || e == state.currentService) return;
-    state = state.copyWith(nextService: e);
+    final newEntry = state.entry.copyWith(serviceID: e.id, serviceTitle: e.name);
+    state = state.copyWith(nextService: e, newEntry: newEntry);
   }
 
   Future<bool> createTimeEntriesVM() async {
@@ -101,8 +96,7 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
     try {
       final response = await _api.postTimeEnty(data);
       if (response.statusCode != 200) {
-        throw Exception(
-            'Error occuren on createTimeEntriesVM: ${response.statusCode}\n${response.data}');
+        throw Exception('Error occuren on createTimeEntriesVM: ${response.statusCode}\n${response.data}');
       }
       return true;
     } on DioException catch (e) {
@@ -130,8 +124,7 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
       }
       final List data = response.data.map((e) => e).toList();
       data.map((e) => e.asMap());
-      final allTimeEntries =
-          data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
+      final allTimeEntries = data.map((e) => TimeEntriesVM.fromTimeEntryDM(TimeEntry.fromJson(e))).toSet().toList();
       allTimeEntries.sort((a, b) => a.date!.compareTo(b.date!));
       state = state.copyWith(newEntries: allTimeEntries);
       return;
@@ -154,19 +147,13 @@ class TimeEntriesNotifier extends AbstractEntryMethod<TimeEntryState> {
   List<Workday> getListOfWorkdays() {
     List<Workday> listOfWorkdays = [];
     for (var e in state.allEntries) {
-      if (listOfWorkdays.any((element) =>
-          element.date.day == e.date!.day &&
-          element.date.month == e.date!.month &&
-          element.date.year == e.date!.year)) {
-        final date = listOfWorkdays.firstWhere((element) =>
-            element.date.day == e.date!.day &&
-            element.date.month == e.date!.month &&
-            element.date.year == e.date!.year);
+      if (listOfWorkdays
+          .any((element) => element.date.day == e.date!.day && element.date.month == e.date!.month && element.date.year == e.date!.year)) {
+        final date = listOfWorkdays.firstWhere(
+            (element) => element.date.day == e.date!.day && element.date.month == e.date!.month && element.date.year == e.date!.year);
         date.timeEntries.add(e);
-      } else if (!listOfWorkdays.any((element) =>
-          element.date.day == e.date!.day &&
-          element.date.month == e.date!.month &&
-          element.date.year == e.date!.year)) {
+      } else if (!listOfWorkdays
+          .any((element) => element.date.day == e.date!.day && element.date.month == e.date!.month && element.date.year == e.date!.year)) {
         listOfWorkdays.add(Workday(date: e.date!, timeEntries: [e]));
       } else {
         log('no matches');

@@ -17,7 +17,7 @@ class ProjectDetails extends ConsumerStatefulWidget {
 
 class _ProjectCardState extends ConsumerState<ProjectDetails> {
   int currentIndex = 0;
-  List<Consumable>? consumables;
+  List<ConsumableDM>? consumables;
 
   @override
   Widget build(BuildContext context) {

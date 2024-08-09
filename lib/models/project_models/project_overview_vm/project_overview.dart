@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 
-import '../../consumable_models/material_vm/material_vm.dart';
 import 'project_time/project_day.dart';
 part 'project_overview.freezed.dart';
 part 'project_overview.g.dart';
@@ -11,7 +11,7 @@ abstract class ProjectOverview with _$ProjectOverview {
     required int customerID,
     String? customerName,
     @Default(false) bool hasDocumentations,
-    @Default(<ConsumeableVM>[]) List<ConsumeableVM> materialViewModels,
+    @Default(<ConsumableDM>[]) List<ConsumableDM> materialViewModels,
     // @Default([]) List materialViewModels,
     required DateTime projectCreated,
     required int projectID,

@@ -4,17 +4,12 @@ part 'consumable_entry.freezed.dart';
 part 'consumable_entry.g.dart';
 
 @freezed
-class ConsumealbeEntry with _$ConsumealbeEntry {
-  const factory ConsumealbeEntry({
-    required DateTime createDate,
-    // @Default('') String entryID,
-    // String? projectName,
+class ConsumalbeEntry with _$ConsumalbeEntry {
+  const factory ConsumalbeEntry({
+    DateTime? createDate,
     int? projectID,
-    @Default(<Consumable>[]) List<Consumable> consumables,
-    // @Default(<String>[]) List<String> dokusPath,
-    // double? estimatedDuration,
-    // int? cost,
-  }) = _ConsumealbeEntry;
+    @Default(<ConsumableDM>[]) List<ConsumableDM> consumables,
+  }) = _ConsumalbeEntry;
 
-  factory ConsumealbeEntry.fromJson(Map<String, dynamic> json) => _$ConsumealbeEntryFromJson(json);
+  factory ConsumalbeEntry.fromJson(Map<String, dynamic> json) => _$ConsumalbeEntryFromJson(json);
 }
