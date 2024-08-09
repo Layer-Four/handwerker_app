@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:handwerker_app/constants/api/api.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
 import 'package:handwerker_app/models/project_models/project_short_vm/project_short_vm.dart';
 
 import '../customer_models/customer_short_model/customer_short_dm.dart';
@@ -41,7 +42,6 @@ abstract class AbstractEntryMethod<T> extends Notifier<T> {
       }
       final List data = response.data.map((e) => e).toList();
       return data.map((e) => ProjectShortVM.fromJson(e)).toList();
-      // state = state.copyWith(newProjects: newProjects);
     } on DioException catch (e) {
       log('DioException: ${e.message}');
     } catch (e) {
@@ -62,6 +62,25 @@ abstract class AbstractEntryMethod<T> extends Notifier<T> {
       final services = data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
       return services;
       // state = AsyncValue.data(services);
+    } on DioException catch (e) {
+      log('DioException: ${e.response?.statusCode}. ${e.response?.data}');
+    } catch (e) {
+      throw Exception(e);
+    }
+    return [];
+  }
+
+  Future<List<ConsumableDM>> getAllConsumables() async {
+    try {
+      final response = await _api.getMaterialsList;
+      if (response.statusCode != 200) {
+        throw Exception(
+          'Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message',
+        );
+      }
+      final List data = response.data.map((e) => e).toList();
+      final services = data.map((e) => ConsumableDM.fromJson(e)).toList();
+      return services;
     } on DioException catch (e) {
       log('DioException: ${e.response?.statusCode}. ${e.response?.data}');
     } catch (e) {

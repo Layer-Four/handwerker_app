@@ -6,7 +6,8 @@ import 'package:handwerker_app/constants/api/api.dart';
 import 'package:handwerker_app/models/service_models/service_list_vm/service_list.dart';
 
 final serviceProvider =
-    AsyncNotifierProvider<ServiceNotifer, List<ServiceListVM>?>(() => ServiceNotifer());
+    AsyncNotifierProvider<ServiceNotifer, List<ServiceListVM>?>(
+        () => ServiceNotifer());
 
 class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
   final Api _api = Api();
@@ -15,7 +16,7 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
     return null;
   }
 
-  void loadServices() async {
+  void loadServices(String name) async {
     try {
       final response = await _api.getExecuteableServices;
       if (response.statusCode != 200) {
@@ -24,7 +25,8 @@ class ServiceNotifer extends AsyncNotifier<List<ServiceListVM>?> {
         );
       }
       final data = response.data;
-      final services = data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
+      final services =
+          data.map<ServiceListVM>((e) => ServiceListVM.fromJson(e)).toList();
       state = AsyncValue.data(services);
     } on DioException catch (e) {
       log('DioException: ${e.response?.statusCode}. ${e.response?.data}');

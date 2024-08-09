@@ -211,6 +211,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: Align(
           alignment: Alignment.topRight,
           child: GestureDetector(
+            onLongPress: () => ref.read(userProvider.notifier).deleteMandant(),
             child: const Text(
               'Passwort vergessen?',
               style: TextStyle(

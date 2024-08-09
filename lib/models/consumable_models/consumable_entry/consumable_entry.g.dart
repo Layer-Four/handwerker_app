@@ -6,21 +6,23 @@ part of 'consumable_entry.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConsumealbeEntryImpl _$$ConsumealbeEntryImplFromJson(
+_$ConsumalbeEntryImpl _$$ConsumalbeEntryImplFromJson(
         Map<String, dynamic> json) =>
-    _$ConsumealbeEntryImpl(
-      createDate: DateTime.parse(json['createDate'] as String),
+    _$ConsumalbeEntryImpl(
+      createDate: json['createDate'] == null
+          ? null
+          : DateTime.parse(json['createDate'] as String),
       projectID: (json['projectID'] as num?)?.toInt(),
       consumables: (json['consumables'] as List<dynamic>?)
-              ?.map((e) => Consumable.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => ConsumableDM.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          const <Consumable>[],
+          const <ConsumableDM>[],
     );
 
-Map<String, dynamic> _$$ConsumealbeEntryImplToJson(
-        _$ConsumealbeEntryImpl instance) =>
+Map<String, dynamic> _$$ConsumalbeEntryImplToJson(
+        _$ConsumalbeEntryImpl instance) =>
     <String, dynamic>{
-      'createDate': instance.createDate.toIso8601String(),
+      'createDate': instance.createDate?.toIso8601String(),
       'projectID': instance.projectID,
       'consumables': instance.consumables,
     };

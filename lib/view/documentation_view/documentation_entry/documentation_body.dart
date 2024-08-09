@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:handwerker_app/view/widgets/logo_widget.dart';
 import 'package:intl/intl.dart';
 import '../../../constants/apptheme/app_colors.dart';
 import '../../../models/customer_models/customer_short_model/customer_short_dm.dart';
@@ -25,8 +26,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
   @override
   void initState() {
     super.initState();
-    _dayPickerController =
-        TextEditingController(text: DateFormat('dd.MM.y').format(DateTime.now()));
+    _dayPickerController = TextEditingController(text: DateFormat('dd.MM.y').format(DateTime.now()));
     _descriptionController = TextEditingController();
   }
 
@@ -48,10 +48,6 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
               initDate: DateTime.now(),
               title: dictionary.date,
               width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColor.kTextfieldBorder),
-              ),
             ),
             ref.watch(documentationProvider).customers.isEmpty
                 ? GestureDetector(
@@ -63,7 +59,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                       child: Center(child: Text(dictionary.loadData)),
                     ),
                   )
-                : ChooseCustomer<CustomerShortDM>(
+                : CustomerDropdown<CustomerShortDM>(
                     title: dictionary.customer,
                     items: ref
                         .watch(documentationProvider)
@@ -79,7 +75,7 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                     onChanged: (e) => ref.read(documentationProvider.notifier).updateCustomer(e),
                     value: ref.watch(documentationProvider.notifier).currentCustomer,
                   ),
-            ChooseCustomer<ProjectShortVM>(
+            CustomerDropdown<ProjectShortVM>(
               title: dictionary.projectUpperCase,
               items: ref
                   .watch(documentationProvider.notifier)
@@ -128,15 +124,30 @@ class _DocumentationBodyState extends ConsumerState<DocumentationBody> {
                 color: AppColor.kPrimaryButtonColor,
                 text: dictionary.createEntry,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-                onPressed: _checkAndSubmit,
+                onPressed: () => _checkAndSubmit(),
               ),
             ),
-            SizedBox(
-              height: 70,
-              child: Center(
-                child: Image.asset('assets/images/img_techtool.png', height: 20),
+            const Center(
+              child: LogoWidget(
+                assetString: 'assets/images/img_techtool.png',
+                size: 20,
               ),
             ),
+            //  Padding(
+            //    padding: const EdgeInsets.all(16.0),
+            //    child: SymmetricButton(
+            //      color: AppColor.kPrimaryButtonColor,
+            //      text: dictionary.createEntry,
+            //      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+            //      onPressed: _checkAndSubmit,
+            //    ),
+            //  ),
+            //  SizedBox(
+            //    height: 70,
+            //    child: Center(
+            //      child: Image.asset('assets/images/img_techtool.png', height: 20),
+            //    ),
+            //  ),
           ],
         ),
       );

@@ -13,9 +13,9 @@ _$ProjectOverViewImpl _$$ProjectOverViewImplFromJson(
       customerName: json['customerName'] as String?,
       hasDocumentations: json['hasDocumentations'] as bool? ?? false,
       materialViewModels: (json['materialViewModels'] as List<dynamic>?)
-              ?.map((e) => ConsumeableVM.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => ConsumableDM.fromJson(e as Map<String, dynamic>))
               .toList() ??
-          const <ConsumeableVM>[],
+          const <ConsumableDM>[],
       projectCreated: DateTime.parse(json['projectCreated'] as String),
       projectID: (json['projectID'] as num).toInt(),
       projectName: json['projectName'] as String?,

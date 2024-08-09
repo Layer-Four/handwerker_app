@@ -67,8 +67,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
       final response = await _api.postDocumentationEntry(formData);
       if (response.statusCode != 200) {
         log('statuscode: ${response.statusCode}, backend returned: ${response.data}');
-        throw Exception(
-            'on postDocumentationEntry got statuscode: ${response.statusCode}\nbackend returned: ${response.data}');
+        throw Exception('on postDocumentationEntry got statuscode: ${response.statusCode}\nbackend returned: ${response.data}');
       }
       log('request was successful-> ${response.data}');
       state = state.copyWith(
@@ -91,17 +90,20 @@ class ProjectNotifer extends Notifier<DocumentationState> {
 
   /// Update project attribute from DocumentationState and edit document
   void updateProject(ProjectShortVM? e) {
+    log(state.project?.title ?? ' is null');
     if (e == null || e == state.project) return;
-    final oldDoc = state.docu;
+    final newDoc = state.docu.copyWith(projectID: e.id);
     state = state.copyWith(
       editedProject: () => e,
-      editedDoc: oldDoc.copyWith(projectID: e.id),
+      editedDoc: newDoc,
     );
+    log('log doc in time-> ${state.docu.toJson()}');
   }
 
   /// Update DocumentationState.currentProject
-  void updateProjectFromCustomer(List<ProjectShortVM> customerProjects) =>
-      state = state.copyWith(newProjects: customerProjects);
+  void updateProjectFromCustomer(List<ProjectShortVM> customerProjects) => state = state.copyWith(
+        newProjects: customerProjects,
+      );
 
   /// Update customers ttribute from DocumentationState.currentCustomer
   void updateCustomer(CustomerShortDM? e) {
@@ -158,8 +160,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
     for (var path in entry.imageUrl) {
       final xfile = XFile(
         path,
-        name:
-            '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
+        name: '${state.project?.title ?? 'Doku_Bild'}/${DateFormat('t.M.y').format(entry.createDate!)}.jpeg',
         mimeType: 'jpeg',
       );
       files.add(xfile);
@@ -173,8 +174,7 @@ class ProjectNotifer extends Notifier<DocumentationState> {
       final XFile file = files[i];
       final multiPartFile = MultipartFile.fromFileSync(
         file.path,
-        filename:
-            '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
+        filename: '${state.project!.title}/${DateFormat('d.M.y').format(DateTime.now())}.png', //file.name,
       );
       formData.files.add(MapEntry('image${i == 0 ? "" : i}', multiPartFile));
     }

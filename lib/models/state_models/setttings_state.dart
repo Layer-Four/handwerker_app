@@ -18,7 +18,7 @@ class SettingsState {
   })  : _allLanguages = allLanguages ?? const [GermanLanguage(), EnglishLanguage()],
         _currentLocal = local ?? const Locale('de'),
         _language = language ?? const GermanLanguage(),
-        _themeMode = currentMode ?? ThemeMode.system,
+        _themeMode = currentMode ?? ThemeMode.light,
         _theme = theme ?? const AppTheme();
 
   Dictionary get dictionary => _language;

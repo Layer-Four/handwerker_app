@@ -29,10 +29,10 @@ class StartView extends ConsumerWidget {
                     children: [
                       Text(
                         "Revolutionieren \nSie Ihr Handwerk",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: AppColor.kWhiteWOpacity,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: AppColor.kWhiteWOpacity, fontWeight: FontWeight.bold, fontSize: 27),
                       ),
                       Text(
                         "Alles, was Sie brauchen, in einer App!",
@@ -54,16 +54,21 @@ class StartView extends ConsumerWidget {
                         height: 40,
                         child: ElevatedButton(
                           onPressed: () async {
-                            log('token after press start > ${ref.watch(userProvider).userToken}');
+                            log('token after press start -> ${ref.watch(userProvider).userToken}');
                             // TODO: set Await the navigate to QrScannerview
                             // final mandant = await ref.watch(userProvider.notifier).mandant;
                             // final user = await ref.watch(userProvider.notifier).username;
                             // (mandant == null && user == null)
                             // ? Navigator.pushReplacementNamed(
-                            // context, AppRoutes.firstSigninScreen)                             :
+                            // context, AppRoutes.firstSigninScreen);
+
                             ref.watch(userProvider).userToken.isEmpty
                                 ? Navigator.pushReplacementNamed(context, AppRoutes.anmeldeScreen)
-                                : Navigator.pushReplacementNamed(context, AppRoutes.viewScreen);
+                                : ref.read(userProvider.notifier).checkTokenFresh().then((e) {
+                                    e
+                                        ? Navigator.pushReplacementNamed(context, AppRoutes.viewScreen)
+                                        : Navigator.pushReplacementNamed(context, AppRoutes.anmeldeScreen);
+                                  });
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

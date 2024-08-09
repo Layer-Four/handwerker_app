@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +25,8 @@ class SettingsNotifer extends Notifier<SettingsState> {
       ThemeMode.light => ThemeMode.dark,
       ThemeMode.dark => ThemeMode.system
     };
-    final newState = state.copyWith(nextMode: nextMode);
+    log(nextMode.toString());
+    final newState = state.copyWith(nextMode: ThemeMode.light);
     state = newState;
     return;
   }

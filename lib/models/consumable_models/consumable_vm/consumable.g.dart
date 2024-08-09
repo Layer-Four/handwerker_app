@@ -6,20 +6,28 @@ part of 'consumable.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConsumableImpl _$$ConsumableImplFromJson(Map<String, dynamic> json) =>
-    _$ConsumableImpl(
-      amount: (json['amount'] as num?)?.toInt() ?? 1,
+_$ConsumableDMImpl _$$ConsumableDMImplFromJson(Map<String, dynamic> json) =>
+    _$ConsumableDMImpl(
+      amount: (json['amount'] as num?)?.toDouble() ?? 1,
+      id: (json['id'] as num?)?.toInt(),
       materialUnitID: (json['materialUnitID'] as num?)?.toInt(),
+      name: json['name'] as String?,
       materialID: json['materialID'] as String?,
-      price: (json['price'] as num?)?.toInt(),
-      unitTypeName: json['unitTypeName'] as String?,
+      netPrice: (json['netPrice'] as num?)?.toDouble(),
+      grossPrice: (json['grossPrice'] as num?)?.toDouble(),
+      vat: (json['vat'] as num?)?.toDouble(),
+      materialUnitName: json['materialUnitName'] as String?,
     );
 
-Map<String, dynamic> _$$ConsumableImplToJson(_$ConsumableImpl instance) =>
+Map<String, dynamic> _$$ConsumableDMImplToJson(_$ConsumableDMImpl instance) =>
     <String, dynamic>{
       'amount': instance.amount,
+      'id': instance.id,
       'materialUnitID': instance.materialUnitID,
+      'name': instance.name,
       'materialID': instance.materialID,
-      'price': instance.price,
-      'unitTypeName': instance.unitTypeName,
+      'netPrice': instance.netPrice,
+      'grossPrice': instance.grossPrice,
+      'vat': instance.vat,
+      'materialUnitName': instance.materialUnitName,
     };

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../constants/apptheme/app_colors.dart';
 
-class ChooseCustomer<T> extends StatelessWidget {
+class CustomerDropdown<T> extends StatelessWidget {
   final T? value;
   final String title;
   final List<DropdownMenuItem<T>>? items;
   final void Function(T?)? onChanged;
   final void Function()? onTap;
-  const ChooseCustomer({
+  const CustomerDropdown({
     super.key,
     required this.title,
     required this.items,

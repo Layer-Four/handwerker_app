@@ -5,7 +5,7 @@ import '../../constants/apptheme/app_colors.dart';
 
 class CustomDatePicker extends StatelessWidget {
   final TextEditingController controller;
-  final DateTime initDate;
+  final DateTime? initDate;
   final String? hintText;
   final EdgeInsets? padding;
   final double? width;
@@ -17,7 +17,7 @@ class CustomDatePicker extends StatelessWidget {
   const CustomDatePicker({
     super.key,
     required this.controller,
-    required this.initDate,
+    this.initDate,
     this.decoration,
     this.isFilled = false,
     this.height,
@@ -29,10 +29,7 @@ class CustomDatePicker extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: width ??
-            (MediaQuery.of(context).size.width > 950
-                ? 300
-                : MediaQuery.of(context).size.width * 0.35),
+        width: width ?? (MediaQuery.of(context).size.width > 950 ? 300 : MediaQuery.of(context).size.width * 0.35),
         height: height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,10 +48,12 @@ class CustomDatePicker extends StatelessWidget {
                   ),
             Container(
               padding: padding,
-              decoration: decoration,
+              decoration:
+                  decoration ?? BoxDecoration(border: Border.all(color: AppColor.kTextfieldBorder), borderRadius: BorderRadius.circular(6)),
               child: TextField(
                 controller: controller,
                 keyboardType: TextInputType.datetime,
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   filled: isFilled,
                   fillColor: AppColor.kTextfieldColor,
@@ -74,11 +73,11 @@ class CustomDatePicker extends StatelessWidget {
                   final date = await showDatePicker(
                     context: context,
                     firstDate: DateTime.now().add(const Duration(days: -(5 * 365))),
-                    initialDate: initDate,
+                    initialDate: initDate ?? DateTime.now(),
                     lastDate: DateTime.now().add(const Duration(days: (10 * 365))),
                   );
                   if (date != null) {
-                    controller.text = DateFormat('d.M.y').format(date);
+                    controller.text = DateFormat('dd.MM.y').format(date);
                   }
                   return;
                 },

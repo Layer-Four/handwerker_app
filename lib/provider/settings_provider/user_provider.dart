@@ -16,6 +16,8 @@ class UserNotifier extends Notifier<UserVM> {
   bool get isOneTimePassword => _isOTP;
   Future<String?> get mandant async => await _api.getMandant;
   Future<String?> get username async => await _api.getUsername;
+
+  static final DateTime _initTime = DateTime.now();
   @override
   UserVM build() {
     _api.getToken.then((value) {
@@ -36,19 +38,25 @@ class UserNotifier extends Notifier<UserVM> {
 
   /// called API and request a [String] userNamen and a [String] password, also it exist a property mandandID for diffenrent mandanten
   Future<bool> loginUser({required password, required String userName}) async {
-    // TODO:filter mandantId by inintal login from username
     String? mID;
     if (!userName.contains('@')) {
-      mID = await mandant;
-      if (mID == null) {
+      String? mIDTemp = await mandant;
+      if (mIDTemp == null) {
         final usernameWithMandantID = userName.split('_');
         if (usernameWithMandantID.length > 1) {
           mID = usernameWithMandantID.first;
           usernameWithMandantID.removeAt(0);
           userName = usernameWithMandantID.join('_');
+          _api.storeMandant(mID);
         } else {
           throw Exception('we got nothin, check login');
         }
+      }
+      mID = mIDTemp;
+      if (userName.startsWith(RegExp(r'^[0-9]+_'))) {
+        final between = userName.split(('_'));
+        between.removeAt(0);
+        userName = between.join('_');
       }
     }
     final json = {"username": userName, "password": password, "mandant": mID};
@@ -112,5 +120,29 @@ class UserNotifier extends Notifier<UserVM> {
       log('Error on resetPasswordRequest:\n$e');
     }
     return false;
+  }
+
+  Future<bool> checkTokenFresh() async {
+    try {
+      final res = await _api.getAllUnits;
+      if (res.statusCode == 200) return true;
+      return false;
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 400) {
+        if (_initTime.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch + 60000) {
+          // TODO: refactor!!! this can be a endless loop!!!!
+          checkTokenFresh();
+        }
+      }
+      if (e.response!.statusCode == 401) _api.deleteToken();
+    } catch (e) {
+      log('Error on checkTokenFresh:\n$e');
+    }
+    return false;
+  }
+
+  deleteMandant() {
+    log('message');
+    _api.deleteMandant();
   }
 }

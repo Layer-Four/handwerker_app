@@ -52,10 +52,7 @@ class CustomTextfield extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: widgetWidth ??
-            (MediaQuery.of(context).size.width > 950
-                ? 300
-                : MediaQuery.of(context).size.width * 0.35),
+        width: widgetWidth ?? (MediaQuery.of(context).size.width > 950 ? 300 : MediaQuery.of(context).size.width * 0.35),
         height: widgetHeight,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,11 +63,7 @@ class CustomTextfield extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(
                       title!,
-                      style: titleStyle ??
-                          Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(fontWeight: FontWeight.bold),
+                      style: titleStyle ?? Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   )
                 : const SizedBox.shrink(),
@@ -83,6 +76,7 @@ class CustomTextfield extends StatelessWidget {
                 controller: controller,
                 maxLines: isMultiLine ? null : 1,
                 textInputAction: isMultiLine ? TextInputAction.newline : TextInputAction.next,
+                textAlign: TextAlign.center,
                 decoration: inputDecoration ??
                     InputDecoration(
                       filled: isFilled,

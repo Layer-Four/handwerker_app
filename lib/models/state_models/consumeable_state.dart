@@ -1,52 +1,59 @@
-import 'package:handwerker_app/models/consumable_models/material_vm/material_vm.dart';
+import 'package:handwerker_app/models/consumable_models/consumable_vm/consumable.dart';
+
+import '../consumable_models/consumable_entry/consumable_entry.dart';
 
 import '../customer_models/customer_short_model/customer_short_dm.dart';
 import '../project_models/project_short_vm/project_short_vm.dart';
 
-class ConsumeableState {
-  final ConsumeableVM _currentConsumable;
+class ConsumableState {
+  final List<ConsumableDM> _allConsumables;
   final List<CustomerShortDM> _allCustomers;
-  final CustomerShortDM? _selectedCustomer;
+  final ConsumalbeEntry _entry;
   final List<ProjectShortVM> _projectFromCustomers;
+  final ConsumableDM? _selectedConsumable;
+  final CustomerShortDM? _selectedCustomer;
   final ProjectShortVM? _selectedProject;
-  const ConsumeableState({
+  const ConsumableState({
+    List<ConsumableDM>? allConsumables,
     List<CustomerShortDM>? customers,
-    CustomerShortDM? currentCustomer,
-    ConsumeableVM? material,
     List<ProjectShortVM>? customersProject,
+    CustomerShortDM? currentCustomer,
+    ConsumableDM? material,
+    ConsumalbeEntry? materialEnty,
     ProjectShortVM? project,
-  })  : _selectedCustomer = currentCustomer,
+  })  : _allConsumables = allConsumables ?? const <ConsumableDM>[],
         _allCustomers = customers ?? const <CustomerShortDM>[],
-        _selectedProject = project,
+        _entry = materialEnty ?? const ConsumalbeEntry(),
         _projectFromCustomers = customersProject ?? const <ProjectShortVM>[],
-        _currentConsumable = material ??
-            const ConsumeableVM(
-              id: -1,
-              name: 'Please change me',
-              amount: -0.1,
-              price: -0.1,
-              materialUnitName: 'Please change me',
-            );
+        _selectedCustomer = currentCustomer,
+        _selectedProject = project,
+        _selectedConsumable = material;
 
 // Getter
-  List<CustomerShortDM> get customers => _allCustomers;
+  List<ConsumableDM> get consumables => _allConsumables;
+  ConsumalbeEntry? get entry => _entry;
+  ConsumableDM? get consumable => _selectedConsumable;
   CustomerShortDM? get currentCustomer => _selectedCustomer;
-  ConsumeableVM get consumable => _currentConsumable;
-  ProjectShortVM? get project => _selectedProject;
+  List<CustomerShortDM> get customers => _allCustomers;
   List<ProjectShortVM> get customerProject => _projectFromCustomers;
+  ProjectShortVM? get project => _selectedProject;
 
-  ConsumeableState copyWith({
-    List<CustomerShortDM>? newCustomers,
+  ConsumableState copyWith({
+    ConsumableDM? editedConsumable,
+    List<ConsumableDM>? newConsumalbels,
     CustomerShortDM? Function()? editedCustomer,
     ProjectShortVM? Function()? editedProject,
-    ConsumeableVM? editedConsumable,
+    List<CustomerShortDM>? newCustomers,
+    ConsumalbeEntry? newEntry,
     List<ProjectShortVM>? newProjects,
   }) =>
-      ConsumeableState(
-        project: editedProject != null ? editedProject() : _selectedProject,
-        customersProject: newProjects ?? _projectFromCustomers,
-        material: editedConsumable ?? _currentConsumable,
-        customers: newCustomers ?? _allCustomers,
+      ConsumableState(
+        allConsumables: newConsumalbels ?? _allConsumables,
         currentCustomer: editedCustomer != null ? editedCustomer() : _selectedCustomer,
+        customersProject: newProjects ?? _projectFromCustomers,
+        customers: newCustomers ?? _allCustomers,
+        materialEnty: newEntry ?? _entry,
+        material: editedConsumable ?? _selectedConsumable,
+        project: editedProject != null ? editedProject() : _selectedProject,
       );
 }
