@@ -161,40 +161,4 @@ class _MaterialBodyState extends ConsumerState<MaterialBody> {
       );
     });
   }
-
-  Widget _buildAmountPriceFields() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColor.kTextfieldBorder),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            ),
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: _summeryController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Price',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColor.kTextfieldBorder),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

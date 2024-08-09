@@ -78,7 +78,6 @@ abstract class AbstractEntryMethod<T> extends Notifier<T> {
           'Request not completed: ${response.statusCode} Backend returned : ${response.data}  \n as Message',
         );
       }
-      // TODO: START HERER WITH DEBUGGING
       final List data = response.data.map((e) => e).toList();
       final services = data.map((e) => ConsumableDM.fromJson(e)).toList();
       return services;
